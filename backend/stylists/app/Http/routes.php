@@ -16,3 +16,5 @@ Route::get('/products/', function () {
 });
 
 Route::any('product/{action}', 'ProductController@index');
+
+Route::any('look/{action}', 'LookController@index');
