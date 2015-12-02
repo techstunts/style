@@ -2,14 +2,16 @@ function lightbox(e){
     if($('#lightbox').length == 0) {
         var lb_html =
             '<div id="lightbox">' +
-            '<p id="close">Close</p>' +
-            '<div id="content">' +
-            '<ul id="sortable">' +
-            '</ul>' +
-            '</div>' +
+                '<p id="close">Close</p>' +
+                '<div id="content">' +
+                    '<ul id="sortable">' +
+                    '</ul>' +
+                '</div>' +
             '</div>'
 
         $('body').append(lb_html);
+
+        $('form.create_look').appendTo('#lightbox #content').show();
 
         $('#lightbox #close').bind('click', function () {
             $('#lightbox #sortable li').remove();
