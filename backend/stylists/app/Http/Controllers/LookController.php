@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CombineImages;
 use App\Look;
 use App\Product;
 use Illuminate\Http\Request;
@@ -58,11 +59,13 @@ class LookController extends Controller
         $look->date = date('Y-m-d H:i:s');
 
         $look_price = 0;
+        $src_image_paths = Array();
 
         if(isset($request->product_id1) && $request->product_id1 != ''){
             $look->product_id1 = $request->product_id1;
             $product1 = Product::find($request->product_id1);
             $look_price += $product1->product_price;
+            $src_image_paths[] = $product1->upload_image;
         }
         else
             $look->product_id1 = '';
@@ -71,6 +74,7 @@ class LookController extends Controller
             $look->product_id2 = $request->product_id2;
             $product2 = Product::find($request->product_id2);
             $look_price += $product2->product_price;
+            $src_image_paths[] = $product2->upload_image;
         }
         else
             $look->product_id2 = '';
@@ -79,6 +83,7 @@ class LookController extends Controller
             $look->product_id3 = $request->product_id3;
             $product3 = Product::find($request->product_id3);
             $look_price += $product3->product_price;
+            $src_image_paths[] = $product3->upload_image;
         }
         else
             $look->product_id3 = '';
@@ -87,15 +92,21 @@ class LookController extends Controller
             $look->product_id4 = $request->product_id4;
             $product4 = Product::find($request->product_id4);
             $look_price += $product4->product_price;
+            $src_image_paths[] = $product4->upload_image;
         }
         else
             $look->product_id4 = '';
 
         $look->lookprice = $look_price;
 
-        if($look->save()){
-            return response()->json(array('success' => true, 'look_id' => $look->id), 200);
+        $lookImage = new CombineImages();
+        if($lookImage->createLook($src_image_paths, $look->look_name)){
+            $look->look_image = $lookImage->targetImage;
+            if($look->save()){
+                return response()->json(array('success' => true, 'look_id' => $look->id), 200);
+            }
         }
+
     }
 
     /**
