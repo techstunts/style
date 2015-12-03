@@ -30,6 +30,8 @@
         @include('layouts.menu')
     </header>
 
+    <div class="message"></div>
+
     @yield('content')
 
 </body>

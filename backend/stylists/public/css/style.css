@@ -9,6 +9,8 @@ div.items div.name{font-size:12px;}
 div.items div.extra span{background-color:#E91E63; overflow: overlay; color: wheat;}
 div.items div.name a{color:grey; text-decoration: none;}
 
+div.message{position: fixed; top: 30px; left: 500px; display:none;}
+
 form.create_look{display:none; float:left;}
 form.create_look div{margin:0 0 5px 0px; text-align:left;}
 

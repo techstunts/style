@@ -21,7 +21,7 @@
             @endforeach
             </ol>
 
-            <form class="create_look" method="post" action="{!! url('look.create') !!}">
+            <form class="create_look" method="post" action="{!! url('look/create') !!}">
                 <div>
                     <select class="form-control mb15" name="bodytype">
                         <option value="">Body Type</option>
@@ -76,7 +76,16 @@
 
                 <div><textarea name="look_description" placeholder="Look Description" style="height:80px;" rows="8" cols="40" class="form-control"></textarea></div>
 
-                <div><input type="submit" value="Create look" /> </div>
+                <div>
+                    <input type="submit" value="Create look" />
+
+                    <input type="hidden" name="product_id1" value="" />
+                    <input type="hidden" name="product_id2" value="" />
+                    <input type="hidden" name="product_id3" value="" />
+                    <input type="hidden" name="product_id4" value="" />
+
+                    {{ csrf_field() }}
+                </div>
             </form>
         </div>
     </div>
