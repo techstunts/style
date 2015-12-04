@@ -103,7 +103,12 @@ class LookController extends Controller
         if($lookImage->createLook($src_image_paths, $look->look_name)){
             $look->look_image = $lookImage->targetImage;
             if($look->save()){
-                return response()->json(array('success' => true, 'look_id' => $look->id), 200);
+                return response()->json(
+                    array('success' => true,
+                        'look_id' => $look->id,
+                        'look_url' => 'http://istyleyou.loc/backend/list_style_item.php?id=' .$look->id,
+                        'look_name' => $look->look_name
+                    ), 200);
             }
         }
 

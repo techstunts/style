@@ -27,7 +27,7 @@ function submitLightboxForm(e){
 
             if(data.success){
                 closeLightbox();
-                showMessage('<a target="_new" href="http://istyleyou.loc/backend/list_style_item.php?id=' + data.look_id + '">Look</a> created');
+                showMessage('Look <a target="_new" href="' + data.look_url + '">' + data.look_name + '</a> created');
             }
         },
         error: function (){

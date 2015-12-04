@@ -15,6 +15,9 @@ class CombineImages
 
         $images_folder = $_SERVER['DOCUMENT_ROOT'] . '/images/';
 
+        $dst_width = floor($this->mapWidth/2);
+        $dst_height = floor($this->mapHeight/2);
+
         /*
          *  PUT SRC IMAGES ON BASE IMAGE
          */
@@ -23,11 +26,10 @@ class CombineImages
             $src_image_path = $images_folder . $src_image_path;
 
             list ($x, $y) = $this->indexToCoords($index);
-            list($tileWidth, $tileHeight) = getimagesize($src_image_path);
 
             $tileImg = $this->compress_image($src_image_path, 99);
 
-            imagecopy($mapImage, $tileImg, $x, $y, 0, 0, $tileWidth, $tileHeight);
+            imagecopy($mapImage, $tileImg, $x, $y, 0, 0, $dst_width, $dst_height);
             imagedestroy($tileImg);
         }
 
