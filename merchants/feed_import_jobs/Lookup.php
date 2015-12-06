@@ -8,8 +8,10 @@ abstract class Lookup{
         $query = "SELECT name, id FROM " . static::$__table;
         $result = execute_query($query);
 
-        for($i=0; $i<count($result); $i++){
-            self::$__resources[$result[0]] = $result[1];
+        if(mysqli_num_rows($result) > 0){
+            while($row = mysqli_fetch_assoc($result)){
+                self::$__resources[$row["name"]] = $row["id"];
+            }
         }
     }
 
@@ -17,9 +19,6 @@ abstract class Lookup{
         if(count(self::$__resources) == 0){
             self::init();
         }
-
-        //var_dump($name);
-        //var_dump(static::$__resources[$name]);die;
 
         return isset(self::$__resources[$name]) ? self::$__resources[$name] : null;
     }
@@ -32,10 +31,8 @@ abstract class Lookup{
         $resource_exists_query = "SELECT name, id FROM " . static::$__table . " WHERE name='" . addslashes($name) . "'";
         $result = execute_query($resource_exists_query);
 
-        //var_dump($result);die;
-
-        if(mysql_num_rows($result) > 0){
-            $row = mysql_fetch_assoc($result);
+        if(mysqli_num_rows($result) > 0){
+            $row = mysqli_fetch_assoc($result);
             self::$__resources[$row["name"]] = $row["id"];
             return $row["id"];
         }

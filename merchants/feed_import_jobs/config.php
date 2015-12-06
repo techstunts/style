@@ -47,4 +47,4 @@ define("__DEBUG__", 1);
 define("__PROGRESS__", 2);
 
 global $debug_on;
-$debug_on = true;
+$debug_on = false;

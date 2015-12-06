@@ -12,23 +12,23 @@ function debug_message($msg, $type = __PROGRESS__){
 
 function db_connect($params){
     global $db_conn;
-    $db_conn = mysql_connect($params['host'], $params['username'], $params['password']);
+    $db_conn = mysqli_connect($params['host'], $params['username'], $params['password']);
 
     if(! $db_conn )
     {
-        die('Could not connect: ' . mysql_error());
+        die('Could not connect: ' . mysqli_error());
     }
 
-    mysql_select_db($params['database']);
+    mysqli_select_db($db_conn, $params['database']);
 }
 
 function execute_query($sql){
     global $db_conn;
-    $retval = mysql_query( $sql, $db_conn );
+    $retval = mysqli_query($db_conn,$sql );
 
     if(! $retval )
     {
-        die("\nCould not execute query - $sql \n" . mysql_error());
+        die("\nCould not execute query - $sql \n" . mysqli_error());
     }
 
     return $retval;
@@ -36,5 +36,5 @@ function execute_query($sql){
 
 function last_insert_id(){
     global $db_conn;
-    return mysql_insert_id($db_conn);
+    return mysqli_insert_id($db_conn);
 }

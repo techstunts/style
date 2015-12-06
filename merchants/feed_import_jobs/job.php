@@ -49,7 +49,7 @@ foreach (new ProductIterator($reader) as $product) {
     foreach($product as $key => $value){
         if($field_mapping[$key]){
             $fields[] = $field_mapping[$key];
-            $values[] = addslashes($product->$key);
+            $values[] = trim(addslashes($product->$key));
         }
     }
 
