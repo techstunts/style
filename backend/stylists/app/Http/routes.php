@@ -18,3 +18,5 @@ Route::get('/products/', function () {
 Route::any('product/{action}', 'ProductController@index');
 
 Route::any('look/{action}', 'LookController@index');
+
+Route::any('merchant/product/{action}', 'Merchant\ProductController@index');

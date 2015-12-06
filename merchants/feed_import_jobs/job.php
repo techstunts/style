@@ -68,6 +68,9 @@ foreach (new ProductIterator($reader) as $product) {
         Brand::getId($brand_name) :
         Brand::addResource($brand_name);
 
+    $fields[] = 'product_image_url';
+    $values[] = $merchant_object->getProductImageUrl($product);
+
     $insert_query = 'INSERT INTO merchant_products (' . implode(',', $fields) . ')' .
                     'VALUES ("' . implode('","', $values) . '")';
     debug_message($insert_query, __DEBUG__);

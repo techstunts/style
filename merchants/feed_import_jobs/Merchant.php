@@ -32,6 +32,7 @@ abstract class Merchant{
 
     abstract function getGender($product);
 
+    abstract function getProductImageUrl($product);
 }
 
 class Jabong extends Merchant{
@@ -52,6 +53,10 @@ class Jabong extends Merchant{
                 return Merchant::__Female__;
         }
         return "";
+    }
+
+    function getProductImageUrl($product){
+        return $product->ProductImageLargeURL;
     }
 }
 
@@ -76,6 +81,19 @@ class Flipkart extends Merchant{
         }
         return "";
     }
+
+    function getProductImageUrl($product){
+        $urls = explode(";", $product->ProductImageLargeURL);
+        if(count($urls) > 0) {
+            foreach ($urls as $url) {
+                if (strpos($url, "original") !== false) {
+                    break;
+                }
+            }
+            return $url;
+        }
+        return $product->ProductImageLargeURL;
+    }
 }
 
 class Koovs extends Merchant{
@@ -99,6 +117,10 @@ class Koovs extends Merchant{
         }
         return "";
     }
+
+    function getProductImageUrl($product){
+        return $product->ProductImageLargeURL;
+    }
 }
 
 class Limeroad extends Merchant{
@@ -110,5 +132,9 @@ class Limeroad extends Merchant{
 
     function getGender($product){
         return "";
+    }
+
+    function getProductImageUrl($product){
+        return $product->ProductImageMediumURL;
     }
 }
