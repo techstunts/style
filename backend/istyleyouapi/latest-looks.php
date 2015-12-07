@@ -15,6 +15,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 		$user_data = mysql_fetch_array($user_res);
 		$gender = $user_data[1];
 		$bodytype = $user_data[2];
+		$body_type_condition = $gender == 'female' ? " AND cl.body_type = '{$bodytype}'" : "";
 
 		//Get 4 latest looks for 4 occasions which are not unliked by current user
 		$latest_looks = array();
@@ -37,7 +38,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 			from createdlook cl
 			LEFT JOIN usersfav uf ON cl.look_id = uf.look_id
 			where cl.gender = '$gender'
-				AND cl.body_type = '$bodytype'
+				$body_type_condition
 				AND cl.occasion = '$occasion'
 				AND (uf.user_id is null OR uf.user_id = '$userid')
 				AND cl.look_id NOT IN
