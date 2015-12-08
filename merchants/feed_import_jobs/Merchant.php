@@ -138,3 +138,88 @@ class Limeroad extends Merchant{
         return $product->ProductImageMediumURL;
     }
 }
+
+class Nykaa extends Merchant{
+
+    function isStockAvailable($product)
+    {
+        return true;
+    }
+
+    function getGender($product){
+        return "";
+    }
+
+    function getProductImageUrl($product){
+        return $product->ProductImageLargeURL;
+    }
+}
+
+class Trendin extends Merchant{
+
+    function isStockAvailable($product)
+    {
+        if (property_exists($product, 'StockAvailability')) {
+            if ($product->StockAvailability == "Out of stock"){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function getGender($product){
+        if (property_exists($product, 'custom1')) {
+            if (strpos($product->custom1, "Men") !== false)
+                return Merchant::__Male__;
+            else if (strpos($product->custom1, "Women") !== false)
+                return Merchant::__Female__;
+        }
+        return "";
+    }
+
+    function getProductImageUrl($product){
+        return $product->ProductImageLargeURL;
+    }
+}
+
+class Yepme extends Merchant{
+
+    function isStockAvailable($product)
+    {
+        return true;
+    }
+
+    function getGender($product){
+        return "";
+    }
+
+    function getProductImageUrl($product){
+        return $product->ProductImageSmallURL;
+    }
+}
+
+
+class Zivame extends Merchant{
+
+    function isStockAvailable($product)
+    {
+        if (property_exists($product, 'StockAvailability')) {
+            if ($product->StockAvailability == "Out of stock"){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function getGender($product){
+        return "";
+    }
+
+    function getProductImageUrl($product){
+        return $product->ProductImageMediumURL;
+    }
+}
+
+
+
+

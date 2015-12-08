@@ -36,18 +36,20 @@ $reader  = new XMLReader();
 $reader->open($feed_path);
 
 foreach (new ProductIterator($reader) as $product) {
+    debug_message('Found name: '. $product->ProductName);
+    debug_message('Category : '. $product->CategoryName);
+
     if(!$merchant_object->isStockAvailable($product)){
+        debug_message('Out of stock');
         continue;
     }
 
-    debug_message('Found name: '. $product->ProductName);
-    debug_message('Category : '. $product->CategoryName);
 
     $fields = $insert_query_field_names;
     $values = $insert_query_values;
 
     foreach($product as $key => $value){
-        if($field_mapping[$key]){
+        if(isset($field_mapping[$key])){
             $fields[] = $field_mapping[$key];
             $values[] = trim(addslashes($product->$key));
         }

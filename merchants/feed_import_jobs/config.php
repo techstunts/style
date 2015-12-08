@@ -3,7 +3,13 @@ $merchants = [
     'jabong' => ['agency_id' => 1, 'merchant_id' => 1, 'feed_path' => '../feeds/jabong/283-02122015-121912.xml'],
     'koovs' => ['agency_id' => 1, 'merchant_id' => 2, 'feed_path' => '../feeds/koovs/335-05122015-031811.xml'],
     'limeroad' => ['agency_id' => 1, 'merchant_id' => 3, 'feed_path' => '../feeds/limeroad/316-05122015-031827.xml'],
-    'flipkart' => ['agency_id' => 1, 'merchant_id' => 4, 'feed_path' => '../feeds/flipkart/382-05122015-031841.xml']
+    'flipkart' => ['agency_id' => 1, 'merchant_id' => 4, 'feed_path' => '../feeds/flipkart/382-05122015-031841.xml'],
+    'nykaa' => ['agency_id' => 1, 'merchant_id' => 5, 'feed_path' => '../feeds/nykaa/363-07122015-103305.xml'],
+    'trendin' => ['agency_id' => 1, 'merchant_id' => 6, 'feed_path' => '../feeds/trendin/321-08122015-053450.xml'],
+    'yepme' => ['agency_id' => 1, 'merchant_id' => 7, 'feed_path' => '../feeds/yepme/323-07122015-103311.xml'],
+    'zivame' => ['agency_id' => 1, 'merchant_id' => 8, 'feed_path' => '../feeds/zivame/361-08122015-053436.xml'],
+
+
 ];
 
 global $db_conn;
