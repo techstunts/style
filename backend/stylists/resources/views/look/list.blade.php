@@ -24,6 +24,10 @@
         @endforeach
         </ol>
     </div>
+    <div class="clear"></div>
+
+    {!! $looks->render() !!}
+
 </div>
 
 @endsection

@@ -12,8 +12,12 @@ ul.pager {list-style: none;padding: 0px;}
 ul.pager li{float: left;padding: 0 6px 0 6px;border: 1px solid #d3d3d3;margin: 0 5px 0 3px;}
 ul.pager li a{color: grey;}
 div.filters{padding: 5px 0 5px 2px;}
-div.filters select{padding: 2px 0 1px 4px; color: grey; background-color: white; border: 1px solid #d3d3d3;}
-div.filters input[type="submit"]{background-color: #D32F2F;border: 1px beige;color: white;font-weight: bold;padding: 3px 4px 3px 4px;margin-top: -4px;}
+div.filters form{float:left;}
+div.filters form select{padding: 2px 0 1px 4px; color: grey; background-color: white; border: 1px solid #d3d3d3;max-width: 200px;}
+div.filters form input[type="submit"]{background-color: #D32F2F;border: 1px beige;color: white;font-weight: bold;padding: 3px 4px 3px 4px;margin:1px 5px 0px 0px;}
+div.filters form.approve{margin-left: 10px;}
+div.filters form.approve input[type="submit"]{background-color: white;border: none;color:#D32F2F;text-decoration:underline;cursor:pointer;}
+
 
 div.message{position: fixed; top: 30px; left: 500px; display:none;}
 

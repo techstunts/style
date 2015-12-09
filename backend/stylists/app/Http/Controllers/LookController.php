@@ -20,11 +20,19 @@ class LookController extends Controller
     public function index(Request $request, $action)
     {
         $method = strtolower($_SERVER['REQUEST_METHOD']) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
-        return $this->$method($_SERVER['REQUEST_METHOD'] == 'POST' ? $request : null);
+        return $this->$method($request);
     }
 
-    public function getList(){
-        $looks = Look::where('look_id','<=',8000)->get()->slice(0,10)->all();
+    public function getList(Request $request){
+        $paginate_qs = $request->query();
+        unset($paginate_qs['page']);
+
+        $looks  =
+            Look::simplePaginate($this->records_per_page)
+                ->appends($paginate_qs);
+
+
+        //$looks = Look::where('look_id','<=',8000)->get()->slice(0,10)->all();
         return view('look.list',['looks'=> $looks]);
     }
 
@@ -33,7 +41,7 @@ class LookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getCreate()
+    public function getCreate(Request $request)
     {
         echo "getCreate";
     }

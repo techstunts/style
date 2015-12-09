@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\SelectOptions;
 
 class ProductController extends Controller
 {
+    protected $filters = ['merchant_id', 'brand_id', 'category_id'];
+
     /**
      * Display a listing of the resource.
      *
@@ -18,12 +21,39 @@ class ProductController extends Controller
     public function index(Request $request, $action)
     {
         $method = strtolower($_SERVER['REQUEST_METHOD']) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
-        return $this->$method($_SERVER['REQUEST_METHOD'] == 'POST' ? $request : null);
+        return $this->$method($request);
     }
 
-    public function getList(){
-        $products = Product::where('id','<=',8000)->get()->slice(3000,10)->all();
-        return view('product.list',['products'=> $products]);
+    public function getList(Request $request){
+        $this->initWhereConditions($request);
+        $this->initFilters('lookdescrip');
+
+        $view_properties = array(
+            'merchants' => $this->merchants,
+            'brands' => $this->brands,
+            'categories' => $this->categories
+        );
+
+        foreach($this->filters as $filter){
+            $view_properties[$filter] = $request->input($filter) ? $request->input($filter) : "";
+        }
+
+        $paginate_qs = $request->query();
+        unset($paginate_qs['page']);
+
+        $products =
+            Product::
+            where($this->where_conditions)
+                ->simplePaginate($this->records_per_page)
+                ->appends($paginate_qs);
+
+        $view_properties['products'] = $products;
+
+        return view('product.list', $view_properties);
+    }
+
+    public function initWhereConditions(Request $request){
+        parent::initWhereConditions($request);
     }
 
     /**

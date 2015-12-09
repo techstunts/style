@@ -2,26 +2,17 @@
 
 namespace App\Http\Controllers\Merchant;
 
-use App\Brand;
-use App\Category;
-use App\Merchant;
 use App\MerchantProduct;
+use App\MerchantProductRejected;
+use App\Product;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 
 class ProductController extends Controller
 {
     protected $filters = ['merchant_id', 'brand_id', 'category_id', 'gender_id'];
-    protected $merchants = [];
-    protected $brands = [];
-    protected $categories = [];
-
-    protected $where_conditions = [];
-
-    protected $records_per_page=10;
 
     /**
      * Display a listing of the resource.
@@ -30,23 +21,30 @@ class ProductController extends Controller
      */
     public function index(Request $request, $action)
     {
-        $method = strtolower($_SERVER['REQUEST_METHOD']) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
-        return $this->$method($_SERVER['REQUEST_METHOD'] == 'POST' ? $request : $request);
+        $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
+        return $this->$method($request);
     }
 
-    public function initWhereConditions(){
+    public function initWhereConditions(Request $request){
         $this->where_conditions['is_moderated'] = false;
+        parent::initWhereConditions($request);
+    }
 
-        foreach($this->filters as $filter){
-            if(isset($_GET[$filter]) && $_GET[$filter]!=""){
-                $this->where_conditions[$filter] = $_GET[$filter];
-            }
+    public function postList(Request $request){
+        $this->initWhereConditions($request);
+        if($request->input('approve_all')){
+            $this->approveAllProducts();
         }
+        elseif($request->input('reject_all')){
+            $this->rejectAllProducts();
+        }
+
+        return Redirect::to($request->fullUrl());
     }
 
     public function getList(Request $request){
-        $this->initWhereConditions();
-        $this->initFilters();
+        $this->initWhereConditions($request);
+        $this->initFilters('merchant_products');
 
         $view_properties = array(
             'merchants' => $this->merchants,
@@ -54,9 +52,8 @@ class ProductController extends Controller
             'categories' => $this->categories
         );
 
-
         foreach($this->filters as $filter){
-            $view_properties[$filter] = isset($_GET[$filter]) ? $_GET[$filter] : "";
+            $view_properties[$filter] = $request->input($filter) ? $request->input($filter) : "";
         }
 
         $paginate_qs = $request->query();
@@ -73,52 +70,50 @@ class ProductController extends Controller
         return view('merchant.product.list', $view_properties);
     }
 
-    public function initFilters(){
-        $this->brands = $this->brands($this->where_conditions);
-        $this->categories = $this->categories($this->where_conditions);
-        $this->merchants = $this->merchants($this->where_conditions);
+    public function approveAllProducts(){
+        $merchant_products =
+            MerchantProduct::
+            where($this->where_conditions)
+                ->simplePaginate($this->records_per_page);
+
+        foreach($merchant_products as $m_product){
+            $product = new Product();
+            $product->agency_id	= $m_product->agency_id;
+            $product->merchant_id	= $m_product->merchant_id;
+            $product->product_name	= $m_product->m_product_name;
+            $product->product_price	= $m_product->m_product_price;
+            $product->product_link	= $m_product->m_product_url;
+            $product->upload_image	= $m_product->product_image_url;
+            $product->image_name	= $m_product->product_image_url;
+            $product->merchant_product_id	= $m_product->id;
+            $product->brand_id	= $m_product->brand_id;
+            $product->category_id	= $m_product->category_id;
+            $product->gender_id	= $m_product->gender_id;
+            if($product->save()){
+                $m_product->is_moderated = true;
+                $m_product->save();
+            }
+        }
     }
 
-    //To be cached
-    public function merchants($whereClauses){
-        unset($whereClauses['merchant_id']);
-        $merchants = DB::table('merchant_products')
-            ->join('merchants', 'merchant_products.merchant_id', '=', 'merchants.id')
-            ->where($whereClauses)
-            ->distinct()
-            ->select('merchants.id', 'merchants.name', DB::raw('COUNT(merchant_products.id) as product_count'))
-            ->groupBy('merchants.id', 'merchants.name')
-            ->orderBy('merchants.name')
-            ->get();
-        return $merchants;
-    }
+    public function rejectAllProducts()
+    {
+        $merchant_products =
+            MerchantProduct::
+            where($this->where_conditions)
+                ->simplePaginate($this->records_per_page);
 
-    //To be cached
-    public function brands($whereClauses){
-        unset($whereClauses['brand_id']);
-        $brands = DB::table('merchant_products')
-            ->join('brands', 'merchant_products.brand_id', '=', 'brands.id')
-            ->where($whereClauses)
-            ->distinct()
-            ->select('brands.id', 'brands.name', DB::raw('COUNT(merchant_products.id) as product_count'))
-            ->groupBy('brands.id', 'brands.name')
-            ->orderBy('brands.name')
-            ->get();
-        return $brands;
-    }
-
-    //To be cached
-    public function categories($whereClauses){
-        unset($whereClauses['category_id']);
-        $categories = DB::table('merchant_products')
-            ->join('categories', 'merchant_products.category_id', '=', 'categories.id')
-            ->where($whereClauses)
-            //->distinct()
-            ->select('categories.id', 'categories.name', DB::raw('COUNT(merchant_products.id) as product_count'))
-            ->groupBy('categories.id', 'categories.name')
-            ->orderBy('categories.name')
-            ->get();
-        return $categories;
+        foreach($merchant_products as $m_product){
+            $rejected_product = new MerchantProductRejected();
+            $rejected_product->agency_id	= $m_product->agency_id;
+            $rejected_product->merchant_id	= $m_product->merchant_id;
+            $rejected_product->m_product_id	= $m_product->m_product_id;
+            $rejected_product->m_product_sku	= $m_product->m_product_sku;
+            if($rejected_product->save()){
+                $m_product->is_moderated = true;
+                $m_product->save();
+            }
+        }
     }
 
     /**

@@ -10,9 +10,17 @@
                 @include('merchant.select')
                 @include('brand.select')
                 @include('category.select')
-                <input type="submit" value="Filter"/>
+                <input type="submit" name="filter" value="Filter"/>
+            </form>
+            <form method="post" action="" class="approve">
+                <input type="submit" name="approve_all" value="Approve All"/>
+                <input type="submit" name="reject_all" value="Reject All"/>
+                {!! csrf_field() !!}
             </form>
         </div>
+
+        <div class="clear"></div>
+
         <div class="container">
             <ol id="selectable">
             @foreach($merchant_products as $product)
@@ -30,16 +38,12 @@
             @endforeach
             </ol>
         </div>
+
         <div class="clear"></div>
+
         {!! $merchant_products->render() !!}
 
     </div>
 </div>
-
-<div class="trigger_lightbox">
-    Create Look
-</div>
-
-
 
 @endsection

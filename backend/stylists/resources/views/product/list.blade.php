@@ -5,6 +5,17 @@
 @section('content')
 <div id="contentCntr">
     <div class="section">
+        <div class="filters">
+            <form method="get" action="">
+                @include('merchant.select')
+                @include('brand.select')
+                @include('category.select')
+                <input type="submit" name="filter" value="Filter"/>
+            </form>
+        </div>
+
+        <div class="clear"></div>
+
         <div class="container">
             <ol id="selectable">
             @foreach($products as $product)
@@ -15,7 +26,7 @@
                             <span>{{$product->product_type}}</span>
                             <span>{{$product->product_price}}</span>
                         </div>
-                        <div class="image"><img src="{!! asset('images/' . $product->upload_image) !!}" /></div>
+                        <div class="image"><img src="{!! strpos($product->upload_image, "uploadfile") === 0 ? asset('images/' . $product->upload_image) : $product->upload_image !!}" /></div>
                     </div>
                 </li>
             @endforeach
@@ -88,6 +99,11 @@
                 </div>
             </form>
         </div>
+
+        <div class="clear"></div>
+
+        {!! $products->render() !!}
+
     </div>
 </div>
 
