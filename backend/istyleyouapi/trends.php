@@ -18,7 +18,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 		$body_type_condition = $gender == 'female' ? " AND cl.body_type = '{$bodytype}'" : "";
 
 		//Get 4 latest looks for 4 occasions which are not unliked by current user
-		$latest_looks = array();
+		$looks = array();
 
 		$page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
 		$occasions = array('Wine & Dine', 'Casuals', 'Ethnic/Festive', 'Work Wear');
@@ -33,33 +33,35 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 		//die;
 
 		foreach($occasions as $occasion){
-			$latest_looks_sql =
-				"Select cl.look_id, look_description, look_image, lookprice, cl.occasion, look_name, uf.fav_id
-			from createdlook cl
-			LEFT JOIN usersfav uf ON cl.look_id = uf.look_id
-			where cl.gender = '$gender'
-				$body_type_condition
-				AND cl.occasion = '$occasion'
-				AND (uf.user_id is null OR uf.user_id = '$userid')
-				AND cl.look_id NOT IN
-					(Select look_id
-					from users_unlike
-					where user_id='$userid')
-			ORDER BY cl.date DESC
-			LIMIT $record_start, $records_count ";
-			//echo $latest_looks_sql . "<br /><br />";
+			$looks_sql =
+				"SELECT cl.look_id, look_description, look_image, lookprice, cl.occasion, look_name, uf.fav_id,
+						sd.stylish_id, sd.stylish_name, sd.stylish_image
+				FROM createdlook cl
+					LEFT JOIN usersfav uf ON cl.look_id = uf.look_id
+					JOIN stylish_details sd on sd.stylish_id = cl.stylish_id
+				WHERE cl.gender = '$gender'
+					$body_type_condition
+					AND cl.occasion = '$occasion'
+					AND (uf.user_id is null OR uf.user_id = '$userid')
+					AND cl.look_id NOT IN
+						(SELECT look_id
+						FROM users_unlike
+						WHERE user_id='$userid')
+				ORDER BY cl.date DESC
+				LIMIT $record_start, $records_count ";
+			//echo $looks_sql . "<br /><br />";
 
-			$latest_looks_res = mysql_query($latest_looks_sql);
+			$looks_res = mysql_query($looks_sql);
 
-			while ($data = mysql_fetch_array($latest_looks_res)) {
-				$latest_looks[] = $data;
+			while ($data = mysql_fetch_array($looks_res)) {
+				$looks[] = $data;
 			}
-			unset($latest_looks_res);
+			unset($looks_res);
 		}
+//var_dump($looks);
+		$looks_count = count($looks);
 
-		$latest_looks_count = count($latest_looks);
-
-		if($latest_looks_count > 0) {
+		if($looks_count > 0) {
 			// Get all favourite products of current user
 			$fav_prod_sql =
 				"Select product_id
@@ -73,8 +75,8 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 				$fav_prods[] = $data['product_id'];
 			}
 
-			for ($i = 0; $i < $latest_looks_count; $i++) {
-				$look_id = $latest_looks[$i][0];
+			for ($i = 0; $i < $looks_count; $i++) {
+				$look_id = $looks[$i][0];
 
 				//Get products info for current look
 				$current_look_products_query =
@@ -114,25 +116,31 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 						'productlink' => $current_look_products[$j][5]);
 				}
 
+				$stylist_details = array();
+				$stylist_details['stylish_id'] = $looks[$i]['stylish_id'];
+				$stylist_details['stylish_name'] = $looks[$i]['stylish_name'];
+				$stylist_details['stylish_image'] = $looks[$i]['stylish_image'];
+
 				$current_look_details =
 					array(
 						'lookdetails' =>
 							array(
-								'fav' => $latest_looks[$i][6] == null ? 'No' : 'Yes',
-								'lookid' => $latest_looks[$i][0],
-								'lookdescription' => $latest_looks[$i][1],
-								'lookimage' => $latest_looks[$i][2],
-								'lookprice' => $latest_looks[$i][3],
-								'occasion' => $latest_looks[$i][4],
-								'lookname' => $latest_looks[$i][5],
-								'productdetails' => $productarray
+								'fav' => $looks[$i][6] == null ? 'No' : 'Yes',
+								'lookid' => $looks[$i]['look_id'],
+								'lookdescription' => $looks[$i]['look_description'],
+								'lookimage' => $looks[$i]['look_image'],
+								'lookprice' => $looks[$i]['lookprice'],
+								'occasion' => $looks[$i]['occasion'],
+								'lookname' => $looks[$i]['look_name'],
+								'productdetails' => $productarray,
+								'stylish_details' => $stylist_details
 							)
 					);
-				$latest_looks_and_products[] = $current_look_details;
+				$looks_and_products[] = $current_look_details;
 				unset($current_look_products);
 			}
 
-			$response = array('result' => 'success', 'latest_looks' => $latest_looks_and_products);
+			$response = array('result' => 'success', 'looks' => $looks_and_products);
 		}
 		else{
 			$response=array('result'=>'fail','response_message'=>'No records');
@@ -146,7 +154,7 @@ else{
 	$response=array('result'=>'fail','response_message'=>'userid empty');
 }
 
-//var_dump($response['latest_looks'][0]['lookdetails']);
+//var_dump($response['looks'][0]['lookdetails']);
 
 mysql_close($conn);
 
