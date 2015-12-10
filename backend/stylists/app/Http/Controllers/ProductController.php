@@ -44,6 +44,7 @@ class ProductController extends Controller
         $products =
             Product::
             where($this->where_conditions)
+                ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 

@@ -22,11 +22,11 @@
                 <li class="ui-state-default" product_id="{{$product->id}}">
                     <div class="items">
                         <div class="name text"><a href="{{$product->product_link}}">{{$product->product_name}}</a></div>
+                        <div class="image"><img src="{!! strpos($product->upload_image, "uploadfile") === 0 ? asset('images/' . $product->upload_image) : $product->upload_image !!}" /></div>
                         <div class="extra text">
                             <span>{{$product->product_type}}</span>
                             <span>{{$product->product_price}}</span>
                         </div>
-                        <div class="image"><img src="{!! strpos($product->upload_image, "uploadfile") === 0 ? asset('images/' . $product->upload_image) : $product->upload_image !!}" /></div>
                     </div>
                 </li>
             @endforeach
