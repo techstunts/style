@@ -9,32 +9,33 @@
   </head>
   <body style="width: 500px;">
     <h1>IStyleYou:  Add Product</h1>
-    <div class="row">
-			<div class="label">Name:</div>
-			<div class="input"><input name="name" id="name" type="text" style="width: 400px; " value=""/></div>
-    </div>
-    
-		<div class="row">
-			<div class="label">Price:</div>
-			<div class="input"><input name="price" id="price" type="text" value=""/></div>
-    </div>
-
-		<div class="row">
-			<div class="label">Description:</div>
-			<div class="input"><textarea name="desc" id="desc" style="width: 400px; height: 100px;"></textarea></div>
-    </div>
-    
-		<div class="row">
-			<div class="label">Images:</div>
-			<div class="input images" style="display:block; overflow:hidden;">
-				<input type="hidden" name="images" id="images" />
-			</div>
-    </div>
+	<div class="row">
+		<button id="fetch">Fetch this product!</button> <button id="save">Save this product!</button>
+		<input type="hidden" name="url" id="url" />
+	</div>
     <br/>
+		
+    <div class="row">
+		<div class="label">Name:</div>
+		<div class="input"><input name="name" id="name" type="text" style="width: 400px; " value=""/></div>
+    </div>
+    
+	<div class="row">
+		<div class="label">Price:</div>
+		<div class="input"><input name="price" id="price" type="text" value=""/></div>
+    </div>
 
-		<div class="row">
-			<button id="fetch">Fetch this product!</button> <button id="save">Save this product!</button>
-			<input type="hidden" name="url" id="url" />
+	<div class="row">
+		<div class="label">Description:</div>
+		<div class="input"><textarea name="desc" id="desc" style="width: 400px; height: 100px;"></textarea></div>
+    </div>
+    
+	<div class="row">
+		<div class="label">Images:</div>
+		<div class="input images" style="display:block; overflow:hidden;">
+			<input type="hidden" name="images" id="images" />
 		</div>
+    </div>
+
   </body>
 </html>

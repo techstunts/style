@@ -78,7 +78,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 			var queryString = kvpairs.join("&");
 
-			var url = "http://istyleyou.loc/backend/style/chrome-add-product.php";
+			//var url = "http://istyleyou.loc/backend/style/chrome-add-product.php";
+			var url = "http://istyleyou.in/backend/chrome-add-product.php";
 			url = url + "?" + queryString;
 			//alert(url);
 			console.log(url);

@@ -12,7 +12,8 @@ include 'databaseconnect.php';
 			VALUES ( '$name', 'Dress', '$price', '$url', '$image', '$image')";
 			
 			$executeQuery	=	mysql_query($insertQuery);
-			$product_url = "http://istyleyou.loc/backend/list_style_item1.php?id=" . mysql_insert_id();
+
+			$product_url = "http://" . $_SERVER['HTTP_HOST'] . "/backend/list_style_item1.php?id=" . mysql_insert_id();
 			if($executeQuery){
 				echo  json_encode([true, $product_url]);
 			}
