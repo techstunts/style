@@ -10,24 +10,39 @@ document.addEventListener('DOMContentLoaded', function() {
 				null,
 				{
 					code: '\
-					var prod_name = document.getElementById(\'prod_name_hide\').value;\
-					var prod_price = document.getElementsByClassName(\'product-price\')[0].getElementsByTagName(\'strong\')[0].innerHTML;\
-					var prod_desc = document.getElementById(\'product-desc\').innerText;\
-					var a_tags = document.getElementsByClassName(\'thumb-views\')[0].getElementsByTagName(\'a\');\
-					var category = document.getElementById(\'product-desc\').getElementsByClassName(\'short_detail\')[0].getElementsByTagName(\'a\')[0].innerText;\
-					var brand = document.getElementById(\'product-desc\').getElementsByClassName(\'short_detail\')[0].getElementsByTagName(\'a\')[1].innerText;\
-					var gender = document.getElementById(\'breadcrumb\').getElementsByClassName(\'breadcrumb-link\')[1].getElementsByTagName(\'span\')[0].innerText;\
-					if(gender == "Women")\
-						gender = "Female";\
-					if(gender == "Men")\
-						gender = "Male";\
+					var merchant = window.location.hostname.split(\'.\')[1];\
+					var prod_name = \'\', prod_price = \'\', prod_desc = \'\', a_tags = \'\', category = \'\', brand = \'\', gender = \'\', img_links = [];\
 					\
-					var img_links = [];\
-					for(var i=0; i<a_tags.length; i++){\
-						var rel = a_tags[i].rel.replace(/\",\"/g,", ");\
-						img_links.push(rel.split(\',\')[0].split(\'\":\"\')[1]);\
+					if(merchant == \'koovs\'){\
+						prod_name = document.getElementById(\'prod_name_hide\').value;\
+						prod_price = document.getElementsByClassName(\'product-price\')[0].getElementsByTagName(\'strong\')[0].innerHTML;\
+						prod_desc = document.getElementById(\'product-desc\').innerText;\
+						a_tags = document.getElementsByClassName(\'thumb-views\')[0].getElementsByTagName(\'a\');\
+						category = document.getElementById(\'product-desc\').getElementsByClassName(\'short_detail\')[0].getElementsByTagName(\'a\')[0].innerText;\
+						brand = document.getElementById(\'product-desc\').getElementsByClassName(\'short_detail\')[0].getElementsByTagName(\'a\')[1].innerText;\
+						gender = document.getElementById(\'breadcrumb\').getElementsByClassName(\'breadcrumb-link\')[1].getElementsByTagName(\'span\')[0].innerText;\
+						for(var i=0; i<a_tags.length; i++){\
+							var rel = a_tags[i].rel.replace(/\",\"/g,", ");\
+							img_links.push(rel.split(\',\')[0].split(\'\":\"\')[1]);\
+						}\
 					}\
-					var r = [prod_name, prod_price, prod_desc, img_links, \'koovs\', category, brand, gender];\
+					else if(merchant == \'abof\'){\
+						prod_name = document.getElementsByClassName(\'product-detail__title\')[0].innerHTML.trim();\
+						prod_price = document.getElementsByClassName(\'product-detail__price--original\')[0].innerText.trim();\
+						prod_desc = document.getElementsByClassName(\'product-detail__tab-content\')[0].getElementsByTagName(\'p\')[0].innerText;\
+						breadcrumbs = document.getElementsByClassName(\'breadcrumbs\')[0].getElementsByTagName(\'li\');\
+						category = breadcrumbs[breadcrumbs.length - 2].innerText;\
+						brand = prod_name.split(\' \')[0];\
+						gender = breadcrumbs[0].innerText;\
+						img_links.push(document.getElementsByClassName(\'carousel__product-img\')[0].getElementsByTagName(\'img\')[0].src);\
+					}\
+					if(gender == "Women"){\
+						gender = "Female";\
+					}\
+					else if(gender == "Men"){\
+						gender = "Male";\
+					}\
+					var r = [prod_name, prod_price, prod_desc, img_links, merchant, category, brand, gender];\
 					r;\
 					'
 				},
@@ -41,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					document.getElementById('category').value = results[0][5];
 					document.getElementById('brand').value = results[0][6];
 					document.getElementById('gender').value = results[0][7];
-
+					
 					
 					var imagesDiv = document.getElementsByClassName('images')[0];
 
