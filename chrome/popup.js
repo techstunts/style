@@ -14,21 +14,34 @@ document.addEventListener('DOMContentLoaded', function() {
 					var prod_price = document.getElementsByClassName(\'product-price\')[0].getElementsByTagName(\'strong\')[0].innerHTML;\
 					var prod_desc = document.getElementById(\'product-desc\').innerText;\
 					var a_tags = document.getElementsByClassName(\'thumb-views\')[0].getElementsByTagName(\'a\');\
+					var category = document.getElementById(\'product-desc\').getElementsByClassName(\'short_detail\')[0].getElementsByTagName(\'a\')[0].innerText;\
+					var brand = document.getElementById(\'product-desc\').getElementsByClassName(\'short_detail\')[0].getElementsByTagName(\'a\')[1].innerText;\
+					var gender = document.getElementById(\'breadcrumb\').getElementsByClassName(\'breadcrumb-link\')[1].getElementsByTagName(\'span\')[0].innerText;\
+					if(gender == "Women")\
+						gender = "Female";\
+					if(gender == "Men")\
+						gender = "Male";\
+					\
 					var img_links = [];\
 					for(var i=0; i<a_tags.length; i++){\
 						var rel = a_tags[i].rel.replace(/\",\"/g,", ");\
 						img_links.push(rel.split(\',\')[0].split(\'\":\"\')[1]);\
 					}\
-					var r = [prod_name, prod_price, prod_desc, img_links];\
+					var r = [prod_name, prod_price, prod_desc, img_links, \'koovs\', category, brand, gender];\
 					r;\
 					'
 				},
-				function(results){ 
+				function(results){
 					document.getElementById('name').value = results[0][0];
 					document.getElementById('price').value = results[0][1];
 					document.getElementById('desc').innerHTML = results[0][2];
 					document.getElementById('images').innerHTML = results[0][3];
 					document.getElementById('url').value = tab.url;
+					document.getElementById('merchant').value = results[0][4];
+					document.getElementById('category').value = results[0][5];
+					document.getElementById('brand').value = results[0][6];
+					document.getElementById('gender').value = results[0][7];
+
 					
 					var imagesDiv = document.getElementsByClassName('images')[0];
 
@@ -78,8 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 			var queryString = kvpairs.join("&");
 
-			//var url = "http://istyleyou.loc/backend/style/chrome-add-product.php";
-			var url = "http://istyleyou.in/backend/chrome-add-product.php";
+		  	var url = "http://stylist.istyleyou.in/product/create";
+	  		//var url = "http://stylist.istyleyou.loc/product/create";
 			url = url + "?" + queryString;
 			//alert(url);
 			console.log(url);

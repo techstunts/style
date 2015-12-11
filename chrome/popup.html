@@ -5,6 +5,11 @@
     <script src="popup.js"></script>
     <style>
 			img{float:left;}
+			div.row{padding: 10px 0;height: 10px;}
+			div.label{float:left; width:100px;}
+			div.input{float:left; max-width:400px;}
+			div.input input{width: 400px;}
+			div.input textarea{width: 400px; height: 100px;}
     </style>
   </head>
   <body style="width: 500px;">
@@ -12,14 +17,30 @@
 	<div class="row">
 		<button id="fetch">Fetch this product!</button> <button id="save">Save this product!</button>
 		<input type="hidden" name="url" id="url" />
+		<input type="hidden" name="merchant" id="merchant" />
 	</div>
     <br/>
 		
     <div class="row">
 		<div class="label">Name:</div>
-		<div class="input"><input name="name" id="name" type="text" style="width: 400px; " value=""/></div>
+		<div class="input"><input name="name" id="name" type="text" value=""/></div>
     </div>
-    
+
+	<div class="row">
+		<div class="label">Category:</div>
+		<div class="input"><input name="category" id="category" type="text" value=""/></div>
+	</div>
+
+	<div class="row">
+		<div class="label">Brand:</div>
+		<div class="input"><input name="brand" id="brand" type="text" value=""/></div>
+	</div>
+
+	<div class="row">
+		<div class="label">Gender:</div>
+		<div class="input"><input name="gender" id="gender" type="text" value=""/></div>
+	</div>
+
 	<div class="row">
 		<div class="label">Price:</div>
 		<div class="input"><input name="price" id="price" type="text" value=""/></div>
@@ -27,7 +48,7 @@
 
 	<div class="row">
 		<div class="label">Description:</div>
-		<div class="input"><textarea name="desc" id="desc" style="width: 400px; height: 100px;"></textarea></div>
+		<div class="input"><textarea name="desc" id="desc" ></textarea></div>
     </div>
     
 	<div class="row">
