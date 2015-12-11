@@ -23,7 +23,9 @@ class CombineImages
          */
         foreach ($src_image_paths as $index => $src_image_path)
         {
-            $src_image_path = $images_folder . $src_image_path;
+            if (filter_var($src_image_path, FILTER_VALIDATE_URL) === FALSE) {
+                $src_image_path = $images_folder . $src_image_path;
+            }
 
             list ($x, $y) = $this->indexToCoords($index);
 

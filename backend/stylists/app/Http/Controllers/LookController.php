@@ -28,7 +28,8 @@ class LookController extends Controller
         unset($paginate_qs['page']);
 
         $looks  =
-            Look::simplePaginate($this->records_per_page)
+            Look::orderBy('look_id', 'desc')
+                ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
 
