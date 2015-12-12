@@ -12,6 +12,7 @@
                 @include('category.select')
                 <input type="submit" name="filter" value="Filter"/>
             </form>
+            {!! $products->render() !!}
         </div>
 
         <div class="clear"></div>
@@ -105,6 +106,21 @@
         {!! $products->render() !!}
 
     </div>
+</div>
+
+<div class="selected_products">
+    <span id="selected_product_1">
+        <div class="remove">X</div>
+    </span>
+    <span id="selected_product_2">
+        <div class="remove">X</div>
+    </span>
+    <span id="selected_product_3">
+        <div class="remove">X</div>
+    </span>
+    <span id="selected_product_4">
+        <div class="remove">X</div>
+    </span>
 </div>
 
 <div class="trigger_lightbox">

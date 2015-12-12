@@ -13,12 +13,7 @@
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
     <script src="{!! asset('js/lightbox.js') !!}"></script>
-
-    <script>
-        $(function() {
-            $( "#selectable" ).selectable();
-        });
-    </script>
+    <script src="{!! asset('js/jquery.cookie.js') !!}"></script>
 
     <title>@yield('title')</title>
 

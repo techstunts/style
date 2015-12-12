@@ -8,7 +8,7 @@ div.items div.text{font-size:11px; color:grey; font-family: Arial;}
 div.items div.name{font-size:12px;}
 div.items div.extra span{background-color:#E91E63; overflow: overlay; color: wheat;}
 div.items div.name a{color:grey; text-decoration: none;}
-ul.pager {list-style: none;padding: 0px;}
+ul.pager {list-style: none;padding: 0px;margin:0px;}
 ul.pager li{float: left;padding: 0 6px 0 6px;border: 1px solid #d3d3d3;margin: 0 5px 0 3px;}
 ul.pager li a{color: grey;}
 div.filters{padding: 5px 0 5px 2px;}
@@ -41,3 +41,7 @@ div#lightbox p#close{margin-right:20px; text-align:right; color: #fff; font-size
 div#lightbox li.ui-state-default{margin-right: 5px;display: -webkit-inline-box;}
 
 div.clear{clear: both;}
+
+div.selected_products{position: fixed; top: 20px; right: 20px; cursor: pointer;}
+div.selected_products span{background-repeat: no-repeat;background-position: top;background-size: cover;width: 100px;height: 100px; border: 1px solid wheat;display: none;margin: 2px 0 0 0;}
+div.selected_products div.remove{position: relative; left: 80px; cursor: pointer; font-size: small; background-color: beige; width: 20px; text-align: center; color: gray;}
