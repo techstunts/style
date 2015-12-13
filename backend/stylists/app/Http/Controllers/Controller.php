@@ -15,11 +15,12 @@ abstract class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected $filters = [];
-    protected $records_per_page=10;
+    protected $records_per_page=25;
     protected $where_conditions = [];
     protected $brands = [];
     protected $categories = [];
     protected $merchants = [];
+    protected $genders = [];
 
     public function initWhereConditions(Request $request){
         foreach($this->filters as $filter){
@@ -34,6 +35,7 @@ abstract class Controller extends BaseController
         $this->brands = $select_options->brands($this->where_conditions);
         $this->categories = $select_options->categories($this->where_conditions);
         $this->merchants = $select_options->merchants($this->where_conditions);
+        $this->genders = $select_options->genders($this->where_conditions);
     }
 
 }

@@ -10,6 +10,7 @@
                 @include('merchant.select')
                 @include('brand.select')
                 @include('category.select')
+                @include('gender.select')
                 <input type="submit" name="filter" value="Filter"/>
             </form>
             <form method="post" action="" class="approve">
@@ -27,12 +28,13 @@
                 <li class="ui-state-default" product_id="{{$product->id}}">
                     <div class="items">
                         <div class="name text"><a href="{{$product->m_product_url}}">{{$product->m_product_name}}</a></div>
+                        <div class="image"><img src="{{$product->product_image_url }}" /></div>
                         <div class="extra text">
                             <span>{{$product->m_brand}}</span>
                             <span>{{$product->m_category_name}}</span>
                             <span>{{$product->m_product_price}}</span>
+                            <span>{{$genders_list[$product->gender_id]->name}}</span>
                         </div>
-                        <div class="image"><img src="{{$product->product_image_url }}" /></div>
                     </div>
                 </li>
             @endforeach

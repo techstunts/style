@@ -11,6 +11,6 @@ class Gender extends Model
      *
      * @var string
      */
-    protected $table = 'gender';
+    protected $table = 'genders';
 
 }

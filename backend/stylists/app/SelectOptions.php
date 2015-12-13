@@ -51,5 +51,19 @@ class SelectOptions{
         return $categories;
     }
 
+    //To be cached
+    public function genders($whereClauses){
+        unset($whereClauses['gender_id']);
+        $genders = DB::table($this->table)
+            ->join('genders', $this->table . '.gender_id', '=', 'genders.id')
+            ->where($whereClauses)
+            //->distinct()
+            ->select('genders.id', 'genders.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
+            ->groupBy('genders.id', 'genders.name')
+            ->orderBy('genders.name')
+            ->get();
+        return $genders;
+    }
+
 
 }

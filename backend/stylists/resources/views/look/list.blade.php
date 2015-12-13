@@ -10,6 +10,7 @@
             <li class="ui-state-default" look_id="{{$look->look_id}}">
                 <div class="items">
                     <div class="name text">{{$look->look_name}}</div>
+                    <div class="image"><img src="{!! asset('images/' . $look->look_image) !!}" /></div>
                     <div class="extra text">
                         <span>{{$look->bodytype}}</span>
                         <span>Rs.{{$look->budget}}</span>
@@ -18,7 +19,6 @@
                         <span>{{$look->gender}}</span>
                         <span>Rs.{{$look->lookprice}}</span>
                     </div>
-                    <div class="image"><img src="{!! asset('images/' . $look->look_image) !!}" /></div>
                 </div>
             </li>
         @endforeach

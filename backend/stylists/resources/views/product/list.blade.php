@@ -10,6 +10,7 @@
                 @include('merchant.select')
                 @include('brand.select')
                 @include('category.select')
+                @include('gender.select')
                 <input type="submit" name="filter" value="Filter"/>
             </form>
             {!! $products->render() !!}
@@ -27,6 +28,7 @@
                         <div class="extra text">
                             <span>{{$product->product_type}}</span>
                             <span>{{$product->product_price}}</span>
+                            <span>{{$genders_list[$product->gender_id]->name}}</span>
                         </div>
                     </div>
                 </li>

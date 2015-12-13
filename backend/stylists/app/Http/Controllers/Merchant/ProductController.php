@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Merchant;
 
+use App\Gender;
 use App\MerchantProduct;
 use App\MerchantProductRejected;
 use App\Product;
@@ -49,7 +50,8 @@ class ProductController extends Controller
         $view_properties = array(
             'merchants' => $this->merchants,
             'brands' => $this->brands,
-            'categories' => $this->categories
+            'categories' => $this->categories,
+            'genders' => $this->genders
         );
 
         foreach($this->filters as $filter){
@@ -59,6 +61,9 @@ class ProductController extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
+        $genders_list = Gender::all()->keyBy('id');
+        $genders_list[0] = new Gender();
+
         $merchant_products =
             MerchantProduct::
                 where($this->where_conditions)
@@ -66,6 +71,7 @@ class ProductController extends Controller
                 ->appends($paginate_qs);
 
         $view_properties['merchant_products'] = $merchant_products;
+        $view_properties['genders_list'] = $genders_list;
 
         return view('merchant.product.list', $view_properties);
     }

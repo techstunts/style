@@ -15,7 +15,7 @@ use App\SelectOptions;
 
 class ProductController extends Controller
 {
-    protected $filters = ['merchant_id', 'brand_id', 'category_id'];
+    protected $filters = ['merchant_id', 'brand_id', 'category_id', 'gender_id'];
 
     /**
      * Display a listing of the resource.
@@ -35,7 +35,8 @@ class ProductController extends Controller
         $view_properties = array(
             'merchants' => $this->merchants,
             'brands' => $this->brands,
-            'categories' => $this->categories
+            'categories' => $this->categories,
+            'genders' => $this->genders
         );
 
         foreach($this->filters as $filter){
@@ -45,6 +46,9 @@ class ProductController extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
+        $genders_list = Gender::all()->keyBy('id');
+        $genders_list[0] = new Gender();
+
         $products =
             Product::
             where($this->where_conditions)
@@ -53,6 +57,7 @@ class ProductController extends Controller
                 ->appends($paginate_qs);
 
         $view_properties['products'] = $products;
+        $view_properties['genders_list'] = $genders_list;
 
         return view('product.list', $view_properties);
     }
