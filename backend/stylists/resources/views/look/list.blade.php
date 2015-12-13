@@ -28,6 +28,8 @@
 
     {!! $looks->render() !!}
 
+    @include('look.create')
+
 </div>
 
 @endsection

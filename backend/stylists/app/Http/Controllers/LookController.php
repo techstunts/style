@@ -69,42 +69,20 @@ class LookController extends Controller
 
         $look_price = 0;
         $src_image_paths = Array();
-
-        if(isset($request->product_id1) && $request->product_id1 != ''){
-            $look->product_id1 = $request->product_id1;
-            $product1 = Product::find($request->product_id1);
-            $look_price += $product1->product_price;
-            $src_image_paths[] = $product1->upload_image;
+        $cnt = 1;
+        foreach($request->input('product_id') as $product_id){
+            if($product_id != ''){
+                $product = null;
+                $product = Product::find($product_id);
+                if($product->id){
+                    $property = "product_id" . $cnt;
+                    $look->$property = $product_id;
+                    $look_price += $product->product_price;
+                    $src_image_paths[] = $product->upload_image;
+                    $cnt++;
+                }
+            }
         }
-        else
-            $look->product_id1 = '';
-
-        if(isset($request->product_id2) && $request->product_id2 != ''){
-            $look->product_id2 = $request->product_id2;
-            $product2 = Product::find($request->product_id2);
-            $look_price += $product2->product_price;
-            $src_image_paths[] = $product2->upload_image;
-        }
-        else
-            $look->product_id2 = '';
-
-        if(isset($request->product_id3) && $request->product_id3 != ''){
-            $look->product_id3 = $request->product_id3;
-            $product3 = Product::find($request->product_id3);
-            $look_price += $product3->product_price;
-            $src_image_paths[] = $product3->upload_image;
-        }
-        else
-            $look->product_id3 = '';
-
-        if(isset($request->product_id4) && $request->product_id4 != ''){
-            $look->product_id4 = $request->product_id4;
-            $product4 = Product::find($request->product_id4);
-            $look_price += $product4->product_price;
-            $src_image_paths[] = $product4->upload_image;
-        }
-        else
-            $look->product_id4 = '';
 
         $look->lookprice = $look_price;
 
