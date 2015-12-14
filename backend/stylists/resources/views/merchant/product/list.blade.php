@@ -18,6 +18,7 @@
                 <input type="submit" name="reject_all" value="Reject All"/>
                 {!! csrf_field() !!}
             </form>
+            {!! $merchant_products->render() !!}
         </div>
 
         <div class="clear"></div>
