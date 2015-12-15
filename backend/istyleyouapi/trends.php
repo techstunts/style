@@ -1,5 +1,6 @@
 <?php
 include("db_config.php");
+include("ProductLink.php");
 
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])){
 	$userid = mysql_real_escape_string($_REQUEST['userid']);
@@ -80,14 +81,15 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 
 				//Get products info for current look
 				$current_look_products_query =
-					"select id,product_name,upload_image,product_price,product_type,product_link
-					from lookdescrip join createdlook
-						on createdlook.product_id1=lookdescrip.id
-						or createdlook.product_id2=lookdescrip.id
-						or createdlook.product_id3=lookdescrip.id
-						or createdlook.product_id4=lookdescrip.id
+					"select id,product_name,upload_image,product_price,product_type,product_link, ld.agency_id, ld.merchant_id
+					from lookdescrip ld join createdlook
+						on createdlook.product_id1=ld.id
+						or createdlook.product_id2=ld.id
+						or createdlook.product_id3=ld.id
+						or createdlook.product_id4=ld.id
 					where look_id='$look_id'";
 				$current_look_products_res = mysql_query($current_look_products_query);
+				$current_look_products = [];
 				while ($data1 = mysql_fetch_array($current_look_products_res)) {
 					$current_look_products[] = $data1;
 				}
@@ -113,7 +115,10 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 						'productimage' => $current_look_products[$j][2],
 						'productprice' => $current_look_products[$j][3],
 						'producttype' => $current_look_products[$j][4],
-						'productlink' => $current_look_products[$j][5]);
+						'productlink' => ProductLink::getDeepLink($current_look_products[$j][6],
+														$current_look_products[$j][7],
+														$current_look_products[$j][5])
+					);
 				}
 
 				$stylist_details = array();
