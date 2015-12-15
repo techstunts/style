@@ -1,5 +1,7 @@
 <?php
 include("db_config.php");
+include("ProductLink.php");
+
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])){
 	$userid=$_REQUEST['userid'];
 			$sql="Select distinct createdlook.look_id,look_description,look_image,lookprice,occasion,look_name from sendlook join createdlook on sendlook.look_id=createdlook.look_id where sendlook.user_id='$userid' ORDER BY sendlook.send_id DESC";
@@ -12,26 +14,36 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 	$list=array();
 	$i=0;
 	while($data=mysql_fetch_array($res)){
-				$ids[]=$data;
-				$id=$ids[$i][0];
+		$ids[]=$data;
+		$id=$ids[$i][0];
 
-				$query="select id,product_name,upload_image,product_price,product_type,product_link from lookdescrip join createdlook on createdlook.product_id1=lookdescrip.id or createdlook.product_id2=lookdescrip.id or createdlook.product_id3=lookdescrip.id or createdlook.product_id4=lookdescrip.id where look_id='$id'";
-				$res1=mysql_query($query);
-				$rows=mysql_num_rows($res);
-				while($data1=mysql_fetch_array($res1)){
-					$list[]=$data1;
-				}
-				$i++;
+		$query="select id,product_name,upload_image,product_price,product_type,product_link, ld.agency_id, ld.merchant_id
+				from lookdescrip ld join createdlook
+				on createdlook.product_id1=ld.id
+				or createdlook.product_id2=ld.id
+				or createdlook.product_id3=ld.id
+				or createdlook.product_id4=ld.id
+				where look_id='$id'";
+		$res1=mysql_query($query);
+		$rows=mysql_num_rows($res);
+		while($data1=mysql_fetch_array($res1)){
+			$list[]=$data1;
+		}
+		$i++;
 	}
-			$k=$row*4;	
-	$productarray=array();
+			$k=$row*4;
+
+	$sql="Select product_id from usersfav join lookdescrip on usersfav.product_id=lookdescrip.id where user_id='$userid'";
+	$res=mysql_query($sql);
+	$tr=mysql_num_rows($res);
+	while($data=mysql_fetch_array($res)){
+		$productid[]=$data['product_id'];
+	}
+
 	for($j=0;$j<$k;$j++){
-		$sql="Select product_id from usersfav join lookdescrip on usersfav.product_id=lookdescrip.id where user_id='$userid'";
-		$res=mysql_query($sql);
-		$tr=mysql_num_rows($res);
-		while($data=mysql_fetch_array($res)){
-						$productid[]=$data['product_id'];
-					}
+		if(!isset($list[$j])){
+			continue;
+		}
 					if($tr==0){
 						$fav='No';
 					}
@@ -43,7 +55,17 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 							$fav='No';
 						}
 					}	
-		$product[]=array('fav'=>$fav,'productid'=>$list[$j][0],'productname'=>$list[$j][1],'productimage'=>$list[$j][2],'productprice'=>$list[$j][3],'producttype'=>$list[$j][4],'productlink'=>$list[$j][5]);
+		$product[]=array(
+			'fav'=>$fav,
+			'productid'=>$list[$j][0],
+			'productname'=>$list[$j][1],
+			'productimage'=>$list[$j][2],
+			'productprice'=>$list[$j][3],
+			'producttype'=>$list[$j][4],
+			'productlink'=>ProductLink::getDeepLink($list[$j][6],
+										$list[$j][7],
+										$list[$j][5])
+		);
 		
 	}
 
