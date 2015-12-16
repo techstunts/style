@@ -38,7 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
 					}\
 					else if(merchant == \'amazon\'){\
 						prod_name = document.getElementById(\'productTitle\').innerHTML.trim();\
-						prod_price = document.getElementById(\'priceblock_ourprice\').innerHTML.match(/[\\d,]+\\.?\\d*/)[0];\
+						var price_tag =  document.getElementById(\'priceblock_saleprice\');\
+						if (typeof(price_tag) == \'undefined\' || price_tag == null){\
+							price_tag =  document.getElementById(\'priceblock_ourprice\');\
+						}\
+						prod_price = price_tag.innerHTML.match(/[\\d,]+\\.?\\d*/)[0];\
 						desc_items = document.getElementById(\'feature-bullets\').getElementsByClassName(\'a-list-item\');\
 						for(i=0; i<desc_items.length; i++){\
 							prod_desc += (desc_items[i].innerHTML.trim() + \'\\n\')\
