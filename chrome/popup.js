@@ -36,10 +36,38 @@ document.addEventListener('DOMContentLoaded', function() {
 						gender = breadcrumbs[0].innerText;\
 						img_links.push(document.getElementsByClassName(\'carousel__product-img\')[0].getElementsByTagName(\'img\')[0].src);\
 					}\
-					if(gender == "Women"){\
+					else if(merchant == \'amazon\'){\
+						prod_name = document.getElementById(\'productTitle\').innerHTML.trim();\
+						prod_price = document.getElementById(\'priceblock_ourprice\').innerHTML.match(/[\\d,]+\\.?\\d*/)[0];\
+						desc_items = document.getElementById(\'feature-bullets\').getElementsByClassName(\'a-list-item\');\
+						for(i=0; i<desc_items.length; i++){\
+							prod_desc += (desc_items[i].innerHTML.trim() + \'\\n\')\
+						}\
+						category_tags = document.getElementsByClassName(\'zg_hrsr_ladder\')[0].getElementsByTagName(\'a\');\
+						category = category_tags[category_tags.length - 1].innerHTML;\
+						brand = document.getElementById(\'brand\').innerHTML;\
+						for(i=0; i<category_tags .length; i++){\
+							gender_text = category_tags[i].innerHTML.trim();\
+							if(gender_text == \'Men\' || gender_text == \'Women\' || gender_text == \'Boys\' || gender_text == \'Girls\'){\
+								gender = gender_text;\
+							}\
+						}\
+						img_links.push(document.getElementById(\'landingImage\').src)\
+					}\
+					else if(merchant == \'jabong\'){\
+						prod_name = document.getElementsByClassName(\'product-title\')[0].innerHTML.trim();\
+						prod_price = document.getElementsByClassName(\'actual-price\')[0].innerHTML.trim();\
+						prod_desc = document.getElementsByClassName(\'prod-disc\')[0].innerHTML;\
+						breadcrumbs = document.getElementsByClassName(\'breadcrumb\')[0].getElementsByTagName(\'span\');\
+						category = breadcrumbs[breadcrumbs.length - 1].innerText;\
+						brand = document.getElementsByClassName(\'brand\')[0].innerHTML;\
+						gender = breadcrumbs[1].innerText;\
+						img_links.push(document.getElementsByClassName(\'product-image\')[0].getElementsByClassName(\'primary-image first\')[0].src);\
+					}\
+					if(gender == "Women" || gender == "Girls"){\
 						gender = "Female";\
 					}\
-					else if(gender == "Men"){\
+					else if(gender == "Men" || gender == "Boys"){\
 						gender = "Male";\
 					}\
 					var r = [prod_name, prod_price, prod_desc, img_links, merchant, category, brand, gender];\
@@ -47,8 +75,9 @@ document.addEventListener('DOMContentLoaded', function() {
 					'
 				},
 				function(results){
+					//console.log(results);
 					document.getElementById('name').value = results[0][0];
-					document.getElementById('price').value = results[0][1];
+					document.getElementById('price').value = results[0][1].replace(/,/g,"");
 					document.getElementById('desc').innerHTML = results[0][2];
 					document.getElementById('images').innerHTML = results[0][3];
 					document.getElementById('url').value = tab.url;
