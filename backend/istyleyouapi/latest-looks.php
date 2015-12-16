@@ -41,6 +41,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 			where cl.gender = '$gender'
 				$body_type_condition
 				AND cl.occasion = '$occasion'
+				AND cl.status_id = 1
 				AND (uf.user_id is null OR uf.user_id = '$userid')
 				AND cl.look_id NOT IN
 					(Select look_id
