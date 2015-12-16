@@ -74,7 +74,7 @@ class LookController extends Controller
             if($product_id != ''){
                 $product = null;
                 $product = Product::find($product_id);
-                if($product->id){
+                if($product && $product->id){
                     $property = "product_id" . $cnt;
                     $look->$property = $product_id;
                     $look_price += $product->product_price;
@@ -90,10 +90,11 @@ class LookController extends Controller
         if($lookImage->createLook($src_image_paths, $look->look_name)){
             $look->look_image = $lookImage->targetImage;
             if($look->save()){
+                $domain = str_replace("stylist.", "", $_SERVER['HTTP_HOST']);
                 return response()->json(
                     array('success' => true,
                         'look_id' => $look->id,
-                        'look_url' => 'http://istyleyou.loc/backend/list_style_item.php?id=' .$look->id,
+                        'look_url' => 'http://' . $domain . '/backend/list_style_item.php?id=' .$look->id,
                         'look_name' => $look->look_name
                     ), 200);
             }
