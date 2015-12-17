@@ -9,7 +9,8 @@ div.items img{max-height:280px;}
 div.items div.text{font-size:11px; color:grey; font-family: Arial;}
 div.items div.name{font-size:12px;}
 div.items div.extra span{background-color:#E91E63; overflow: overlay; color: wheat;}
-div.items div.name a{color:grey; text-decoration: none;}
+div.items div.extra a{color: wheat;}
+div.items div.name a{color:grey; text-decoration: underline;}
 ul.pager {list-style: none;padding: 0px;margin:0px;}
 ul.pager li{float: left;padding: 0 6px 0 6px;border: 1px solid #d3d3d3;margin: 0 5px 0 3px;}
 ul.pager li a{color: grey;}
@@ -30,10 +31,10 @@ form.create_look input[type=text],textarea{min-width: 400px;}
 
 /* Selectable css */
 #feedback { font-size: 1.4em; }
-#selectable .ui-selecting { background: #FECA40; }
-#selectable .ui-selected { background: #F39814; color: white; }
-#selectable { list-style-type: none; margin: 0; padding: 0;  }
-#selectable li { margin: 3px; float: left; font-size: 4em; text-align: center; background: white;}
+ol.selectable .ui-selecting { background: #FECA40; }
+ol.selectable .ui-selected { background: #F39814; color: white; }
+ol.selectable { list-style-type: none; margin: 0; padding: 0;  }
+ol.selectable li { margin: 3px; float: left; text-align: center; background: white;}
 
 /* Sortable css*/
 #sortable {width: 500px; left: 50%; margin-left: 10%;float:left;margin-top: 0;}
@@ -50,3 +51,19 @@ div.clear{clear: both;}
 div.selected_products{position: fixed; top: 20px; right: 20px; cursor: pointer;}
 div.selected_products span{background-repeat: no-repeat;background-position: top;background-size: cover;width: 100px;height: 100px; border: 1px solid wheat;display: none;margin: 2px 0 0 0;}
 div.selected_products div.remove{position: relative; left: 80px; cursor: pointer; font-size: small; background-color: beige; width: 20px; text-align: center; color: gray;}
+
+
+div.resource_view{margin:5px;}
+div.resource_view div.image{float:left;}
+div.resource_view div.image img{max-height:700px;}
+div.resource_view table.info{float:left;width:500px;}
+div.resource_view tr.row{text-align: left;padding: 5px}
+div.resource_view tr.row td{max-width: 490px;}
+div.resource_view tr.row td.title, td.description{padding-bottom:10px;}
+div.resource_view tr.row td.title{font-size: 20px;}
+div.resource_view tr.row td.description{color: gray;}
+div.resource_view tr.row td.head{color: gray;max-width:100px}
+div.resource_view tr.row td.content{width: 400px;max-width:390px}
+div.resource_view tr.row td.content img{max-width: 100px;max-height: 100px;margin-right: 5px;}
+div.resource_view tr.row td.content img.icon{max-width: 30px;max-height: 30px;}
+

@@ -22,6 +22,8 @@ abstract class Controller extends BaseController
     protected $merchants = [];
     protected $genders = [];
 
+    protected $resource_id;
+
     public function initWhereConditions(Request $request){
         foreach($this->filters as $filter){
             if($request->input($filter) != ""){

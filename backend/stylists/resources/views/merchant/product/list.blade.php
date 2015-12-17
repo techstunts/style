@@ -24,13 +24,14 @@
         <div class="clear"></div>
 
         <div class="container">
-            <ol id="selectable">
+            <ol class="selectable" id="selectable">
             @foreach($merchant_products as $product)
                 <li class="ui-state-default" product_id="{{$product->id}}">
                     <div class="items">
                         <div class="name text"><a href="{{$product->m_product_url}}">{{$product->m_product_name}}</a></div>
                         <div class="image"><img src="{{$product->product_image_url }}" /></div>
                         <div class="extra text">
+                            <span><a href="{{url('merchant/product/view/' . $product->id)}}">View</a></span>
                             <span>{{$product->m_brand}}</span>
                             <span>{{$product->m_category_name}}</span>
                             <span>{{$product->m_product_price}}</span>

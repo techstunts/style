@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Look extends Model
 {
@@ -13,6 +14,8 @@ class Look extends Model
      */
     protected $table = 'createdlook';
 
+    protected $primaryKey = 'look_id';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -22,5 +25,9 @@ class Look extends Model
         'product_id4','body_type', 'budget', 'age', 'occasion', 'gender', 'stylish_id', 'lookprice','date'];
 
     public $timestamps = false;
+
+    public function stylist(){
+        return $this->belongsTo('App\Stylist', 'stylish_id');
+    }
 
 }

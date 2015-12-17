@@ -22,9 +22,12 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $action)
+    public function index(Request $request, $action, $id = null)
     {
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
+        if($id){
+            $this->resource_id = $id;
+        }
         return $this->$method($request);
     }
 
@@ -122,9 +125,21 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function getView()
     {
-        //
+        $product = Product::find($this->resource_id);
+        $view_properties = null;
+        if($product){
+            $category = $product->category;
+            $merchant = $product->merchant;
+            $brand = $product->brand;
+            $gender = $product->gender;
+
+            $view_properties = array('product' => $product, 'merchant' => $merchant,
+                'category' => $category, 'gender' => $gender, 'brand' => $brand);
+        }
+
+        return view('product.view', $view_properties);
     }
 
     /**

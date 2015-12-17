@@ -17,9 +17,12 @@ class LookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $action)
+    public function index(Request $request, $action, $id = null)
     {
-        $method = strtolower($_SERVER['REQUEST_METHOD']) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
+        $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
+        if($id){
+            $this->resource_id = $id;
+        }
         return $this->$method($request);
     }
 
@@ -93,8 +96,8 @@ class LookController extends Controller
                 $domain = str_replace("stylist.", "", $_SERVER['HTTP_HOST']);
                 return response()->json(
                     array('success' => true,
-                        'look_id' => $look->id,
-                        'look_url' => 'http://' . $domain . '/backend/list_style_item.php?id=' .$look->id,
+                        'look_id' => $look->look_id,
+                        'look_url' => url('look/view/' . $look->look_id),
                         'look_name' => $look->look_name
                     ), 200);
             }
@@ -105,12 +108,24 @@ class LookController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function getView()
     {
-        //
+        $look = Look::find($this->resource_id);
+        $view_properties = null;
+        if($look){
+            $product_ids[] = $look->product_id1;
+            $product_ids[] = $look->product_id2;
+            $product_ids[] = $look->product_id3;
+            $product_ids[] = $look->product_id4;
+
+            $products = Product::find($product_ids);
+            //var_dump($look, $look->stylist, $product_ids, $products);
+            $view_properties = array('look' => $look, 'products' => $products, 'stylist' => $look->stylist);
+        }
+
+        return view('look.view', $view_properties);
     }
 
     /**

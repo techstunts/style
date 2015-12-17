@@ -15,8 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::any('product/{action}', 'ProductController@index');
+Route::any('product/{action}/{id?}', 'ProductController@index');
 
-Route::any('look/{action}', 'LookController@index');
+Route::any('look/{action}/{id?}', 'LookController@index');
 
-Route::any('merchant/product/{action}', 'Merchant\ProductController@index');
+Route::any('merchant/product/{action}/{id?}', 'Merchant\ProductController@index');

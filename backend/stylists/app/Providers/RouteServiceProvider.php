@@ -24,7 +24,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        //
+        //Product id, Look id, MerchantProducts id
+        $router->pattern('id', '[0-9]+');
 
         parent::boot($router);
     }

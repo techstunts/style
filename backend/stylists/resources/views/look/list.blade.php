@@ -4,12 +4,15 @@
 
 @section('content')
 <div id="contentCntr">
+    {!! $looks->render() !!}
+    <div class="clear"></div>
+
     <div class="section">
-        <ol id="selectable">
+        <ol class="selectable" >
         @foreach($looks as $look)
             <li class="ui-state-default" look_id="{{$look->look_id}}">
                 <div class="items">
-                    <div class="name text">{{$look->look_name}}</div>
+                    <div class="name text"><a href="{{url('look/view/' . $look->look_id)}}">{{$look->look_name}}</a></div>
                     <div class="image"><img src="{!! asset('images/' . $look->look_image) !!}" /></div>
                     <div class="extra text">
                         <span>{{$look->bodytype}}</span>
