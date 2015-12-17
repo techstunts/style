@@ -138,6 +138,9 @@ class ProductController extends Controller
             $view_properties = array('product' => $product, 'merchant' => $merchant,
                 'category' => $category, 'gender' => $gender, 'brand' => $brand);
         }
+        else{
+            return view('404', array('title' => 'Product not found'));
+        }
 
         return view('product.view', $view_properties);
     }

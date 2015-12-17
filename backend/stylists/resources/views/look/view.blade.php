@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', ($look->look_name ? $look->look_name : "Look not found"))
+@section('title', $look->look_name)
 
 @section('content')
 <div id="contentCntr">
@@ -19,7 +19,7 @@
                             <td class="description" colspan="2">{{$look->look_description}}</td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Body Type</td><td class="content">{{$look->bodytype}} </td>
+                            <td class="head">Body Type</td><td class="content">{{$look->body_type}} </td>
                         </tr>
                         <tr class="row">
                             <td class="head">Budget</td><td class="content">Rs.{{$look->budget}} </td>
@@ -35,6 +35,9 @@
                         </tr>
                         <tr class="row">
                             <td class="head">Look Price</td><td class="content">Rs.{{$look->lookprice}} </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="head">Status</td><td class="content">{{$status->name}} </td>
                         </tr>
                         <tr class="row">
                             <td class="head">Stylist</td>
@@ -59,7 +62,6 @@
             </li>
         </ol>
     </div>
-
 
     @include('look.create')
 

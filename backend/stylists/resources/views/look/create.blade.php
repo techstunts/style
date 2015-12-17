@@ -23,7 +23,7 @@
         <form class="create_look" method="post" action="{!! url('look/create') !!}">
             <ul id="sortable"></ul>
             <div>
-                <select class="form-control mb15" name="bodytype">
+                <select class="form-control mb15" name="body_type">
                     <option value="">Body Type</option>
                     <option value="Apple">Apple</option>
                     <option value="Banana">Banana</option>

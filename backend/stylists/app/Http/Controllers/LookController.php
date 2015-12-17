@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CombineImages;
 use App\Look;
 use App\Product;
+use App\Status;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -113,7 +114,7 @@ class LookController extends Controller
     public function getView()
     {
         $look = Look::find($this->resource_id);
-        $view_properties = null;
+        $view_properties = [];
         if($look){
             $product_ids[] = $look->product_id1;
             $product_ids[] = $look->product_id2;
@@ -121,8 +122,13 @@ class LookController extends Controller
             $product_ids[] = $look->product_id4;
 
             $products = Product::find($product_ids);
+            $status = Status::find($look->status_id);
             //var_dump($look, $look->stylist, $product_ids, $products);
-            $view_properties = array('look' => $look, 'products' => $products, 'stylist' => $look->stylist);
+            $view_properties = array('look' => $look, 'products' => $products, 'stylist' => $look->stylist,
+                'status' => $status);
+        }
+        else{
+            return view('404', array('title' => 'Look not found'));
         }
 
         return view('look.view', $view_properties);
