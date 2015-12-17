@@ -83,6 +83,7 @@ class ProductController extends Controller
             $product = new Product();
             $product->merchant_id	= $merchant->id;
             $product->product_name	= $request->input('name');
+            $product->description	= $request->input('desc');
             $product->product_price	= str_replace(array(","," "), "", $request->input('price'));
             $product->product_link	= $request->input('url');
             $product->upload_image	= $request->input('image0');

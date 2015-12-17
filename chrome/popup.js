@@ -137,6 +137,12 @@ document.addEventListener('DOMContentLoaded', function() {
 				 var e = input_elements[i];
 				 kvpairs.push(encodeURIComponent(e.name) + "=" + encodeURIComponent(e.value));
 			}
+			var textarea_elements = document.getElementsByTagName('textarea');
+			for (var i = 0; i < textarea_elements.length; i++ ) {
+				 var e = textarea_elements[i];
+				 kvpairs.push(encodeURIComponent(e.name) + "=" + encodeURIComponent(e.value));
+			}
+
 			var queryString = kvpairs.join("&");
 
 		  	var url = "http://stylist.istyleyou.in/product/create";
