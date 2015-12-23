@@ -519,7 +519,7 @@ return $data;
                 </div>
 				 <div class="col-lg-4">
 				<?php
-				$sql = "SELECT * FROM stylish_details";
+				$sql = "SELECT * FROM stylists";
 $result = mysql_query($sql);
 echo "<select class="."form-control mb15"." name='stylish_id'>";
 while ($row = mysql_fetch_array($result)) {

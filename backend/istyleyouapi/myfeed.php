@@ -11,7 +11,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 				$row=mysql_num_rows($res);
 			
 			if($row==0){
-				$sql="Select looks.look_id,look_description,look_image,lookprice,look_name from looks where looks.look_id NOT IN (Select look_id from users_unlike where user_id='$userid') AND looks.look_id NOT IN (Select look_id from usersfav where user_id='$userid') AND stylish_id=(select stylish_id from stylish_details order by rand(stylish_id) limit 1 ) AND lower(gender)=(select gender from userdetails where user_id='$userid') ORDER BY looks.look_id ASC limit 5";
+				$sql="Select looks.look_id,look_description,look_image,lookprice,look_name from looks where looks.look_id NOT IN (Select look_id from users_unlike where user_id='$userid') AND looks.look_id NOT IN (Select look_id from usersfav where user_id='$userid') AND stylish_id=(select stylish_id from stylists order by rand(stylish_id) limit 1 ) AND lower(gender)=(select gender from userdetails where user_id='$userid') ORDER BY looks.look_id ASC limit 5";
 				$res=mysql_query($sql);
 				$row=mysql_num_rows($res);
 					if($row==0){

@@ -163,7 +163,7 @@ $(document).ready(function() {
                     </tfoot>
                         <tbody>
               <?php
-                 $query="Select stylish_name,stylish_email,expertise,profile,stylish_code,stylish_image from stylish_details";
+                 $query="Select stylish_name,stylish_email,expertise,profile,stylish_code,stylish_image from stylists";
                     $res = mysql_query($query);      
                   $numRows = mysql_num_rows($res);
                   if($numRows!=0){

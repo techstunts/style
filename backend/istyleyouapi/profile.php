@@ -34,7 +34,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"  &&  isset($_REQUEST['userid']) && isset($
 		$footwearprice=$_REQUEST['footwearprice'];
 		$pricerange=$clubprice+$ethicprice+$denimprice+$footwearprice;
 		$stylishcode=$_REQUEST['stylishcode'];
-		$query="Select stylish_id from stylish_info where stylish_code='$stylishcode'";
+		$query="Select stylish_id from stylists where stylish_code='$stylishcode'";
 		$res=mysql_query($query);
 		$row=mysql_num_rows($res);
 		if($row==1){
@@ -43,7 +43,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"  &&  isset($_REQUEST['userid']) && isset($
 		$sql="Update userdetails SET username='$username',userimage='$userimage',bodyshape='$bodyshape',stylish_id='$stylishid',bodytype='$bodytype',skintype='$skintype',styletype='$styletype',age='$age',pricerange='$pricerange',clubprice='$clubprice',ethicprice='$ethicprice',denimprice='$denimprice',footwearprice='$footwearprice',height='$height' where user_id='$userid'";
 
 		$select=mysql_query($sql);
-		$sql = "SELECT user_id,username,userimage,stylish_details.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails Join stylish_details on stylish_details.stylish_id=userdetails.stylish_id  where userdetails.user_id='$userid'";
+		$sql = "SELECT user_id,username,userimage,stylists.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id  where userdetails.user_id='$userid'";
 					
 						$select = mysql_query($sql);
 						$result = array();

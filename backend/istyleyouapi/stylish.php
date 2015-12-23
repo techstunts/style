@@ -3,7 +3,7 @@ include("db_config.php");
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['stylish_id']) && !empty($_GET['stylish_id']) && !empty($_GET['gender'])){
   $userid=$_GET['stylish_id'];
   $gender=$_GET['gender'];
-  $sql="SELECT stylish_id,stylish_name,stylish_description,stylish_image,stylish_code FROM stylish_details where stylish_id='$userid'";
+  $sql="SELECT stylish_id,stylish_name,stylish_description,stylish_image,stylish_code FROM stylists where stylish_id='$userid'";
   $stylishinfo=array();
   $res=mysql_query($sql);
   $rows=mysql_num_rows($res);

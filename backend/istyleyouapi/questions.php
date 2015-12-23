@@ -18,7 +18,7 @@ if($_SERVER['REQUEST_METHOD']=="POST" &&  isset($_REQUEST['userid']) && isset($_
 		$sql="Update userdetails SET bodyshape='$bodyshape',bodytype='$bodytype',skintype='$skintype',styletype='$styletype',age='$age',pricerange='$pricerange',clubprice='$clubprice',ethicprice='$ethicprice',denimprice='$denimprice',footwearprice='$footwearprice',height='$height' where user_id='$userid'";
 
 		$select=mysql_query($sql);
-		$sql = "SELECT user_id,username,userimage,stylish_details.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails Join stylish_details on stylish_details.stylish_id=userdetails.stylish_id  where userdetails.user_id='$userid'";
+		$sql = "SELECT user_id,username,userimage,stylists.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id  where userdetails.user_id='$userid'";
 					
 						$select = mysql_query($sql);
 						$result = array();

@@ -19,7 +19,7 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
   $valid=true;
   if(isset($_REQUEST['stylishcode']) && !empty($_REQUEST['stylishcode'])){
     $stylishcode=$_REQUEST['stylishcode'];
-    $query="Select stylish_id from stylish_info where stylish_code='$stylishcode'";
+    $query="Select stylish_id from stylists where stylish_code='$stylishcode'";
     $res=mysql_query($query);
     $row=mysql_num_rows($res);
       if($row==1){
@@ -31,11 +31,11 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
       }
   }else{
     if($gender=='male'){
-      $sql="SELECT stylish_id from stylish_info where stylish_gender='female' and status_id=1 ORDER BY stylish_id  LIMIT 1";
+      $sql="SELECT stylish_id from stylists where stylish_gender='female' and status_id=1 ORDER BY stylish_id  LIMIT 1";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $lastfemaleid=$data['stylish_id'];
-      $sql="SELECT stylish_id from stylish_info where stylish_gender='female' and status_id=1 ORDER BY stylish_id  LIMIT 1";
+      $sql="SELECT stylish_id from stylists where stylish_gender='female' and status_id=1 ORDER BY stylish_id  LIMIT 1";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $firstfemaleid=$data['stylish_id'];
@@ -43,7 +43,7 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $lastuserid=$data['stylish_id'];
-      $sql="select stylish_id from stylish_info where stylish_id = (select min(stylish_id) from stylish_info where stylish_gender='female' AND stylish_id > $lastuserid and status_id=1)";
+      $sql="select stylish_id from stylists where stylish_id = (select min(stylish_id) from stylists where stylish_gender='female' AND stylish_id > $lastuserid and status_id=1)";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $randomid=$data['stylish_id'];
@@ -58,7 +58,7 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
     $res=mysql_query($sql);
     $data=mysql_fetch_array($res);
     $lastuserstylish=$data['stylish_id'];
-    $sql="SELECT stylish_id from stylish_info WHERE status_id=1 ORDER BY stylish_id DESC LIMIT 1";
+    $sql="SELECT stylish_id from stylists WHERE status_id=1 ORDER BY stylish_id DESC LIMIT 1";
     $res=mysql_query($sql);
     $data=mysql_fetch_array($res);
     $laststylishid=$data['stylish_id'];
@@ -92,7 +92,7 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
           
               if($lastid){
                 if($stylishid !=0){
-                $sql = "SELECT user_id,username,userimage,stylish_info.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails Join stylish_info on stylish_info.stylish_id=userdetails.stylish_id  where userdetails.user_id='$lastid'";
+                $sql = "SELECT user_id,username,userimage,stylists.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id  where userdetails.user_id='$lastid'";
                 $select = mysql_query($sql);
                 $result = array();
                 while($data = mysql_fetch_assoc($select)) {
@@ -170,11 +170,11 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
     $footwearprice=100;
     $pricerange=$clubprice+$ethicprice+$denimprice+$footwearprice;
     if($gender=='male'){
-     $sql="SELECT stylish_id from stylish_info where stylish_gender='female' AND status_id=1 ORDER BY stylish_id DESC LIMIT 1";
+     $sql="SELECT stylish_id from stylists where stylish_gender='female' AND status_id=1 ORDER BY stylish_id DESC LIMIT 1";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $lastfemaleid=$data['stylish_id'];
-      $sql="SELECT stylish_id from stylish_info where stylish_gender='female' AND status_id=1 ORDER BY stylish_id ASC LIMIT 1";
+      $sql="SELECT stylish_id from stylists where stylish_gender='female' AND status_id=1 ORDER BY stylish_id ASC LIMIT 1";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $firstfemaleid=$data['stylish_id'];
@@ -182,7 +182,7 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $lastuserid=$data['stylish_id'];
-      $sql="select stylish_id from stylish_info where stylish_id = (select min(stylish_id) from stylish_info where stylish_gender='female' AND stylish_id > $lastuserid AND status_id=1)";
+      $sql="select stylish_id from stylists where stylish_id = (select min(stylish_id) from stylists where stylish_gender='female' AND stylish_id > $lastuserid AND status_id=1)";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $randomid=$data['stylish_id'];
@@ -194,11 +194,11 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
 
     }else{
    
-    $sql="SELECT stylish_id from stylish_info where stylish_gender='female' AND status_id=1 ORDER BY stylish_id DESC LIMIT 1";
+    $sql="SELECT stylish_id from stylists where stylish_gender='female' AND status_id=1 ORDER BY stylish_id DESC LIMIT 1";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $lastfemaleid=$data['stylish_id'];
-      $sql="SELECT stylish_id from stylish_info where stylish_gender='female' AND status_id=1 ORDER BY stylish_id ASC LIMIT 1";
+      $sql="SELECT stylish_id from stylists where stylish_gender='female' AND status_id=1 ORDER BY stylish_id ASC LIMIT 1";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $firstfemaleid=$data['stylish_id'];
@@ -206,7 +206,7 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $lastuserid=$data['stylish_id'];
-      $sql="select stylish_id from stylish_info where stylish_id = (select min(stylish_id) from stylish_info where stylish_gender='female' AND stylish_id > $lastuserid AND status_id=1)";
+      $sql="select stylish_id from stylists where stylish_id = (select min(stylish_id) from stylists where stylish_gender='female' AND stylish_id > $lastuserid AND status_id=1)";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $randomid=$data['stylish_id'];
@@ -292,11 +292,11 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
     $regId=$_REQUEST['regid'];
     $pricerange=$clubprice+$ethicprice+$denimprice+$footwearprice;
    if($gender=='male'){
-    $sql="SELECT stylish_id from stylish_info where stylish_gender='female' AND status_id=1 ORDER BY stylish_id DESC LIMIT 1";
+    $sql="SELECT stylish_id from stylists where stylish_gender='female' AND status_id=1 ORDER BY stylish_id DESC LIMIT 1";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $lastfemaleid=$data['stylish_id'];
-      $sql="SELECT stylish_id from stylish_info where stylish_gender='female' AND status_id=1 ORDER BY stylish_id ASC LIMIT 1";
+      $sql="SELECT stylish_id from stylists where stylish_gender='female' AND status_id=1 ORDER BY stylish_id ASC LIMIT 1";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $firstfemaleid=$data['stylish_id'];
@@ -304,7 +304,7 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $lastuserid=$data['stylish_id'];
-      $sql="select stylish_id from stylish_info where stylish_id = (select min(stylish_id) from stylish_info where stylish_gender='female' AND stylish_id > $lastuserid AND status_id=1)";
+      $sql="select stylish_id from stylists where stylish_id = (select min(stylish_id) from stylists where stylish_gender='female' AND stylish_id > $lastuserid AND status_id=1)";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $randomid=$data['stylish_id'];
@@ -316,11 +316,11 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
 
     }else{
    
-    $sql="SELECT stylish_id from stylish_info where stylish_gender='female' AND status_id=1 ORDER BY stylish_id DESC LIMIT 1";
+    $sql="SELECT stylish_id from stylists where stylish_gender='female' AND status_id=1 ORDER BY stylish_id DESC LIMIT 1";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $lastfemaleid=$data['stylish_id'];
-      $sql="SELECT stylish_id from stylish_info where stylish_gender='female' AND status_id=1 ORDER BY stylish_id ASC LIMIT 1";
+      $sql="SELECT stylish_id from stylists where stylish_gender='female' AND status_id=1 ORDER BY stylish_id ASC LIMIT 1";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $firstfemaleid=$data['stylish_id'];
@@ -328,7 +328,7 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $lastuserid=$data['stylish_id'];
-      $sql="select stylish_id from stylish_info where stylish_id = (select min(stylish_id) from stylish_info where stylish_gender='female' AND stylish_id > $lastuserid AND status_id=1)";
+      $sql="select stylish_id from stylists where stylish_id = (select min(stylish_id) from stylists where stylish_gender='female' AND stylish_id > $lastuserid AND status_id=1)";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $randomid=$data['stylish_id'];
@@ -411,11 +411,11 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
     $footwearprice=100;
     $pricerange=$clubprice+$ethicprice+$denimprice+$footwearprice;
     if($gender=='male'){
-      $sql="SELECT stylish_id from stylish_info where stylish_gender='female' AND status_id=1 ORDER BY stylish_id DESC LIMIT 1";
+      $sql="SELECT stylish_id from stylists where stylish_gender='female' AND status_id=1 ORDER BY stylish_id DESC LIMIT 1";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $lastfemaleid=$data['stylish_id'];
-      $sql="SELECT stylish_id from stylish_info where stylish_gender='female' AND status_id=1 ORDER BY stylish_id  LIMIT 1";
+      $sql="SELECT stylish_id from stylists where stylish_gender='female' AND status_id=1 ORDER BY stylish_id  LIMIT 1";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $firstfemaleid=$data['stylish_id'];
@@ -423,7 +423,7 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $lastuserid=$data['stylish_id'];
-      $sql="select stylish_id from stylish_info where stylish_id = (select min(stylish_id) from stylish_info where stylish_gender='female' AND stylish_id > $lastuserid AND status_id=1)";
+      $sql="select stylish_id from stylists where stylish_id = (select min(stylish_id) from stylists where stylish_gender='female' AND stylish_id > $lastuserid AND status_id=1)";
       $res=mysql_query($sql);
       $data=mysql_fetch_array($res);
       $randomid=$data['stylish_id'];
@@ -438,7 +438,7 @@ if($_SERVER['REQUEST_METHOD']=="POST" && isset($_REQUEST['email']) && !empty($_R
     $res=mysql_query($sql);
     $data=mysql_fetch_array($res);
     $lastuserstylish=$data['stylish_id'];
-    $sql="SELECT stylish_id from stylish_info WHERE status_id=1 ORDER BY stylish_id DESC LIMIT 1";
+    $sql="SELECT stylish_id from stylists WHERE status_id=1 ORDER BY stylish_id DESC LIMIT 1";
     $res=mysql_query($sql);
     $data=mysql_fetch_array($res);
     $laststylishid=$data['stylish_id'];
@@ -547,7 +547,7 @@ function login($email,$password,$gender){
 
   
       if($result[1] !=0){
-      $sql = "SELECT user_id,username,userimage,stylish_info.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylish_info.stylish_code,stylish_info.stylish_image FROM userdetails Join stylish_info on stylish_info.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
+      $sql = "SELECT user_id,username,userimage,stylists.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylists.stylish_code,stylists.stylish_image FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
       
         $select = mysql_query($sql);
         $result = array();
@@ -627,7 +627,7 @@ function FacebookLogin($email,$facebookid,$gender,$username){
 
   
       if($result[1] !=0){
-      $sql = "SELECT user_id,username,userimage,stylish_info.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylish_info.stylish_code,stylish_info.stylish_image,stylish_info.stylish_id FROM userdetails Join stylish_info on stylish_info.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
+      $sql = "SELECT user_id,username,userimage,stylists.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylists.stylish_code,stylists.stylish_image,stylists.stylish_id FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
       
         $select = mysql_query($sql);
         $result = array();
@@ -703,7 +703,7 @@ function GoogleLogin($email,$googleid,$gender,$username){
 
   
       if($result[1] !=0){
-      $sql = "SELECT user_id,username,userimage,stylish_info.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylish_info.stylish_code,stylish_info.stylish_image,stylish_info.stylish_id FROM userdetails Join stylish_info on stylish_info.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
+      $sql = "SELECT user_id,username,userimage,stylists.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylists.stylish_code,stylists.stylish_image,stylists.stylish_id FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
       
         $select = mysql_query($sql);
         $result = array();
@@ -779,7 +779,7 @@ function LinkedinLogin($email,$linkedid,$gender,$username){
 
   
       if($result[1] !=0){
-      $sql = "SELECT user_id,username,userimage,stylish_info.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylish_info.stylish_code,stylish_info.stylish_image FROM userdetails Join stylish_info on stylish_info.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
+      $sql = "SELECT user_id,username,userimage,stylists.stylish_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylists.stylish_code,stylists.stylish_image FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
       
         $select = mysql_query($sql);
         $result = array();

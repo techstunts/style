@@ -39,7 +39,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 						sd.stylish_id, sd.stylish_name, sd.stylish_image
 				FROM looks cl
 					LEFT JOIN usersfav uf ON cl.look_id = uf.look_id
-					JOIN stylish_details sd on sd.stylish_id = cl.stylish_id
+					JOIN stylists sd on sd.stylish_id = cl.stylish_id
 				WHERE cl.gender = '$gender'
 					$body_type_condition
 					AND cl.occasion = '$occasion'

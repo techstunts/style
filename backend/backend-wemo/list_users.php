@@ -442,7 +442,7 @@ $(document).ready(function (){
                     </tfoot>
                         <tbody>
               <?php
-                  $query='Select user_id,username,user_email,gender,bodyshape,bodytype,age,stylish_details.stylish_name,pricerange from userdetails join stylish_details on userdetails.stylish_id=stylish_details.stylish_id ORDER BY `userdetails`.`user_id`  DESC 
+                  $query='Select user_id,username,user_email,gender,bodyshape,bodytype,age,stylists.stylish_name,pricerange from userdetails join stylists on userdetails.stylish_id=stylists.stylish_id ORDER BY `userdetails`.`user_id`  DESC
                         ';
                     $res = mysql_query($query);      
                   $numRows = mysql_num_rows($res);

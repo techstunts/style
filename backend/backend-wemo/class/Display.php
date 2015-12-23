@@ -16,10 +16,10 @@ class Display
 					}
 					$username = mysql_real_escape_string($username);
 					$password = mysql_real_escape_string($password);
-					$password = md5($password);
+					//$password = md5($password);
 					
-					$query 		= 	"SELECT * FROM `user_auth` 
-									WHERE user_auth_name = '$username' AND user_auth_password = '$password' ";
+					$query 		= 	"SELECT * FROM `stylists`
+									WHERE stylish_email = '$username' AND stylish_password = '$password' ";
 
 					$db_query	=	mysql_query($query);
 					$num 		= 	mysql_num_rows($db_query);			
@@ -28,8 +28,8 @@ class Display
 					if(@$num>0)					{				
 
 						$data = mysql_fetch_array($db_query);
-						$_SESSION['isu_user_id']		=	@$data['user_auth_id'];
-						$_SESSION['isu_user_name']		=	@$data['user_auth_name'];
+						$_SESSION['isu_user_id']		=	@$data['stylish_id'];
+						$_SESSION['isu_user_name']		=	@$data['stylish_email'];
 						
 						//header("Location:http://www.google.com");
 						$status  = true;

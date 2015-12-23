@@ -15,7 +15,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['userid']) && !empty($_GET['
 			}
 				for($i=0;$i<$row;$i++){
 				$id=$ids[$i][0];
-                                $stylish="select stylish_details.stylish_id,stylish_name,stylish_image from stylish_details join looks on stylish_details.stylish_id=looks.stylish_id where look_id='$id'";
+                                $stylish="select stylists.stylish_id,stylish_name,stylish_image from stylists join looks on stylists.stylish_id=looks.stylish_id where look_id='$id'";
 				$res2=mysql_query($stylish);
 				while($data2=mysql_fetch_array($res2)){
 					$stylish_details[]=$data2;

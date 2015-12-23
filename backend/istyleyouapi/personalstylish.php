@@ -2,7 +2,7 @@
 include("db_config.php");
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['userid']) && !empty($_GET['userid'])){
   $userid=$_GET['userid'];
-  $sql="SELECT stylish_id,stylish_name,stylish_description,stylish_image,stylish_code FROM stylish_info where stylish_id IN (SELECT stylish_id from userdetails where user_id='$userid')";
+  $sql="SELECT stylish_id,stylish_name,stylish_description,stylish_image,stylish_code FROM stylists where stylish_id IN (SELECT stylish_id from userdetails where user_id='$userid')";
   $stylishinfo=array();
   $res=mysql_query($sql);
   $rows=mysql_num_rows($res);

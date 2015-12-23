@@ -357,7 +357,7 @@ $sql1="SELECT *, looks.id as look_id from products join looks ON looks.product_i
               <label class="col-sm-0 control-label" for="checkbox"></label>
               <div class="col-sm-5">
           <?php
-        $sql = "SELECT * FROM stylish_details";
+        $sql = "SELECT * FROM stylists";
 $result = mysql_query($sql);
 
 while ($row = mysql_fetch_array($result)) {
@@ -612,7 +612,7 @@ if(isset($_POST['send']) && !empty($_REQUEST['select'])){
 
  $id=$_SESSION["users"];
  foreach($id as $uid1){
-$stylishname="select stylish_info.stylish_name from stylish_info join userdetails on stylish_info.stylish_id=userdetails.stylish_id where user_id='$uid1'";
+$stylishname="select stylists.stylish_name from stylists join userdetails on stylists.stylish_id=userdetails.stylish_id where user_id='$uid1'";
 $res13=mysql_query($stylishname);
 while($a=mysql_fetch_array($res13)){
 $stylish=$a[0];

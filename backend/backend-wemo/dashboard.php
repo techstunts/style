@@ -331,7 +331,7 @@ $(document).ready(function (){
 
                     <label class="control-label">No. Of Stylist</label>
 				 <?php 
-				 $sql="select * from stylish_details";
+				 $sql="select * from stylists";
 				 $res=mysql_query($sql);
 				 $stylish=mysql_num_rows($res);
 				 
@@ -491,7 +491,7 @@ $(document).ready(function (){
                     </tfoot>
                         <tbody>
           		<?php
-          			  $query='select asklook.user_id,asklook.occasion,asklook.budget,asklook.datetime,userdetails.username,bodytype,age,stylish_details.stylish_name,asklookid from asklook join userdetails join stylish_details on asklook.user_id=userdetails.user_id AND userdetails.stylish_id=stylish_details.stylish_id
+          			  $query='select asklook.user_id,asklook.occasion,asklook.budget,asklook.datetime,userdetails.username,bodytype,age,stylists.stylish_name,asklookid from asklook join userdetails join stylists on asklook.user_id=userdetails.user_id AND userdetails.stylish_id=stylists.stylish_id
 where send is NULL ORDER BY asklook.asklookid DESC';
                   	$res = mysql_query($query);			 
           			 	$numRows = mysql_num_rows($res);
@@ -531,23 +531,10 @@ where send is NULL ORDER BY asklook.asklookid DESC';
 
     </form>
     <?php
-unset($_SESSION["users"]);
-unset($_SESSION['reg']);    /*
-if(isset($_REQUEST['send'])){
-      $registatoin_ids=array();
-      $userid=$_REQUEST['id'];
-      print_r($userid);
-        foreach($userid as $user){
-        $sql="select regId from userdetails where user_id='$user'";
-        $res=mysql_query($sql);
-              while($data=mysql_fetch_array($res)){
-                $regId=$data['regId'];
-             array_push($registatoin_ids, $regId);
-              }
-        }
-
-}
-*/
+    if(isset($_SESSION["users"]))
+        unset($_SESSION["users"]);
+    if(isset($_SESSION["reg"]))
+        unset($_SESSION['reg']);
   ?>        
       </div>
     </div><!-- contentpanel -->

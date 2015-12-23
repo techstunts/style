@@ -28,7 +28,7 @@
 	
 if(!empty($_REQUEST["id"])){
 	$id=intval($_REQUEST["id"]);			
-	$data1 = mysql_query("SELECT * FROM products JOIN looks JOIN stylish_details ON looks.product_id1=products.id AND looks.stylish_id=stylish_details.stylish_id Where looks.product_id1 IN (SELECT product_id1 FROM looks WHERE looks.id=$id)");
+	$data1 = mysql_query("SELECT * FROM products JOIN looks JOIN stylists ON looks.product_id1=products.id AND looks.stylish_id=stylists.stylish_id Where looks.product_id1 IN (SELECT product_id1 FROM looks WHERE looks.id=$id)");
 	//Puts it into an array 
 	$info1 = mysql_fetch_array( $data1 );
  

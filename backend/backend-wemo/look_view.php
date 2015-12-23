@@ -123,7 +123,7 @@
 			$id=intval($_GET["id"]);
 			
 			
-			 $data = mysql_query("SELECT *, looks.id as look_id FROM looks JOIN stylish_details ON looks.stylish_id=stylish_details.stylish_id WHERE looks.id = $id");
+			 $data = mysql_query("SELECT *, looks.id as look_id FROM looks JOIN stylists ON looks.stylish_id=stylists.stylish_id WHERE looks.id = $id");
  //Puts it into an array 
  $info = mysql_fetch_array( $data );
  $sql=mysql_query("select *, products.id as product_id, looks.id as look_id from products join looks on looks.product_id1=products.id OR looks.product_id2=products.id OR looks.product_id3=products.id OR looks.product_id4=products.id where looks.id=$id" );
