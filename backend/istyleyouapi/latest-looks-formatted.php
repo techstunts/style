@@ -5,8 +5,8 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 	$userid=$_REQUEST['userid'];
 	
 	//Get looks sent to user which are neither unliked nor favorited by user
-	$sql="Select distinct createdlook.look_id,look_description,look_image,lookprice,occasion,look_name 
-	from sendlook join createdlook on sendlook.look_id=createdlook.look_id 
+	$sql="Select distinct looks.look_id,look_description,look_image,lookprice,occasion,look_name
+	from sendlook join looks on sendlook.look_id=looks.look_id
 	where sendlook.look_id NOT IN 
 			(Select look_id 
 			from users_unlike 
@@ -34,11 +34,11 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 
 			//Get products in current look 
 			$query="select id,product_name,upload_image,product_price,product_type,product_link 
-			from lookdescrip join createdlook 
-				on createdlook.product_id1=lookdescrip.id 
-					or createdlook.product_id2=lookdescrip.id 
-					or createdlook.product_id3=lookdescrip.id 
-					or createdlook.product_id4=lookdescrip.id 
+			from products join looks
+				on looks.product_id1=products.id
+					or looks.product_id2=products.id
+					or looks.product_id3=products.id
+					or looks.product_id4=products.id
 			where look_id='$id'";
 			$res1=mysql_query($query);
 			
@@ -48,7 +48,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 			
 			// Get product_ids for all favorite products of current user
 			$sql="Select product_id 
-			from usersfav join lookdescrip on usersfav.product_id=lookdescrip.id 
+			from usersfav join products on usersfav.product_id=products.id
 			where user_id='$userid'";
 			
 			$res=mysql_query($sql);
@@ -102,17 +102,17 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 	}
 	
 	//Get all favorite looks of current user which are not unliked by him/her
-	$sql="Select createdlook.look_id,look_description,look_image,lookprice,createdlook.occasion,look_name 
-		from createdlook 
-		where createdlook.look_id NOT IN 
+	$sql="Select looks.look_id,look_description,look_image,lookprice,looks.occasion,look_name
+		from looks
+		where looks.look_id NOT IN
 				(Select look_id 
 				from users_unlike 
 				where user_id='$userid') 
-			AND createdlook.look_id IN 
+			AND looks.look_id IN
 				(Select look_id 
 				from usersfav 
 				where user_id='$userid') 
-		ORDER BY createdlook.look_id DESC  ";
+		ORDER BY looks.look_id DESC  ";
 	$res=mysql_query($sql);
 	$row=mysql_num_rows($res);
 
@@ -127,11 +127,11 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 
 		//Get products info for current look
 		$query = "select id,product_name,upload_image,product_price,product_type,product_link 
-			from lookdescrip join createdlook 
-				on createdlook.product_id1=lookdescrip.id 
-				or createdlook.product_id2=lookdescrip.id 
-				or createdlook.product_id3=lookdescrip.id 
-				or createdlook.product_id4=lookdescrip.id 
+			from products join looks
+				on looks.product_id1=products.id
+				or looks.product_id2=products.id
+				or looks.product_id3=products.id
+				or looks.product_id4=products.id
 			where look_id='$id'";
 		$res1=mysql_query($query);
 		while($data1=mysql_fetch_array($res1)){
@@ -140,8 +140,8 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 
 		// Get all favourite products of current user
 		$sql="Select product_id 
-			from usersfav join lookdescrip 
-				on usersfav.product_id = lookdescrip.id 
+			from usersfav join products
+				on usersfav.product_id = products.id
 			where user_id='$userid'";
 		$res=mysql_query($sql);
 		$tr=mysql_num_rows($res);

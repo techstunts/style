@@ -81,17 +81,17 @@ $productlink4 = $_POST['productlink4'];
 		}
 
 
-$sql = "INSERT INTO lookdescrip (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname1', '$producttype1', '$productprice1','$productlink1','uploadfile/$filename4','$filename4')";
+$sql = "INSERT INTO products (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname1', '$producttype1', '$productprice1','$productlink1','uploadfile/$filename4','$filename4')";
 mysql_query($sql);
 $productlastid=mysql_insert_id();
 
-$sql = "INSERT INTO lookdescrip (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname2', '$producttype2', '$productprice2','$productlink2','uploadfile/$filename1','$filename1')";
+$sql = "INSERT INTO products (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname2', '$producttype2', '$productprice2','$productlink2','uploadfile/$filename1','$filename1')";
 mysql_query($sql);
 $productlastid1=mysql_insert_id();
-$sql = "INSERT INTO lookdescrip (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname3', '$producttype3', '$productprice3','$productlink3','uploadfile/$filename2','$filename2')";
+$sql = "INSERT INTO products (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname3', '$producttype3', '$productprice3','$productlink3','uploadfile/$filename2','$filename2')";
 mysql_query($sql);
 $productlastid2=mysql_insert_id();
-$sql = "INSERT INTO lookdescrip (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname4', '$producttype4', '$productprice4','$productlink4','uploadfile/$filename3','$filename3')";
+$sql = "INSERT INTO products (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname4', '$producttype4', '$productprice4','$productlink4','uploadfile/$filename3','$filename3')";
 mysql_query($sql);
 $productlastid3=mysql_insert_id();
 $productid1=$productlastid;
@@ -106,7 +106,7 @@ for($i=1;$i<5;$i++)
 {
 $productid.$i=$productid1+$i;
 
- //$sql="SELECT * FROM lookdescrip where id=$lastid+$i";
+ //$sql="SELECT * FROM products where id=$lastid+$i";
 //$result=mysql_query($sql);
  // $result = mysql_fetch_array($result);
   //header("Content-type: image/jpg");

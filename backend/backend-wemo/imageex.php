@@ -57,39 +57,22 @@ if( $SAVE_AS_FILE ){
     $mergedimage=imagejpeg($merged_image,"uploadfile1/$filename");
 	
 	 
-$sql = "INSERT INTO createdlook (look_image,look_name,look_description,product_id1,product_id2,product_id3,product_id4,body_type,budget,age,occasion,gender,stylish_id,date,lookprice) VALUES ('uploadfile1/$filename','$lookname','$lookdescription','$productid1','$productid2','$productid3','$productid4','$body_type','$budget','$age','$occasion','$gender','$stylishid','$timestamp','$lookprice')";
+$sql = "INSERT INTO looks (look_image,look_name,look_description,product_id1,product_id2,product_id3,product_id4,body_type,budget,age,occasion,gender,stylish_id,date,lookprice) VALUES ('uploadfile1/$filename','$lookname','$lookdescription','$productid1','$productid2','$productid3','$productid4','$body_type','$budget','$age','$occasion','$gender','$stylishid','$timestamp','$lookprice')";
 
 mysql_query($sql,$conn);
 $looklastid=mysql_insert_id();
 
 
-$sql="INSERT INTO productlookmap(look_id,product_id) VALUES('$looklastid','$productid1')";
+$sql="INSERT INTO looks_products(look_id,product_id) VALUES('$looklastid','$productid1')";
 mysql_query($sql);
-$sql="INSERT INTO productlookmap(look_id,product_id) VALUES('$looklastid','$productid2')";
+$sql="INSERT INTO looks_products(look_id,product_id) VALUES('$looklastid','$productid2')";
 mysql_query($sql);
-$sql="INSERT INTO productlookmap(look_id,product_id) VALUES('$looklastid','$productid3')";
+$sql="INSERT INTO looks_products(look_id,product_id) VALUES('$looklastid','$productid3')";
 mysql_query($sql);
-$sql="INSERT INTO productlookmap(look_id,product_id) VALUES('$looklastid','$productid4')";
+$sql="INSERT INTO looks_products(look_id,product_id) VALUES('$looklastid','$productid4')";
 mysql_query($sql);
 
 $lastid1=mysql_insert_id();
-
-//for($i=1;$i<=$lastid;$i++)
-//{
-
-//$sql="SELECT * FROM createdlook where look_id=$lastid1";
-
-//$result=mysql_query($sql);
-
-//$rows=mysql_num_rows($result1);
- // $result = mysql_fetch_array($result);
-  //$row=$result['look_image'];
-  //$mergedpath=compress_image('$row',"uploadfile1/demo11.jpeg",99);
-//echo $result['product_id1'];
-  //header("Content-type: image/jpg");
- //echo $result['look_id'];
-
- //echo  "<input type='image' src='".$result['look_image']."'name='submit'/>"; 
 
 }else{
     header('Content-Type: image/jpeg');

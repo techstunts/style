@@ -28,17 +28,17 @@
 	
 if(!empty($_REQUEST["id"])){
 	$id=intval($_REQUEST["id"]);			
-	$data1 = mysql_query("SELECT * FROM lookdescrip JOIN createdlook JOIN stylish_details ON createdlook.product_id1=lookdescrip.id AND createdlook.stylish_id=stylish_details.stylish_id Where createdlook.product_id1 IN (SELECT product_id1 FROM createdlook WHERE createdlook.look_id=$id)");
+	$data1 = mysql_query("SELECT * FROM products JOIN looks JOIN stylish_details ON looks.product_id1=products.id AND looks.stylish_id=stylish_details.stylish_id Where looks.product_id1 IN (SELECT product_id1 FROM looks WHERE looks.id=$id)");
 	//Puts it into an array 
 	$info1 = mysql_fetch_array( $data1 );
  
-	$data2 = mysql_query("SELECT * FROM lookdescrip JOIN createdlook ON createdlook.product_id2=lookdescrip.id Where createdlook.product_id2 IN (SELECT product_id2 FROM createdlook WHERE createdlook.look_id=$id )");
+	$data2 = mysql_query("SELECT * FROM products JOIN looks ON looks.product_id2=products.id Where looks.product_id2 IN (SELECT product_id2 FROM looks WHERE looks.id=$id )");
 	//Puts it into an array 
 	$info2 = mysql_fetch_array( $data2 );
-	$data3 = mysql_query("SELECT * FROM lookdescrip JOIN createdlook ON createdlook.product_id3=lookdescrip.id Where createdlook.product_id3 IN (SELECT product_id3 FROM createdlook WHERE createdlook.look_id=$id )");
+	$data3 = mysql_query("SELECT * FROM products JOIN looks ON looks.product_id3=products.id Where looks.product_id3 IN (SELECT product_id3 FROM looks WHERE looks.id=$id )");
 	//Puts it into an array 
 	$info3 = mysql_fetch_array( $data3);
-	$data4 = mysql_query("SELECT * FROM lookdescrip JOIN createdlook ON createdlook.product_id4=lookdescrip.id Where createdlook.product_id4 IN (SELECT product_id4 FROM createdlook WHERE createdlook.look_id=$id )");
+	$data4 = mysql_query("SELECT * FROM products JOIN looks ON looks.product_id4=products.id Where looks.product_id4 IN (SELECT product_id4 FROM looks WHERE looks.id=$id )");
 	//Puts it into an array 
 	$info4 = mysql_fetch_array( $data4 );
 	
@@ -437,17 +437,17 @@ if($valid)
 {
 
 
-$sql = "INSERT INTO lookdescrip (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname1', '$producttype1', '$productprice1','$productlink1','uploadfile/$filename4','$filename4')";
+$sql = "INSERT INTO products (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname1', '$producttype1', '$productprice1','$productlink1','uploadfile/$filename4','$filename4')";
 mysql_query($sql);
 $productlastid=mysql_insert_id();
 
-$sql = "INSERT INTO lookdescrip (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname2', '$producttype2', '$productprice2','$productlink2','uploadfile/$filename1','$filename1')";
+$sql = "INSERT INTO products (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname2', '$producttype2', '$productprice2','$productlink2','uploadfile/$filename1','$filename1')";
 mysql_query($sql);
 $productlastid1=mysql_insert_id();
-$sql = "INSERT INTO lookdescrip (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname3', '$producttype3', '$productprice3','$productlink3','uploadfile/$filename2','$filename2')";
+$sql = "INSERT INTO products (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname3', '$producttype3', '$productprice3','$productlink3','uploadfile/$filename2','$filename2')";
 mysql_query($sql);
 $productlastid2=mysql_insert_id();
-$sql = "INSERT INTO lookdescrip (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname4', '$producttype4', '$productprice4','$productlink4','uploadfile/$filename3','$filename3')";
+$sql = "INSERT INTO products (product_name, product_type, product_price,product_link,upload_image,image_name) VALUES ('$productname4', '$producttype4', '$productprice4','$productlink4','uploadfile/$filename3','$filename3')";
 mysql_query($sql);
 $productlastid3=mysql_insert_id();
 $productid1=$productlastid;
@@ -514,11 +514,11 @@ if(empty($id)){
         <li class="active"><a href="dashboard.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
         <li><a href="create_look.php"><i class="fa fa-envelope-o"></i> <span>Create Look</span></a></li>
         <li><a href="look_list.php"><i class="fa fa-envelope-o"></i> <span>List All</span></a></li>
-        <li><a href="view_product.php"><i class="fa fa-envelope-o"></i> <span>View Products</span></a></li>
+        <li><a href="product_list.php"><i class="fa fa-envelope-o"></i> <span>View Products</span></a></li>
         <li><a href="create_stylist.php"><i class="fa fa-envelope-o"></i> <span>Create Stylist</span></a></li>
         <li><a href="add_cat.php"><i class="fa fa-envelope-o"></i> <span>Add Category</span></a></li>
         <li><a href="list_stylist.php"><i class="fa fa-envelope-o"></i> <span>See Stylist</span></a></li>
-        <li><a href="list_usres.php"><i class="fa fa-envelope-o"></i> <span>See All Users</span></a></li>
+        <li><a href="list_users.php"><i class="fa fa-envelope-o"></i> <span>See All Users</span></a></li>
         
       </ul>
 

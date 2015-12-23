@@ -4,13 +4,13 @@ if($_SERVER['REQUEST_METHOD']=="POST" &&  !empty($_POST['userid']) && !empty($_P
 	$userid=$_POST['userid'];
 	$productid=$_POST['productid'];
 	$productcomment=$_POST['productcomment'];
-	$sql="INSERT INTO userscomment(user_id,product_id,product_comment) Values('$userid','$productid','$productcomment')";
+	$sql="INSERT INTO users_comments(user_id,product_id,product_comment) Values('$userid','$productid','$productcomment')";
 	$res=mysql_query($sql);
-	$query="SELECT product_comment from lookdescrip where id='$productid'";
+	$query="SELECT product_comment from products where id='$productid'";
 	$res=mysql_query($query);
 	$data=mysql_fetch_array($res);
 	$totalproductcomment=$data['product_comment'] +1;
-	$update="Update lookdescrip SET product_comment='$totalproductcomment' where id='$productid'";
+	$update="Update products SET product_comment='$totalproductcomment' where id='$productid'";
 	$res=mysql_query($update);
 	$data = array('result' => 'success', 'message' => 'User ID no. '.$userid.' commented on product ID no '.$productid);
 	

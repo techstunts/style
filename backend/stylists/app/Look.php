@@ -12,7 +12,7 @@ class Look extends Model
      *
      * @var string
      */
-    protected $table = 'createdlook';
+    protected $table = 'looks';
 
     protected $primaryKey = 'look_id';
 

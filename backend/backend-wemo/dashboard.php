@@ -257,11 +257,11 @@ $(document).ready(function (){
         <li class="active"><a href="dashboard.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
         <li><a href="create_look.php"><i class="fa fa-envelope-o"></i> <span>Create Look</span></a></li>
         <li><a href="look_list.php"><i class="fa fa-envelope-o"></i> <span>List All</span></a></li>
-        <li><a href="view_product.php"><i class="fa fa-envelope-o"></i> <span>View Products</span></a></li>
+        <li><a href="product_list.php"><i class="fa fa-envelope-o"></i> <span>View Products</span></a></li>
         <li><a href="create_stylist.php"><i class="fa fa-envelope-o"></i> <span>Create Stylist</span></a></li>
         
         <li><a href="list_stylist.php"><i class="fa fa-envelope-o"></i> <span>See Stylist</span></a></li>
-        <li><a href="list_usres.php"><i class="fa fa-envelope-o"></i> <span>See All Users</span></a></li>
+        <li><a href="list_users.php"><i class="fa fa-envelope-o"></i> <span>See All Users</span></a></li>
         
         
       </ul>
@@ -372,7 +372,7 @@ $(document).ready(function (){
                     <label class="control-label">No. Of Look</label>
 		
 			 <?php 
-				 $sql="select * from createdlook";
+				 $sql="select * from looks";
 				 $res=mysql_query($sql);
 				 $totallook=mysql_num_rows($res);
 				 
@@ -451,39 +451,6 @@ $(document).ready(function (){
        <div class="row">
 <!--image code 1-->
 
-<?php
- /*
-  if($_GET['images']){
-$looks=$_GET['images'];
-$productarray=array();
-$lookdetail=array();
-$abc=array();
-$_SESSION['looks']=$looks;
-foreach($looks as $value){
-$sql="select * from createdlook where look_id='$value'";
-$res=mysql_query($sql);
-while($data=mysql_fetch_array($res)){
-  $query="select id,product_name,upload_image,product_price,product_type,product_link from lookdescrip join createdlook on createdlook.product_id1=lookdescrip.id or createdlook.product_id2=lookdescrip.id or createdlook.product_id3=lookdescrip.id or createdlook.product_id4=lookdescrip.id where look_id='$value'";
-  $res1=mysql_query($query);
-  while($data1=mysql_fetch_array($res1)){
-  $product=array('fav'=>'No','productid'=>$data1['id'],'productname'=>$data1['product_name'],'productimage'=>$data1['upload_image'],'productprice'=>$data1['product_price'],'producttype'=>$data1['product_type'],'productlink'=>$data1['product_link']);
-  $productarray=$product;
-  }
-  $lookdetail=array('fav'=>'No','lookid'=>$data['look_id'],'lookdescription'=>$data['look_description'],'lookimage'=>$data['look_image'],'lookprice'=>$data['lookprice'],'lookname'=>$data['look_name'],'productdetails'=>$productarray);
- $abc[]=$lookdetail;
-
- unset($productarray);
-*/
- ?>
-
-        
-
-<?php
-/* 
-}
-}
-}*/
-?>
       </div><!-- row -->
     
           	  <h4>Pending Notification/ Request</h4>

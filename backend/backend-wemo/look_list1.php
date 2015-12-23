@@ -73,7 +73,7 @@ $(document).ready(function(){
         $.ajax({
           dataType : 'json',
           type: "POST", 
-          url: 'lazy-loading.php',
+          url: 'view_more_looks.php',
           data: str,  
           async:false,
           success: function(msg){           
@@ -129,11 +129,11 @@ $(document).ready(function(){
         <li class="active"><a href="dashboard.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
         <li><a href="create_look.php"><i class="fa fa-envelope-o"></i> <span>Create Look</span></a></li>
         <li><a href="look_list.php"><i class="fa fa-envelope-o" ></i> <span>List All</span></a></li>
-        <li><a href="view_product.php"><i class="fa fa-envelope-o"></i> <span>View Products</span></a></li>
+        <li><a href="product_list.php"><i class="fa fa-envelope-o"></i> <span>View Products</span></a></li>
         <li><a href="create_stylist.php"><i class="fa fa-envelope-o"></i> <span>Create Stylist</span></a></li>
         
         <li><a href="list_stylist.php"><i class="fa fa-envelope-o"></i> <span>See Stylist</span></a></li>
-        <li><a href="list_usres.php"><i class="fa fa-envelope-o"></i> <span>See All Users</span></a></li>
+        <li><a href="list_users.php"><i class="fa fa-envelope-o"></i> <span>See All Users</span></a></li>
       </ul>
 
     
@@ -302,7 +302,7 @@ $valid=true;
   
   
   
-$sql1="SELECT * from lookdescrip join createdlook ON createdlook.product_id1=lookdescrip.id where ".$query_str1." ORDER BY look_id DESC LIMIT 0,12";
+$sql1="SELECT *, looks.id as look_id from products join looks ON looks.product_id1=products.id where ".$query_str1." ORDER BY looks.id DESC LIMIT 0,12";
   
     
   }else{
@@ -314,7 +314,7 @@ $sql1="SELECT * from lookdescrip join createdlook ON createdlook.product_id1=loo
         $valid=true;
         $filter_err="";
         $str = '';
-        $sql1="SELECT * from createdlook  ORDER BY `look_id` DESC LIMIT 0,12";
+        $sql1="SELECT *, looks.id as look_id from looks  ORDER BY looks.id DESC LIMIT 0,12";
     } 
     
     
@@ -635,7 +635,7 @@ $looks=$_REQUEST['select'];
 $r=0;
 foreach($looks as $value){
   
-  $lookgender="select gender from createdlook where look_id='$value'";
+  $lookgender="select gender from looks where looks.id='$value'";
   $res12=mysql_query($lookgender);
   while($data12=mysql_fetch_array($res12)){
     $lg=$data12[0];
@@ -643,7 +643,7 @@ foreach($looks as $value){
   }
   if($ug==$lg){
  if($r==0){
-    $sql="select look_image from createdlook where look_id='$value'";
+    $sql="select look_image from looks where looks.id='$value'";
     $res=mysql_query($sql);
     $data=mysql_fetch_array($res);
     $firstlook=$data[0];

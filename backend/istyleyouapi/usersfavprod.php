@@ -2,7 +2,7 @@
 include("db_config.php");
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['userid']) && !empty($_GET['userid'])){
 	$userid=$_GET['userid'];
-	$sql="select * from lookdescrip join usersfav on usersfav.product_id=lookdescrip.id where user_id='$userid'";
+	$sql="select * from products join usersfav on usersfav.product_id=products.id where user_id='$userid'";
 	$res=mysql_query($sql);
 	$row=mysql_num_rows($res);
 	$list=array();

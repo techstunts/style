@@ -33,7 +33,7 @@ class ProductController extends Controller
 
     public function getList(Request $request){
         $this->initWhereConditions($request);
-        $this->initFilters('lookdescrip');
+        $this->initFilters('products');
 
         $view_properties = array(
             'merchants' => $this->merchants,

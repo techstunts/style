@@ -55,11 +55,11 @@
         <li class="active"><a href="dashboard.php"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
         <li><a href="create_look.php"><i class="fa fa-envelope-o"></i> <span>Create Look</span></a></li>
         <li><a href="look_list.php"><i class="fa fa-envelope-o"></i> <span>List All</span></a></li>
-        <li><a href="view_product.php"><i class="fa fa-envelope-o"></i> <span>View Products</span></a></li>
+        <li><a href="product_list.php"><i class="fa fa-envelope-o"></i> <span>View Products</span></a></li>
         <li><a href="create_stylist.php"><i class="fa fa-envelope-o"></i> <span>Create Stylist</span></a></li>
         
         <li><a href="list_stylist.php"><i class="fa fa-envelope-o"></i> <span>See Stylist</span></a></li>
-        <li><a href="list_usres.php"><i class="fa fa-envelope-o"></i> <span>See All Users</span></a></li>
+        <li><a href="list_users.php"><i class="fa fa-envelope-o"></i> <span>See All Users</span></a></li>
         
       </ul>
 
@@ -123,35 +123,146 @@
 			$id=intval($_GET["id"]);
 			
 			
-			 $data = mysql_query("SELECT * FROM lookdescrip  WHERE id = $id");
+			 $data = mysql_query("SELECT *, looks.id as look_id FROM looks JOIN stylish_details ON looks.stylish_id=stylish_details.stylish_id WHERE looks.id = $id");
  //Puts it into an array 
  $info = mysql_fetch_array( $data );
-
+ $sql=mysql_query("select *, products.id as product_id, looks.id as look_id from products join looks on looks.product_id1=products.id OR looks.product_id2=products.id OR looks.product_id3=products.id OR looks.product_id4=products.id where looks.id=$id" );
+while($data1=mysql_fetch_array($sql)){
+  $totaldata[]=$data1;
+}
 
 
  ?> 
     <div class="panel panel-default panel-blog">
           <div class="panel-body">
-            <h3 class="blogsingle-title">Product Name : <?php echo $info['product_name']; ?></h3>
+            <h3 class="blogsingle-title">Look Name : <?php echo $info['look_name']; ?></h3>
             
-            
+            <ul class="blog-meta">
+              <li>By: <?php echo $info['stylish_name']; ?></li>
+              <li><?php echo $info['date']; ?></li>
+            </ul>
             
             <br />
-          <center><img src="<?php echo $info['upload_image'] ?>" class="img-responsive" alt="" /></center>
+          <center><img src="<?php echo $info['look_image'] ?>" class="img-responsive" alt="" /></center>
 			
 	
 
 
 			     
             <div class="mb20"></div>            
-          
-            <h3>Product Price</h3><p><?php echo $info['product_price'] ?></p>
-            <h3>Product Type</h3><p><?php echo $info['product_type'] ?></p>
+            <h3>Look Description</h3><p><?php echo $info['look_description'] ?></p>
+            
           </div><!-- panel-body -->
         </div><!-- panel -->
+<div class="col-sm-6 col-md-3">
+          <div class="panel panel-dark panel-stat">
+            <div class="panel-heading">
+              <div class="stat">
+                <div class="row">
+                  <div class="col-xs-12">
+          
+           
+           <a href="product_view.php?id=<?php echo $totaldata[0]['product_id'] ?>"><img class="img-thumbnail" src="<?php echo $totaldata[0]['upload_image'] ?>"  alt="" /></a>
+                
+                       
+                  </div>
+                  
+                </div><!-- row -->
 
+                <div class="mb15"></div>
+                <div class="row">
+                 
+                </div><!-- row -->
+
+              </div><!-- stat -->
+
+            </div><!-- panel-heading -->
+          </div><!-- panel -->
+        </div><!-- col-sm-6 -->
+
+        <div class="col-sm-6 col-md-3">
+          <div class="panel panel-dark panel-stat">
+            <div class="panel-heading">
+              <div class="stat">
+                <div class="row">
+                  <div class="col-xs-12">
+          
+           
+           <a href="product_view.php?id=<?php echo $totaldata[1]['product_id'] ?>"><img class="img-thumbnail" src="<?php echo $totaldata[1]['upload_image'] ?>"  alt="" /></a>
+                
+                       
+                  </div>
+                  
+                </div><!-- row -->
+
+                <div class="mb15"></div>
+                <div class="row">
+                 
+                </div><!-- row -->
+
+              </div><!-- stat -->
+
+            </div><!-- panel-heading -->
+          </div><!-- panel -->
+        </div><!-- col-sm-6 -->
+
+        <div class="col-sm-6 col-md-3">
+          <div class="panel panel-dark panel-stat">
+            <div class="panel-heading">
+              <div class="stat">
+                <div class="row">
+                  <div class="col-xs-12">
+          
+           
+           <a href="product_view.php?id=<?php echo $totaldata[2]['product_id'] ?>"><img class="img-thumbnail" src="<?php echo $totaldata[2]['upload_image'] ?>"  alt="" /></a>
+                
+                       
+                  </div>
+                  
+                </div><!-- row -->
+
+                <div class="mb15"></div>
+                <div class="row">
+                  
+                </div><!-- row -->
+
+              </div><!-- stat -->
+
+            </div><!-- panel-heading -->
+          </div><!-- panel -->
+        </div><!-- col-sm-6 -->
+
+        <div class="col-sm-6 col-md-3">
+          <div class="panel panel-dark panel-stat">
+            <div class="panel-heading">
+              <div class="stat">
+                <div class="row">
+                  <div class="col-xs-12">
+          
+           
+           <a href="product_view.php?id=<?php echo $totaldata[3]['product_id'] ?>"><img class="img-thumbnail" src="<?php echo $totaldata[3]['upload_image'] ?>"  alt="" /></a>
+                
+                       
+                  </div>
+                  
+                </div><!-- row -->
+
+                <div class="mb15"></div>
+                <div class="row">
+                  
+                </div><!-- row -->
+
+              </div><!-- stat -->
+
+            </div><!-- panel-heading -->
+          </div><!-- panel -->
+        </div><!-- col-sm-6 -->
+        
           <div class="row">
-         
+            <div class="panel-footer">
+             <center><a href="dupicate_look.php?id=<?php echo $info['look_id'] ?>"><button class="btn btn-lightblue">Duplicate Look</button></a></center>
+            
+            </div>
           </div>
 
       </div>

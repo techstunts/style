@@ -11,7 +11,7 @@ class Product extends Model
      *
      * @var string
      */
-    protected $table = 'lookdescrip';
+    protected $table = 'products';
 
     protected $fillable = ['agency_id', 'merchant_id', 'product_name', 'product_price', 'product_link', 'upload_image',
         'image_name','merchant_product_id', 'brand_id', 'category_id', 'gender_id'];

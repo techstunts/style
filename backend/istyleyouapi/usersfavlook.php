@@ -2,7 +2,7 @@
 include("db_config.php");
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['userid']) && !empty($_GET['userid'])){
 	$userid=$_GET['userid'];
-	$sql="Select createdlook.look_id,look_description,look_image,lookprice,look_name from createdlook where createdlook.look_id NOT IN (Select look_id from users_unlike where user_id='$userid') AND createdlook.look_id IN (Select look_id from usersfav where user_id='$userid') ORDER BY createdlook.look_id DESC LIMIT 5 ";
+	$sql="Select looks.look_id,look_description,look_image,lookprice,look_name from looks where looks.look_id NOT IN (Select look_id from users_unlike where user_id='$userid') AND looks.look_id IN (Select look_id from usersfav where user_id='$userid') ORDER BY looks.look_id DESC LIMIT 5 ";
 			$res=mysql_query($sql);
 			$row=mysql_num_rows($res);
 		
@@ -16,12 +16,12 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['userid']) && !empty($_GET['
 				for($i=0;$i<$row;$i++){
 				$id=$ids[$i][0];
                                
-				$query="select id,product_name,upload_image,product_price,product_type,product_link from lookdescrip join createdlook on createdlook.product_id1=lookdescrip.id or createdlook.product_id2=lookdescrip.id or createdlook.product_id3=lookdescrip.id or createdlook.product_id4=lookdescrip.id where look_id='$id'";
+				$query="select id,product_name,upload_image,product_price,product_type,product_link from products join looks on looks.product_id1=products.id or looks.product_id2=products.id or looks.product_id3=products.id or looks.product_id4=products.id where look_id='$id'";
 				$res1=mysql_query($query);
 				while($data1=mysql_fetch_array($res1)){
 					$list[]=$data1;
 				}
-					$sql="Select product_id from usersfav join lookdescrip on usersfav.product_id=lookdescrip.id where user_id='$userid'";
+					$sql="Select product_id from usersfav join products on usersfav.product_id=products.id where user_id='$userid'";
 					$res=mysql_query($sql);
 					$tr=mysql_num_rows($res);
 				$productarray=array();

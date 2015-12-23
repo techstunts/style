@@ -9,11 +9,11 @@ if($_SERVER['REQUEST_METHOD']=="POST" &&  !empty($_POST['userid']) && !empty($_P
 	if($row==0){
 	$sql="INSERT INTO users_unlike(user_id,look_id) Values('$userid','$lookid')";
 	$res=mysql_query($sql);
-	$query="SELECT look_unlike from createdlook where look_id='$lookid'";
+	$query="SELECT look_unlike from looks where look_id='$lookid'";
 	$res=mysql_query($query);
 	$data=mysql_fetch_array($res);
 	$looklike=$data['look_unlike'] +1;
-	$update="Update createdlook SET look_unlike='$looklike' where look_id='$lookid'";
+	$update="Update looks SET look_unlike='$looklike' where look_id='$lookid'";
 	$res=mysql_query($update);
 	$data = array('result' => 'success', 'response_message' => 'look id no. '.$lookid.' unlike successfully by userid'.$userid);
 	}else{

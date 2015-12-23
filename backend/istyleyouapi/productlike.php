@@ -9,11 +9,11 @@ if($_SERVER['REQUEST_METHOD']=="POST" &&  !empty($_POST['userid']) && !empty($_P
 	if($row==0){
 	$sql="INSERT INTO userslike(user_id,product_id) Values('$userid','$productid')";
 	$res=mysql_query($sql);
-	$query="SELECT product_like from lookdescrip where id='$productid'";
+	$query="SELECT product_like from products where id='$productid'";
 	$res=mysql_query($query);
 	$data=mysql_fetch_array($res);
 	$productlike=$data['product_like'] +1;
-	$update="Update lookdescrip SET product_like='$productlike' where id='$productid'";
+	$update="Update products SET product_like='$productlike' where id='$productid'";
 	$res=mysql_query($update);
 
 	$data = array('result' => 'success', 'message' => 'product id no. '.$productid.' like successfully by '.$userid);

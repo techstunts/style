@@ -4,7 +4,7 @@ include("ProductLink.php");
 
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])){
 	$userid=$_REQUEST['userid'];
-			$sql="Select distinct createdlook.look_id,look_description,look_image,lookprice,occasion,look_name from sendlook join createdlook on sendlook.look_id=createdlook.look_id where sendlook.user_id='$userid' ORDER BY sendlook.send_id DESC";
+			$sql="Select distinct looks.look_id,look_description,look_image,lookprice,occasion,look_name from sendlook join looks on sendlook.look_id=looks.look_id where sendlook.user_id='$userid' ORDER BY sendlook.send_id DESC";
 			$res=mysql_query($sql);
 			$row=mysql_num_rows($res);
 			if($row!=0){
@@ -18,11 +18,11 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 		$id=$ids[$i][0];
 
 		$query="select id,product_name,upload_image,product_price,product_type,product_link, ld.agency_id, ld.merchant_id
-				from lookdescrip ld join createdlook
-				on createdlook.product_id1=ld.id
-				or createdlook.product_id2=ld.id
-				or createdlook.product_id3=ld.id
-				or createdlook.product_id4=ld.id
+				from products ld join looks
+				on looks.product_id1=ld.id
+				or looks.product_id2=ld.id
+				or looks.product_id3=ld.id
+				or looks.product_id4=ld.id
 				where look_id='$id'";
 		$res1=mysql_query($query);
 		$rows=mysql_num_rows($res);
@@ -33,7 +33,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 	}
 			$k=$row*4;
 
-	$sql="Select product_id from usersfav join lookdescrip on usersfav.product_id=lookdescrip.id where user_id='$userid'";
+	$sql="Select product_id from usersfav join products on usersfav.product_id=products.id where user_id='$userid'";
 	$res=mysql_query($sql);
 	$tr=mysql_num_rows($res);
 	while($data=mysql_fetch_array($res)){

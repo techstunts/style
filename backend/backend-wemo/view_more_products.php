@@ -26,7 +26,7 @@ include 'databaseconnect.php';
                   <div class="col-xs-12">
           
            
-           <a href="list_style_item.php?id='.$value['look_id'].'"><img class="img-thumbnail" src="'.$value['look_image'].'"  alt="" /></a>
+           <a href="product_view.php?id='.$value['id'].'"><img class="img-thumbnail" src="'.$value['upload_image'].'"  alt="" /></a>
                 
                        
                   </div>
@@ -36,7 +36,7 @@ include 'databaseconnect.php';
                 <div class="mb15"></div>
                 <div class="row">
                   <div class="col-xs-6">
-                    <div class="checkbox block"><label><input type="checkbox"  name="select[]" value="'. $value['look_id']. '"> Select</label></div>
+                    <div class="checkbox block"><label><input type="checkbox"  name="select[]" value="'. $value['id']. '"> Select</label></div>
                   </div>
 
                  
@@ -52,6 +52,5 @@ include 'databaseconnect.php';
 
   $arr['htm'] =$str;
   $arr['status'] = 'success';
-$arr['sql'] =$query;
   echo  json_encode($arr);
 ?> 
