@@ -32,12 +32,12 @@ class LookController extends Controller
         unset($paginate_qs['page']);
 
         $looks  =
-            Look::orderBy('look_id', 'desc')
+            Look::orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
 
-        //$looks = Look::where('look_id','<=',8000)->get()->slice(0,10)->all();
+        //$looks = Look::where('id','<=',8000)->get()->slice(0,10)->all();
         return view('look.list',['looks'=> $looks]);
     }
 
@@ -97,8 +97,8 @@ class LookController extends Controller
                 $domain = str_replace("stylist.", "", $_SERVER['HTTP_HOST']);
                 return response()->json(
                     array('success' => true,
-                        'look_id' => $look->look_id,
-                        'look_url' => url('look/view/' . $look->look_id),
+                        'look_id' => $look->id,
+                        'look_url' => url('look/view/' . $look->id),
                         'look_name' => $look->look_name
                     ), 200);
             }

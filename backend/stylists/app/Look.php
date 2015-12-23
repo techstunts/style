@@ -14,7 +14,7 @@ class Look extends Model
      */
     protected $table = 'looks';
 
-    protected $primaryKey = 'look_id';
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.

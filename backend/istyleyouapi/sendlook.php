@@ -10,7 +10,7 @@
     } else {
 	
     // get user data
-    $sql = "SELECT * FROM looks where look_id=$id";
+    $sql = "SELECT * FROM looks where looks.id=$id";
     $select = mysql_query($sql);
     $result = array();
     while($data = mysql_fetch_assoc($select)) {

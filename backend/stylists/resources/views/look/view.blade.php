@@ -6,7 +6,7 @@
 <div id="contentCntr">
     <div class="section">
         <ol class="selectable">
-            <li class="ui-state-default" id="{{$look->look_id}}">
+            <li class="ui-state-default" id="{{$look->id}}">
                 <div class="resource_view">
                     <div class="image">
                         <img src="{!! asset('images/' . $look->look_image) !!}" />

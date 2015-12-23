@@ -20,7 +20,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['stylish_id']) && !empty($_G
 
         $lookinfo=array();
         $looks=array();
-        $sql="Select looks.look_id,look_description,look_image,lookprice,look_name,looks.occasion FROM looks where gender= '$gender' AND stylish_id='$userid'  order by look_id ASC LIMIT 5";
+        $sql="Select looks.id as look_id,look_description,look_image,lookprice,look_name,looks.occasion FROM looks where gender= '$gender' AND stylish_id='$userid'  order by looks.id ASC LIMIT 5";
       
         $res=mysql_query($sql);
         $row=mysql_num_rows($res);
@@ -30,7 +30,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['stylish_id']) && !empty($_G
         }
         for($i=0;$i<$row;$i++){
         $id=$ids[$i][0];
-        $sql1="select usersfav.look_id from usersfav join looks on looks.look_id=usersfav.look_id where user_id='$userid'";
+        $sql1="select usersfav.look_id from usersfav join looks on looks.id=usersfav.look_id where user_id='$userid'";
         
         $res=mysql_query($sql1);
         $r=mysql_num_rows($res);
@@ -49,7 +49,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['stylish_id']) && !empty($_G
               $fav1='No';
             }
           }
-        $query="select id,product_name,upload_image,product_price,product_type,product_link from products join looks on looks.product_id1=products.id or looks.product_id2=products.id or looks.product_id3=products.id or looks.product_id4=products.id where look_id='$id'";
+        $query="select products.id,product_name,upload_image,product_price,product_type,product_link from products join looks on looks.product_id1=products.id or looks.product_id2=products.id or looks.product_id3=products.id or looks.product_id4=products.id where looks.id='$id'";
         $res1=mysql_query($query);
         $list=array();
         while($data1=mysql_fetch_array($res1)){

@@ -35,15 +35,15 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 
 		foreach($occasions as $occasion){
 			$latest_looks_sql =
-				"Select cl.look_id, look_description, look_image, lookprice, cl.occasion, look_name, uf.fav_id
+				"Select cl.id as look_id, look_description, look_image, lookprice, cl.occasion, look_name, uf.fav_id
 			from looks cl
-			LEFT JOIN usersfav uf ON cl.look_id = uf.look_id
+			LEFT JOIN usersfav uf ON cl.id = uf.look_id
 			where cl.gender = '$gender'
 				$body_type_condition
 				AND cl.occasion = '$occasion'
 				AND cl.status_id = 1
 				AND (uf.user_id is null OR uf.user_id = '$userid')
-				AND cl.look_id NOT IN
+				AND cl.id NOT IN
 					(Select look_id
 					from users_unlike
 					where user_id='$userid')
@@ -80,13 +80,13 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 
 				//Get products info for current look
 				$current_look_products_query =
-					"select id,product_name,upload_image,product_price,product_type,product_link, ld.agency_id, ld.merchant_id
-					from products ld join looks
-						on looks.product_id1=ld.id
-						or looks.product_id2=ld.id
-						or looks.product_id3=ld.id
-						or looks.product_id4=ld.id
-					where look_id='$look_id'";
+					"select p.id,product_name,upload_image,product_price,product_type,product_link, p.agency_id, p.merchant_id
+					from products p join looks
+						on looks.product_id1=p.id
+						or looks.product_id2=p.id
+						or looks.product_id3=p.id
+						or looks.product_id4=p.id
+					where looks.id='$look_id'";
 
 				$current_look_products_res = mysql_query($current_look_products_query);
 				$current_look_products = [];

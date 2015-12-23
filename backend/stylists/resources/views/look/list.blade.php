@@ -10,9 +10,9 @@
     <div class="section">
         <ol class="selectable" >
         @foreach($looks as $look)
-            <li class="ui-state-default" look_id="{{$look->look_id}}">
+            <li class="ui-state-default" look_id="{{$look->id}}">
                 <div class="items">
-                    <div class="name text"><a href="{{url('look/view/' . $look->look_id)}}">{{$look->look_name}}</a></div>
+                    <div class="name text"><a href="{{url('look/view/' . $look->id)}}">{{$look->look_name}}</a></div>
                     <div class="image"><img src="{!! asset('images/' . $look->look_image) !!}" /></div>
                     <div class="extra text">
                         <span>{{$look->bodytype}}</span>
