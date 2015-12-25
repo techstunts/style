@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -23,6 +25,9 @@ class AuthController extends Controller
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
+    protected $redirectPath = '/look/list';
+
+    protected $redirectAfterLogout = '/auth/login';
     /**
      * Create a new authentication controller instance.
      *
@@ -30,7 +35,23 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'getLogout']);
+        //Commented the below code as the logout was not happening when the below code was on.
+        //$this->middleware('guest', ['except' => 'getLogout']);
+    }
+
+    /**
+     * Calls AuthenticatesAndRegistersUsers methods like getLogin, postLogin, getRegister, postRegister
+     *
+     */
+    public function index(Request $request, $action)
+    {
+        $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
+
+        if(Auth::check() && $method != 'getLogout'){
+            return redirect(property_exists($this, 'redirectPath') ? $this->redirectPath : '/');
+        }
+        
+        return $this->$method($request->method() == 'POST' ? $request : null);
     }
 
     /**

@@ -10,11 +10,15 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
+use Zizaco\Entrust\Traits\EntrustUserTrait;
+
 class Stylist extends Model implements AuthenticatableContract,
-                                    AuthorizableContract,
+                                    //AuthorizableContract,
                                     CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword;
+    use Authenticatable, CanResetPassword;
+    // use Authorizable; //This conflicts with Entrust role and permission module with error "Trait method can has not been applied",
+    use EntrustUserTrait;
 
     /**
      * The database table used by the model.
@@ -30,7 +34,7 @@ class Stylist extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['stylish_name', 'stylish_email', 'stylish_password', 'stylish_image',  'profile',
+    protected $fillable = ['stylish_name', 'email', 'password', 'stylish_image',  'profile',
         'stylish_code', 'expertise', 'stylish_age', 'stylish_gender', 'stylish_description', 'status_id'];
 
     /**
@@ -38,5 +42,5 @@ class Stylist extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $hidden = ['stylish_password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token'];
 }

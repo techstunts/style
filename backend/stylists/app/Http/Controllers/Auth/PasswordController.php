@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Http\Request;
 
 class PasswordController extends Controller
 {
@@ -20,6 +21,8 @@ class PasswordController extends Controller
 
     use ResetsPasswords;
 
+    protected $redirectTo = '/look/list';
+
     /**
      * Create a new password controller instance.
      *
@@ -28,5 +31,19 @@ class PasswordController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    public function index(Request $request, $action, $token = null)
+    {
+        $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
+        if($request->method() == 'POST'){
+            return $this->$method($request);
+        }
+        else if($action == 'email'){
+            return $this->$method();
+        }
+        else{
+            return $this->$method($token);
+        }
     }
 }

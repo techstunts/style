@@ -15,8 +15,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::any('product/{action}/{id?}', 'ProductController@index');
+Route::any('auth/{action}', 'Auth\AuthController@index');
+Route::any('password/{action}/{token?}', 'Auth\PasswordController@index');
 
-Route::any('look/{action}/{id?}', 'LookController@index');
+Route::group(['middleware' => 'auth'], function(){
 
-Route::any('merchant/product/{action}/{id?}', 'Merchant\ProductController@index');
+    Route::any('product/{action}/{id?}', 'ProductController@index');
+
+    Route::any('look/{action}/{id?}', 'LookController@index');
+
+    Route::any('merchant/product/{action}/{id?}', 'Merchant\ProductController@index');
+
+});
+
+
