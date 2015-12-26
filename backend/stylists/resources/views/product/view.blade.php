@@ -4,7 +4,7 @@
 
 @section('content')
 <div id="contentCntr">
-    <div class="section">
+    <div class="container">
         <ol class="selectable">
             <li class="ui-state-default" id="{{$product->id}}">
                 <div class="resource_view">

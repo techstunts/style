@@ -5,25 +5,25 @@
 @section('content')
 <div id="contentCntr">
     <div class="section">
-        <div class="filters">
-            <form method="get" action="">
-                @include('merchant.select')
-                @include('brand.select')
-                @include('category.select')
-                @include('gender.select')
-                <input type="submit" name="filter" value="Filter"/>
-            </form>
-            <form method="post" action="" class="approve">
-                <input type="submit" name="approve_all" value="Approve All"/>
-                <input type="submit" name="reject_all" value="Reject All"/>
-                {!! csrf_field() !!}
-            </form>
-            {!! $merchant_products->render() !!}
-        </div>
-
-        <div class="clear"></div>
-
         <div class="container">
+            <div class="filters">
+                <form method="get" action="">
+                    @include('merchant.select')
+                    @include('brand.select')
+                    @include('category.select')
+                    @include('gender.select')
+                    <input type="submit" name="filter" value="Filter"/>
+                </form>
+                <form method="post" action="" class="approve">
+                    <input type="submit" name="approve_all" value="Approve All"/>
+                    <input type="submit" name="reject_all" value="Reject All"/>
+                    {!! csrf_field() !!}
+                </form>
+                {!! $merchant_products->render() !!}
+            </div>
+
+            <div class="clear"></div>
+
             <ol class="selectable" id="selectable">
             @foreach($merchant_products as $product)
                 <li class="ui-state-default" product_id="{{$product->id}}">
@@ -41,12 +41,11 @@
                 </li>
             @endforeach
             </ol>
+
+            <div class="clear"></div>
+
+            {!! $merchant_products->render() !!}
         </div>
-
-        <div class="clear"></div>
-
-        {!! $merchant_products->render() !!}
-
     </div>
 </div>
 
