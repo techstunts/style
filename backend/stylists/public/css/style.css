@@ -58,7 +58,7 @@ div.selected_products div.remove{position: relative; left: 80px; cursor: pointer
 
 div.resource_view{margin:5px;}
 div.resource_view div.image{float:left;}
-div.resource_view div.image img{max-height:700px;}
+div.resource_view div.image img{max-height:700px;max-width: 550px;}
 div.resource_view table.info{float:left;width:500px;}
 div.resource_view tr.row{text-align: left;padding: 5px}
 div.resource_view tr.row td{max-width: 490px;}
