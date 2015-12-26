@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Stylist;
 use Illuminate\Http\Request;
-use App\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -63,22 +63,23 @@ class AuthController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'stylish_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
+            'toc' => 'required'
         ]);
     }
 
     /**
-     * Create a new user instance after a valid registration.
+     * Create a new stylist instance after a valid registration.
      *
      * @param  array  $data
-     * @return User
+     * @return Stylist
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
+        return Stylist::create([
+            'stylish_name' => $data['stylish_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
