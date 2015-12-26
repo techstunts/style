@@ -27,7 +27,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 				while($data2=mysql_fetch_array($res2)){
 					$stylish_details[]=$data2;
 				}
-					var_dump($stylish_details);
+
 				$query="select products.id,product_name,upload_image,product_price,product_type,product_link from products join looks on looks.product_id1=products.id or looks.product_id2=products.id or looks.product_id3=products.id or looks.product_id4=products.id where looks.id='$id'";
 				$res1=mysql_query($query);
 				while($data1=mysql_fetch_array($res1)){
