@@ -17,7 +17,11 @@ if(isset($_POST['signup']) && $_POST['signup']!=''){
 	if(!empty($imageName)){
 		move_uploaded_file($temp_name,'stylish/'.$imageName);
 	}
-	$sql = "INSERT INTO stylists (stylish_name, stylish_email, stylish_password,stylish_image, profile,stylish_code,expertise,stylish_age,stylish_gender,stylish_description) VALUES ('$name','$email','$password','stylish/$imageName','$profile','$code','$expertise','$age','$gender','$description')";
+
+	$cost = 10;
+	$hash = password_hash($password, 1, ['cost' => $cost]);
+
+	$sql = "INSERT INTO stylists (stylish_name, email, password,stylish_image, profile,stylish_code,expertise,stylish_age,stylish_gender,stylish_description) VALUES ('$name','$email','$hash','stylish/$imageName','$profile','$code','$expertise','$age','$gender','$description')";
 	$result = mysql_query($sql);
 	if($result)	{
 	   header('Location:create_stylist.php');

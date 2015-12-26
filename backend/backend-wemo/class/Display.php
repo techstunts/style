@@ -16,32 +16,36 @@ class Display
 					}
 					$username = mysql_real_escape_string($username);
 					$password = mysql_real_escape_string($password);
-					//$password = md5($password);
-					
+
 					$query 		= 	"SELECT * FROM `stylists`
-									WHERE stylish_email = '$username' AND stylish_password = '$password' ";
+									WHERE email = '$username' ";
 
 					$db_query	=	mysql_query($query);
 					$num 		= 	mysql_num_rows($db_query);			
 					//echo $num.$db_query.$query;
 					
-					if(@$num>0)					{				
+					if(@$num>0)					{
 
 						$data = mysql_fetch_array($db_query);
-						$_SESSION['isu_user_id']		=	@$data['stylish_id'];
-						$_SESSION['isu_user_name']		=	@$data['stylish_email'];
-						
-						//header("Location:http://www.google.com");
-						$status  = true;
-						
-					}
 
+						$saved_hash = @$data['password'];
+
+						if(password_verify($password, $saved_hash))
+						{
+							$_SESSION['isu_user_id']		=	@$data['stylish_id'];
+							$_SESSION['isu_user_name']		=	@$data['email'];
+							$status  = true;
+						}
+						else{
+							$_SESSION['login_check']				=	"Password doesn't match";
+							$status  =  'incorrect';
+						}
+					}
 					else
 					{
 						$_SESSION['login_check']				=	"Password doesn't match";
 						$status  =  'incorrect';
-						//header("Location:login.php");
-					}	
+					}
 		
 		echo json_encode($status);
 		exit();
