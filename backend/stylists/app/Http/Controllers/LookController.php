@@ -68,7 +68,7 @@ class LookController extends Controller
         $look->age = isset($request->age) && $request->age != '' ? $request->age : '';
         $look->occasion = isset($request->occasion) && $request->occasion != '' ? $request->occasion : '';
         $look->gender = isset($request->gender) && $request->gender != '' ? $request->gender : '';
-        $look->stylish_id = isset($request->stylish_id) && $request->stylish_id != '' ? $request->stylish_id : '';
+        $look->stylish_id = $request->user()->stylish_id != '' ? $request->user()->stylish_id : '';
         $look->date = date('Y-m-d H:i:s');
 
         $look_price = 0;

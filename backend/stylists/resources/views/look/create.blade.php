@@ -69,7 +69,6 @@
                     <option value="Female">Female</option>
                 </select>
 
-                <select class="form-control  mb15=" name="stylish_id"><option value="1">arsh nagar</option><option value="2">Padma</option><option value="3">Kajal Yadav</option><option value="4">Shweta</option><option value="5">Harshil</option><option value="6">Sakshi</option><option value="7">Kunal</option><option value="8">tutorail </option><option value="9">Deepshikha</option><option value="10">SwatiM</option><option value="11">ipsa</option><option value="12">surbhi</option><option value="13">Aisha</option><option value="14">shruti</option><option value="15">shikha</option><option value="16">Aqsa</option><option value="17">Nidhi</option><option value="18">DIVYANGANA</option><option value="19">Aradhana</option><option value="20">Neha Sane</option><option value="21">VARSHA</option><option value="22">MANASI  JAYAKAR</option><option value="23">Saurabh Singh</option><option value="24">Khushbu  Bherulal Dhoka</option><option value="25">Aditi Shah</option><option value="26">Hardika Gulati</option><option value="27">Shreyasi Singh</option><option value="28">Snigdha Rawat</option></select>
             </div>
 
             <div><input type="text" name="look_name" placeholder="Look Name" value="" class="form-control"> </div>
@@ -77,7 +76,7 @@
             <div><textarea name="look_description" placeholder="Look Description" style="height:80px;" rows="8" cols="40" class="form-control"></textarea></div>
 
             <div>
-                <input type="submit" value="Create look" />
+                <input type="submit" value="Create look" class="form-control"/>
 
                 {{ csrf_field() }}
             </div>
