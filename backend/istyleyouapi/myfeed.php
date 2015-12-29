@@ -1,5 +1,6 @@
 <?php
 include("db_config.php");
+include("ProductLink.php");
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])){
 			$userid=$_REQUEST['userid'];
 			$sql="Select distinct looks.id as look_id,look_description,look_image,lookprice,look_name from sendlook join looks on sendlook.look_id=looks.id where sendlook.look_id NOT IN (Select look_id from users_unlike where user_id='$userid') AND  sendlook.look_id NOT IN (Select look_id from usersfav where user_id='$userid') AND sendlook.user_id='$userid' ORDER BY sendlook.send_id DESC limit 5 ";
@@ -33,7 +34,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 				for($i=0;$i<$row;$i++){
 				$id=$ids[$i][0];
 
-				$query="select products.id,product_name,upload_image,product_price,product_type,product_link from products join looks on looks.product_id1=products.id or looks.product_id2=products.id or looks.product_id3=products.id or looks.product_id4=products.id where looks.id='$id'";
+				$query="select products.id,product_name,upload_image,product_price,product_type,product_link,products.agency_id,products.merchant_id from products join looks on looks.product_id1=products.id or looks.product_id2=products.id or looks.product_id3=products.id or looks.product_id4=products.id where looks.id='$id'";
 				$res1=mysql_query($query);
 				while($data1=mysql_fetch_array($res1)){
 					$list[]=$data1;
@@ -60,7 +61,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 					}	
 					
 				
-					$product=array('fav'=>$fav,'productid'=>$list[$j][0],'productname'=>$list[$j][1],'productimage'=>$list[$j][2],'productprice'=>$list[$j][3],'producttype'=>$list[$j][4],'productlink'=>$list[$j][5]);
+					$product=array('fav'=>$fav,'productid'=>$list[$j][0],'productname'=>$list[$j][1],'productimage'=>$list[$j][2],'productprice'=>$list[$j][3],'producttype'=>$list[$j][4],'productlink'=>ProductLink::getDeepLink($list[$j][6], $list[$j][7], $list[$j][5]));
 					$productarray[]=$product;
 				}
 				$data= array('lookdetails'=>array('fav'=>'No','lookid'=>$ids[$i][0],'lookdescription'=>$ids[$i][1],'lookimage'=>$ids[$i][2],'lookprice'=>$ids[$i][3],'lookname'=>$ids[$i][4],'productdetails' => $productarray));
@@ -84,7 +85,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 				for($i=0;$i<$row;$i++){
 				$id=$ids[$i][0];
 
-				$query="select id,product_name,upload_image,product_price,product_type,product_link from products join looks on looks.product_id1=products.id or looks.product_id2=products.id or looks.product_id3=products.id or looks.product_id4=products.id where looks.id='$id'";
+				$query="select id,product_name,upload_image,product_price,product_type,product_link,products.agency_id,products.merchant_id from products join looks on looks.product_id1=products.id or looks.product_id2=products.id or looks.product_id3=products.id or looks.product_id4=products.id where looks.id='$id'";
 				$res1=mysql_query($query);
 				while($data1=mysql_fetch_array($res1)){
 					$list[]=$data1;
@@ -111,7 +112,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 					}	
 					
 				
-					$product=array('fav'=>$fav,'productid'=>$list[$j][0],'productname'=>$list[$j][1],'productimage'=>$list[$j][2],'productprice'=>$list[$j][3],'producttype'=>$list[$j][4],'productlink'=>$list[$j][5]);
+					$product=array('fav'=>$fav,'productid'=>$list[$j][0],'productname'=>$list[$j][1],'productimage'=>$list[$j][2],'productprice'=>$list[$j][3],'producttype'=>$list[$j][4],'productlink'=>ProductLink::getDeepLink($list[$j][6], $list[$j][7], $list[$j][5]));
 					$productarray[]=$product;
 				}
 				$data= array('lookdetails'=>array('fav'=>'yes','lookid'=>$ids[$i][0],'lookdescription'=>$ids[$i][1],'lookimage'=>$ids[$i][2],'lookprice'=>$ids[$i][3],'lookname'=>$ids[$i][4],'productdetails' => $productarray));
