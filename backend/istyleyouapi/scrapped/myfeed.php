@@ -3,20 +3,40 @@ include("db_config.php");
 include("ProductLink.php");
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])){
 			$userid=$_REQUEST['userid'];
-			$sql="Select distinct looks.id as look_id,look_description,look_image,lookprice,look_name from sendlook join looks on sendlook.look_id=looks.id where sendlook.look_id NOT IN (Select look_id from users_unlike where user_id='$userid') AND  sendlook.look_id NOT IN (Select look_id from usersfav where user_id='$userid') AND sendlook.user_id='$userid' ORDER BY sendlook.send_id DESC limit 5 ";
+			$sql="Select distinct looks.id as look_id, looks.description, looks.image, looks.price, looks.name
+				  from sendlook join looks on sendlook.look_id=looks.id
+				  where sendlook.look_id NOT IN (Select look_id from users_unlike where user_id='$userid')
+				  AND  sendlook.look_id NOT IN (Select look_id from usersfav where user_id='$userid')
+				  AND sendlook.user_id='$userid'
+				  ORDER BY sendlook.send_id DESC limit 5 ";
 			$res=mysql_query($sql);
 			$row=mysql_num_rows($res);
 			if($row==0){
-				$sql="Select looks.id as look_id,look_description,look_image,lookprice,look_name from looks where looks.id NOT IN (Select look_id from users_unlike where user_id='$userid') AND looks.id NOT IN (Select look_id from usersfav where user_id='$userid') AND stylish_id=(select stylish_id from userdetails where user_id='$userid') AND lower(gender)=(select gender from userdetails where user_id='$userid') ORDER BY looks.id ASC limit 5";
+				$sql="Select looks.id as look_id, looks.description, looks.image, looks.price, looks.name
+					  from looks
+					  where looks.id NOT IN (Select look_id from users_unlike where user_id='$userid')
+					  AND looks.id NOT IN (Select look_id from usersfav where user_id='$userid')
+					  AND stylish_id=(select stylish_id from userdetails where user_id='$userid')
+					  AND lower(gender)=(select gender from userdetails where user_id='$userid')
+					  ORDER BY looks.id ASC limit 5";
 				$res=mysql_query($sql);
 				$row=mysql_num_rows($res);
 			
 			if($row==0){
-				$sql="Select looks.id as look_id,look_description,look_image,lookprice,look_name from looks where looks.id NOT IN (Select look_id from users_unlike where user_id='$userid') AND looks.id NOT IN (Select look_id from usersfav where user_id='$userid') AND stylish_id=(select stylish_id from stylists order by rand(stylish_id) limit 1 ) AND lower(gender)=(select gender from userdetails where user_id='$userid') ORDER BY looks.id ASC limit 5";
+				$sql="Select looks.id as look_id, looks.description, looks.image, looks.price, looks.name
+					  from looks
+					  where looks.id NOT IN (Select look_id from users_unlike where user_id='$userid')
+					  AND looks.id NOT IN (Select look_id from usersfav where user_id='$userid')
+					  AND stylish_id=(select stylish_id from stylists order by rand(stylish_id) limit 1 )
+					  AND lower(gender)=(select gender from userdetails where user_id='$userid')
+					  ORDER BY looks.id ASC limit 5";
 				$res=mysql_query($sql);
 				$row=mysql_num_rows($res);
 					if($row==0){
-		$sql="Select looks.id as look_id,look_description,look_image,lookprice,look_name from looks where lower(gender)=(select gender from userdetails where user_id='$userid') order by rand() limit 5 ";
+		$sql="Select looks.id as look_id, looks.description, looks.image, looks.price, looks.name
+			  from looks
+			  where lower(gender)=(select gender from userdetails where user_id='$userid')
+			  order by rand() limit 5 ";
 				$res=mysql_query($sql);
 		$row=mysql_num_rows($res);
 	}
@@ -72,7 +92,11 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 			}
 
 			//fav
-				$sql="Select looks.id as look_id,look_description,look_image,lookprice,look_name from looks where looks.id NOT IN (Select look_id from users_unlike where user_id='$userid') AND looks.id IN (Select look_id from usersfav where user_id='$userid') ORDER BY looks.id DESC LIMIT 5 ";
+				$sql="Select looks.id as look_id, looks.description, looks.image, looks.price, looks.name
+					  from looks
+					  where looks.id NOT IN (Select look_id from users_unlike where user_id='$userid')
+					  AND looks.id IN (Select look_id from usersfav where user_id='$userid')
+					  ORDER BY looks.id DESC LIMIT 5 ";
 			$res=mysql_query($sql);
 			$row=mysql_num_rows($res);
 		

@@ -2,7 +2,12 @@
 include("db_config.php");
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])){
 			$userid=$_REQUEST['userid'];
-			$sql="Select distinct looks.id as look_id,look_description,look_image,lookprice,occasion,look_name from sendlook join looks on sendlook.look_id=looks.id where sendlook.look_id NOT IN (Select look_id from users_unlike where user_id='$userid') AND  sendlook.look_id NOT IN (Select look_id from usersfav where user_id='$userid') AND sendlook.user_id='$userid' ORDER BY sendlook.send_id DESC";
+			$sql="Select distinct looks.id as look_id,looks.description, looks.image, looks.price, occasion, looks.name
+				  from sendlook join looks on sendlook.look_id=looks.id
+				  where sendlook.look_id NOT IN (Select look_id from users_unlike where user_id='$userid')
+				  AND  sendlook.look_id NOT IN (Select look_id from usersfav where user_id='$userid')
+				  AND sendlook.user_id='$userid'
+				  ORDER BY sendlook.send_id DESC";
 			$res=mysql_query($sql);
 			$row=mysql_num_rows($res);
 			
@@ -63,7 +68,13 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 			$abc=array();
 		}
 			//fav
-				$sql="Select looks.id as look_id,look_description,look_image,lookprice,looks.occasion,look_name from looks where looks.id NOT IN (Select look_id from users_unlike where user_id='$userid') AND looks.id IN (Select look_id from usersfav where user_id='$userid') ORDER BY looks.id DESC  ";
+
+				$sql="Select looks.id as look_id,looks.description, looks.image, looks.price, occasion, looks.name
+					  from looks
+					  where looks.id NOT IN (Select look_id from users_unlike where user_id='$userid')
+					  AND looks.id IN (Select look_id from usersfav
+					  where user_id='$userid')
+					  ORDER BY looks.id DESC  ";
 			$res=mysql_query($sql);
 			$row=mysql_num_rows($res);
 		

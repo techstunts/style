@@ -2,7 +2,11 @@
 include("db_config.php");
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['userid']) && !empty($_GET['userid'])){
 	$userid=$_GET['userid'];
-	$sql="Select looks.id as look_id,look_description,look_image,lookprice,look_name from looks where looks.id NOT IN (Select look_id from users_unlike where user_id='$userid') AND looks.id IN (Select look_id from usersfav where user_id='$userid') ORDER BY looks.id DESC LIMIT 5 ";
+	$sql="Select id as look_id, description, image, price, name
+		  from looks
+		  where looks.id NOT IN (Select look_id from users_unlike where user_id='$userid')
+		  AND looks.id IN (Select look_id from usersfav where user_id='$userid')
+		  ORDER BY looks.id DESC LIMIT 5 ";
 			$res=mysql_query($sql);
 			$row=mysql_num_rows($res);
 		

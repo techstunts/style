@@ -2,7 +2,7 @@
 include("db_config.php");
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['userid']) && !empty($_GET['userid'])){
   $userid=$_GET['userid'];
-  $sql="SELECT stylish_id,stylish_name,stylish_description,stylish_image,stylish_code FROM stylists where stylish_id IN (SELECT stylish_id from userdetails where user_id='$userid')";
+  $sql="SELECT stylish_id, name, description, image, code FROM stylists where stylish_id IN (SELECT stylish_id from userdetails where user_id='$userid')";
   $stylishinfo=array();
   $res=mysql_query($sql);
   $rows=mysql_num_rows($res);
@@ -11,15 +11,20 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['userid']) && !empty($_GET['
       while($data=mysql_fetch_assoc($res)){
         $stylishimage=array();
         $stylishid=$data['stylish_id'];
-        $stylishname=$data['stylish_name'];
-        $description=$data['stylish_description'];
-        $stylishimage[]=$data['stylish_image'];
-        $stylishcode=$data['stylish_code'];
+        $stylishname=$data['name'];
+        $description=$data['description'];
+        $stylishimage[]=$data['image'];
+        $stylishcode=$data['code'];
         }
 
         $lookinfo=array();
         $looks=array();
-        $sql="Select looks.id as look_id,look_description,look_image,lookprice,look_name,looks.occasion FROM looks where gender IN (select gender from userdetails where user_id='$userid') AND stylish_id IN (SELECT stylish_id from userdetails where user_id='$userid') order by look_id ASC LIMIT 5";
+
+        $sql="Select looks.id as look_id,looks.description, looks.image, looks.price, looks.name, looks.occasion
+              FROM looks
+              where gender IN (select gender from userdetails where user_id='$userid')
+              AND stylish_id IN (SELECT stylish_id from userdetails where user_id='$userid')
+              order by look_id ASC LIMIT 5";
       
         $res=mysql_query($sql);
         $row=mysql_num_rows($res);
