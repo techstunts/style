@@ -1,6 +1,7 @@
 <?php
 include("db_config.php");
 include("ProductLink.php");
+include("Lookup.php");
 
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])){
 	$userid = mysql_real_escape_string($_REQUEST['userid']);
@@ -33,21 +34,25 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 		//var_dump($page, $occasions);
 		//die;
 
+		$gender_id = Lookup::getId('gender', $gender);
+		$occasion_id = Lookup::getId('occasion', $occasion);
+
 		foreach($occasions as $occasion){
 			$latest_looks_sql =
-				"Select cl.id as look_id, look_description, look_image, lookprice, cl.occasion, look_name, uf.fav_id
+				"Select cl.id as look_id, cl.description, cl.image, cl.price, o.name as occasion, cl.name, uf.fav_id
 			from looks cl
+		  	join lu_occasion o on cl.occasion_id = o.id
 			LEFT JOIN usersfav uf ON cl.id = uf.look_id
-			where cl.gender = '$gender'
+			where cl.gender_id = '$gender_id'
 				$body_type_condition
-				AND cl.occasion = '$occasion'
+				AND cl.occasion_id = '$occasion_id'
 				AND cl.status_id = 1
 				AND (uf.user_id is null OR uf.user_id = '$userid')
 				AND cl.id NOT IN
 					(Select look_id
 					from users_unlike
 					where user_id='$userid')
-			ORDER BY cl.date DESC
+			ORDER BY cl.created_at DESC
 			LIMIT $record_start, $records_count ";
 			//echo $latest_looks_sql . "<br /><br />";
 
@@ -81,12 +86,10 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 				//Get products info for current look
 				$current_look_products_query =
 					"select p.id,product_name,upload_image,product_price,product_type,product_link, p.agency_id, p.merchant_id
-					from products p join looks
-						on looks.product_id1=p.id
-						or looks.product_id2=p.id
-						or looks.product_id3=p.id
-						or looks.product_id4=p.id
-					where looks.id='$look_id'";
+						from looks l
+						join looks_products lp ON l.id = lp.look_id
+						join products p ON lp.product_id = p.id
+						where l.id='$look_id'";
 
 				$current_look_products_res = mysql_query($current_look_products_query);
 				$current_look_products = [];

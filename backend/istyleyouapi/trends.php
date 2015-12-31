@@ -1,6 +1,7 @@
 <?php
 include("db_config.php");
 include("ProductLink.php");
+include("Lookup.php");
 
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])){
 	$userid = mysql_real_escape_string($_REQUEST['userid']);
@@ -30,26 +31,28 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 		$record_start = intval($page * 4);
 		$records_count = 4;
 
-		//var_dump($page, $occasions);
-		//die;
+        $gender_id = Lookup::getId('gender', $gender);
+        $occasion_id = Lookup::getId('occasion', $occasion);
 
 		foreach($occasions as $occasion){
 			$looks_sql =
-				"SELECT cl.id as look_id, look_description, look_image, lookprice, cl.occasion, look_name, uf.fav_id,
-						sd.stylish_id, sd.stylish_name, sd.stylish_image
+				"SELECT cl.id as look_id, cl.description as look_description, cl.image as look_image,
+						cl.price as lookprice, o.name as occasion, cl.name as look_name, uf.fav_id,
+						sd.stylish_id as stylist_id, sd.name as stylist_name, sd.image as stylist_image
 				FROM looks cl
+        		  	JOIN lu_occasion o on cl.occasion_id = o.id
 					LEFT JOIN usersfav uf ON cl.id = uf.look_id
 					JOIN stylists sd on sd.stylish_id = cl.stylish_id
-				WHERE cl.gender = '$gender'
-					$body_type_condition
-					AND cl.occasion = '$occasion'
+			    WHERE cl.gender_id = '$gender_id'
+				    $body_type_condition
+				    AND cl.occasion_id = '$occasion_id'
 					AND cl.status_id = 1
 					AND (uf.user_id is null OR uf.user_id = '$userid')
 					AND cl.id NOT IN
 						(SELECT look_id
 						FROM users_unlike
 						WHERE user_id='$userid')
-				ORDER BY cl.date DESC
+				ORDER BY cl.created_at DESC
 				LIMIT $record_start, $records_count ";
 			//echo $looks_sql . "<br /><br />";
 
@@ -82,13 +85,12 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 
 				//Get products info for current look
 				$current_look_products_query =
-					"select ld.id,product_name,upload_image,product_price,product_type,product_link, ld.agency_id, ld.merchant_id
-					from products ld join looks
-						on looks.product_id1=ld.id
-						or looks.product_id2=ld.id
-						or looks.product_id3=ld.id
-						or looks.product_id4=ld.id
-					where looks.id='$look_id'";
+					"select p.id,product_name,upload_image,product_price,product_type,product_link, p.agency_id, p.merchant_id
+						from looks l
+						join looks_products lp ON l.id = lp.look_id
+						join products p ON lp.product_id = p.id
+						where l.id='$look_id'";
+
 				$current_look_products_res = mysql_query($current_look_products_query);
 				$current_look_products = [];
 				while ($data1 = mysql_fetch_array($current_look_products_res)) {
@@ -123,9 +125,9 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 				}
 
 				$stylist_details = array();
-				$stylist_details['stylish_id'] = $looks[$i]['stylish_id'];
-				$stylist_details['stylish_name'] = $looks[$i]['stylish_name'];
-				$stylist_details['stylish_image'] = $looks[$i]['stylish_image'];
+				$stylist_details['stylish_id'] = $looks[$i]['stylist_id'];
+				$stylist_details['stylish_name'] = $looks[$i]['stylist_name'];
+				$stylist_details['stylish_image'] = $looks[$i]['stylist_image'];
 
 				$current_look_details =
 					array(

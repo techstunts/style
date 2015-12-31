@@ -18,8 +18,8 @@
                         {!! csrf_field() !!}
 
                         <div class="form-group has-error">
-                            <input class="form-control" placeholder="Name" type="text" name="stylish_name" value="{{ old('stylish_name') }}">
-                            @if($name_error = $errors->first('stylish_name'))
+                            <input class="form-control" placeholder="Name" type="text" name="name" value="{{ old('name') }}">
+                            @if($name_error = $errors->first('name'))
                                 <span class="errorMsg">{{$name_error}}</span>
                             @endif
                         </div>

@@ -21,13 +21,37 @@ class Look extends Model
      *
      * @var array
      */
-    protected $fillable = ['look_image', 'look_name', 'look_description', 'product_id1', 'product_id2', 'product_id3',
-        'product_id4','body_type', 'budget', 'age', 'occasion', 'gender', 'stylish_id', 'lookprice','date'];
+    protected $fillable = ['image', 'name', 'description', 'body_type_id', 'budget_id', 'age_group_id', 'occasion_id', 'gender_id',
+        'stylish_id', 'price', 'created_at'];
 
     public $timestamps = false;
 
     public function stylist(){
         return $this->belongsTo('App\Stylist', 'stylish_id');
+    }
+
+    public function products(){
+        return $this->belongsToMany('App\Product', 'looks_products');
+    }
+
+    public function gender(){
+        return $this->belongsTo('App\Gender', 'gender_id');
+    }
+
+    public function body_type(){
+        return $this->belongsTo('App\BodyType', 'body_type_id');
+    }
+
+    public function occasion(){
+        return $this->belongsTo('App\Occasion', 'occasion_id');
+    }
+
+    public function budget(){
+        return $this->belongsTo('App\Budget', 'budget_id');
+    }
+
+    public function age_group(){
+        return $this->belongsTo('App\AgeGroup', 'age_group_id');
     }
 
 }

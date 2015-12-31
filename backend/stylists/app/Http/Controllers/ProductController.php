@@ -134,8 +134,9 @@ class ProductController extends Controller
             $merchant = $product->merchant;
             $brand = $product->brand;
             $gender = $product->gender;
+            $looks = $product->looks;
 
-            $view_properties = array('product' => $product, 'merchant' => $merchant,
+            $view_properties = array('product' => $product, 'looks' => $looks, 'merchant' => $merchant,
                 'category' => $category, 'gender' => $gender, 'brand' => $brand);
         }
         else{

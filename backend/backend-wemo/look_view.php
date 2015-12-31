@@ -123,10 +123,17 @@
 			$id=intval($_GET["id"]);
 			
 			
-			 $data = mysql_query("SELECT *, looks.id as look_id FROM looks JOIN stylists ON looks.stylish_id=stylists.stylish_id WHERE looks.id = $id");
+			 $data = mysql_query("SELECT *, lk.id as look_id, lk.name as look_name, lk.image as look_image,
+                                lk.description as look_description, lk.created_at as look_created_at,
+                                stylists.name as stylist_name
+                                FROM looks lk JOIN stylists ON lk.stylish_id=stylists.stylish_id WHERE lk.id = $id");
  //Puts it into an array 
  $info = mysql_fetch_array( $data );
- $sql=mysql_query("select *, products.id as product_id, looks.id as look_id from products join looks on looks.product_id1=products.id OR looks.product_id2=products.id OR looks.product_id3=products.id OR looks.product_id4=products.id where looks.id=$id" );
+ $sql=mysql_query("select *, p.id as product_id, l.id as look_id
+                    from looks l
+                    join looks_products lp ON l.id = lp.look_id
+                    join products p ON lp.product_id = p.id
+                    where l.id=$id" );
 while($data1=mysql_fetch_array($sql)){
   $totaldata[]=$data1;
 }
@@ -138,8 +145,8 @@ while($data1=mysql_fetch_array($sql)){
             <h3 class="blogsingle-title">Look Name : <?php echo $info['look_name']; ?></h3>
             
             <ul class="blog-meta">
-              <li>By: <?php echo $info['stylish_name']; ?></li>
-              <li><?php echo $info['date']; ?></li>
+              <li>By: <?php echo $info['stylist_name']; ?></li>
+              <li><?php echo $info['look_created_at']; ?></li>
             </ul>
             
             <br />

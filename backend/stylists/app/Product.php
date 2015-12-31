@@ -32,4 +32,7 @@ class Product extends Model
         return $this->belongsTo('App\Gender', 'gender_id');
     }
 
+    public function looks(){
+        return $this->belongsToMany('App\Look', 'looks_products');
+    }
 }

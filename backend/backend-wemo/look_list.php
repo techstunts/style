@@ -305,7 +305,12 @@ $valid=true;
   
   
   
-$sql1="SELECT *, looks.id as look_id from products join looks ON looks.product_id1=products.id where ".$query_str1." ORDER BY looks.id DESC LIMIT 0,12";
+$sql1="SELECT distinct p.*, l.*, l.id as look_id, l.image as look_image
+        from looks l
+        join looks_products lp ON l.id = lp.look_id
+        join products p ON lp.product_id = p.id
+        where ".$query_str1."
+        ORDER BY l.id DESC LIMIT 0,12";
   
     
   }else{
@@ -317,7 +322,7 @@ $sql1="SELECT *, looks.id as look_id from products join looks ON looks.product_i
         $valid=true;
         $filter_err="";
         $str = '';
-        $sql1="SELECT *, looks.id as look_id from looks  ORDER BY looks.id DESC LIMIT 0,12";
+        $sql1="SELECT *, looks.id as look_id, looks.image as look_image  from looks  ORDER BY looks.id DESC LIMIT 0,12";
     } 
     
     
@@ -364,7 +369,7 @@ $sql1="SELECT *, looks.id as look_id from products join looks ON looks.product_i
 $result = mysql_query($sql);
 
 while ($row = mysql_fetch_array($result)) {
-    echo "<div class="."checkbox block"."><label><input type="."'checkbox'"."name="."filter[]"." value='" . $row['stylish_id'] . "'>" . $row['stylish_name'] . "</label></div>";
+    echo "<div class="."checkbox block"."><label><input type="."'checkbox'"."name="."filter[]"." value='" . $row['stylish_id'] . "'>" . $row['name'] . "</label></div>";
 }
 
 ?>
@@ -589,91 +594,98 @@ if($rows!=0){ ?>
     
   </div><!-- rightpanel -->
 <?php
-//print_r($_REQUEST);
-  if(!empty($_REQUEST['userid'])){
-       $_SESSION["users"]=$_REQUEST['userid']; 
-      $userid=$_REQUEST['userid'];
-      $ids=$_REQUEST['ids'];
-      foreach($ids as $askid){
-    $check="update asklook set send='1' where asklookid='$askid'";
-          $res1=mysql_query($check);
-  }
+if (!empty($_REQUEST['userid'])) {
+    $_SESSION["users"] = $_REQUEST['userid'];
+    $userid = $_REQUEST['userid'];
+    $ids = $_REQUEST['ids'];
+    $_SESSION['style_request_ids'] = $ids;
 
-      $regid=array();
-      foreach($userid as $uid){
-          if(!empty($uid)){
-              $fetch="select regId from userdetails where user_id='$uid'";
+    $regid = array();
+    foreach ($userid as $uid) {
+        if (!empty($uid)) {
+            $fetch = "select regId from userdetails where user_id='$uid'";
 
-              $res=mysql_query($fetch);
-              
-              while($data=mysql_fetch_array($res)){
-                $rid=$data[0];
+            $res = mysql_query($fetch);
+
+            while ($data = mysql_fetch_array($res)) {
+                $rid = $data[0];
                 array_push($regid, $rid);
-                $_SESSION['reg']=$regid;
-              }
-          }
-      }
-  }  
+                $_SESSION['reg'] = $regid;
+            }
+        }
+    }
+}
 
 
 if(isset($_POST['send']) && !empty($_REQUEST['select'])){
 
- $id=$_SESSION["users"];
- foreach($id as $uid1){
-$stylishname="select stylists.stylish_name from stylists join userdetails on stylists.stylish_id=userdetails.stylish_id where user_id='$uid1'";
-$res13=mysql_query($stylishname);
-while($a=mysql_fetch_array($res13)){
-$stylish=$a[0];
-}
-      $fetch="select regId from userdetails where user_id='$uid1'";
-       $res=mysql_query($fetch);
-              $regid=array();
-              while($data=mysql_fetch_array($res)){
-                $regid=$data[0];  
-              }
+    $ids = $_SESSION['style_request_ids'];
+    unset($_SESSION['style_request_ids']);
 
-  $gendercheck="select gender from userdetails where user_id='$uid1'";
-  $res11=mysql_query($gendercheck);
-  while($data11=mysql_fetch_array($res11)){
-    $ug=$data11[0];
-    $ug=strtolower($ug);
-  }
+    $id = $_SESSION["users"];
+    foreach ($id as $uid1) {
+        $stylishname = "select stylists.name from stylists join userdetails on stylists.stylish_id=userdetails.stylish_id where user_id='$uid1'";
+        $res13 = mysql_query($stylishname);
+        while ($a = mysql_fetch_array($res13)) {
+            $stylish = $a[0];
+        }
+        $fetch = "select regId from userdetails where user_id='$uid1'";
+        $res = mysql_query($fetch);
+        $regid = array();
+        while ($data = mysql_fetch_array($res)) {
+            $regid = $data[0];
+        }
 
-$looks=$_REQUEST['select'];
-$r=0;
-foreach($looks as $value){
-  
-  $lookgender="select gender from looks where id='$value'";
-  $res12=mysql_query($lookgender);
-  while($data12=mysql_fetch_array($res12)){
-    $lg=$data12[0];
-    $lg=strtolower($lg);
-  }
-  if($ug==$lg){
- if($r==0){
-    $sql="select look_image from looks where id='$value'";
-    $res=mysql_query($sql);
-    $data=mysql_fetch_array($res);
-    $firstlook=$data[0];
-    $r++;
-  }
-      $insert="Insert into sendlook(user_id,look_id) Values('$uid1','$value')";
-      $res=mysql_query($insert);
-  }else{
-  
-   $lookerror= "look ID No. ".$value." having gender ".$lg." whereas user have gender ".$ug;
-  $lookerror=preg_replace("/\r?\n/", "\\n", addslashes($lookerror));
-     echo "<script type='text/javascript'>alert(\"$lookerror\")</script>";
-  }
+        $gendercheck = "select gender from userdetails where user_id='$uid1'";
+        $res11 = mysql_query($gendercheck);
+        while ($data11 = mysql_fetch_array($res11)) {
+            $ug = $data11[0];
+            $ug = strtolower($ug);
+        }
 
-  
-}
-include_once 'push.php';
-$push = new pushmessage();
-$params = array("pushtype"=>"android", "registration_id"=>$regid, "message"=>$stylish." has sent you looks","message_summery"=>$stylish." has sent you looks","look_url"=>$firstlook);
+        $looks = $_REQUEST['select'];
+        $r = 0;
+        foreach ($looks as $value) {
 
-$rtn = $push->sendMessage($params);
-}
+            $lookgender = "select g.name from looks l inner join lu_gender g on l.gender_id = g.id where l.id='$value'";
+            $res12 = mysql_query($lookgender);
+            while ($data12 = mysql_fetch_array($res12)) {
+                $lg = $data12[0];
+                $lg = strtolower($lg);
+            }
+            if ($ug == $lg) {
+                if ($r == 0) {
+                    $sql = "select image from looks where id='$value'";
+                    $res = mysql_query($sql);
+                    $data = mysql_fetch_array($res);
+                    $firstlook = $data[0];
+                    $r++;
+                }
+                $insert = "INSERT INTO recommendations(user_id, entity_id, entity_type_id, recommendation_type_id, created_at, created_by)
+                           VALUES ('$uid1','$value', '2', '1', date('Y-m-d H:i:s'), {$_SESSION['isu_user_id']})";
+                $res = mysql_query($insert);
+                $recommendation_id = mysql_insert_id();
+
+                if($ids[0]) {
+                    $insert = "INSERT INTO style_requests_recommendations(style_request_id, recommendation_id)
+                               VALUES ('{$ids[0]}','$recommendation_id')";
+                    $res = mysql_query($insert);
+                }
+
+            } else {
+
+                $lookerror = "look ID No. " . $value . " having gender " . $lg . " whereas user have gender " . $ug;
+                $lookerror = preg_replace("/\r?\n/", "\\n", addslashes($lookerror));
+                echo "<script type='text/javascript'>alert(\"$lookerror\")</script>";
+            }
+
+        }
+        include_once 'push.php';
+        $push = new pushmessage();
+        $params = array("pushtype" => "android", "registration_id" => $regid, "message" => $stylish . " has sent you looks", "message_summery" => $stylish . " has sent you looks", "look_url" => $firstlook);
+
+        $rtn = $push->sendMessage($params);
+    }
 
 }
  

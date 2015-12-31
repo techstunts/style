@@ -61,15 +61,15 @@ class LookController extends Controller
     {
 
         $look = new Look();
-        $look->look_name = isset($request->look_name) && $request->look_name != '' ? $request->look_name : '';
-        $look->look_description = isset($request->look_description) && $request->look_description != '' ? $request->look_description : '';
-        $look->body_type = isset($request->body_type) && $request->body_type != '' ? $request->body_type : '';
-        $look->budget = isset($request->budget) && $request->budget != '' ? $request->budget : '';
-        $look->age = isset($request->age) && $request->age != '' ? $request->age : '';
-        $look->occasion = isset($request->occasion) && $request->occasion != '' ? $request->occasion : '';
-        $look->gender = isset($request->gender) && $request->gender != '' ? $request->gender : '';
+        $look->name = isset($request->name) && $request->name != '' ? $request->name : '';
+        $look->description = isset($request->description) && $request->description != '' ? $request->description : '';
+        $look->body_type_id = isset($request->body_type_id) && $request->body_type_id != '' ? $request->body_type_id : '';
+        $look->budget_id = isset($request->budget_id) && $request->budget_id != '' ? $request->budget_id : '';
+        $look->age_group_id = isset($request->age_group_id) && $request->age_group_id != '' ? $request->age_group_id : '';
+        $look->occasion_id = isset($request->occasion_id) && $request->occasion_id != '' ? $request->occasion_id : '';
+        $look->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
         $look->stylish_id = $request->user()->stylish_id != '' ? $request->user()->stylish_id : '';
-        $look->date = date('Y-m-d H:i:s');
+        $look->created_at = date('Y-m-d H:i:s');
 
         $look_price = 0;
         $src_image_paths = Array();
@@ -88,18 +88,18 @@ class LookController extends Controller
             }
         }
 
-        $look->lookprice = $look_price;
+        $look->price = $look_price;
 
         $lookImage = new CombineImages();
-        if($lookImage->createLook($src_image_paths, $look->look_name)){
-            $look->look_image = $lookImage->targetImage;
+        if($lookImage->createLook($src_image_paths, $look->name)){
+            $look->image = $lookImage->targetImage;
             if($look->save()){
                 $domain = str_replace("stylist.", "", $_SERVER['HTTP_HOST']);
                 return response()->json(
                     array('success' => true,
                         'look_id' => $look->id,
                         'look_url' => url('look/view/' . $look->id),
-                        'look_name' => $look->look_name
+                        'name' => $look->name
                     ), 200);
             }
         }
@@ -116,12 +116,7 @@ class LookController extends Controller
         $look = Look::find($this->resource_id);
         $view_properties = [];
         if($look){
-            $product_ids[] = $look->product_id1;
-            $product_ids[] = $look->product_id2;
-            $product_ids[] = $look->product_id3;
-            $product_ids[] = $look->product_id4;
-
-            $products = Product::find($product_ids);
+            $products = $look->products;
             $status = Status::find($look->status_id);
             //var_dump($look, $look->stylist, $product_ids, $products);
             $view_properties = array('look' => $look, 'products' => $products, 'stylist' => $look->stylist,

@@ -14,15 +14,15 @@
             @foreach($stylists as $stylist)
                 <li class="ui-state-default" stylist_id="{{$stylist->stylish_id}}">
                     <div class="items">
-                        <div class="name text"><a href="{{url('stylist/view/' . $stylist->stylish_id)}}">{{$stylist->stylish_name}}</a></div>
-                        <div class="image"><img src="{!! strpos($stylist->stylish_image, "stylish") === 0 ? asset('images/' . $stylist->stylish_image) : $stylist->stylish_image !!}" /></div>
+                        <div class="name text"><a href="{{url('stylist/view/' . $stylist->stylish_id)}}">{{$stylist->name}}</a></div>
+                        <div class="image"><img src="{!! strpos($stylist->image, "stylish") === 0 ? asset('images/' . $stylist->image) : $stylist->image !!}" /></div>
                         <div class="extra text">
                             <span>{{$status_list[$stylist->status_id]->name}}</span>
                             <span>{{$stylist->stylish_expertise}}</span>
-                            <span>{{$stylist->stylish_age}}</span>
+                            <span>{{$stylist->age}}</span>
                             <span>{{$stylist->stylish_gender}}</span>
                         </div>
-                        <div class="name text">{{$stylist->stylish_description}}</div>
+                        <div class="name text">{{$stylist->description}}</div>
                     </div>
                 </li>
             @endforeach

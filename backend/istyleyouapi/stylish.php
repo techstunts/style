@@ -1,26 +1,33 @@
 <?php       
 include("db_config.php");
+include("Lookup.php");
+
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['stylish_id']) && !empty($_GET['stylish_id']) && !empty($_GET['gender'])){
   $userid=$_GET['stylish_id'];
   $gender=$_GET['gender'];
-  $sql="SELECT stylish_id,stylish_name,stylish_description,stylish_image,stylish_code FROM stylists where stylish_id='$userid'";
+  $sql="SELECT stylish_id, name, description, image, code FROM stylists where stylish_id='$userid'";
   $stylishinfo=array();
   $res=mysql_query($sql);
   $rows=mysql_num_rows($res);
+
+  $gender_id = Lookup::getId('gender', $gender);
 
   if($rows==1){
       while($data=mysql_fetch_assoc($res)){
         $stylishimage=array();
         $stylishid=$data['stylish_id'];
-        $stylishname=$data['stylish_name'];
-        $description=$data['stylish_description'];
-        $stylishimage[]=$data['stylish_image'];
-        $stylishcode=$data['stylish_code'];
+        $stylishname=$data['name'];
+        $description=$data['description'];
+        $stylishimage[]=$data['image'];
+        $stylishcode=$data['code'];
         }
 
         $lookinfo=array();
         $looks=array();
-        $sql="Select looks.id as look_id,look_description,look_image,lookprice,look_name,looks.occasion FROM looks where gender= '$gender' AND stylish_id='$userid'  order by looks.id ASC LIMIT 5";
+        $sql="Select l.id as look_id, l.description, l.image, l.price, l.name, o.name as occasion
+              FROM looks l join lu_occasion o on l.occasion_id = o.id
+              where gender_id= '$gender_id' AND stylish_id='$userid'
+              order by l.id ASC LIMIT 5";
       
         $res=mysql_query($sql);
         $row=mysql_num_rows($res);
@@ -49,7 +56,12 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_GET['stylish_id']) && !empty($_G
               $fav1='No';
             }
           }
-        $query="select products.id,product_name,upload_image,product_price,product_type,product_link from products join looks on looks.product_id1=products.id or looks.product_id2=products.id or looks.product_id3=products.id or looks.product_id4=products.id where looks.id='$id'";
+          $query="select p.id,product_name,upload_image,product_price,product_type,product_link, p.agency_id, p.merchant_id
+                  from looks l
+                  join looks_products lp ON l.id = lp.look_id
+                  join products p ON lp.product_id = p.id
+                  where l.id='$id'";
+
         $res1=mysql_query($query);
         $list=array();
         while($data1=mysql_fetch_array($res1)){

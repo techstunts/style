@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', $look->look_name)
+@section('title', $look->name)
 
 @section('content')
 <div id="contentCntr">
@@ -9,32 +9,32 @@
             <li class="ui-state-default" id="{{$look->id}}">
                 <div class="resource_view">
                     <div class="image">
-                        <img src="{!! asset('images/' . $look->look_image) !!}" />
+                        <img src="{!! asset('images/' . $look->image) !!}" />
                     </div>
                     <table class="info">
                         <tr class="row">
-                            <td class="title" colspan="2">{{$look->look_name}}</td>
+                            <td class="title" colspan="2">{{$look->name}}</td>
                         </tr>
                         <tr class="row">
-                            <td class="description" colspan="2">{{$look->look_description}}</td>
+                            <td class="description" colspan="2">{{$look->description}}</td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Body Type</td><td class="content">{{$look->body_type}} </td>
+                            <td class="head">Body Type</td><td class="content">{{$look->body_type->name}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Budget</td><td class="content">Rs.{{$look->budget}} </td>
+                            <td class="head">Budget</td><td class="content">{{$look->budget->name}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Age</td><td class="content">{{$look->age}} </td>
+                            <td class="head">Age Group</td><td class="content">{{$look->age_group->name}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Occasion</td><td class="content">{{$look->occasion}} </td>
+                            <td class="head">Occasion</td><td class="content">{{$look->occasion->name}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Gender</td><td class="content">{{$look->gender}} </td>
+                            <td class="head">Gender</td><td class="content">{{$look->gender->name}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Look Price</td><td class="content">Rs.{{$look->lookprice}} </td>
+                            <td class="head">Look Price</td><td class="content">Rs.{{$look->price}} </td>
                         </tr>
                         <tr class="row">
                             <td class="head">Status</td><td class="content">{{$status->name}} </td>
@@ -42,8 +42,10 @@
                         <tr class="row">
                             <td class="head">Stylist</td>
                             <td class="content">
-                                <img class="icon" src="{{asset('images/' . $stylist->stylish_image)}}"/>
-                                {{$stylist->stylish_name}}
+                                <a href="{{url('stylist/view/' . $stylist->stylish_id)}}" title="{{$stylist->name}}" target="stylist_win">
+                                    <img class="icon" src="{{asset('images/' . $stylist->image)}}"/>
+                                    {{$stylist->name}}
+                                </a>
                             </td>
                         </tr>
                         <tr class="row">

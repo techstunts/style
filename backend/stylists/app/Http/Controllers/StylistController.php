@@ -70,6 +70,7 @@ class StylistController extends Controller
 
             $view_properties['stylist'] = $stylist;
             $view_properties['status_list'] = $status_list;
+            $view_properties['looks'] = $stylist->looks;
         }
         else{
             return view('404', array('title' => 'Stylist not found'));

@@ -470,7 +470,7 @@ $(document).ready(function (){
                               <th>username</th>
                               <th>bodytype</th>
                   	      <th>age</th>
-                  					  <th>stylish_name</th>
+                  					  <th>Stylist name</th>
                   					  
                            </tr>
                         </thead>
@@ -485,14 +485,21 @@ $(document).ready(function (){
                               <th>username</th>
                              <th>bodytype</th>
                               <th>age</th>
-                              <th>stylish_name</th>
+                              <th>Stylist name</th>
                              
                       </tr>
                     </tfoot>
                         <tbody>
           		<?php
-          			  $query='select asklook.user_id,asklook.occasion,asklook.budget,asklook.datetime,userdetails.username,bodytype,age,stylists.stylish_name,asklookid from asklook join userdetails join stylists on asklook.user_id=userdetails.user_id AND userdetails.stylish_id=stylists.stylish_id
-where send is NULL ORDER BY asklook.asklookid DESC';
+          			  $query='select sr.user_id, sr.occasion_id, sr.budget_id, sr.created_at, u.username, u.bodytype,
+                                      u.age, s.name, sr.id
+                              from style_requests sr
+                              join userdetails u on sr.user_id = u.user_id
+                              join stylists s on u.stylish_id = s.stylish_id
+                              left join style_requests_recommendations srr on sr.id = srr.style_request_id
+                              where srr.recommendation_id is NULL
+                              ORDER BY sr.id DESC';
+                //echo $query;
                   	$res = mysql_query($query);			 
           			 	$numRows = mysql_num_rows($res);
 

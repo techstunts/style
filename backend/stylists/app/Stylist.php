@@ -34,8 +34,8 @@ class Stylist extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['stylish_name', 'email', 'password', 'stylish_image',  'profile',
-        'stylish_code', 'expertise', 'stylish_age', 'stylish_gender', 'stylish_description', 'status_id'];
+    protected $fillable = ['name', 'email', 'password', 'image',  'profile',
+        'code', 'expertise', 'age', 'stylish_gender', 'description', 'status_id'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -43,4 +43,8 @@ class Stylist extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+    public function looks(){
+        return $this->hasMany('App\Look', 'stylish_id');
+    }
 }
