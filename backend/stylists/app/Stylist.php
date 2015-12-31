@@ -47,4 +47,13 @@ class Stylist extends Model implements AuthenticatableContract,
     public function looks(){
         return $this->hasMany('App\Look', 'stylish_id');
     }
+
+    public function gender(){
+        return $this->belongsTo('App\Gender', 'gender_id');
+    }
+
+    public function expertise(){
+        return $this->belongsTo('App\Expertise', 'expertise_id');
+    }
+
 }

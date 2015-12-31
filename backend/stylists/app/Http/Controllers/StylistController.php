@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Lookup;
 use App\Status;
 use App\Stylist;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Validator;
 
 class StylistController extends Controller
 {
@@ -85,21 +87,70 @@ class StylistController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function getEdit()
     {
-        //
+        $stylist = Stylist::find($this->resource_id);
+        $view_properties = null;
+        if($stylist){
+            $lookup = new Lookup();
+
+            $view_properties['stylist'] = $stylist;
+            $view_properties['gender_id'] = $stylist->gender_id;
+            $view_properties['genders'] = $lookup->type('gender')->get();
+            $view_properties['status_id'] = $stylist->status_id;
+            $view_properties['statuses'] = $lookup->type('status')->get();
+            $view_properties['expertise_id'] = $stylist->expertise_id;
+            $view_properties['expertises'] = $lookup->type('expertise')->get();
+        }
+        else{
+            return view('404', array('title' => 'Stylist not found'));
+        }
+
+        return view('stylist.edit', $view_properties);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function postUpdate(Request $request)
     {
-        //
+        $validator = $this->validator($request->all());
+        if($validator->fails()){
+            return redirect('stylist/edit/' . $this->resource_id)
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $stylist = Stylist::find($this->resource_id);
+        $stylist->name = isset($request->name) && $request->name != '' ? $request->name : '';
+        $stylist->email = isset($request->email) && $request->email != '' ? $request->email : '';
+        $stylist->description = isset($request->description) && $request->description != '' ? $request->description : '';
+        $stylist->age = isset($request->age) && $request->age != '' ? $request->age : '';
+        $stylist->profile = isset($request->profile) && $request->profile != '' ? $request->profile : '';
+        $stylist->code = isset($request->code) && $request->code != '' ? $request->code : '';
+        $stylist->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : '';;
+        $stylist->expertise_id = isset($request->expertise_id) && $request->expertise_id != '' ? $request->expertise_id : '';
+        $stylist->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
+        $stylist->save();
+
+        return redirect('stylist/view/' . $this->resource_id);
+    }
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|max:255|min:5',
+            'email' => 'required|email|max:255',
+        ]);
     }
 
     /**

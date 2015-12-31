@@ -13,7 +13,10 @@
                     </div>
                     <table class="info">
                         <tr class="row">
-                            <td class="title" colspan="2">{{$stylist->name}}</td>
+                            <td class="title" colspan="2">
+                                {{$stylist->name}}
+                                <a style="color:blue;font-size:13px;" href="{{url('stylist/edit/' . $stylist->stylish_id)}}" title="{{$stylist->name}}" >Edit</a>
+                            </td>
                         </tr>
                         <tr class="row">
                             <td class="description" colspan="2">{{$stylist->description}}</td>
@@ -25,13 +28,13 @@
                             <td class="head">Status</td><td class="content">{{$status_list[$stylist->status_id]->name}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Expertise</td><td class="content">{{$stylist->stylish_expertise}} </td>
+                            <td class="head">Expertise</td><td class="content">{{$stylist->expertise->name}} </td>
                         </tr>
                         <tr class="row">
                             <td class="head">Age</td><td class="content">{{$stylist->age}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Gender</td><td class="content">{{$stylist->stylish_gender}} </td>
+                            <td class="head">Gender</td><td class="content">{{$stylist->gender->name}} </td>
                         </tr>
                         <tr class="row">
                             <td class="head">Code</td><td class="content">{{$stylist->code}} </td>
