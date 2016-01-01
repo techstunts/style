@@ -1,6 +1,6 @@
 <?php       
 include("db_config.php");
-$sql="SELECT stylish_id,stylish_image FROM `stylish_details`";
+$sql="SELECT stylish_id,image as stylish_image FROM `stylists`";
  $res=mysql_query($sql);
  while($data=mysql_fetch_assoc($res)){
 $stylishinfo[]=$data;

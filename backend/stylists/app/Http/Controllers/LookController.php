@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CombineImages;
 use App\Look;
+use App\LookProduct;
 use App\Product;
 use App\Status;
 use Illuminate\Http\Request;
@@ -71,6 +72,7 @@ class LookController extends Controller
         $look->stylish_id = $request->user()->stylish_id != '' ? $request->user()->stylish_id : '';
         $look->created_at = date('Y-m-d H:i:s');
 
+        $look_products  = array();
         $look_price = 0;
         $src_image_paths = Array();
         $cnt = 1;
@@ -79,8 +81,7 @@ class LookController extends Controller
                 $product = null;
                 $product = Product::find($product_id);
                 if($product && $product->id){
-                    $property = "product_id" . $cnt;
-                    $look->$property = $product_id;
+                    $look_products[] = array('product_id' => $product_id);
                     $look_price += $product->product_price;
                     $src_image_paths[] = $product->upload_image;
                     $cnt++;
@@ -94,12 +95,16 @@ class LookController extends Controller
         if($lookImage->createLook($src_image_paths, $look->name)){
             $look->image = $lookImage->targetImage;
             if($look->save()){
-                $domain = str_replace("stylist.", "", $_SERVER['HTTP_HOST']);
+                foreach($look_products as &$lp){
+                    $lp['look_id'] = $look->id;
+                }
+                LookProduct::insert($look_products);
+
                 return response()->json(
                     array('success' => true,
                         'look_id' => $look->id,
                         'look_url' => url('look/view/' . $look->id),
-                        'name' => $look->name
+                        'look_name' => $look->name
                     ), 200);
             }
         }

@@ -20,10 +20,15 @@ class Lookup{
             self::init();
         }
 
-        if($type == "" || !isset(self::$lookup_data["lu_" . $type])){
-            return null;
-        }
+        $lookup_table = "lu_" . $type;
 
-        return self::$lookup_data["lu_" . $type][strtolower($name)];
+        if($type != "" && isset(self::$lookup_data[$lookup_table])) {
+
+            $lookup_keyname = strtolower($name);
+
+            if (isset(self::$lookup_data[$lookup_table][$lookup_keyname])) {
+                return self::$lookup_data[$lookup_table][$lookup_keyname];
+            }
+        }
     }
 }
