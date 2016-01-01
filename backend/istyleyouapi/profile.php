@@ -1,6 +1,6 @@
 <?php
 include("db_config.php");
-if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset($_REQUEST['username']) && isset($_REQUEST['bodytype']) && isset($_REQUEST['bodyshape']) && isset($_REQUEST['height']) && isset($_REQUEST['age']) && isset($_REQUEST['skintype']) && isset($_REQUEST['styletype']) && isset($_REQUEST['clubprice']) && isset($_REQUEST['ethicprice']) && isset($_REQUEST['denimprice']) && isset($_REQUEST['footwearprice']) && isset($_REQUEST['stylishcode'])) {
+    if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset($_REQUEST['username']) && isset($_REQUEST['bodytype']) && isset($_REQUEST['bodyshape']) && isset($_REQUEST['height']) && isset($_REQUEST['age']) && isset($_REQUEST['skintype']) && isset($_REQUEST['styletype']) && isset($_REQUEST['clubprice']) && isset($_REQUEST['ethicprice']) && isset($_REQUEST['denimprice']) && isset($_REQUEST['footwearprice']) && isset($_REQUEST['stylishcode'])) {
     $userid = $_REQUEST['userid'];
     $username = $_REQUEST['username'];
     if (!empty($_FILES['userimage']['name'])) {
@@ -42,7 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
         $sql = "Update userdetails SET username='$username',userimage='$userimage',bodyshape='$bodyshape',stylish_id='$stylishid',bodytype='$bodytype',skintype='$skintype',styletype='$styletype',age='$age',pricerange='$pricerange',clubprice='$clubprice',ethicprice='$ethicprice',denimprice='$denimprice',footwearprice='$footwearprice',height='$height' where user_id='$userid'";
 
         $select = mysql_query($sql);
-        $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id  where userdetails.user_id='$userid'";
+        $sql = "SELECT user_id, username, userimage, s.name as stylist_name, bodytype, bodyshape, height, u.age, skintype, styletype,
+                        clubprice, ethicprice, denimprice, footwearprice
+                FROM userdetails u
+                Join stylists s on s.stylish_id = u.stylish_id
+                where u.user_id='$userid'";
 
         $select = mysql_query($sql);
         $result = array();

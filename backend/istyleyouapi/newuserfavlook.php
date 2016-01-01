@@ -32,6 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
                         where l.id='$id'";
 
             $res1 = mysql_query($query);
+            if(mysql_num_rows($res1)<=0){
+                continue;
+            }
+
             while ($data1 = mysql_fetch_array($res1)) {
                 $list[] = $data1;
             }
