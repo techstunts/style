@@ -32,9 +32,9 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 		$records_count = 4;
 
         $gender_id = Lookup::getId('gender', $gender);
-        $occasion_id = Lookup::getId('occasion', $occasion);
 
 		foreach($occasions as $occasion){
+            $occasion_id = Lookup::getId('occasion', $occasion);
 			$looks_sql =
 				"SELECT cl.id as look_id, cl.description as look_description, cl.image as look_image,
 						cl.price as lookprice, o.name as occasion, cl.name as look_name, uf.fav_id,

@@ -1,11 +1,14 @@
 <?php
-class Lookup{
+
+class Lookup
+{
     static $lookup_data = [];
 
-    public static function init(){
+    public static function init()
+    {
 
         $lookup_tables = array('lu_gender', 'lu_occasion', 'lu_budget', 'lu_body_type');
-        foreach($lookup_tables as $table){
+        foreach ($lookup_tables as $table) {
             $sql = "SELECT id, lower(name) FROM $table";
             $result = mysql_query($sql);
 
@@ -15,14 +18,15 @@ class Lookup{
         }
     }
 
-    public static function getId($type, $name){
-        if(self::$lookup_data == []){
+    public static function getId($type, $name)
+    {
+        if (self::$lookup_data == []) {
             self::init();
         }
 
         $lookup_table = "lu_" . $type;
 
-        if($type != "" && isset(self::$lookup_data[$lookup_table])) {
+        if ($type != "" && isset(self::$lookup_data[$lookup_table])) {
 
             $lookup_keyname = strtolower($name);
 

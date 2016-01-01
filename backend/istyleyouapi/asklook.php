@@ -2,7 +2,8 @@
 include("db_config.php");
 include("Lookup.php");
 if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['userid']) &&
-        !empty($_REQUEST['occasion']) && isset($_REQUEST['occasion']) && !empty($_REQUEST['budget'])) {
+    !empty($_REQUEST['occasion']) && isset($_REQUEST['occasion']) && !empty($_REQUEST['budget'])
+) {
     $userid = $_REQUEST['userid'];
     $occasion = Lookup::getId('occasion', $_REQUEST['occasion']);
     $budget = Lookup::getId('budget', $_REQUEST['budget']);
@@ -24,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['userid']) &&
 			  VALUES('$userid','$occasion','$budget','$asklookimage','$date') ";
     mysql_query($sql);
     $data = array('result' => 'success', 'message' => 'Ask Look successfully');
-} elseif ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['userid']) && !empty($_REQUEST['occasion']) ) {
+} elseif ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['userid']) && !empty($_REQUEST['occasion'])) {
     $userid = $_REQUEST['userid'];
     $occasion = Lookup::getId('occasion', $_REQUEST['occasion']);
     $budget = "";
