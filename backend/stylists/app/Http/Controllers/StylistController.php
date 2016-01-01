@@ -109,6 +109,35 @@ class StylistController extends Controller
         return view('stylist.edit', $view_properties);
     }
 
+    public function postImage(Request $request)
+    {
+        $stylist = Stylist::find($this->resource_id);
+
+        if($stylist) {
+
+            $imageValidator =  Validator::make($request->all(), [
+                'image' => 'required|image',
+            ]);
+            if($imageValidator ->fails()){
+                return redirect('stylist/edit/' . $this->resource_id)
+                    ->withErrors($imageValidator)
+                    ->withInput();
+            }
+
+            if ($request->file('image')->isValid()) {
+                $destinationPath = public_path() . '/' . env('STYLIST_IMAGE_PATH');
+                $filename = $request->file('image')->getClientOriginalName();
+                $request->file('image')->move($destinationPath, $filename);
+                $stylist->image = 'stylish/' . $filename;
+                $stylist->save();
+            }
+        }
+        else{
+            return view('404', array('title' => 'Stylist not found'));
+        }
+
+        return redirect('stylist/edit/' . $this->resource_id);
+    }
     /**
      * Update the specified resource in storage.
      *

@@ -18,7 +18,7 @@ ul.pager li > span { padding: 2px 14px;}
 
 div.filters{padding: 5px 0 5px 2px;}
 div.filters form{float:left;}
-div.filters form select{padding: 2px 0 1px 4px; color: grey; background-color: white; border: 1px solid #d3d3d3;max-width: 200px;}
+div.filters form select{padding: 2px 0 1px 4px; color: grey; background-color: white; border: 1px solid #d3d3d3;max-width: 200px;display: inline;width: initial;height: initial;}
 div.filters form input[type="submit"]{background-color: #D32F2F;border: 1px beige;color: white;font-weight: bold;padding: 3px 4px 3px 4px;margin:1px 5px 0px 0px;}
 div.filters form.approve{margin-left: 10px;}
 div.filters form.approve input[type="submit"]{background-color: white;border: none;color:#D32F2F;text-decoration:underline;cursor:pointer;}
@@ -60,7 +60,7 @@ div.selected_products div.remove{position: relative; left: 80px; cursor: pointer
 div.resource_view{margin:5px;}
 div.resource_view div.image{float:left;}
 div.resource_view div.image img{max-height:700px;max-width: 550px;}
-div.resource_view table.info{float:left;width:500px;}
+div.resource_view table.info{float:left;width:500px;margin-left: 5px;}
 div.resource_view tr.row{text-align: left;padding: 5px}
 div.resource_view tr.row td{max-width: 490px;}
 div.resource_view tr.row td.title, td.description{padding-bottom:10px;}
