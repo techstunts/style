@@ -1,5 +1,6 @@
 <?php
 include("db_config.php");
+//file_put_contents('userdetails-data', "\n" . var_export($_REQUEST, true), FILE_APPEND);
 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && !empty($_REQUEST['password']) && isset($_REQUEST['password']) && !empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
 
     $email = $_REQUEST['email'];
@@ -90,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
 
             if ($lastid) {
                 if ($stylishid != 0) {
-                    $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id  where userdetails.user_id='$lastid'";
+                    $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,userdetails.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id  where userdetails.user_id='$lastid'";
                     $select = mysql_query($sql);
                     $result = array();
                     while ($data = mysql_fetch_assoc($select)) {
@@ -537,7 +538,7 @@ function login($email, $password, $gender)
 
 
         if ($result[1] != 0) {
-            $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylists.code as stylist_code, stylists.image as stylist_image FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
+            $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,userdetails.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylists.code as stylist_code, stylists.image as stylist_image FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
 
             $select = mysql_query($sql);
             $result = array();
@@ -616,7 +617,7 @@ function FacebookLogin($email, $facebookid, $gender, $username)
 
 
         if ($result[1] != 0) {
-            $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.stylish_id FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
+            $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,userdetails.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.stylish_id FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
 
             $select = mysql_query($sql);
             $result = array();
@@ -691,7 +692,7 @@ function GoogleLogin($email, $googleid, $gender, $username)
 
 
         if ($result[1] != 0) {
-            $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.stylish_id FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
+            $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,userdetails.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.stylish_id FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
 
             $select = mysql_query($sql);
             $result = array();
@@ -766,7 +767,7 @@ function LinkedinLogin($email, $linkedid, $gender, $username)
 
 
         if ($result[1] != 0) {
-            $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
+            $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,userdetails.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image FROM userdetails Join stylists on stylists.stylish_id=userdetails.stylish_id where userdetails.user_id='$userid'";
 
             $select = mysql_query($sql);
             $result = array();
@@ -811,5 +812,6 @@ mysql_close($conn);
 /* JSON Response */
 header("Content-type: application/json");
 echo json_encode($data);
+//file_put_contents('userdetails-data', "\n" . var_export($data, true), FILE_APPEND);
 
 ?>
