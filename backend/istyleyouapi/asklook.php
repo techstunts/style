@@ -5,8 +5,32 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['userid']) &&
     !empty($_REQUEST['occasion']) && isset($_REQUEST['occasion']) && !empty($_REQUEST['budget'])
 ) {
     $userid = $_REQUEST['userid'];
+
     $occasion = Lookup::getId('occasion', $_REQUEST['occasion']);
     $budget = Lookup::getId('budget', $_REQUEST['budget']);
+
+    $app_budgets['Low'] = 1;
+    $app_budgets['Medium'] = 2;
+    $app_budgets['High'] = 3;
+    $app_budgets['Premium'] = 4;
+
+    $app_occasions['Casuals'] = 1;
+    $app_occasions['Ethnic'] = 3;
+    $app_occasions['Formals'] = 4;
+    $app_occasions['Wine '] = 5;
+
+    if($occasion == null){
+        if(isset($app_occasions[$_REQUEST['occasion']])){
+            $occasion = $app_occasions[$_REQUEST['occasion']];
+        }
+    }
+
+    if($budget == null){
+        if(isset($app_budgets[$_REQUEST['budget']])){
+            $budget = $app_budgets[$_REQUEST['budget']];
+        }
+    }
+
     $date = date('Y-m-d H:i:s');
     $asklookimage = "";
     if (!empty($_FILES['askimage']['name'])) {

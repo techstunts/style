@@ -491,12 +491,14 @@ $(document).ready(function (){
                     </tfoot>
                         <tbody>
           		<?php
-          			  $query='select sr.user_id, sr.occasion_id, sr.budget_id, sr.created_at, u.username, u.bodytype,
+          			  $query='select sr.user_id, lo.name, lb.name, sr.created_at, u.username, u.bodytype,
                                       u.age, s.name, sr.id
                               from style_requests sr
                               join userdetails u on sr.user_id = u.user_id
                               join stylists s on u.stylish_id = s.stylish_id
                               left join style_requests_recommendations srr on sr.id = srr.style_request_id
+                              join lu_budget lb on sr.budget_id = lb.id
+                              join lu_occasion lo on sr.occasion_id = lo.id
                               where srr.recommendation_id is NULL
                               ORDER BY sr.id DESC';
                 //echo $query;

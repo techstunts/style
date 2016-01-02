@@ -455,8 +455,11 @@
                             </tfoot>
                             <tbody>
                             <?php
-                            $query = 'Select user_id,username,user_email,gender,bodyshape,bodytype,age,stylists.name,pricerange from userdetails join stylists on userdetails.stylish_id=stylists.stylish_id ORDER BY `userdetails`.`user_id`  DESC
-                        ';
+                            $query = 'Select user_id, username, user_email, gender, bodyshape, bodytype, u.age, s.name, pricerange
+                                      from userdetails u
+                                      join stylists s on u.stylish_id = s.stylish_id
+                                      ORDER BY u.user_id  DESC';
+
                             $res = mysql_query($query);
                             $numRows = mysql_num_rows($res);
                             if ($numRows != 0) {
@@ -495,24 +498,11 @@
 
             </form>
             <?php
-            unset($_SESSION["users"]);
-            unset($_SESSION['reg']);
-            /*
-        if(isset($_REQUEST['send'])){
-              $registatoin_ids=array();
-              $userid=$_REQUEST['id'];
-              print_r($userid);
-                foreach($userid as $user){
-                $sql="select regId from userdetails where user_id='$user'";
-                $res=mysql_query($sql);
-                      while($data=mysql_fetch_array($res)){
-                        $regId=$data['regId'];
-                     array_push($registatoin_ids, $regId);
-                      }
-                }
+            if(isset($_SESSION["users"]))
+                unset($_SESSION["users"]);
 
-        }
-        */
+            if(isset($_SESSION["reg"]))
+                unset($_SESSION['reg']);
             ?>
         </div>
     </div>

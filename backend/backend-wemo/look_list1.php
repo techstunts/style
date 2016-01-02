@@ -637,7 +637,7 @@ if (isset($_POST['send']) && !empty($_REQUEST['select'])) {
         $r = 0;
         foreach ($looks as $value) {
 
-            $lookgender = "select gender from looks where looks.id='$value'";
+            $lookgender = "select g.name from looks l inner join lu_gender g on l.gender_id = g.id where l.id='$value'";
             $res12 = mysql_query($lookgender);
             while ($data12 = mysql_fetch_array($res12)) {
                 $lg = $data12[0];
