@@ -16,8 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
     if ($user_rows > 0) {
         $user_data = mysql_fetch_array($user_res);
         $gender = $user_data[1];
-        $bodytype = $user_data[2];
-        $body_type_condition = $gender == 'female' ? " AND cl.body_type = '{$bodytype}'" : "";
+        $body_type = $user_data[2];
+        $body_type_id = Lookup::getId('body_type', $body_type);
+        $body_type_condition = $gender == 'female' ? " AND cl.body_type_id = '{$body_type_id}'" : "";
 
         //Get 4 latest looks for 4 occasions which are not unliked by current user
         $latest_looks = array();
