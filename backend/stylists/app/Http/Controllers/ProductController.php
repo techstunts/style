@@ -15,7 +15,8 @@ use App\SelectOptions;
 
 class ProductController extends Controller
 {
-    protected $filters = ['merchant_id', 'brand_id', 'category_id', 'gender_id'];
+    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id'];
+    protected $filters = ['merchants', 'brands', 'categories', 'genders'];
 
     /**
      * Display a listing of the resource.
@@ -32,8 +33,9 @@ class ProductController extends Controller
     }
 
     public function getList(Request $request){
+        $this->base_table = 'products';
         $this->initWhereConditions($request);
-        $this->initFilters('products');
+        $this->initFilters();
 
         $view_properties = array(
             'merchants' => $this->merchants,
@@ -42,7 +44,7 @@ class ProductController extends Controller
             'genders' => $this->genders
         );
 
-        foreach($this->filters as $filter){
+        foreach($this->filter_ids as $filter){
             $view_properties[$filter] = $request->input($filter) ? $request->input($filter) : "";
         }
 

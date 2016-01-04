@@ -2,14 +2,23 @@ nav{overflow: auto}
 nav ul{padding: 0 0 0 2px;}
 nav li{float:left; margin: 0px 2px 4px 0px;padding: 3px 5px;list-style: none; border: 1px solid wheat; background-color: #E91E63;}
 nav li a{color: white; text-decoration: none; padding:3px; }
-div.items{float:left;margin:5px; height: 330px; width: 260px; border: 2px solid beige;  overflow: hidden;}
+div.items{float:left;margin:5px; height: 350px; width: 260px; border: 2px solid beige;  overflow: hidden;}
 div.items div{min-height:10px;}
 div.items div.image{height:280px;}
 div.items img{max-height:280px;}
-div.items div.text{font-size:11px; color:grey; font-family: Arial;}
+div.items div.text{padding: 2px 0 3px 0;font-size:11px; color:grey; font-family: Arial;}
 div.items div.name{font-size:12px;}
-div.items div.extra span{background-color:#E91E63; overflow: overlay; color: wheat;}
+div.items div.extra {display:block;}
+div.items div.extra span{background-color:#E91E63;overflow:overlay;color:wheat;margin:0 5px 0 0;padding:0 1px;}
 div.items div.extra a{color: wheat;}
+div.items div.extra a.action{padding: 6px 12px 0px 5px;margin: 0 5px 0 0;background-image: url(/images/glyphicons-halflings-sprite-sheet.png);}
+div.items div.extra a.Active{background-position: 354px -122px;}
+div.items div.extra a.Inactive{background-position: 323px -122px;}
+div.items div.extra a.Deleted{background-position: 384px -123px;}
+div.items div.extra a.InProgress{background-position: 354px -122px;}
+div.items div.extra a.Submitted{background-position: 354px -183px;}
+div.items div.extra a.Approved{background-position: 477px -183px;}
+div.items div.extra a.Rejected{background-position: 447px -183px;}
 div.items div.name a{color:grey; text-decoration: underline;}
 ul.pager {list-style: none;padding: 0px;margin:0px;}
 ul.pager li{float: left;padding: 0 6px 0 6px;margin: 0 5px 0 3px;}
@@ -25,7 +34,8 @@ div.filters form.approve input[type="submit"]{background-color: white;border: no
 
 span.errorMsg{color:red;}
 
-div.message{position: fixed; top: 30px; left: 500px; display:none;}
+div.message{position: fixed; top: 30px; left: 500px; display:block;}
+div.message div.error{color:red}
 
 form.create_look{float:left;}
 form.create_look div{margin:0 0 5px 0px; text-align:left;float: left;width:500px;}

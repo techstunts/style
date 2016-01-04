@@ -12,35 +12,81 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
 
 class LookController extends Controller
 {
+    protected $filter_ids = ['stylish_id', 'status_id', 'gender_id'];
+    protected $filters = ['stylists', 'statuses', 'genders'];
+
+    protected $status_rules;
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $action, $id = null)
+    public function index(Request $request, $action, $id = null, $action_id = null)
     {
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
         if($id){
             $this->resource_id = $id;
         }
+        if($action_id){
+            $this->action_resource_id = $action_id;
+        }
+
         return $this->$method($request);
     }
 
+    protected function initStatusRules(){
+        $rules_file = app_path() . '/Models/Rules/look.xml';
+        $data = implode("", file($rules_file));
+
+        $xml = simplexml_load_string($data);
+        $json = json_encode($xml);
+        $status_rules = json_decode($json,TRUE);
+
+        foreach($status_rules['statuses']['status'] as $status){
+            $this->status_rules[$status['id']] = $status;
+        }
+
+        //var_export($this->status_rules);die;
+
+    }
+
     public function getList(Request $request){
+        $this->base_table = 'looks';
+        $this->initWhereConditions($request);
+        $this->initFilters();
+
+        $view_properties = array(
+            'stylists' => $this->stylists,
+            'statuses' => $this->statuses,
+            'genders' => $this->genders
+        );
+
+        foreach($this->filter_ids as $filter){
+            $view_properties[$filter] = $request->input($filter) ? $request->input($filter) : "";
+        }
+
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
+        $this->initStatusRules();
+
         $looks  =
-            Look::orderBy('id', 'desc')
+            Look::where($this->where_conditions)
+                //->where('status_id', '!=', LookupStatus::Deleted)
+                ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
 
         //$looks = Look::where('id','<=',8000)->get()->slice(0,10)->all();
-        return view('look.list',['looks'=> $looks]);
+        $view_properties['looks'] = $looks;
+        $view_properties['status_rules'] = $this->status_rules;
+        return view('look.list', $view_properties);
     }
 
     /**
@@ -52,6 +98,41 @@ class LookController extends Controller
     {
         echo "getCreate";
     }
+
+    public function getChangestatus(Request $request)
+    {
+        $look = Look::find($this->resource_id);
+        if($look) {
+            $this->initStatusRules();
+            if (isset($this->status_rules[$look->status->id]['edit_status']['new_status'])) {
+
+                $new_statuses = $this->status_rules[$look->status->id]['edit_status']['new_status'];
+                if (isset($new_statuses['id'])) {
+                    $new_statuses = array($new_statuses);
+                }
+                foreach($new_statuses as $new_status) {
+                    if ($new_status['id'] == $this->action_resource_id) {
+                        $look->status_id = $new_status['id'];
+                        if($look->save()){
+                            return Redirect::back()->withSuccess('Look status changed successfully!');
+                        }
+                        else{
+                            return Redirect::back()->withError('Error! Look save error.');
+                        }
+                    }
+                }
+                return Redirect::back()->withError('Error! Look status change from status ' . $look->status->name . ' to status ' . $this->action_resource_id . ' is not allowed.');
+            }
+            else{
+                return Redirect::back()->withError('Error! Look is in its last status. Further status changes not allowed.');
+            }
+        }
+        else{
+            return Redirect::back()->withError('Error! Look not found.');
+        }
+        return Redirect::back()->withError('Error! Status cant be changed.');
+    }
+
 
     /**
      * Store a newly created look in storage.

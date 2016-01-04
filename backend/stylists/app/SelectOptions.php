@@ -57,13 +57,35 @@ class SelectOptions{
         $genders = DB::table($this->table)
             ->join('lu_gender', $this->table . '.gender_id', '=', 'lu_gender.id')
             ->where($whereClauses)
-            //->distinct()
             ->select('lu_gender.id', 'lu_gender.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
             ->groupBy('lu_gender.id', 'lu_gender.name')
-            ->orderBy('lu_gender.name')
             ->get();
         return $genders;
     }
 
+    //To be cached
+    public function statuses($whereClauses){
+        unset($whereClauses['status_id']);
+        $statuses = DB::table($this->table)
+            ->join('lu_status', $this->table . '.status_id', '=', 'lu_status.id')
+            ->where($whereClauses)
+            ->select('lu_status.id', 'lu_status.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
+            ->groupBy('lu_status.id', 'lu_status.name')
+            ->get();
+        return $statuses;
+    }
+
+    //To be cached
+    public function stylists($whereClauses){
+        unset($whereClauses['stylish_id']);
+        $genders = DB::table($this->table)
+            ->join('stylists', $this->table . '.stylish_id', '=', 'stylists.stylish_id')
+            ->where($whereClauses)
+            ->select('stylists.stylish_id', 'stylists.name', DB::raw('COUNT(' . $this->table . '.stylish_id) as product_count'))
+            ->groupBy('stylists.stylish_id', 'stylists.name')
+            ->orderBy('stylists.name')
+            ->get();
+        return $genders;
+    }
 
 }

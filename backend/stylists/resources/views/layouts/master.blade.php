@@ -26,7 +26,10 @@
         @include('layouts.menu')
     </header>
 
-    <div class="message"></div>
+    <div class="message">
+        <div class="success">{{Session::get('success')}}</div>
+        <div class="error">{{Session::get('error')}}</div>
+    </div>
 
     @yield('content')
 

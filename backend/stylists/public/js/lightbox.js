@@ -5,8 +5,16 @@ function log(message){
     }
 }
 
-function showMessage(msg) {
-    $('div.message').html(msg).show();
+function showMessage(msg, error) {
+    $('div.message').html('');
+    messagehtml = '<div class="{{class}}">' + msg + '</div>';
+    if(typeof error !== 'undefined'){
+        messagehtml= messagehtml.replace("{{class}}", "error");
+    }
+    else{
+        messagehtml = messagehtml.replace("{{class}}", "success");
+    }
+    $('div.message').html(messagehtml).show();
 }
 
 function submitLightboxForm(e){
@@ -31,7 +39,8 @@ function submitLightboxForm(e){
             }
         },
         error: function (){
-            showMessage('Failed');
+            closeLightbox();
+            showMessage('Error! Look cant be created, please check.', true);
         }
     });
 

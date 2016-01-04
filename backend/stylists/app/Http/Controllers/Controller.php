@@ -14,6 +14,7 @@ abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected $base_table;
     protected $filters = [];
     protected $records_per_page=25;
     protected $where_conditions = [];
@@ -21,23 +22,25 @@ abstract class Controller extends BaseController
     protected $categories = [];
     protected $merchants = [];
     protected $genders = [];
+    protected $stylists = [];
+    protected $statuses = [];
 
     protected $resource_id;
+    protected $action_resource_id;
 
     public function initWhereConditions(Request $request){
-        foreach($this->filters as $filter){
-            if($request->input($filter) != ""){
-                $this->where_conditions[$filter] = $request->input($filter);
+        foreach($this->filter_ids as $filter_id){
+            if($request->input($filter_id) != ""){
+                $this->where_conditions[$this->base_table . '.' . $filter_id] = $request->input($filter_id);
             }
         }
     }
 
-    public function initFilters($base_table){
-        $select_options = new SelectOptions($base_table);
-        $this->brands = $select_options->brands($this->where_conditions);
-        $this->categories = $select_options->categories($this->where_conditions);
-        $this->merchants = $select_options->merchants($this->where_conditions);
-        $this->genders = $select_options->genders($this->where_conditions);
+    public function initFilters(){
+        $select_options = new SelectOptions($this->base_table);
+        foreach($this->filters as $filter){
+            $this->$filter = $select_options->$filter($this->where_conditions);
+        }
     }
 
 }
