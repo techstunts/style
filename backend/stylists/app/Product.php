@@ -29,7 +29,7 @@ class Product extends Model
     }
 
     public function gender(){
-        return $this->belongsTo('App\Gender', 'gender_id');
+        return $this->belongsTo('App\Models\Lookups\Gender', 'gender_id');
     }
 
     public function looks(){

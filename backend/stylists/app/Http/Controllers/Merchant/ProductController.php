@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Merchant;
 
-use App\Gender;
+use App\Models\Lookups\Gender;
 use App\MerchantProduct;
 use App\MerchantProductRejected;
 use App\Product;

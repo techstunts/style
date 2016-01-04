@@ -35,23 +35,23 @@ class Look extends Model
     }
 
     public function gender(){
-        return $this->belongsTo('App\Gender', 'gender_id');
+        return $this->belongsTo('App\Models\Lookups\Gender', 'gender_id');
     }
 
     public function body_type(){
-        return $this->belongsTo('App\BodyType', 'body_type_id');
+        return $this->belongsTo('App\Models\Lookups\BodyType', 'body_type_id');
     }
 
     public function occasion(){
-        return $this->belongsTo('App\Occasion', 'occasion_id');
+        return $this->belongsTo('App\Models\Lookups\Occasion', 'occasion_id');
     }
 
     public function budget(){
-        return $this->belongsTo('App\Budget', 'budget_id');
+        return $this->belongsTo('App\Models\Lookups\Budget', 'budget_id');
     }
 
     public function age_group(){
-        return $this->belongsTo('App\AgeGroup', 'age_group_id');
+        return $this->belongsTo('App\Models\Lookups\AgeGroup', 'age_group_id');
     }
 
 }

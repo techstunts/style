@@ -1,16 +1,16 @@
 <?php
 
-namespace App;
+namespace App\Models\Lookups;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AgeGroup extends Model
+class Gender extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'lu_age_group';
+    protected $table = 'lu_gender';
 
 }

@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\CombineImages;
 use App\Look;
 use App\LookProduct;
+use App\Models\Enums\Status as LookupStatus;
 use App\Product;
-use App\Status;
+use App\Models\Lookups\Status;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -71,6 +72,7 @@ class LookController extends Controller
         $look->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
         $look->stylish_id = $request->user()->stylish_id != '' ? $request->user()->stylish_id : '';
         $look->created_at = date('Y-m-d H:i:s');
+        $look->status_id = LookupStatus::Inactive;
 
         $look_products  = array();
         $look_price = 0;

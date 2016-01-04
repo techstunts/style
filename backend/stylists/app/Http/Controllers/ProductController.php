@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Brand;
 use App\Category;
-use App\Gender;
+use App\Models\Lookups\Gender;
 use App\Merchant;
 use App\Product;
 use Illuminate\Http\Request;

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Lookup;
-use App\Status;
+use App\Models\Lookups\Lookup;
+use App\Models\Lookups\Status;
 use App\Stylist;
 use Illuminate\Http\Request;
 

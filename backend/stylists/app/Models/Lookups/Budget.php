@@ -1,16 +1,16 @@
 <?php
 
-namespace App;
+namespace App\Models\Lookups;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Expertise extends Model
+class Budget extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'lu_expertise';
+    protected $table = 'lu_budget';
 
 }
