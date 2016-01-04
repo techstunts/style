@@ -37,6 +37,8 @@ class Stylist extends Model implements AuthenticatableContract,
     protected $fillable = ['name', 'email', 'password', 'image',  'profile',
         'code', 'expertise', 'age', 'stylish_gender', 'description', 'status_id'];
 
+    public $timestamps = true;
+
     /**
      * The attributes excluded from the model's JSON form.
      *

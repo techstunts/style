@@ -16,6 +16,8 @@ class Product extends Model
     protected $fillable = ['agency_id', 'merchant_id', 'product_name', 'product_price', 'product_link', 'upload_image',
         'image_name','merchant_product_id', 'brand_id', 'category_id', 'gender_id'];
 
+    public $timestamps = true;
+
     public function category(){
         return $this->belongsTo('App\Category', 'category_id');
     }

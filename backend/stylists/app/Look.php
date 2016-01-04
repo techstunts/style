@@ -24,7 +24,7 @@ class Look extends Model
     protected $fillable = ['image', 'name', 'description', 'body_type_id', 'budget_id', 'age_group_id', 'occasion_id', 'gender_id',
         'stylish_id', 'price', 'created_at'];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function stylist(){
         return $this->belongsTo('App\Stylist', 'stylish_id');
@@ -32,6 +32,10 @@ class Look extends Model
 
     public function products(){
         return $this->belongsToMany('App\Product', 'looks_products');
+    }
+
+    public function status(){
+        return $this->belongsTo('App\Models\Lookups\Status', 'status_id');
     }
 
     public function gender(){

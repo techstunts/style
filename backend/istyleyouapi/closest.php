@@ -9,6 +9,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 				  join looks l on r.entity_id=l.id and r.entity_type_id = 2
 				  join lu_occasion o on l.occasion_id = o.id
 				  where r.user_id='$userid'
+				  and l.status_id = 1
 				  ORDER BY r.id DESC";
 			$res=mysql_query($sql);
 			$row=mysql_num_rows($res);
@@ -26,7 +27,9 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 				from looks l
 				join looks_products lp ON l.id = lp.look_id
 				join products p ON lp.product_id = p.id
-				where l.id='$id'";
+				where l.id='$id'
+				and l.status_id = 1
+				";
 		$res1=mysql_query($query);
 		$rows=mysql_num_rows($res);
  		while($data1=mysql_fetch_array($res1)){

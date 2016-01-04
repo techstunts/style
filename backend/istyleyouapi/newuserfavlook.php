@@ -2,11 +2,12 @@
 include("db_config.php");
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GET['userid'])) {
     $userid = $_GET['userid'];
-    $sql = "Select looks.id as look_id,looks.description, looks.image, looks.price, looks.name
-		  from looks
-		  where looks.id NOT IN (Select look_id from users_unlike where user_id='$userid')
-		  AND looks.id IN (Select look_id from usersfav where user_id='$userid')
-		  ORDER BY looks.id DESC LIMIT 5 ";
+    $sql = "Select l.id as look_id, l.description, l.image, l.price, l.name
+		  from looks l
+		  where l.id NOT IN (Select look_id from users_unlike where user_id='$userid')
+		  AND l.id IN (Select look_id from usersfav where user_id='$userid')
+		  and l.status_id = 1
+		  ORDER BY l.id DESC LIMIT 5 ";
     $res = mysql_query($sql);
     $row = mysql_num_rows($res);
 
@@ -19,7 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
         }
         for ($i = 0; $i < $row; $i++) {
             $id = $ids[$i][0];
-            $stylish = "select stylists.stylish_id, stylists.name as stylish_name, stylists.image as stylish_image  from stylists join looks on stylists.stylish_id=looks.stylish_id where looks.id='$id'";
+            $stylish = "select s.stylish_id, s.name as stylish_name, s.image as stylish_image
+                        from stylists s
+                        join looks l on s.stylish_id = l.stylish_id
+                        where l.id='$id'
+				        and l.status_id = 1
+                        ";
             $res2 = mysql_query($stylish);
             while ($data2 = mysql_fetch_array($res2)) {
                 $stylish_details[] = $data2;
@@ -29,7 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
                         from looks l
                         join looks_products lp ON l.id = lp.look_id
                         join products p ON lp.product_id = p.id
-                        where l.id='$id'";
+                        where l.id='$id'
+				        and l.status_id = 1
+                        ";
 
             $res1 = mysql_query($query);
             if(mysql_num_rows($res1)<=0){
