@@ -26,6 +26,15 @@ document.addEventListener('DOMContentLoaded', function() {
 							img_links.push(rel.split(\',\')[0].split(\'\":\"\')[1]);\
 						}\
 					}\
+					else if(merchant == \'indianroots\'){\
+						prod_name = document.getElementsByTagName(\'h1\')[0].innerText;\
+						prod_price = document.querySelectorAll(\'[itemprop]\')[1].childNodes[0].data.replace(/^\\D+/g, \'\');\
+						prod_desc = document.querySelector(\'span[itemprop=\"description\"]\').innerHTML;\
+						category = \'\';\
+						brand = document.getElementsByClassName(\'ProContentDetails\')[0].getElementsByTagName(\'a\')[0].innerHTML;\
+						gender = document.getElementsByClassName(\'nav\')[0].getElementsByClassName(\'l1-active\')[0].getElementsByTagName(\'a\')[0].innerHTML;\
+						img_links.push(document.getElementById(\'zoom1\').href);\
+					}\
 					else if(merchant == \'abof\'){\
 						prod_name = document.getElementsByClassName(\'product-detail__title\')[0].innerHTML.trim();\
 						prod_price = document.getElementsByClassName(\'product-detail__price--original\')[0].innerText.trim();\
