@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Role;
 use App\Stylist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,10 +79,16 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        return Stylist::create([
+        $stylist = Stylist::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+
+        $stylist_role = Role::where('name','stylist')->firstOrFail();
+
+        $stylist->attachRole($stylist_role);
+
+        return $stylist;
     }
 }

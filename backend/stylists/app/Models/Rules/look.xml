@@ -9,20 +9,20 @@
                     <id>5</id>
                     <name>Submitted</name>
                     <roles>
-                        <role>is_owner</role>
+                        <role>stylist</role>
                     </roles>
                 </new_status>
                 <new_status>
                     <id>3</id>
                     <name>Deleted</name>
                     <roles>
-                        <role>is_owner</role>
+                        <role>stylist</role>
                     </roles>
                 </new_status>
             </edit_status>
             <edit_data>
                 <roles>
-                    <role>is_owner</role>
+                    <role>stylist</role>
                 </roles>
             </edit_data>
         </status>
@@ -34,20 +34,20 @@
                     <id>6</id>
                     <name>Approved</name>
                     <roles>
-                        <role>is_admin</role>
+                        <role>admin</role>
                     </roles>
                 </new_status>
                 <new_status>
                     <id>7</id>
                     <name>Rejected</name>
                     <roles>
-                        <role>is_admin</role>
+                        <role>admin</role>
                     </roles>
                 </new_status>
             </edit_status>
             <edit_data>
                 <roles>
-                    <role>is_admin</role>
+                    <role>admin</role>
                 </roles>
             </edit_data>
         </status>
@@ -59,14 +59,14 @@
                     <id>1</id>
                     <name>Active</name>
                     <roles>
-                        <role>is_admin</role>
+                        <role>admin</role>
                     </roles>
                 </new_status>
                 <new_status>
                     <id>2</id>
                     <name>Inactive</name>
                     <roles>
-                        <role>is_admin</role>
+                        <role>admin</role>
                     </roles>
                 </new_status>
             </edit_status>
@@ -86,14 +86,14 @@
                     <id>1</id>
                     <name>Active</name>
                     <roles>
-                        <role>is_admin</role>
+                        <role>admin</role>
                     </roles>
                 </new_status>
                 <new_status>
                     <id>7</id>
                     <name>Rejected</name>
                     <roles>
-                        <role>is_admin</role>
+                        <role>admin</role>
                     </roles>
                 </new_status>
             </edit_status>
@@ -107,14 +107,14 @@
                     <id>3</id>
                     <name>Deleted</name>
                     <roles>
-                        <role>is_admin</role>
+                        <role>admin</role>
                     </roles>
                 </new_status>
             </edit_status>
             <edit_data>
                 <roles>
-                    <role>is_owner</role>
-                    <role>is_admin</role>
+                    <role>stylist</role>
+                    <role>admin</role>
                 </roles>
                 <new_default_status>
                     <id>2</id>

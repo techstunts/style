@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class LookController extends Controller
@@ -72,18 +73,28 @@ class LookController extends Controller
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
-
         $this->initStatusRules();
+
+        if(Auth::user()->hasRole('admin')){
+            $view_properties['user_role'] = 'admin';
+        }
+        else if(Auth::user()->hasRole('stylist')){
+            $view_properties['user_role'] = 'stylist';
+        }
+
+
+        $remove_deleted_looks = '1=1';
+        if(!$request->has('status_id') || $request->input('status_id') != LookupStatus::Deleted){
+            $remove_deleted_looks = 'looks.status_id != ' . LookupStatus::Deleted;
+        }
 
         $looks  =
             Look::where($this->where_conditions)
-                //->where('status_id', '!=', LookupStatus::Deleted)
+                ->whereRaw($remove_deleted_looks)
                 ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
-
-        //$looks = Look::where('id','<=',8000)->get()->slice(0,10)->all();
         $view_properties['looks'] = $looks;
         $view_properties['status_rules'] = $this->status_rules;
         return view('look.list', $view_properties);
