@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
         $body_type = $user_data[2];
         $body_type_id = Lookup::getId('body_type', $body_type);
         $body_type_condition = $gender == 'female' ? " AND cl.body_type_id = '{$body_type_id}'" : "";
+        $body_type_condition = "";//5-Jan-2015 : Temporarily commented out this condition as we do not have much looks in all body types.
 
         //Get 4 latest looks for 4 occasions which are not unliked by current user
         $latest_looks = array();

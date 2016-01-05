@@ -164,7 +164,7 @@ class LookController extends Controller
         $look->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
         $look->stylish_id = $request->user()->stylish_id != '' ? $request->user()->stylish_id : '';
         $look->created_at = date('Y-m-d H:i:s');
-        $look->status_id = LookupStatus::Inactive;
+        $look->status_id = LookupStatus::Submitted;
 
         $look_products  = array();
         $look_price = 0;

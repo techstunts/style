@@ -3,13 +3,21 @@ include("db_config.php");
 include("ProductLink.php");
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])) {
     $userid = $_REQUEST['userid'];
-    $sql = "Select distinct l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name
+
+    $page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
+    $records_count = 10;
+    $record_start = intval($page * $records_count);
+
+    $sql = "Select distinct l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name,
+                    s.stylish_id, s.name as stylish_name, s.image as stylish_image
 				  from recommendations r
 				  join looks l on r.entity_id=l.id and r.entity_type_id = 2
 				  join lu_occasion o on l.occasion_id = o.id
+                  join stylists s on s.stylish_id = l.stylish_id
 				  where r.user_id='$userid'
                   and l.status_id = 1
-				  ORDER BY r.id DESC limit 5";
+				  ORDER BY r.id DESC
+			      LIMIT $record_start, $records_count ";
     $res = mysql_query($sql);
     $row = mysql_num_rows($res);
 
@@ -27,16 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
         }
         for ($i = 0; $i < $row; $i++) {
             $id = $ids[$i][0];
-            $stylish = "select s.stylish_id, s.name as stylish_name, s.image as stylish_image
-						  from stylists s
-						  join looks l on s.stylish_id = l.stylish_id
-						  where l.id='$id'
-				          and l.status_id = 1
-						  ";
-            $res2 = mysql_query($stylish);
-            while ($data2 = mysql_fetch_array($res2)) {
-                $stylish_details[] = $data2;
-            }
+            $stylish_details = array(
+                'stylish_id' => $ids[$i][6],
+                'stylish_name' => $ids[$i][7],
+                'stylish_image' => $ids[$i][8],
+            );
+
             $query = "select p.id,product_name,upload_image,product_price,product_type,product_link, p.agency_id, p.merchant_id
                         from looks l
                         join looks_products lp ON l.id = lp.look_id
@@ -97,13 +101,16 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
         $abc = array();
     }
     //fav
-    $sql = "Select l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name
+    $sql = "Select l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name,
+                    s.stylish_id, s.name as stylish_name, s.image as stylish_image
 					  from looks l
 					  join lu_occasion o on l.occasion_id = o.id
+                      join stylists s on s.stylish_id = l.stylish_id
 					  where l.id NOT IN (Select look_id from users_unlike where user_id='$userid')
 					  AND l.id IN (Select look_id from usersfav where user_id='$userid')
                       and l.status_id = 1
-					  ORDER BY l.id DESC  ";
+					  ORDER BY l.id DESC
+			          LIMIT $record_start, $records_count ";
     $res = mysql_query($sql);
     $row = mysql_num_rows($res);
 
@@ -115,16 +122,11 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
     }
     for ($i = 0; $i < $row; $i++) {
         $id = $ids[$i][0];
-        $stylish = "select s.stylish_id, s.name as stylish_name, s.image as stylish_image
-                    from stylists s
-                    join looks l on s.stylish_id = l.stylish_id
-                    where l.id='$id'
-                    and l.status_id = 1
-                    ";
-        $res2 = mysql_query($stylish);
-        while ($data2 = mysql_fetch_array($res2)) {
-            $stylish_details[] = $data2;
-        }
+        $stylish_details = array(
+            'stylish_id' => $ids[$i][6],
+            'stylish_name' => $ids[$i][7],
+            'stylish_image' => $ids[$i][8],
+        );
 
         $query = "select p.id,product_name,upload_image,product_price,product_type,product_link, p.agency_id, p.merchant_id
                         from looks l
