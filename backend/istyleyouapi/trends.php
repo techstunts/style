@@ -76,7 +76,6 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 						join looks_products lp ON l.id = lp.look_id
 						join products p ON lp.product_id = p.id
 						where l.id='$look_id'
-				        and l.status_id = 1
 						";
 
 				$current_look_products_res = mysql_query($current_look_products_query);
