@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Collection;
 use App\Look;
 use App\Models\Enums\EntityType;
+use App\Models\Enums\Gender;
 use App\Product;
 use App\Models\Lookups\Status;
 use Illuminate\Http\Request;
@@ -53,7 +54,7 @@ class CollectionController extends Controller
      */
     public function getView()
     {
-        $entities = [];
+        $female_entities = $male_entities = [];
         $collection = Collection::find($this->resource_id);
         if($collection){
             $entity_ids = DB::table('collection_entities')
@@ -72,12 +73,18 @@ class CollectionController extends Controller
                     continue;
                 }
                 if(isset($entity[1]->id)){
-                    $entities[] = $entity;
+                    if($entity[1]->gender_id == Gender::Female)
+                        $female_entities[] = $entity;
+                    else if($entity[1]->gender_id == Gender::Male)
+                        $male_entities[] = $entity;
                 }
             }
             $status = Status::find($collection->status_id);
             //var_dump($collection, $collection->stylist, $product_ids, $products);
-            $view_properties = array('collection' => $collection, 'entities' => $entities, 'status' => $status);
+            $view_properties = array('collection' => $collection,
+                'female_entities' => $female_entities,
+                'male_entities' => $male_entities,
+                'status' => $status);
         }
         else{
             return view('404', array('title' => 'collection not found'));

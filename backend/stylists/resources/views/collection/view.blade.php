@@ -39,24 +39,30 @@
                         <tr class="row">
                             <td class="head">Entities</td>
                             <td class="content">
+
                                 <?php
-                                $href_tag = '<a href="%s" title="%s" target="new_win"><img src="%s"/></a>';
-                                foreach($entities as $entity){
-                                    if($entity[0] == \App\Models\Enums\EntityType::Product){
-                                        echo sprintf($href_tag,
-                                                url('product/view/' . $entity[1]->id),
-                                                $entity[1]->product_name,
-                                                strpos($entity[1]->upload_image, "http") !== false ? $entity[1]->upload_image : asset('images/' . $entity[1]->upload_image)
-                                        );
+                                    $href_tag = '<a href="%s" title="%s" target="new_win"><img class="entity" src="%s"/></a>';
+                                    $combined = array('Female' => $female_entities, 'Male' => $male_entities);
+                                    foreach($combined as $gender => $entities){
+                                        echo "<br/>" . $gender . "<br />";
+                                        foreach($entities as $entity){
+                                            if($entity[0] == \App\Models\Enums\EntityType::Product){
+                                                echo sprintf($href_tag,
+                                                        url('product/view/' . $entity[1]->id),
+                                                        $entity[1]->product_name,
+                                                        strpos($entity[1]->upload_image, "http") !== false ? $entity[1]->upload_image : asset('images/' . $entity[1]->upload_image)
+                                                );
+                                            }
+                                            else if($entity[0] == \App\Models\Enums\EntityType::Look){
+                                                echo sprintf($href_tag,
+                                                        url('look/view/' . $entity[1]->id),
+                                                        $entity[1]->name,
+                                                        strpos($entity[1]->image, "http") !== false ? $entity[1]->image : asset('images/' . $entity[1]->image)
+                                                );
+                                            }
+                                        }
+                                        echo "<br/><br/>";
                                     }
-                                    else if($entity[0] == \App\Models\Enums\EntityType::Look){
-                                        echo sprintf($href_tag,
-                                                url('look/view/' . $entity[1]->id),
-                                                $entity[1]->name,
-                                                strpos($entity[1]->image, "http") !== false ? $entity[1]->image : asset('images/' . $entity[1]->image)
-                                        );
-                                    }
-                                }
                                 ?>
                             </td>
                         </tr>
