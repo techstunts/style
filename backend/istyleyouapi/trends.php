@@ -16,55 +16,40 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 	if($user_rows > 0){
 		$user_data = mysql_fetch_array($user_res);
 		$gender = $user_data[1];
-		$body_type = $user_data[2];
-		$body_type_id = Lookup::getId('body_type', $body_type);
-		$body_type_condition = $gender == 'female' ? " AND cl.body_type_id = '{$body_type_id}'" : "";
+		$gender_id = Lookup::getId('gender', $gender);
 
-		//Get 4 latest looks for 4 occasions which are not unliked by current user
 		$looks = array();
 
 		$page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
-		$occasions = array('Wine & Dine', 'Casuals', 'Ethnic/Festive', 'Work Wear');
-		if(isset($_GET['occasion']) && $_GET['occasion'] != ''){
-			$occasions = array_intersect($occasions, array(mysql_real_escape_string($_GET['occasion'])));
-		}
+		$records_count = 10;
+		$record_start = intval($page * $records_count);
 
-		$record_start = intval($page * 4);
-		$records_count = 4;
-
-        $gender_id = Lookup::getId('gender', $gender);
-
-		foreach($occasions as $occasion){
-            $occasion_id = Lookup::getId('occasion', $occasion);
-			$looks_sql =
-				"SELECT cl.id as look_id, cl.description as look_description, cl.image as look_image,
-						cl.price as lookprice, o.name as occasion, cl.name as look_name, uf.fav_id,
-						sd.stylish_id as stylist_id, sd.name as stylist_name, sd.image as stylist_image
-				FROM looks cl
-        		  	JOIN lu_occasion o on cl.occasion_id = o.id
-					LEFT JOIN usersfav uf ON cl.id = uf.look_id
-					JOIN stylists sd on sd.stylish_id = cl.stylish_id
-			    WHERE cl.gender_id = '$gender_id'
-				    $body_type_condition
-				    AND cl.occasion_id = '$occasion_id'
-					AND cl.status_id = 1
-					AND (uf.user_id is null OR uf.user_id = '$userid')
-					AND cl.id NOT IN
-						(SELECT look_id
-						FROM users_unlike
-						WHERE user_id='$userid')
-				ORDER BY cl.created_at DESC
-				LIMIT $record_start, $records_count ";
+		$looks_sql =
+			"SELECT cl.id as look_id, cl.description as look_description, cl.image as look_image,
+					cl.price as lookprice, o.name as occasion, cl.name as look_name, uf.fav_id,
+					sd.stylish_id as stylist_id, sd.name as stylist_name, sd.image as stylist_image
+			FROM collection_entities ce
+				JOIN looks cl ON ce.entity_id = cl.id AND ce.entity_type_id = 2
+				JOIN lu_occasion o on cl.occasion_id = o.id
+				LEFT JOIN (SELECT * FROM usersfav WHERE user_id = '$userid') uf ON cl.id = uf.look_id
+				JOIN stylists sd on sd.stylish_id = cl.stylish_id
+			WHERE ce.collection_id = 1
+				AND cl.gender_id = '$gender_id'
+				AND cl.id NOT IN
+					(SELECT look_id
+					FROM users_unlike
+					WHERE user_id='$userid')
+			ORDER BY cl.created_at DESC
+			LIMIT $record_start, $records_count ";
 			//echo $looks_sql . "<br /><br />";
 
-			$looks_res = mysql_query($looks_sql);
+		$looks_res = mysql_query($looks_sql);
 
-			while ($data = mysql_fetch_array($looks_res)) {
-				$looks[] = $data;
-			}
-			unset($looks_res);
+		while ($data = mysql_fetch_array($looks_res)) {
+			$looks[] = $data;
 		}
-//var_dump($looks);
+		unset($looks_res);
+		//var_dump($looks);
 		$looks_count = count($looks);
 
 		if($looks_count > 0) {
