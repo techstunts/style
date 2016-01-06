@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
   var fetchButton = document.getElementById('fetch');
+
+	String.prototype.capitalizeFirstLetter = function() {
+		return this.charAt(0).toUpperCase() + this.slice(1);
+	}
       
   fetchButton.addEventListener('click', function() {
 
@@ -29,11 +33,21 @@ document.addEventListener('DOMContentLoaded', function() {
 					else if(merchant == \'indianroots\'){\
 						prod_name = document.getElementsByTagName(\'h1\')[0].innerText;\
 						prod_price = document.querySelectorAll(\'[itemprop]\')[1].childNodes[0].data.replace(/^\\D+/g, \'\');\
-						prod_desc = document.querySelector(\'span[itemprop=\"description\"]\').innerHTML;\
+						prod_desc = document.querySelector(\'span[itemprop=\"description\"]\').innerText;\
 						category = \'\';\
-						brand = document.getElementsByClassName(\'ProContentDetails\')[0].getElementsByTagName(\'a\')[0].innerHTML;\
+						brand = document.getElementsByClassName(\'ProContentDetails\')[0].getElementsByTagName(\'a\')[0].innerText;\
 						gender = document.getElementsByClassName(\'nav\')[0].getElementsByClassName(\'l1-active\')[0].getElementsByTagName(\'a\')[0].innerHTML;\
 						img_links.push(document.getElementById(\'zoom1\').href);\
+					}\
+					else if(merchant == \'limeroad\'){\
+						prod_name = document.getElementsByClassName(\'p_name\')[0].innerText;\
+						prod_price = document.getElementsByClassName(\'sPr\')[0].innerText;\
+						prod_desc = document.getElementsByClassName(\'product_desc\')[0].innerText;\
+						breadcrumbs = document.querySelectorAll(\'li[itemtype=\"http://data-vocabulary.org/Breadcrumb\"]\');\
+						category = breadcrumbs[breadcrumbs.length - 1].innerText.trim();\
+						brand = document.getElementsByClassName(\'sUsrNme\')[0].innerText;\
+						gender = \'Women\';\
+						img_links.push(document.getElementsByClassName(\'jqzoom\')[0].href);\
 					}\
 					else if(merchant == \'abof\'){\
 						prod_name = document.getElementsByClassName(\'product-detail__title\')[0].innerHTML.trim();\
@@ -70,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					else if(merchant == \'jabong\'){\
 						prod_name = document.getElementsByClassName(\'product-title\')[0].innerHTML.trim();\
 						prod_price = document.getElementsByClassName(\'actual-price\')[0].innerHTML.trim();\
-						prod_desc = document.getElementsByClassName(\'prod-disc\')[0].innerHTML;\
+						prod_desc = document.getElementsByClassName(\'prod-disc\')[0].innerText;\
 						breadcrumbs = document.getElementsByClassName(\'breadcrumb\')[0].getElementsByTagName(\'span\');\
 						category = breadcrumbs[breadcrumbs.length - 1].innerText;\
 						brand = document.getElementsByClassName(\'brand\')[0].innerHTML;\
@@ -89,14 +103,14 @@ document.addEventListener('DOMContentLoaded', function() {
 				},
 				function(results){
 					//console.log(results);
-					document.getElementById('name').value = results[0][0];
+					document.getElementById('name').value = results[0][0].capitalizeFirstLetter();
 					document.getElementById('price').value = results[0][1].replace(/,/g,"");
-					document.getElementById('desc').innerHTML = results[0][2];
+					document.getElementById('desc').innerHTML = results[0][2].capitalizeFirstLetter();
 					document.getElementById('images').innerHTML = results[0][3];
 					document.getElementById('url').value = tab.url;
 					document.getElementById('merchant').value = results[0][4];
-					document.getElementById('category').value = results[0][5];
-					document.getElementById('brand').value = results[0][6];
+					document.getElementById('category').value = results[0][5].capitalizeFirstLetter();
+					document.getElementById('brand').value = results[0][6].capitalizeFirstLetter();
 					document.getElementById('gender').value = results[0][7];
 					
 					
