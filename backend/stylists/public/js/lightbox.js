@@ -21,6 +21,21 @@ function submitLightboxForm(e){
     log($(this));
     log($(this).serialize());
 
+    error = false;
+
+    $(this).find(':input').each(function(e){
+        if($(this).attr('validation') == 'required'){
+            if($(this).val() == "" && $(this).attr('placeholder') != ""){
+                alert('Please provide value for ' + $(this).attr('placeholder'));
+                error = true;
+            }
+        }
+    });
+
+    if(error) {
+        return false;
+    }
+
     var url = $(this).attr('action');
 
     $.ajax({

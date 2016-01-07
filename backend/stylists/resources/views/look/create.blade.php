@@ -23,8 +23,7 @@
         <form class="create_look" method="post" action="{!! url('look/create') !!}">
             <ul id="sortable"></ul>
             <div>
-                <select class="form-control mb15" name="body_type_id">
-                    <option value="">Body Type</option>
+                <select class="form-control mb15" name="body_type_id" placeholder="Body Type" validation="required">
                     <option value="1">Apple</option>
                     <option value="2">Banana</option>
                     <option value="3">Hourglass</option>
@@ -34,16 +33,14 @@
                     <option value="7">Round</option>
                 </select>
 
-                <select class="form-control mb15" name="budget_id">
-                    <option value="">Budget</option>
+                <select class="form-control mb15" name="budget_id" placeholder="Budget" validation="required">
                     <option value="1">&lt;2000</option>
                     <option value="2">2000-5000</option>
                     <option value="3">5000-10000</option>
                     <option value="4">&gt;10000</option>
                 </select>
 
-                <select class="form-control mb15" name="age_group_id">
-                    <option value="">Age Group</option>
+                <select class="form-control mb15" name="age_group_id" placeholder="Age Group" validation="required">
                     <option value="2">Teenager</option>
                     <option value="4">Young(18-22)</option>
                     <option value="3">Young Medium (22-30)</option>
@@ -53,27 +50,23 @@
             </div>
 
             <div>
-                <select class="form-control mb15" name="occasion_id">
-                    <option value="">Occasion</option>
+                <select class="form-control mb15" name="occasion_id" placeholder="Occasion" validation="required">
                     <option value="1">Casuals</option>
-                    <option value="2">Club</option>
                     <option value="3">Ethnic/Festive</option>
-                    <option value="4">Formals</option>
                     <option value="5">Wine &amp; Dine</option>
                     <option value="6">Work Wear</option>
                 </select>
 
-                <select class="form-control mb15" name="gender_id">
-                    <option value="">Gender</option>
+                <select class="form-control mb15" name="gender_id" placeholder="Gender" validation="required">
                     <option value="1">Female</option>
                     <option value="2">Male</option>
                 </select>
 
             </div>
 
-            <div><input type="text" name="name" placeholder="Look Name" value="" class="form-control"> </div>
+            <div><input type="text" name="name" placeholder="Look Name" value="" class="form-control" validation="required"> </div>
 
-            <div><textarea name="description" placeholder="Look Description" style="height:80px;" rows="8" cols="40" class="form-control"></textarea></div>
+            <div><textarea name="description" placeholder="Look Description" style="height:80px;" rows="8" cols="40" class="form-control" validation="required"></textarea></div>
 
             <div>
                 <input type="submit" value="Create look" class="form-control"/>
