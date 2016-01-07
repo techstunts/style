@@ -22,7 +22,7 @@
             @foreach($looks as $look)
                 <li class="ui-state-default" look_id="{{$look->id}}">
                     <div class="items">
-                        <div class="name text"><a href="{{url('look/view/' . $look->id)}}">{{$look->name}}</a></div>
+                        <div class="name text"><a href="{{url('look/view/' . $look->id)}}">{{$look->name == "" ? "Error! Look name empty" : $look->name }}</a></div>
                         <div class="image"><img src="{!! asset('images/' . $look->image) !!}" /></div>
                         <div class="extra text">
                             <?php
