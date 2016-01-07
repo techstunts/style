@@ -53,7 +53,7 @@
                             <td class="content">
                                 @foreach($products as $product)
                                     <a href="{{url('product/view/' . $product->id)}}" title="{{$product->product_name}}" target="product_win">
-                                        <img src="{{strpos($product->upload_image, "http") !== false ? $product->upload_image : asset('images/' . $product->upload_image)}}"/>
+                                        <img class="entity" src="{{strpos($product->upload_image, "http") !== false ? $product->upload_image : asset('images/' . $product->upload_image)}}"/>
                                     </a>
                                 @endforeach
                             </td>

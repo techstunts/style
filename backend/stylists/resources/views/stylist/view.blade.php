@@ -47,7 +47,7 @@
                             <td class="content">
                                 @foreach($looks as $look)
                                     <a href="{{url('look/view/' . $look->id)}}" title="{{$look->name}}" target="look_win">
-                                        <img src="{{strpos($look->image, "http") !== false ? $look->image : asset('images/' . $look->image)}}"/>
+                                        <img class="entity" src="{{strpos($look->image, "http") !== false ? $look->image : asset('images/' . $look->image)}}"/>
                                     </a>
                                 @endforeach
                             </td>
