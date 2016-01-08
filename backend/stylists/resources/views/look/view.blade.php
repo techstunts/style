@@ -13,7 +13,9 @@
                     </div>
                     <table class="info">
                         <tr class="row">
-                            <td class="title" colspan="2">{{$look->name}}</td>
+                            <td class="title" colspan="2">{{$look->name}}
+                                <a class="product_link" href="{{url('look/edit/' . $look->id)}}" title="{{$look->name}}" >Edit</a>
+                            </td>
                         </tr>
                         <tr class="row">
                             <td class="description" colspan="2">{{$look->description}}</td>

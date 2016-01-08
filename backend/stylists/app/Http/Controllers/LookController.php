@@ -6,6 +6,7 @@ use App\CombineImages;
 use App\Look;
 use App\LookProduct;
 use App\Models\Enums\Status as LookupStatus;
+use App\Models\Lookups\Lookup;
 use App\Product;
 use App\Models\Lookups\Status;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Validator;
 
 class LookController extends Controller
 {
@@ -234,9 +236,46 @@ class LookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function getEdit($id)
     {
-        //
+        $look = Look::find($this->resource_id);
+        $view_properties = null;
+        if($look){
+            $lookup = new Lookup();
+
+            $view_properties['look'] = $look;
+            $view_properties['gender_id'] = $look->gender_id;
+            $view_properties['genders'] = $lookup->type('gender')->get();
+            $view_properties['status_id'] = $look->status_id;
+            $view_properties['statuses'] = $lookup->type('status')->get();
+            $view_properties['occasion_id'] = $look->occasion_id;
+            $view_properties['occasions'] = $lookup->type('occasion')->get();
+            $view_properties['age_group_id'] = $look->age_group_id;
+            $view_properties['age_groups'] = $lookup->type('age_group')->get();
+            $view_properties['budget_id'] = $look->budget_id;
+            $view_properties['budgets'] = $lookup->type('budget')->get();
+            $view_properties['body_type_id'] = $look->body_type_id;
+            $view_properties['body_types'] = $lookup->type('body_type')->get();
+        }
+        else{
+            return view('404', array('title' => 'Look not found'));
+        }
+
+        return view('look.edit', $view_properties);
+    }
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|max:256|min:5',
+            'description' => 'required|min:25',
+            'body_type_id' => 'required',
+            'budget_id' => 'required',
+            'age_group_id' => 'required',
+            'occasion_id' => 'required',
+            'gender_id' => 'required',
+            'price' => 'required|min:2',
+        ]);
     }
 
     /**
@@ -246,9 +285,27 @@ class LookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function postUpdate(Request $request)
     {
-        //
+        $validator = $this->validator($request->all());
+        if($validator->fails()){
+            return redirect('look/edit/' . $this->resource_id)
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $look = look::find($this->resource_id);
+        $look->name = isset($request->name) && $request->name != '' ? $request->name : '';
+        $look->description = isset($request->description) && $request->description != '' ? $request->description : '';
+        $look->age_group_id = isset($request->age_group_id) && $request->age_group_id != '' ? $request->age_group_id : '';
+        $look->body_type_id = isset($request->body_type_id) && $request->body_type_id != '' ? $request->body_type_id : '';
+        $look->budget_id = isset($request->budget_id) && $request->budget_id != '' ? $request->budget_id : '';
+        $look->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
+        $look->occasion_id = isset($request->occasion_id) && $request->occasion_id != '' ? $request->occasion_id : '';
+        $look->price = isset($request->price) && $request->price != '' ? $request->price : '';
+        $look->save();
+
+        return redirect('look/view/' . $this->resource_id);
     }
 
     /**

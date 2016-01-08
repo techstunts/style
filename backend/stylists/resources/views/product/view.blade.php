@@ -25,7 +25,7 @@
                             <td class="head">Price</td><td class="content">Rs.{{$product->product_price}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Merchant</td><td class="content">{{$merchant ? $merchant->name : ""}} </td>
+                            <td class="head">Merchant</td><td class="content">{{$merchant ? $merchant->name : ""}} <a target="new" href="{{$product->product_link}}" class="product_link">Product Link</a></td>
                         </tr>
                         <tr class="row">
                             <td class="head">Brand</td><td class="content">{{$brand ? $brand->name : ""}} </td>
