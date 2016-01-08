@@ -19,8 +19,8 @@ use Validator;
 
 class LookController extends Controller
 {
-    protected $filter_ids = ['stylish_id', 'status_id', 'gender_id'];
-    protected $filters = ['stylists', 'statuses', 'genders'];
+    protected $filter_ids = ['stylish_id', 'status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id'];
+    protected $filters = ['stylists', 'statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups'];
 
     protected $status_rules;
 
@@ -66,7 +66,11 @@ class LookController extends Controller
         $view_properties = array(
             'stylists' => $this->stylists,
             'statuses' => $this->statuses,
-            'genders' => $this->genders
+            'genders' => $this->genders,
+            'occasions' => $this->occasions,
+            'body_types' => $this->body_types,
+            'budgets' => $this->budgets,
+            'age_groups' => $this->age_groups
         );
 
         foreach($this->filter_ids as $filter){

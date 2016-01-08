@@ -9,8 +9,12 @@
             <div class="filters">
                 <form method="get" action="">
                     @include('stylist.select')
+                    @include('common.occasion.select')
                     @include('common.status.select')
                     @include('common.gender.select')
+                    @include('common.body_type.select')
+                    @include('common.budget.select')
+                    @include('common.age_group.select')
                     <input type="submit" name="filter" value="Filter"/>
                 </form>
                 {!! $looks->render() !!}

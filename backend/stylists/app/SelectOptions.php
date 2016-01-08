@@ -51,41 +51,60 @@ class SelectOptions{
         return $categories;
     }
 
-    //To be cached
     public function genders($whereClauses){
-        unset($whereClauses['gender_id']);
-        $genders = DB::table($this->table)
-            ->join('lu_gender', $this->table . '.gender_id', '=', 'lu_gender.id')
-            ->where($whereClauses)
-            ->select('lu_gender.id', 'lu_gender.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
-            ->groupBy('lu_gender.id', 'lu_gender.name')
-            ->get();
-        return $genders;
+        return $this->get_lookup_data_with_count('gender', $whereClauses);
+    }
+
+    public function statuses($whereClauses){
+        return $this->get_lookup_data_with_count('status', $whereClauses);
+    }
+
+    public function occasions($whereClauses){
+        return $this->get_lookup_data_with_count('occasion', $whereClauses);
+    }
+
+    public function body_types($whereClauses){
+        return $this->get_lookup_data_with_count('body_type', $whereClauses);
+    }
+
+    public function budgets($whereClauses){
+        return $this->get_lookup_data_with_count('budget', $whereClauses);
+    }
+
+    public function age_groups($whereClauses){
+        return $this->get_lookup_data_with_count('age_group', $whereClauses);
     }
 
     //To be cached
-    public function statuses($whereClauses){
-        unset($whereClauses['status_id']);
-        $statuses = DB::table($this->table)
-            ->join('lu_status', $this->table . '.status_id', '=', 'lu_status.id')
+    protected function get_lookup_data_with_count($lookup_type, $whereClauses){
+        $lookup_table = 'lu_' . $lookup_type;
+        $lookup_table_pk_col = $lookup_table. '.id';
+        $lookup_table_name_col = $lookup_table. '.name';
+        $count_table_id_col = $this->table . '.id';
+        $count_table_fk_col = $this->table . '.' . $lookup_type . '_id';
+        $count_table_fk = $lookup_type . '_id';
+
+        unset($whereClauses[$count_table_fk]);
+        $data = DB::table($this->table)
+            ->join($lookup_table, $count_table_fk_col, '=', $lookup_table_pk_col)
             ->where($whereClauses)
-            ->select('lu_status.id', 'lu_status.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
-            ->groupBy('lu_status.id', 'lu_status.name')
+            ->select($lookup_table_pk_col, $lookup_table_name_col, DB::raw('COUNT(' . $count_table_id_col . ') as product_count'))
+            ->groupBy($lookup_table_pk_col, $lookup_table_name_col)
             ->get();
-        return $statuses;
+        return $data;
     }
 
     //To be cached
     public function stylists($whereClauses){
         unset($whereClauses['stylish_id']);
-        $genders = DB::table($this->table)
+        $stylists = DB::table($this->table)
             ->join('stylists', $this->table . '.stylish_id', '=', 'stylists.stylish_id')
             ->where($whereClauses)
             ->select('stylists.stylish_id', 'stylists.name', DB::raw('COUNT(' . $this->table . '.stylish_id) as product_count'))
             ->groupBy('stylists.stylish_id', 'stylists.name')
             ->orderBy('stylists.name')
             ->get();
-        return $genders;
+        return $stylists;
     }
 
 }

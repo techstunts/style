@@ -24,6 +24,10 @@ abstract class Controller extends BaseController
     protected $genders = [];
     protected $stylists = [];
     protected $statuses = [];
+    protected $occasions = [];
+    protected $body_types = [];
+    protected $budgets = [];
+    protected $age_groups = [];
 
     protected $resource_id;
     protected $action_resource_id;
