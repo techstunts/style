@@ -11,7 +11,7 @@
                     @include('merchant.select')
                     @include('brand.select')
                     @include('category.select')
-                    @include('gender.select')
+                    @include('common.gender.select')
                     <input type="submit" name="filter" value="Filter"/>
                 </form>
                 {!! $products->render() !!}

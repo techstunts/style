@@ -51,13 +51,13 @@
 
                             <tr class="row">
                                 <td class="title" colspan="2">
-                                    @include('status.select')
+                                    @include('common.status.select')
                                 </td>
                             </tr>
 
                             <tr class="row">
                                 <td class="title" colspan="2">
-                                    @include('expertise.select')
+                                    @include('common.expertise.select')
                                 </td>
                             </tr>
 
@@ -72,7 +72,7 @@
 
                             <tr class="row">
                                 <td class="title" colspan="2">
-                                    @include('gender.select')
+                                    @include('common.gender.select')
                                 </td>
                             </tr>
 

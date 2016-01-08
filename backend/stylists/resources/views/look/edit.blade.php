@@ -70,7 +70,7 @@
 
                             <tr class="row">
                                 <td class="title" colspan="2">
-                                    @include('gender.select')
+                                    @include('common.gender.select')
                                     @if($gender_error = $errors->first('gender_id'))
                                         <span class="errorMsg">{{$gender_error}}</span>
                                     @endif
