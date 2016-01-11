@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Brand;
 use App\Category;
 use App\Models\Lookups\Gender;
+use App\Models\Lookups\Color;
 use App\Merchant;
 use App\Product;
 use Illuminate\Http\Request;
@@ -83,6 +84,8 @@ class ProductController extends Controller
         $brand = Brand::firstOrCreate(['name' => $request->input('brand')]);
         $category = Category::firstOrCreate(['name' => $request->input('category')]);
         $gender = Gender::where(['name' => $request->input('gender')])->first();
+	$primary_color = Color::where(['name' => $request->input('color1')])->first();
+        $secondary_color = Color::where(['name' => $request->input('color2')])->first();
 
         if($merchant && $brand && $category && $request->input('name')) {
             $product = new Product();
@@ -96,6 +99,8 @@ class ProductController extends Controller
             $product->brand_id	    = $brand->id;
             $product->category_id	= $category->id;
             $product->gender_id	    = $gender ? $gender->id : "";
+            $product->primary_color_id     = $primary_color ? $primary_color->id : "";
+            $product->secondary_color_id     = $secondary_color ? $secondary_color->id : "";
 
             if($product->save()) {
                 $product_url = url('product/view/' . $product->id);
@@ -139,7 +144,8 @@ class ProductController extends Controller
             $looks = $product->looks;
 
             $view_properties = array('product' => $product, 'looks' => $looks, 'merchant' => $merchant,
-                'category' => $category, 'gender' => $gender, 'brand' => $brand);
+                'category' => $category, 'gender' => $gender, 'brand' => $brand, 'primary_color' => $product->primary_color, 'secondary_color' => 
+$product->secondary_color);
         }
         else{
             return view('404', array('title' => 'Product not found'));

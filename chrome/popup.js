@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				{
 					code: '\
 					var merchant = window.location.hostname.split(\'.\')[1];\
-					var prod_name = \'\', prod_price = \'\', prod_desc = \'\', a_tags = \'\', category = \'\', brand = \'\', gender = \'\', img_links = [];\
+					var prod_name = \'\', prod_price = \'\', prod_desc = \'\', a_tags = \'\', category = \'\', brand = \'\', gender = \'\', img_links = [], colors = [];\
 					\
 					if(merchant == \'koovs\'){\
 						prod_name = document.getElementById(\'prod_name_hide\').value;\
@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							var rel = a_tags[i].rel.replace(/\",\"/g,", ");\
 							img_links.push(rel.split(\',\')[0].split(\'\":\"\')[1]);\
 						}\
+						colors.push(document.getElementById(\'selected_color_label\').innerText);\
 					}\
 					else if(merchant == \'indianroots\'){\
 						prod_name = document.getElementsByTagName(\'h1\')[0].innerText;\
@@ -36,8 +37,12 @@ document.addEventListener('DOMContentLoaded', function() {
 						prod_desc = document.querySelector(\'span[itemprop=\"description\"]\').innerText;\
 						category = \'\';\
 						brand = document.getElementsByClassName(\'ProContentDetails\')[0].getElementsByTagName(\'a\')[0].innerText;\
-						gender = document.getElementsByClassName(\'nav\')[0].getElementsByClassName(\'l1-active\')[0].getElementsByTagName(\'a\')[0].innerHTML;\
+						gender = document.querySelector(\'.nav .l1-active\') ? document.querySelector(\'.nav .l1-active\').getElementsByTagName(\'a\')[0].innerText : "";\
 						img_links.push(document.getElementById(\'zoom1\').href);\
+						color_patterns = prod_desc.match(/Colour:[a-zA-Z ]*/);\
+						if(color_patterns != null){\
+							colors.push(color_patterns[0].replace(\'Colour:\',\'\').trim());\
+						}\
 					}\
 					else if(merchant == \'limeroad\'){\
 						prod_name = document.getElementsByClassName(\'p_name\')[0].innerText;\
@@ -48,6 +53,11 @@ document.addEventListener('DOMContentLoaded', function() {
 						brand = document.getElementsByClassName(\'sUsrNme\')[0].innerText;\
 						gender = \'Women\';\
 						img_links.push(document.getElementsByClassName(\'jqzoom\')[0].href);\
+						color_tags = document.querySelectorAll(\'a[data-key=\"color\"]\');\
+						var i;\
+						for (i = 0; i < color_tags.length; i++) {\
+							colors.push(color_tags[i].innerText);\
+						}\
 					}\
 					else if(merchant == \'abof\'){\
 						prod_name = document.getElementsByClassName(\'product-detail__title\')[0].innerHTML.trim();\
@@ -90,6 +100,13 @@ document.addEventListener('DOMContentLoaded', function() {
 						brand = document.getElementsByClassName(\'brand\')[0].innerHTML;\
 						gender = breadcrumbs[1].innerText;\
 						img_links.push(document.getElementsByClassName(\'product-image\')[0].getElementsByClassName(\'primary-image first\')[0].src);\
+						labels = document.querySelectorAll(\'.prod-main-wrapper li\');\
+						var i;\
+						for (i = 0; i < labels.length; i++) {\
+						    if(labels[i].querySelector(\'label\').innerText == \'Color\'){\
+								colors.push(labels[i].querySelector(\'span\').innerText);\
+							}\
+						}\
 					}\
 					if(gender == "Women" || gender == "Girls"){\
 						gender = "Female";\
@@ -97,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					else if(gender == "Men" || gender == "Boys"){\
 						gender = "Male";\
 					}\
-					var r = [prod_name, prod_price, prod_desc, img_links, merchant, category, brand, gender];\
+					var r = [prod_name, prod_price, prod_desc, img_links, merchant, category, brand, gender, colors];\
 					r;\
 					'
 				},
@@ -113,6 +130,12 @@ document.addEventListener('DOMContentLoaded', function() {
 					document.getElementById('brand').value = results[0][6].capitalizeFirstLetter();
 					document.getElementById('gender').value = results[0][7];
 					
+					for(cnt in results[0][8]){
+						var input = document.getElementById('color' + (parseInt(cnt) + 1));
+						if(input != null){
+							input.value = results[0][8][cnt].match(/multi/i) ? 'Multi' : results[0][8][cnt];
+						}
+					}
 					
 					var imagesDiv = document.getElementsByClassName('images')[0];
 

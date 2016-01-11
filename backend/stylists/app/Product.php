@@ -14,7 +14,7 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = ['agency_id', 'merchant_id', 'product_name', 'product_price', 'product_link', 'upload_image',
-        'image_name','merchant_product_id', 'brand_id', 'category_id', 'gender_id'];
+        'image_name','merchant_product_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'secondary_color_id'];
 
     public $timestamps = true;
 
@@ -37,4 +37,13 @@ class Product extends Model
     public function looks(){
         return $this->belongsToMany('App\Look', 'looks_products');
     }
+
+    public function primary_color(){
+        return $this->belongsTo('App\Models\Lookups\Color', 'primary_color_id');
+    }
+
+    public function secondary_color(){
+        return $this->belongsTo('App\Models\Lookups\Color', 'secondary_color_id');
+    }
+
 }
