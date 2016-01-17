@@ -7,7 +7,7 @@ class Lookup
     public static function init()
     {
 
-        $lookup_tables = array('lu_gender', 'lu_occasion', 'lu_budget', 'lu_body_type');
+        $lookup_tables = array('lu_gender', 'lu_occasion', 'lu_budget', 'lu_body_type', 'lu_entity_type');
         foreach ($lookup_tables as $table) {
             $sql = "SELECT id, lower(name) FROM $table";
             $result = mysql_query($sql);
@@ -34,5 +34,6 @@ class Lookup
                 return self::$lookup_data[$lookup_table][$lookup_keyname];
             }
         }
+        return '';
     }
 }
