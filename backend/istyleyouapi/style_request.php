@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['userid']) )
     }
 
     $description = '';
-    if(isset($_POST['description']) && !empty($_POST['description'])){
-        $description = mysql_real_escape_string(trim($_POST['description']));
+    if(isset($_REQUEST['description']) && !empty($_REQUEST['description'])){
+        $description = mysql_real_escape_string(trim($_REQUEST['description']));
     }
 
     if(($entity_type != 0 && $occasion == '' && $budget == '') || ($entity_type == 0 && $description == '')){
