@@ -15,6 +15,7 @@
                     @include('common.body_type.select')
                     @include('common.budget.select')
                     @include('common.age_group.select')
+                    @include('common.search')
                     <input type="submit" name="filter" value="Filter"/>
                 </form>
                 {!! $looks->render() !!}
@@ -23,6 +24,9 @@
             <div class="clear"></div>
 
             <ol class="selectable" >
+            @if(count($looks) == 0)
+                No Looks found
+            @endif
             @foreach($looks as $look)
                 <li class="ui-state-default" look_id="{{$look->id}}">
                     <div class="items">

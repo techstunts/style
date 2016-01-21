@@ -3,7 +3,7 @@ include("db_config.php");
 include("ProductLink.php");
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GET['userid'])) {
     $userid = $_GET['userid'];
-    $sql = "select p.id, product_name, product_type, product_price, product_link, upload_image, p.agency_id, p.merchant_id
+    $sql = "select p.id, p.name, product_type, p.price, product_link, upload_image, p.agency_id, p.merchant_id
             from products p
             join usersfav on usersfav.product_id = p.id
             where user_id='$userid'";

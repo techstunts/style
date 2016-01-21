@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', ($product->product_name ? $product->product_name : "Product not found"))
+@section('title', ($product->name ? $product->name : "Product not found"))
 
 @section('content')
 <div id="contentCntr">
@@ -13,7 +13,7 @@
                     </div>
                     <table class="info">
                         <tr class="row">
-                            <td class="title" colspan="2">{{$product->product_name}}</td>
+                            <td class="title" colspan="2">{{$product->name}}</td>
                         </tr>
                         <tr class="row">
                             <td class="description" colspan="2">{{$product->description}}</td>
@@ -22,7 +22,7 @@
                             <td class="head">Product Type</td><td class="content">{{$product->product_type}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Price</td><td class="content">Rs.{{$product->product_price}} </td>
+                            <td class="head">Price</td><td class="content">Rs.{{$product->price}} </td>
                         </tr>
                         <tr class="row">
                             <td class="head">Merchant</td><td class="content">{{$merchant ? $merchant->name : ""}} <a target="new" href="{{$product->product_link}}" class="product_link">Product Link</a></td>

@@ -1,0 +1,1 @@
+<input type="text" name="search" value="{{$search}}" placeholder="Search Text" class="form-control search">

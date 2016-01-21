@@ -48,8 +48,9 @@ class ProductController extends Controller
         );
 
         foreach($this->filter_ids as $filter){
-            $view_properties[$filter] = $request->input($filter) ? $request->input($filter) : "";
+            $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
+        $view_properties['search'] = $request->input('search');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -60,12 +61,14 @@ class ProductController extends Controller
         $products =
             Product::
             where($this->where_conditions)
+                ->whereRaw($this->where_raw)
                 ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
         $view_properties['products'] = $products;
         $view_properties['genders_list'] = $genders_list;
+
 
         return view('product.list', $view_properties);
     }
@@ -92,9 +95,9 @@ class ProductController extends Controller
         if($merchant && $brand && $request->input('name')) {
             $product = new Product();
             $product->merchant_id	= $merchant->id;
-            $product->product_name	= $request->input('name');
+            $product->name	= $request->input('name');
             $product->description	= $request->input('desc');
-            $product->product_price	= str_replace(array(","," "), "", $request->input('price'));
+            $product->price	= str_replace(array(","," "), "", $request->input('price'));
             $product->product_link	= $request->input('url');
             $product->upload_image	= $request->input('image0');
             $product->image_name	= $request->input('image0');

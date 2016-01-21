@@ -18,6 +18,7 @@ abstract class Controller extends BaseController
     protected $filters = [];
     protected $records_per_page=25;
     protected $where_conditions = [];
+    protected $where_raw = "1=1";
     protected $brands = [];
     protected $categories = [];
     protected $merchants = [];
@@ -38,12 +39,17 @@ abstract class Controller extends BaseController
                 $this->where_conditions[$this->base_table . '.' . $filter_id] = $request->input($filter_id);
             }
         }
+        if($request->input('search') != "" and strlen(trim($request->input('search')))>0){
+            $search_term  = trim($request->input('search'));
+            $this->where_raw = "({$this->base_table}.name like '%{$search_term}%' OR {$this->base_table}.description like '%{$search_term}%')";
+        }
+
     }
 
     public function initFilters(){
-        $select_options = new SelectOptions($this->base_table);
+        $select_options = new SelectOptions($this->base_table, $this->where_conditions, $this->where_raw);
         foreach($this->filters as $filter){
-            $this->$filter = $select_options->$filter($this->where_conditions);
+            $this->$filter = $select_options->$filter();
         }
     }
 

@@ -74,8 +74,9 @@ class LookController extends Controller
         );
 
         foreach($this->filter_ids as $filter){
-            $view_properties[$filter] = $request->input($filter) ? $request->input($filter) : "";
+            $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
+        $view_properties['search'] = $request->input('search');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -96,6 +97,7 @@ class LookController extends Controller
 
         $looks  =
             Look::where($this->where_conditions)
+                ->whereRaw($this->where_raw)
                 ->whereRaw($remove_deleted_looks)
                 ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
@@ -182,7 +184,7 @@ class LookController extends Controller
                 $product = Product::find($product_id);
                 if($product && $product->id){
                     $look_products[] = array('product_id' => $product_id);
-                    $look_price += $product->product_price;
+                    $look_price += $product->price;
                     $src_image_paths[] = $product->upload_image;
                     $cnt++;
                 }

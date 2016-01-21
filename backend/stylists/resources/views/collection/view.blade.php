@@ -49,7 +49,7 @@
                                             if($entity[0] == \App\Models\Enums\EntityType::Product){
                                                 echo sprintf($href_tag,
                                                         url('product/view/' . $entity[1]->id),
-                                                        $entity[1]->product_name,
+                                                        $entity[1]->name,
                                                         strpos($entity[1]->upload_image, "http") !== false ? $entity[1]->upload_image : asset('images/' . $entity[1]->upload_image)
                                                 );
                                             }

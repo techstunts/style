@@ -15,9 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
 				  join lu_occasion o on l.occasion_id = o.id
                   join stylists s on s.stylish_id = l.stylish_id
 				  where r.user_id='$userid'
-                  and l.status_id = 1
+                
 				  ORDER BY r.id DESC
 			      LIMIT $record_start, $records_count ";
+//echo $sql;
     $res = mysql_query($sql);
     $row = mysql_num_rows($res);
 
@@ -41,12 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                 'stylish_image' => $ids[$i][8],
             );
 
-            $query = "select p.id,product_name,upload_image,product_price,product_type,product_link, p.agency_id, p.merchant_id
+            $query = "select p.id,p.name,upload_image,p.price,product_type,product_link, p.agency_id, p.merchant_id
                         from looks l
                         join looks_products lp ON l.id = lp.look_id
                         join products p ON lp.product_id = p.id
                         where l.id='$id'
-				        and l.status_id = 1
+				       
                         ";
 
             $res1 = mysql_query($query);
@@ -108,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                       join stylists s on s.stylish_id = l.stylish_id
 					  where l.id NOT IN (Select look_id from users_unlike where user_id='$userid')
 					  AND l.id IN (Select look_id from usersfav where user_id='$userid')
-                      and l.status_id = 1
+                      
 					  ORDER BY l.id DESC
 			          LIMIT $record_start, $records_count ";
     $res = mysql_query($sql);
@@ -128,12 +129,12 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
             'stylish_image' => $ids[$i][8],
         );
 
-        $query = "select p.id,product_name,upload_image,product_price,product_type,product_link, p.agency_id, p.merchant_id
+        $query = "select p.id,p.name,upload_image,p.price,product_type,product_link, p.agency_id, p.merchant_id
                         from looks l
                         join looks_products lp ON l.id = lp.look_id
                         join products p ON lp.product_id = p.id
                         where l.id='$id'
-				        and l.status_id = 1
+				        
                         ";
 
         $res1 = mysql_query($query);

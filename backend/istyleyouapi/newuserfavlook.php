@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
                 $stylish_details[] = $data2;
             }
 
-            $query = "select p.id,product_name,upload_image,product_price,product_type,product_link, p.agency_id, p.merchant_id
+            $query = "select p.id, p.name, upload_image, p.price, product_type, product_link, p.agency_id, p.merchant_id
                         from looks l
                         join looks_products lp ON l.id = lp.look_id
                         join products p ON lp.product_id = p.id

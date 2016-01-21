@@ -13,7 +13,7 @@ class Product extends Model
      */
     protected $table = 'products';
 
-    protected $fillable = ['agency_id', 'merchant_id', 'product_name', 'product_price', 'product_link', 'upload_image',
+    protected $fillable = ['agency_id', 'merchant_id', 'name', 'price', 'product_link', 'upload_image',
         'image_name','merchant_product_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'secondary_color_id'];
 
     public $timestamps = true;
