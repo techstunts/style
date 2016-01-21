@@ -41,6 +41,17 @@
 != 0 ? "(Secondary color: " . $secondary_color->name . ")" : ""}}</td>
                         </tr>
                         <tr class="row">
+                            <td class="head">Stylist</td>
+                            <td class="content">
+                                @if(isset($stylist) && isset($stylist->stylish_id))
+                                    <a href="{{url('stylist/view/' . $stylist->stylish_id)}}" title="{{$stylist->name}}" target="stylist_win">
+                                        <img class="icon" src="{{asset('images/' . $stylist->image)}}"/>
+                                        {{$stylist->name}}
+                                    </a>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr class="row">
                             <td class="head">Used in looks</td>
                             <td class="content">
                                 @foreach($looks as $look)

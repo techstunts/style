@@ -9,6 +9,7 @@
             <div class="filters">
                 <form method="get" action="">
                     @include('merchant.select')
+                    @include('stylist.select')
                     @include('brand.select')
                     @include('category.select')
                     @include('common.gender.select')

@@ -2,7 +2,7 @@
     <option value="">All</option>
     @foreach($expertises as $expertise)
         <option value="{{$expertise->id}}" {{$expertise_id == $expertise->id ? "selected" : ""}}>
-            {{$expertise->name}} {{$gender->product_count ?  '(' . $gender->product_count . ')' : ''}}
+            {{$expertise->name}} {{$expertise->product_count ?  '(' . $expertise->product_count . ')' : ''}}
         </option>
     @endforeach
 </select>

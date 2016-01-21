@@ -6,6 +6,7 @@ use App\Brand;
 use App\Category;
 use App\Models\Lookups\Gender;
 use App\Models\Lookups\Color;
+use App\Models\Enums\Category as CategoryEnum;
 use App\Merchant;
 use App\Product;
 use Illuminate\Http\Request;
@@ -16,8 +17,8 @@ use App\SelectOptions;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id'];
-    protected $filters = ['merchants', 'brands', 'categories', 'genders'];
+    protected $filter_ids = ['stylish_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id'];
+    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders'];
 
     /**
      * Display a listing of the resource.
@@ -39,6 +40,7 @@ class ProductController extends Controller
         $this->initFilters();
 
         $view_properties = array(
+            'stylists' => $this->stylists,
             'merchants' => $this->merchants,
             'brands' => $this->brands,
             'categories' => $this->categories,
@@ -82,12 +84,12 @@ class ProductController extends Controller
         $merchant = Merchant::where('name', $request->input('merchant'))->first();
 
         $brand = Brand::firstOrCreate(['name' => $request->input('brand')]);
-        $category = Category::firstOrCreate(['name' => $request->input('category')]);
+        $category = Category::where(['name' => $request->input('category')])->first();
         $gender = Gender::where(['name' => $request->input('gender')])->first();
-	$primary_color = Color::where(['name' => $request->input('color1')])->first();
+        $primary_color = Color::where(['name' => $request->input('color1')])->first();
         $secondary_color = Color::where(['name' => $request->input('color2')])->first();
 
-        if($merchant && $brand && $category && $request->input('name')) {
+        if($merchant && $brand && $request->input('name')) {
             $product = new Product();
             $product->merchant_id	= $merchant->id;
             $product->product_name	= $request->input('name');
@@ -97,10 +99,11 @@ class ProductController extends Controller
             $product->upload_image	= $request->input('image0');
             $product->image_name	= $request->input('image0');
             $product->brand_id	    = $brand->id;
-            $product->category_id	= $category->id;
+            $product->category_id	= $category ? $category->id : CategoryEnum::Others;
             $product->gender_id	    = $gender ? $gender->id : "";
             $product->primary_color_id     = $primary_color ? $primary_color->id : "";
             $product->secondary_color_id     = $secondary_color ? $secondary_color->id : "";
+            $product->stylish_id    = $request->user()->stylish_id != '' ? $request->user()->stylish_id : '';
 
             if($product->save()) {
                 $product_url = url('product/view/' . $product->id);
@@ -142,10 +145,11 @@ class ProductController extends Controller
             $brand = $product->brand;
             $gender = $product->gender;
             $looks = $product->looks;
+            $stylist = $product->stylist;
 
             $view_properties = array('product' => $product, 'looks' => $looks, 'merchant' => $merchant,
                 'category' => $category, 'gender' => $gender, 'brand' => $brand, 'primary_color' => $product->primary_color, 'secondary_color' => 
-$product->secondary_color);
+$product->secondary_color, 'stylist' => $stylist);
         }
         else{
             return view('404', array('title' => 'Product not found'));

@@ -46,4 +46,8 @@ class Product extends Model
         return $this->belongsTo('App\Models\Lookups\Color', 'secondary_color_id');
     }
 
+    public function stylist(){
+        return $this->belongsTo('App\Stylist', 'stylish_id');
+    }
+
 }
