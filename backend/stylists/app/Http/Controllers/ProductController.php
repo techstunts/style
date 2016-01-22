@@ -7,6 +7,7 @@ use App\Category;
 use App\Models\Lookups\Gender;
 use App\Models\Lookups\Color;
 use App\Models\Enums\Category as CategoryEnum;
+use App\Models\Enums\Brand as BrandEnum;
 use App\Merchant;
 use App\Product;
 use Illuminate\Http\Request;
@@ -86,7 +87,7 @@ class ProductController extends Controller
     {
         $merchant = Merchant::where('name', $request->input('merchant'))->first();
 
-        $brand = Brand::firstOrCreate(['name' => $request->input('brand')]);
+        $brand = Brand::where(['name' => $request->input('brand')])->first();
         $category = Category::where(['name' => $request->input('category')])->first();
         $gender = Gender::where(['name' => $request->input('gender')])->first();
         $primary_color = Color::where(['name' => $request->input('color1')])->first();
@@ -101,7 +102,7 @@ class ProductController extends Controller
             $product->product_link	= $request->input('url');
             $product->upload_image	= $request->input('image0');
             $product->image_name	= $request->input('image0');
-            $product->brand_id	    = $brand->id;
+            $product->brand_id	    = $brand->id ? $brand->id : BrandEnum::Others;
             $product->category_id	= $category ? $category->id : CategoryEnum::Others;
             $product->gender_id	    = $gender ? $gender->id : "";
             $product->primary_color_id     = $primary_color ? $primary_color->id : "";
