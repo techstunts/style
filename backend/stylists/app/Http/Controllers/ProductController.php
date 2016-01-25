@@ -29,13 +29,14 @@ class ProductController extends Controller
     public function index(Request $request, $action, $id = null)
     {
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
-        if($id){
+        if ($id) {
             $this->resource_id = $id;
         }
         return $this->$method($request);
     }
 
-    public function getList(Request $request){
+    public function getList(Request $request)
+    {
         $this->base_table = 'products';
         $this->initWhereConditions($request);
         $this->initFilters();
@@ -48,7 +49,7 @@ class ProductController extends Controller
             'genders' => $this->genders
         );
 
-        foreach($this->filter_ids as $filter){
+        foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
         $view_properties['search'] = $request->input('search');
@@ -74,7 +75,8 @@ class ProductController extends Controller
         return view('product.list', $view_properties);
     }
 
-    public function initWhereConditions(Request $request){
+    public function initWhereConditions(Request $request)
+    {
         parent::initWhereConditions($request);
     }
 
@@ -93,31 +95,29 @@ class ProductController extends Controller
         $primary_color = Color::where(['name' => $request->input('color1')])->first();
         $secondary_color = Color::where(['name' => $request->input('color2')])->first();
 
-        if($merchant && $brand && $request->input('name')) {
+        if ($merchant && $brand && $request->input('name')) {
             $product = new Product();
-            $product->merchant_id	= $merchant->id;
-            $product->name	= $request->input('name');
-            $product->description	= $request->input('desc');
-            $product->price	= str_replace(array(","," "), "", $request->input('price'));
-            $product->product_link	= $request->input('url');
-            $product->upload_image	= $request->input('image0');
-            $product->image_name	= $request->input('image0');
-            $product->brand_id	    = $brand->id ? $brand->id : BrandEnum::Others;
-            $product->category_id	= $category ? $category->id : CategoryEnum::Others;
-            $product->gender_id	    = $gender ? $gender->id : "";
-            $product->primary_color_id     = $primary_color ? $primary_color->id : "";
-            $product->secondary_color_id     = $secondary_color ? $secondary_color->id : "";
-            $product->stylish_id    = $request->user()->stylish_id != '' ? $request->user()->stylish_id : '';
+            $product->merchant_id = $merchant->id;
+            $product->name = htmlentities($request->input('name'));
+            $product->description = htmlentities($request->input('desc'));
+            $product->price = str_replace(array(",", " "), "", $request->input('price'));
+            $product->product_link = $request->input('url');
+            $product->upload_image = $request->input('image0');
+            $product->image_name = $request->input('image0');
+            $product->brand_id = $brand->id ? $brand->id : BrandEnum::Others;
+            $product->category_id = $category ? $category->id : CategoryEnum::Others;
+            $product->gender_id = $gender ? $gender->id : "";
+            $product->primary_color_id = $primary_color ? $primary_color->id : "";
+            $product->secondary_color_id = $secondary_color ? $secondary_color->id : "";
+            $product->stylish_id = $request->user()->stylish_id != '' ? $request->user()->stylish_id : '';
 
-            if($product->save()) {
+            if ($product->save()) {
                 $product_url = url('product/view/' . $product->id);
                 echo json_encode([true, $product_url]);
-            }
-            else{
+            } else {
                 echo json_encode([false, "Product cant be stored"]);
             }
-        }
-        else{
+        } else {
             echo json_encode([false, "Please enter product name"]);
         }
     }
@@ -125,7 +125,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -136,14 +136,14 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function getView()
     {
         $product = Product::find($this->resource_id);
         $view_properties = null;
-        if($product){
+        if ($product) {
             $category = $product->category;
             $merchant = $product->merchant;
             $brand = $product->brand;
@@ -152,10 +152,9 @@ class ProductController extends Controller
             $stylist = $product->stylist;
 
             $view_properties = array('product' => $product, 'looks' => $looks, 'merchant' => $merchant,
-                'category' => $category, 'gender' => $gender, 'brand' => $brand, 'primary_color' => $product->primary_color, 'secondary_color' => 
-$product->secondary_color, 'stylist' => $stylist);
-        }
-        else{
+                'category' => $category, 'gender' => $gender, 'brand' => $brand, 'primary_color' => $product->primary_color, 'secondary_color' =>
+                    $product->secondary_color, 'stylist' => $stylist);
+        } else {
             return view('404', array('title' => 'Product not found'));
         }
 
@@ -165,7 +164,7 @@ $product->secondary_color, 'stylist' => $stylist);
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -176,8 +175,8 @@ $product->secondary_color, 'stylist' => $stylist);
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -188,7 +187,7 @@ $product->secondary_color, 'stylist' => $stylist);
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

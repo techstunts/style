@@ -71,12 +71,14 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 
 				//Get products info for current look
 				$current_look_products_query =
-					"select p.id, p.name, upload_image, p.price, product_type, product_link, p.agency_id, p.merchant_id
+					"select p.id, p.name, upload_image, p.price, product_type, product_link, p.agency_id, p.merchant_id,
+                            m.name merchant_name, b.name brand_name, b.id as brand_id
 						from looks l
 						join looks_products lp ON l.id = lp.look_id
 						join products p ON lp.product_id = p.id
-						where l.id='$look_id'
-						";
+						join merchants m ON p.merchant_id = m.id
+						join brands b ON p.brand_id = b.id
+						where l.id='$look_id'";
 
 				$current_look_products_res = mysql_query($current_look_products_query);
 				$current_look_products = [];
@@ -107,7 +109,10 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 						'producttype' => $current_look_products[$j][4],
 						'productlink' => ProductLink::getDeepLink($current_look_products[$j][6],
 														$current_look_products[$j][7],
-														$current_look_products[$j][5])
+														$current_look_products[$j][5]),
+						'merchant' => $current_look_products[$j]['merchant_name'],
+						'brand' => $current_look_products[$j]['brand_name'],
+                        'brand_id' => $list[$j]['brand_id'],
 					);
 				}
 

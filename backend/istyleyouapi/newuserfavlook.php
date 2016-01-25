@@ -1,5 +1,7 @@
 <?php
 include("db_config.php");
+include("ProductLink.php");
+
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GET['userid'])) {
     $userid = $_GET['userid'];
     $sql = "Select l.id as look_id, l.description, l.image, l.price, l.name
@@ -31,10 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
                 $stylish_details[] = $data2;
             }
 
-            $query = "select p.id, p.name, upload_image, p.price, product_type, product_link, p.agency_id, p.merchant_id
+            $query = "select p.id, p.name, upload_image, p.price, product_type, product_link, p.agency_id, p.merchant_id,
+                            m.name merchant_name, b.name brand_name, b.id as brand_id
                         from looks l
                         join looks_products lp ON l.id = lp.look_id
                         join products p ON lp.product_id = p.id
+						join merchants m ON p.merchant_id = m.id
+						join brands b ON p.brand_id = b.id
                         where l.id='$id'
 				        and l.status_id = 1
                         ";
@@ -69,7 +74,20 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
                 }
 
 
-                $product = array('fav' => $fav, 'productid' => $list[$j][0], 'productname' => $list[$j][1], 'productimage' => $list[$j][2], 'productprice' => $list[$j][3], 'producttype' => $list[$j][4], 'productlink' => $list[$j][5]);
+                $product = array(
+                    'fav' => $fav,
+                    'productid' => $list[$j][0],
+                    'productname' => $list[$j][1],
+                    'productimage' => $list[$j][2],
+                    'productprice' => $list[$j][3],
+                    'producttype' => $list[$j][4],
+                    'productlink'=>ProductLink::getDeepLink($list[$j][6],
+                            $list[$j][7],
+                            $list[$j][5]),
+                    'merchant' => $list[$j]['merchant_name'],
+                    'brand' => $list[$j]['brand_name'],
+                    'brand_id' => $list[$j]['brand_id'],
+                );
                 $productarray[] = $product;
             }
             $data = array('lookdetails' => array('fav' => 'yes', 'lookid' => $ids[$i][0], 'lookdescription' => $ids[$i][1], 'lookimage' => $ids[$i][2], 'lookprice' => $ids[$i][3], 'lookname' => $ids[$i][4], 'productdetails' => $productarray, 'stylish_details' => $stylish_details));

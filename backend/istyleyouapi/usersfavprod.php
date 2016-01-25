@@ -3,9 +3,13 @@ include("db_config.php");
 include("ProductLink.php");
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GET['userid'])) {
     $userid = $_GET['userid'];
-    $sql = "select p.id, p.name, product_type, p.price, product_link, upload_image, p.agency_id, p.merchant_id
+
+    $sql = "select p.id, p.name, upload_image, p.price, product_type, product_link, p.agency_id, p.merchant_id,
+                    m.name merchant_name, b.name brand_name, b.id as brand_id
             from products p
             join usersfav on usersfav.product_id = p.id
+            join merchants m ON p.merchant_id = m.id
+            join brands b ON p.brand_id = b.id
             where user_id='$userid'";
     $res = mysql_query($sql);
     $row = mysql_num_rows($res);
@@ -17,14 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
     for ($j = 0; $j < $row; $j++) {
         $product = array(
             'fav' => 'yes',
-            'productid' => $list[$j][0],
-            'productname' => $list[$j][1],
-            'producttype' => $list[$j][2],
-            'productprice' => $list[$j][3],
+            'productid'=>$list[$j][0],
+            'productname'=>$list[$j][1],
+            'productimage'=>$list[$j][2],
+            'productprice'=>$list[$j][3],
+            'producttype'=>$list[$j][4],
             'productlink' => ProductLink::getDeepLink($list[$j][6],
                 $list[$j][7],
                 $list[$j][5]),
-            'productimage' => $list[$j][5]);
+            'merchant' => $list[$j]['merchant_name'],
+            'brand' => $list[$j]['brand_name'],
+            'brand_id' => $list[$j]['brand_id'],
+        );
         $productarray[] = $product;
     }
     $data = array('result' => 'success', 'myfav' => $productarray);

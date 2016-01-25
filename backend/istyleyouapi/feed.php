@@ -42,10 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                 'stylish_image' => $ids[$i][8],
             );
 
-            $query = "select p.id,p.name,upload_image,p.price,product_type,product_link, p.agency_id, p.merchant_id
+            $query = "select p.id,p.name,upload_image,p.price,product_type,product_link, p.agency_id, p.merchant_id,
+					         m.name merchant_name, b.name brand_name, b.id as brand_id
                         from looks l
                         join looks_products lp ON l.id = lp.look_id
                         join products p ON lp.product_id = p.id
+                        join merchants m ON p.merchant_id = m.id
+                        join brands b ON p.brand_id = b.id
                         where l.id='$id'
 				       
                         ";
@@ -87,7 +90,11 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                     'producttype' => $list[$j][4],
                     'productlink' => ProductLink::getDeepLink($list[$j][6],
                         $list[$j][7],
-                        $list[$j][5]));
+                        $list[$j][5]),
+                    'merchant' => $list[$j]['merchant_name'],
+                    'brand' => $list[$j]['brand_name'],
+                    'brand_id' => $list[$j]['brand_id'],
+                );
                 $productarray[] = $product;
             }
             $data = array('lookdetails' => array('fav' => 'No', 'lookid' => $ids[$i][0], 'lookdescription' => $ids[$i][1], 'lookimage' => $ids[$i][2], 'lookprice' => $ids[$i][3], 'occasion' => $ids[$i][4], 'lookname' => $ids[$i][5], 'productdetails' => $productarray, 'stylish_details' => $stylish_details));
@@ -129,10 +136,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
             'stylish_image' => $ids[$i][8],
         );
 
-        $query = "select p.id,p.name,upload_image,p.price,product_type,product_link, p.agency_id, p.merchant_id
+        $query = "select p.id,p.name,upload_image,p.price,product_type,product_link, p.agency_id, p.merchant_id,
+                         m.name merchant_name, b.name brand_name, b.id as brand_id
                         from looks l
                         join looks_products lp ON l.id = lp.look_id
                         join products p ON lp.product_id = p.id
+                        join merchants m ON p.merchant_id = m.id
+                        join brands b ON p.brand_id = b.id
                         where l.id='$id'
 				        
                         ";
@@ -174,7 +184,11 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                 'producttype' => $list[$j][4],
                 'productlink' => ProductLink::getDeepLink($list[$j][6],
                     $list[$j][7],
-                    $list[$j][5]));
+                    $list[$j][5]),
+                'merchant' => $list[$j]['merchant_name'],
+                'brand' => $list[$j]['brand_name'],
+                'brand_id' => $list[$j]['brand_id'],
+            );
             $productarray[] = $product;
         }
         $data = array('lookdetails' => array('fav' => 'yes', 'lookid' => $ids[$i][0], 'lookdescription' => $ids[$i][1], 'lookimage' => $ids[$i][2], 'lookprice' => $ids[$i][3], 'occasion' => $ids[$i][4], 'lookname' => $ids[$i][5], 'productdetails' => $productarray, 'stylish_details' => $stylish_details));

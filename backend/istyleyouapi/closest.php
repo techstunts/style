@@ -23,10 +23,13 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 		$ids[]=$data;
 		$id=$ids[$i][0];
 
-		$query="select p.id,p.name,upload_image,p.price,product_type,product_link, p.agency_id, p.merchant_id
+		$query="select p.id,p.name,upload_image,p.price,product_type,product_link, p.agency_id, p.merchant_id,
+					   m.name merchant_name, b.name brand_name, b.id as brand_id
 				from looks l
 				join looks_products lp ON l.id = lp.look_id
 				join products p ON lp.product_id = p.id
+				join merchants m ON p.merchant_id = m.id
+				join brands b ON p.brand_id = b.id
 				where l.id='$id'
 				and l.status_id = 1
 				";
@@ -70,7 +73,10 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 			'producttype'=>$list[$j][4],
 			'productlink'=>ProductLink::getDeepLink($list[$j][6],
 										$list[$j][7],
-										$list[$j][5])
+										$list[$j][5]),
+			'merchant' => $list[$j]['merchant_name'],
+			'brand' => $list[$j]['brand_name'],
+			'brand_id' => $list[$j]['brand_id'],
 		);
 		
 	}
