@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                 while ($data1 = mysql_fetch_array($current_look_products_res)) {
                     $current_look_products[] = $data1;
                 }
-
+//var_dump($current_look_products);
                 $productarray = array();
                 for ($j = 0; $j < count($current_look_products); $j++) {
                     if ($fav_prod_count == 0) {
@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                     $productarray[] = array(
                         'fav' => $fav,
                         'productid' => $current_look_products[$j][0],
-                        'productname' => $current_look_products[$j][1],
+                        'productname' => mb_convert_encoding($current_look_products[$j][1], "UTF-8", "Windows-1252"),
                         'productimage' => $current_look_products[$j][2],
                         'productprice' => $current_look_products[$j][3],
                         'producttype' => $current_look_products[$j][4],
@@ -137,11 +137,11 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                             array(
                                 'fav' => $latest_looks[$i][6] == null ? 'No' : 'Yes',
                                 'lookid' => $latest_looks[$i][0],
-                                'lookdescription' => $latest_looks[$i][1],
+                                'lookdescription' => mb_convert_encoding($latest_looks[$i][1], "UTF-8", "Windows-1252"),
                                 'lookimage' => $latest_looks[$i][2],
                                 'lookprice' => $latest_looks[$i][3],
                                 'occasion' => $latest_looks[$i][4],
-                                'lookname' => $latest_looks[$i][5],
+                                'lookname' => mb_convert_encoding($latest_looks[$i][5], "UTF-8", "Windows-1252"),
                                 'productdetails' => $productarray
                             )
                     );
@@ -160,6 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
     $response = array('result' => 'fail', 'response_message' => 'userid empty');
 }
 
+//var_dump($response);
 //var_dump($response['latest_looks'][0]['lookdetails']);
 
 mysql_close($conn);
