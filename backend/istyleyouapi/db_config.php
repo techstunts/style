@@ -11,4 +11,15 @@ if(! $conn )
 else{
 	mysql_select_db($dbname);
 }
+
+
+$debug = true;
+if($debug) {
+    $base = substr(basename($_SERVER['REQUEST_URI']), 0, strpos(basename($_SERVER['REQUEST_URI']), ".php"));
+    $log_file = "debug/" . $base . ".log";
+    file_put_contents($log_file, PHP_EOL . var_export($_REQUEST, true), FILE_APPEND);
+}
+
+
+
 ?>
