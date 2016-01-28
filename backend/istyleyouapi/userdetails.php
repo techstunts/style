@@ -1,6 +1,18 @@
 <?php
 include("db_config.php");
 //file_put_contents('userdetails-data', "\n" . var_export($_REQUEST, true), FILE_APPEND);
+
+if (!empty($_SERVER['HTTP_CLIENT_IP'])){
+    $ip=$_SERVER['HTTP_CLIENT_IP'];
+}elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+    $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+}else{
+    $ip=$_SERVER['REMOTE_ADDR'];
+}
+$user_signup_ip_address = ip2long($ip);
+$current_date_time = date("Y-m-d H:i:s");
+//The $user_signup_ip_address would look something like: 1073732954
+
 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && !empty($_REQUEST['password']) && isset($_REQUEST['password']) && !empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
 
     $email = $_REQUEST['email'];
@@ -84,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
             $data = array('result' => 0, 'message' => 'User already registered with the given email');
             $data = login($email, $password, $gender);
         } else {
-            $sql = "INSERT INTO userdetails(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylish_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height')";
+            $sql = "INSERT INTO userdetails(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylish_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$user_signup_ip_address', '$current_date_time')";
             $insert = mysql_query($sql);
             $lastid = mysql_insert_id();
 
@@ -235,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         $data = FacebookLogin($email, $facebookid, $gender, $username);
 
     } else {
-        $sql = "INSERT INTO userdetails(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylish_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,regId) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$regId')";
+        $sql = "INSERT INTO userdetails(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylish_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,regId,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$regId','$user_signup_ip_address', '$current_date_time')";
         $insert = mysql_query($sql);
         $lastid = mysql_insert_id();
 
@@ -356,7 +368,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         $res == mysql_query($sql);
         $data = GoogleLogin($email, $googleid, $gender, $username);
     } else {
-        $sql = "INSERT INTO userdetails(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylish_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,regId) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$regId')";
+        $sql = "INSERT INTO userdetails(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylish_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,regId,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$regId','$user_signup_ip_address', '$current_date_time')";
         $insert = mysql_query($sql);
         $lastid = mysql_insert_id();
         if ($lastid) {
@@ -455,7 +467,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         //$data = array('result' => 'fail', 'message' => 'User already registered with the given email');
         $data = LinkedinLogin($email, $linkedid, $gender, $username);
     } else {
-        $sql = "INSERT INTO userdetails(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylish_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height')";
+        $sql = "INSERT INTO userdetails(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylish_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$user_signup_ip_address', '$current_date_time')";
         $insert = mysql_query($sql);
         $lastid = mysql_insert_id();
 
