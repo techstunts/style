@@ -112,7 +112,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 														$current_look_products[$j][5]),
 						'merchant' => $current_look_products[$j]['merchant_name'],
 						'brand' => $current_look_products[$j]['brand_name'],
-                        'brand_id' => $list[$j]['brand_id'],
+                        'brand_id' => $current_look_products[$j]['brand_id'],
 					);
 				}
 
