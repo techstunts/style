@@ -15,15 +15,19 @@
                         <tr class="row">
                             <td class="title" colspan="2">
                                 {{$stylist->name}}
-                                <a style="color:blue;font-size:13px;" href="{{url('stylist/edit/' . $stylist->stylish_id)}}" title="{{$stylist->name}}" >Edit</a>
+                                @if($is_owner_or_admin)
+                                    <a style="color:blue;font-size:13px;" href="{{url('stylist/edit/' . $stylist->stylish_id)}}" title="{{$stylist->name}}" >Edit</a>
+                                @endif
                             </td>
                         </tr>
                         <tr class="row">
                             <td class="description" colspan="2">{{$stylist->description}}</td>
                         </tr>
-                        <tr class="row">
-                            <td class="head">Email</td><td class="content">{{$stylist->email}} </td>
-                        </tr>
+                        @if($is_owner_or_admin)
+                            <tr class="row">
+                                <td class="head">Email</td><td class="content">{{$stylist->email}} </td>
+                            </tr>
+                        @endif
                         <tr class="row">
                             <td class="head">Status</td><td class="content">{{$status_list[$stylist->status_id]->name}} </td>
                         </tr>

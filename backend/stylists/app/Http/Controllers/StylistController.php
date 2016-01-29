@@ -8,6 +8,7 @@ use App\Stylist;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class StylistController extends Controller
@@ -73,6 +74,7 @@ class StylistController extends Controller
             $view_properties['stylist'] = $stylist;
             $view_properties['status_list'] = $status_list;
             $view_properties['looks'] = $stylist->looks;
+            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $stylist->stylish_id == Auth::user()->stylish_id;
         }
         else{
             return view('404', array('title' => 'Stylist not found'));
@@ -90,6 +92,10 @@ class StylistController extends Controller
     public function getEdit()
     {
         $stylist = Stylist::find($this->resource_id);
+        if(!Auth::user()->hasRole('admin') && $stylist->stylish_id != Auth::user()->stylish_id){
+            return view('404', array('title' => 'You do not have permission to change this Stylist\'s details'));
+        }
+
         $view_properties = null;
         if($stylist){
             $lookup = new Lookup();
@@ -154,6 +160,11 @@ class StylistController extends Controller
         }
 
         $stylist = Stylist::find($this->resource_id);
+
+        if(!Auth::user()->hasRole('admin') && $stylist->stylish_id != Auth::user()->stylish_id){
+            return view('404', array('title' => 'You do not have permission to change this Stylist\'s details'));
+        }
+
         $stylist->name = isset($request->name) && $request->name != '' ? $request->name : '';
         $stylist->email = isset($request->email) && $request->email != '' ? $request->email : '';
         $stylist->description = isset($request->description) && $request->description != '' ? $request->description : '';
