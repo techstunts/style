@@ -20,6 +20,8 @@ Route::any('password/{action}/{token?}', 'Auth\PasswordController@index');
 
 Route::group(['middleware' => 'auth'], function(){
 
+    Route::any('client/{action}/{id?}/{action_id?}', 'ClientController@index');
+
     Route::any('product/{action}/{id?}', 'ProductController@index');
 
     Route::any('look/{action}/{id?}/{action_id?}', 'LookController@index');
