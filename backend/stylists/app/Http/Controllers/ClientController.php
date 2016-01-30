@@ -54,7 +54,8 @@ class ClientController extends Controller
 
         $authWhereClauses = $this->authWhereClauses();
         $clients =
-            Client::where($this->where_conditions)
+            Client::with('stylist')
+                ->where($this->where_conditions)
                 ->whereRaw($authWhereClauses)
                 ->orderBy('user_id', 'desc')
                 ->simplePaginate($this->records_per_page)

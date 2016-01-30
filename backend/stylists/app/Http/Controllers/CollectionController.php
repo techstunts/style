@@ -38,7 +38,8 @@ class CollectionController extends Controller
         unset($paginate_qs['page']);
 
         $collections =
-            Collection::orderBy('id', 'desc')
+            Collection::with('gender','status','body_type','budget','occasion','age_group')
+                ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
@@ -55,7 +56,8 @@ class CollectionController extends Controller
     public function getView()
     {
         $female_entities = $male_entities = [];
-        $collection = Collection::find($this->resource_id);
+        $collection = Collection::with('look')
+        ->find($this->resource_id);
         if($collection){
             $entity_ids = DB::table('collection_entities')
                 ->where('collection_id', $collection->id)

@@ -96,7 +96,8 @@ class LookController extends Controller
         }
 
         $looks  =
-            Look::where($this->where_conditions)
+            Look::with('gender','status','body_type','budget','occasion','age_group')
+                ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereRaw($remove_deleted_looks)
                 ->orderBy('id', 'desc')

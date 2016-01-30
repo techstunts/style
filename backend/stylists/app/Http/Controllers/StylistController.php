@@ -35,8 +35,8 @@ class StylistController extends Controller
         $status_list[0] = new Status();
 
         $stylists =
-            Stylist::
-                orderBy('stylish_id', 'desc')
+            Stylist::with('gender','expertise')
+                ->orderBy('stylish_id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
@@ -65,7 +65,11 @@ class StylistController extends Controller
      */
     public function getView()
     {
-        $stylist = Stylist::find($this->resource_id);
+        $stylist = Stylist::with(['looks' => function ($query) {
+            $query->orderBy('id', 'desc')->limit(3);
+
+        }])->find($this->resource_id);
+
         $view_properties = null;
         if($stylist){
             $status_list = Status::all()->keyBy('id');

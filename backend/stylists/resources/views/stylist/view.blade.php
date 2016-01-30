@@ -49,11 +49,16 @@
                         <tr class="row">
                             <td class="head">Looks created</td>
                             <td class="content">
-                                @foreach($looks as $look)
-                                    <a href="{{url('look/view/' . $look->id)}}" title="{{$look->name}}" target="look_win">
-                                        <img class="entity" src="{{strpos($look->image, "http") !== false ? $look->image : asset('images/' . $look->image)}}"/>
-                                    </a>
-                                @endforeach
+                                @if(count($looks))
+                                    @foreach($looks as $look)
+                                        <a href="{{url('look/view/' . $look->id)}}" title="{{$look->name}}" target="look_win">
+                                            <img class="entity" src="{{strpos($look->image, "http") !== false ? $look->image : asset('images/' . $look->image)}}"/>
+                                        </a>
+                                    @endforeach
+                                    <a style="color:blue;font-size:13px;" href="{{url('look/list?stylish_id=' . $stylist->stylish_id)}}">View all</a>
+                                @else
+                                    None
+                                @endif
                             </td>
                         </tr>
                     </table>
