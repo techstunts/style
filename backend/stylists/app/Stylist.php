@@ -54,6 +54,10 @@ class Stylist extends Model implements AuthenticatableContract,
         return $this->belongsTo('App\Models\Lookups\Gender', 'gender_id');
     }
 
+    public function designation(){
+        return $this->belongsTo('App\Models\Lookups\Designation', 'designation_id');
+    }
+
     public function expertise(){
         return $this->belongsTo('App\Models\Lookups\Expertise', 'expertise_id');
     }

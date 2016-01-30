@@ -6,7 +6,10 @@ include("Lookup.php");
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty($_GET['stylish_id']) && !empty($_GET['gender'])) {
     $userid = $_GET['stylish_id'];
     $gender = $_GET['gender'];
-    $sql = "SELECT stylish_id, name, description, image, code FROM stylists where stylish_id='$userid'";
+    $sql = "SELECT stylish_id, s.name, description, image, code, d.name as designation, blog_url, facebook_id, twitter_id, pinterest_id, instagram_id
+            FROM stylists s
+            JOIN lu_designation d on s.designation_id = d.id
+            WHERE stylish_id='$userid'";
     $stylishinfo = array();
     $res = mysql_query($sql);
     $rows = mysql_num_rows($res);
@@ -18,9 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
             $stylishimage = array();
             $stylishid = $data['stylish_id'];
             $stylishname = $data['name'];
-            $description = $data['description'];
+            $description = mb_convert_encoding($data['description'], "UTF-8", "Windows-1252");
             $stylishimage[] = $data['image'];
             $stylishcode = $data['code'];
+            $designation = $data['designation'];
+            $blog_url = $data['blog_url'];
+            $facebook_url = isset($data['facebook_id']) ? "http://facebook.com/{$data['facebook_id']}" : "";
+            $twitter_url = isset($data['twitter_id']) ? "http://twitter.com/{$data['twitter_id']}" : "";
+            $pinterest_url = isset($data['pinterest_id']) ? "http://pinterest.com/{$data['pinterest_id']}" : "";
+            $instagram_url = isset($data['instagram_id']) ? "http://instagram.com/{$data['instagram_id']}" : "";
+            break;
         }
 
         $lookinfo = array();
@@ -96,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
                     $product = array(
                         'fav' => $fav,
                         'productid' => $list[$j][0],
-                        'productname' => $list[$j][1],
+                        'productname' => mb_convert_encoding($list[$j][1], "UTF-8", "Windows-1252"),
                         'productimage' => $list[$j][2],
                         'productprice' => $list[$j][3],
                         'producttype' => $list[$j][4],
@@ -116,11 +126,15 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
 
             }
 
-            $data = array('result' => 'success', 'Stylish Images' => $stylishimage, 'stylish_id' => $stylishid, 'stylish_name' => $stylishname, 'description' => $description, 'stylish_code' => $stylishcode, 'Look Details' => $abc);
+            $data = array('result' => 'success', 'Stylish Images' => $stylishimage, 'stylish_id' => $stylishid, 'stylish_name' => $stylishname, 'description' => $description, 'stylish_code' => $stylishcode,
+                'designation' => $designation, 'blog_url' => $blog_url, 'facebook_url' => $facebook_url, 'twitter_url' => $twitter_url, 'pinterest_url' => $pinterest_url, 'instagram_url' => $instagram_url,
+                'Look Details' => $abc);
         } else {
             $abc = array();
 
-            $data = array('result' => 'success', 'Stylish Images' => $stylishimage, 'stylish_id' => $stylishid, 'stylish_name' => $stylishname, 'description' => $description, 'stylish_code' => $stylishcode, 'Look Details' => $abc);
+            $data = array('result' => 'success', 'Stylish Images' => $stylishimage, 'stylish_id' => $stylishid, 'stylish_name' => $stylishname, 'description' => $description, 'stylish_code' => $stylishcode,
+                'designation' => $designation, 'blog_url' => $blog_url, 'facebook_url' => $facebook_url, 'twitter_url' => $twitter_url, 'pinterest_url' => $pinterest_url, 'instagram_url' => $instagram_url,
+                'Look Details' => $abc);
         }
     } else {
         $data = array('result' => 'fail', 'message' => 'User ID is wrong');

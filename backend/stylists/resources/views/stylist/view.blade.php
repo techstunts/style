@@ -41,6 +41,24 @@
                             <td class="head">Gender</td><td class="content">{{$stylist->gender->name}} </td>
                         </tr>
                         <tr class="row">
+                            <td class="head">Designation</td><td class="content">{{$stylist->designation->name}} </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="head">Blog URL</td><td class="content">{{$stylist->blog_url}} </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="head">Facebook Id</td><td class="content">{{$stylist->facebook_id}} </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="head">Twitter Id</td><td class="content">{{$stylist->twitter_id}} </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="head">Pinterest Id</td><td class="content">{{$stylist->pinterest_id}} </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="head">Instagram Id</td><td class="content">{{$stylist->instagram_id}} </td>
+                        </tr>
+                        <tr class="row">
                             <td class="head">Code</td><td class="content">{{$stylist->code}} </td>
                         </tr>
                         <tr class="row">
@@ -56,6 +74,18 @@
                                         </a>
                                     @endforeach
                                     <a style="color:blue;font-size:13px;" href="{{url('look/list?stylish_id=' . $stylist->stylish_id)}}">View all</a>
+                                @else
+                                    None
+                                @endif
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <td class="head">Profile images</td>
+                            <td class="content">
+                                @if(count($profile_images))
+                                    @foreach($profile_images as $image)
+                                        <img class="entity" src="{{strpos($image, "http") !== false ? $image : asset('images/' . $image)}}"/>
+                                    @endforeach
                                 @else
                                     None
                                 @endif

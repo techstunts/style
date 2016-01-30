@@ -52,20 +52,26 @@
                             <tr class="row">
                                 <td class="title" colspan="2">
                                     @include('common.status.select')
+                                    @if($status_error = $errors->first('status_id'))
+                                        <span class="errorMsg">{{$status_error}}</span>
+                                    @endif
                                 </td>
                             </tr>
 
                             <tr class="row">
                                 <td class="title" colspan="2">
                                     @include('common.expertise.select')
+                                    @if($expertise_error = $errors->first('expertise_id'))
+                                        <span class="errorMsg">{{$expertise_error}}</span>
+                                    @endif
                                 </td>
                             </tr>
 
                             <tr class="row">
                                 <td class="title" colspan="2">
-                                    <input class="form-control" placeholder="Age" type="age" name="age" value="{{ old('age') != "" ? old('age') : $stylist->age }}">
-                                    @if($email_error = $errors->first('age'))
-                                        <span class="errorMsg">{{$email_error}}</span>
+                                    <input class="form-control" placeholder="Age" type="text" name="age" value="{{ old('age') != "" ? old('age') : $stylist->age }}">
+                                    @if($age_error = $errors->first('age'))
+                                        <span class="errorMsg">{{$age_error}}</span>
                                     @endif
                                 </td>
                             </tr>
@@ -73,14 +79,71 @@
                             <tr class="row">
                                 <td class="title" colspan="2">
                                     @include('common.gender.select')
+                                    @if($gender_error = $errors->first('gender_id'))
+                                        <span class="errorMsg">{{$gender_error}}</span>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <tr class="row">
+                                <td class="title" colspan="2">
+                                    @include('common.designation.select')
+                                    @if($designation_error = $errors->first('designation_id'))
+                                        <span class="errorMsg">{{$designation_error}}</span>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <tr class="row">
+                                <td class="title" colspan="2">
+                                    <input class="form-control" placeholder="Blog URL" type="text" name="blog_url" value="{{ old('blog_url') != "" ? old('blog_url') : $stylist->blog_url }}">
+                                    @if($blog_url_error = $errors->first('blog_url'))
+                                        <span class="errorMsg">{{$blog_url_error}}</span>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <tr class="row">
+                                <td class="title" colspan="2">
+                                    <input class="form-control" placeholder="Facebook Id" type="text" name="facebook_id" value="{{ old('facebook_id') != "" ? old('facebook_id') : $stylist->facebook_id }}">
+                                    @if($facebook_id_error = $errors->first('facebook_id'))
+                                        <span class="errorMsg">{{$facebook_id_error}}</span>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <tr class="row">
+                                <td class="title" colspan="2">
+                                    <input class="form-control" placeholder="Twitter Id" type="text" name="twitter_id" value="{{ old('twitter_id') != "" ? old('twitter_id') : $stylist->twitter_id }}">
+                                    @if($twitter_id_error = $errors->first('twitter_id'))
+                                        <span class="errorMsg">{{$twitter_id_error}}</span>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <tr class="row">
+                                <td class="title" colspan="2">
+                                    <input class="form-control" placeholder="Pinterest Id" type="text" name="pinterest_id" value="{{ old('pinterest_id') != "" ? old('pinterest_id') : $stylist->pinterest_id }}">
+                                    @if($pinterest_id_error = $errors->first('pinterest_id'))
+                                        <span class="errorMsg">{{$pinterest_id_error}}</span>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <tr class="row">
+                                <td class="title" colspan="2">
+                                    <input class="form-control" placeholder="Instagram Id" type="text" name="instagram_id" value="{{ old('instagram_id') != "" ? old('instagram_id') : $stylist->instagram_id }}">
+                                    @if($instagram_id_error = $errors->first('instagram_id'))
+                                        <span class="errorMsg">{{$instagram_id_error}}</span>
+                                    @endif
                                 </td>
                             </tr>
 
                             <tr class="row">
                                 <td class="title" colspan="2">
                                     <input class="form-control" placeholder="Code" type="code" name="code" value="{{ old('code') != "" ? old('code') : $stylist->code }}">
-                                    @if($email_error = $errors->first('code'))
-                                        <span class="errorMsg">{{$email_error}}</span>
+                                    @if($code_error = $errors->first('code'))
+                                        <span class="errorMsg">{{$code_error}}</span>
                                     @endif
                                 </td>
                             </tr>
@@ -88,8 +151,8 @@
                             <tr class="row">
                                 <td class="title" colspan="2">
                                     <input class="form-control" placeholder="Profile" type="profile" name="profile" value="{{ old('profile') != "" ? old('profile') : $stylist->profile }}">
-                                    @if($email_error = $errors->first('profile'))
-                                        <span class="errorMsg">{{$email_error}}</span>
+                                    @if($profile_error = $errors->first('profile'))
+                                        <span class="errorMsg">{{$profile_error}}</span>
                                     @endif
                                 </td>
                             </tr>
@@ -97,6 +160,7 @@
                             <tr class="row">
                                 <td class="title" colspan="2">
                                     <input type="submit" class="btn btn-primary btn-lg" value="Save">
+                                    <a href="{!! url('stylist/view/' . $stylist->stylish_id) !!}">Cancel</a>
                                 </td>
                             </tr>
 

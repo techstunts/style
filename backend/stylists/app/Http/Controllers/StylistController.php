@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Validator;
 
 class StylistController extends Controller
@@ -35,7 +36,7 @@ class StylistController extends Controller
         $status_list[0] = new Status();
 
         $stylists =
-            Stylist::with('gender','expertise')
+            Stylist::with('gender','expertise','designation')
                 ->orderBy('stylish_id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
@@ -79,6 +80,8 @@ class StylistController extends Controller
             $view_properties['status_list'] = $status_list;
             $view_properties['looks'] = $stylist->looks;
             $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $stylist->stylish_id == Auth::user()->stylish_id;
+            $view_properties['profile_images'] = Storage::disk('public_images')->files('stylish/profile/' . $stylist->stylish_id);
+
         }
         else{
             return view('404', array('title' => 'Stylist not found'));
@@ -111,6 +114,8 @@ class StylistController extends Controller
             $view_properties['statuses'] = $lookup->type('status')->get();
             $view_properties['expertise_id'] = $stylist->expertise_id;
             $view_properties['expertises'] = $lookup->type('expertise')->get();
+            $view_properties['designation_id'] = intval($stylist->designation_id);
+            $view_properties['designations'] = $lookup->type('designation')->get();
         }
         else{
             return view('404', array('title' => 'Stylist not found'));
@@ -177,7 +182,13 @@ class StylistController extends Controller
         $stylist->code = isset($request->code) && $request->code != '' ? $request->code : '';
         $stylist->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : '';;
         $stylist->expertise_id = isset($request->expertise_id) && $request->expertise_id != '' ? $request->expertise_id : '';
+        $stylist->designation_id = isset($request->designation_id) && $request->designation_id != '' ? $request->designation_id : '';
         $stylist->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
+        $stylist->blog_url = isset($request->blog_url) && $request->blog_url != '' ? $request->blog_url : '';;
+        $stylist->facebook_id = isset($request->facebook_id) && $request->facebook_id != '' ? $request->facebook_id : '';;
+        $stylist->twitter_id = isset($request->twitter_id) && $request->twitter_id != '' ? $request->twitter_id : '';;
+        $stylist->pinterest_id = isset($request->pinterest_id) && $request->pinterest_id != '' ? $request->pinterest_id : '';;
+        $stylist->instagram_id = isset($request->instagram_id) && $request->instagram_id != '' ? $request->instagram_id : '';;
         $stylist->save();
 
         return redirect('stylist/view/' . $this->resource_id);
@@ -194,6 +205,16 @@ class StylistController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255|min:5',
             'email' => 'required|email|max:255',
+            'age' => 'required|integer|max:50|min:18',
+            'status_id' => 'required|integer|max:20|min:1',
+            'expertise_id' => 'required|integer|max:20|min:1',
+            'gender_id' => 'required|integer|max:20|min:1',
+            'designation_id' => 'required|integer|max:20|min:1',
+            'blog_url' => 'url|min:5',
+            'facebook_id' => 'string|min:5',
+            'twitter_id' => 'string|min:5',
+            'pinterest_id' => 'string|min:5',
+            'instagram_id' => 'string|min:5',
         ]);
     }
 
