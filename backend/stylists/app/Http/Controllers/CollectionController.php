@@ -56,8 +56,7 @@ class CollectionController extends Controller
     public function getView()
     {
         $female_entities = $male_entities = [];
-        $collection = Collection::with('look')
-        ->find($this->resource_id);
+        $collection = Collection::find($this->resource_id);
         if($collection){
             $entity_ids = DB::table('collection_entities')
                 ->where('collection_id', $collection->id)
