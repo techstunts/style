@@ -14,12 +14,12 @@ class ProductLink{
         }
     }
 
-    public static function getDeepLink($agency_id, $merchant_id, $product_link){
+    public static function getDeepLink($agency_id = 0, $merchant_id = 0, $product_link){
         if(self::$agency_programme_ids == []){
             self::init();
         }
 
-        if($agency_id != 0 || !isset(self::$agency_programme_ids[$merchant_id])){
+        if($agency_id != 0 || $merchant_id == 0 || !isset(self::$agency_programme_ids[$merchant_id])){
             return $product_link;
         }
 

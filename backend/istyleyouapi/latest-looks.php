@@ -1,6 +1,6 @@
 <?php
 include("db_config.php");
-include("ProductLink.php");
+include("common.php");
 include("Lookup.php");
 
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])) {
@@ -63,93 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
             unset($latest_looks_res);
         }
 
-        $latest_looks_count = count($latest_looks);
+        if (count($latest_looks) > 0) {
+            $looks_and_products = getLooksDetails($latest_looks, $userid);
 
-        if ($latest_looks_count > 0) {
-            // Get all favourite products of current user
-            $fav_prod_sql =
-                "Select product_id
-					from usersfav join products
-						on usersfav.product_id = products.id
-					where user_id='$userid'";
-            $fav_prod_res = mysql_query($fav_prod_sql);
-            $fav_prod_count = mysql_num_rows($fav_prod_res);
-
-            while ($data = mysql_fetch_array($fav_prod_res)) {
-                $fav_prods[] = $data['product_id'];
-            }
-
-            for ($i = 0; $i < $latest_looks_count; $i++) {
-                $look_id = $latest_looks[$i][0];
-
-                //Get products info for current look
-                $current_look_products_query =
-                    "select p.id, p.name, upload_image, p.price, product_type, product_link, p.agency_id, p.merchant_id,
-                            m.name merchant_name, b.name brand_name, b.id as brand_id
-						from looks l
-						join looks_products lp ON l.id = lp.look_id
-						join products p ON lp.product_id = p.id
-						join merchants m ON p.merchant_id = m.id
-						join brands b ON p.brand_id = b.id
-						where l.id='$look_id'
-						AND l.status_id = 1";
-
-                $current_look_products_res = mysql_query($current_look_products_query);
-                $current_look_products = [];
-                while ($data1 = mysql_fetch_array($current_look_products_res)) {
-                    $current_look_products[] = $data1;
-                }
-//var_dump($current_look_products);
-                $productarray = array();
-                for ($j = 0; $j < count($current_look_products); $j++) {
-                    if ($fav_prod_count == 0) {
-                        $fav = 'No';
-                    }
-                    for ($k = 0; $k < $fav_prod_count; $k++) {
-                        if ($current_look_products[$j][0] == $fav_prods[$k]) {
-                            $fav = 'yes';
-                            break;
-                        } else {
-                            $fav = 'No';
-                        }
-                    }
-
-                    $productarray[] = array(
-                        'fav' => $fav,
-                        'productid' => $current_look_products[$j][0],
-                        'productname' => mb_convert_encoding($current_look_products[$j][1], "UTF-8", "Windows-1252"),
-                        'productimage' => $current_look_products[$j][2],
-                        'productprice' => $current_look_products[$j][3],
-                        'producttype' => $current_look_products[$j][4],
-                        'productlink' => ProductLink::getDeepLink($current_look_products[$j][6],
-                            $current_look_products[$j][7],
-                            $current_look_products[$j][5]),
-                        'merchant' => $current_look_products[$j]['merchant_name'],
-                        'brand' => $current_look_products[$j]['brand_name'],
-                        'brand_id' => $current_look_products[$j]['brand_id'],
-                    );
-
-                }
-
-                $current_look_details =
-                    array(
-                        'lookdetails' =>
-                            array(
-                                'fav' => $latest_looks[$i][6] == null ? 'No' : 'Yes',
-                                'lookid' => $latest_looks[$i][0],
-                                'lookdescription' => mb_convert_encoding($latest_looks[$i][1], "UTF-8", "Windows-1252"),
-                                'lookimage' => $latest_looks[$i][2],
-                                'lookprice' => $latest_looks[$i][3],
-                                'occasion' => $latest_looks[$i][4],
-                                'lookname' => mb_convert_encoding($latest_looks[$i][5], "UTF-8", "Windows-1252"),
-                                'productdetails' => $productarray
-                            )
-                    );
-                $latest_looks_and_products[] = $current_look_details;
-                unset($current_look_products);
-            }
-
-            $response = array('result' => 'success', 'latest_looks' => $latest_looks_and_products);
+            $response = array('result' => 'success', 'latest_looks' => $looks_and_products);
         } else {
             $response = array('result' => 'fail', 'response_message' => 'No records');
         }
