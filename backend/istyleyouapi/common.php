@@ -69,6 +69,13 @@ function getLooksDetails($looks, $userid){
 
         }
 
+        $stylist_details = array();
+        if(isset($looks[$i]['stylist_id'])){
+            $stylist_details['stylish_id'] = $looks[$i]['stylist_id'];
+            $stylist_details['stylish_name'] = $looks[$i]['stylist_name'];
+            $stylist_details['stylish_image'] = $looks[$i]['stylist_image'];
+        }
+
         $current_look_details =
             array(
                 'lookdetails' =>
@@ -80,7 +87,8 @@ function getLooksDetails($looks, $userid){
                         'lookprice' => $looks[$i][3],
                         'occasion' => $looks[$i][4],
                         'lookname' => mb_convert_encoding($looks[$i][5], "UTF-8", "Windows-1252"),
-                        'productdetails' => $productarray
+                        'productdetails' => $productarray,
+                        'stylish_details' => $stylist_details
                     )
             );
         $looks_and_products[] = $current_look_details;

@@ -41,12 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                 "Select cl.id as look_id, cl.description, cl.image, cl.price, o.name as occasion, cl.name, uf.fav_id
 			from looks cl
 		  	join lu_occasion o on cl.occasion_id = o.id
-			LEFT JOIN usersfav uf ON cl.id = uf.look_id
+			LEFT JOIN usersfav uf ON cl.id = uf.look_id and uf.user_id = '$userid'
 			where cl.gender_id = '$gender_id'
 				$body_type_condition
 				AND cl.occasion_id = '$occasion_id'
 				AND cl.status_id = 1
-				AND (uf.user_id is null OR uf.user_id = '$userid')
 				AND cl.id NOT IN
 					(Select look_id
 					from users_unlike

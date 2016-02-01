@@ -31,7 +31,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 			FROM collection_entities ce
 				JOIN looks cl ON ce.entity_id = cl.id AND ce.entity_type_id = 2
 				JOIN lu_occasion o on cl.occasion_id = o.id
-				LEFT JOIN (SELECT * FROM usersfav WHERE user_id = '$userid') uf ON cl.id = uf.look_id
+        		LEFT JOIN usersfav uf ON cl.id = uf.look_id and uf.user_id = '$userid'
 				JOIN stylists sd on sd.stylish_id = cl.stylish_id
 			WHERE ce.collection_id = 1
 				AND cl.gender_id = '$gender_id'
