@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 
 abstract class Job
 {
+    protected $max_attempts = 3;
     /*
     |--------------------------------------------------------------------------
     | Queueable Jobs

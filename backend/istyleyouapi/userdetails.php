@@ -1,5 +1,6 @@
 <?php
 include("db_config.php");
+include_once("Emailer.php");
 //file_put_contents('userdetails-data', "\n" . var_export($_REQUEST, true), FILE_APPEND);
 
 if (!empty($_SERVER['HTTP_CLIENT_IP'])){
@@ -12,6 +13,8 @@ if (!empty($_SERVER['HTTP_CLIENT_IP'])){
 $user_signup_ip_address = ip2long($ip);
 $current_date_time = date("Y-m-d H:i:s");
 //The $user_signup_ip_address would look something like: 1073732954
+
+$signup_successful = false;
 
 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && !empty($_REQUEST['password']) && isset($_REQUEST['password']) && !empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
 
@@ -152,6 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
 
                     $data = login($email, $password, $gender);
                 }
+                $signup_successful = true;
+
             } else {
                 $data = array('result' => 'fail', 'message' => 'Error in adding user');
             }
@@ -276,6 +281,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
 
             }
             $data = FacebookLogin($email, $facebookid, $gender, $username);
+            $signup_successful = true;
         } else {
             $data = array('result' => 'fail', 'message' => 'Error in adding user');
         }
@@ -395,6 +401,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
 
             }
             $data = GoogleLogin($email, $googleid, $gender, $username);
+            $signup_successful = true;
         } else {
             $data = array('result' => 'fail', 'message' => 'Error in adding user');
         }
@@ -497,6 +504,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
 
             }
             $data = LinkedinLogin($email, $linkedid, $gender, $username);
+            $signup_successful = true;
         } else {
             $data = array('result' => 'fail', 'message' => 'Error in adding user');
         }
@@ -505,6 +513,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $data = array('result' => 'fail', 'message' => 'Request method is wrong or some parameters missing!');
 
 }
+
+if($signup_successful){
+    if($data['result'] == 'success' && isset($data['response body']) && $data['response body']['user_id']!=''){
+        $mailer = new Emailer();
+        $mailer->enqueue(1, $data['response body']['user_id']);
+        $mailer->enqueue(2, $data['response body']['user_id']);
+    }
+}
+
 
 function login($email, $password, $gender)
 {

@@ -18,6 +18,9 @@ Route::get('/', function () {
 Route::any('auth/{action}', 'Auth\AuthController@index');
 Route::any('password/{action}/{token?}', 'Auth\PasswordController@index');
 
+//Called by istyleyouapi. This rule should be deleted once old apis migrate to lumen
+Route::get('job/{action}/{id}', 'JobController@index');
+
 Route::group(['middleware' => 'auth'], function(){
 
     Route::any('client/{action}/{id?}/{action_id?}', 'ClientController@index');
