@@ -199,7 +199,7 @@
         }
 
         if (!empty($_POST['budget_id'])) {
-            if (!empty($_REQUEST['body_type_id']) || (!empty($_REQUEST['gender_id']) AND !empty($_REQUEST['age_group_id']) AND !empty($_REQUEST['occasion_id']) AND !empty($_REQUEST['producttype1']) AND !empty($_REQUEST['body_type_id']))) {
+            if (!empty($_REQUEST['body_type_id']) || (!empty($_REQUEST['gender_id']) AND !empty($_REQUEST['age_group_id']) AND !empty($_REQUEST['occasion_id']) AND !empty($_REQUEST['status_id']) AND !empty($_REQUEST['body_type_id']))) {
                 $query_str1 .= " AND ";
                 $str .= "&";
             }
@@ -213,7 +213,7 @@
         }
 
         if (!empty($_POST['age_group_id'])) {
-            if (!empty($_REQUEST['body_type_id']) || !empty($_REQUEST['budget_id']) || (!empty($_REQUEST['gender_id']) AND !empty($_REQUEST['occasion_id']) AND !empty($_REQUEST['producttype1']) AND !empty($_REQUEST['body_type_id']) AND !empty($_REQUEST['budget_id']))) {
+            if (!empty($_REQUEST['body_type_id']) || !empty($_REQUEST['budget_id']) || (!empty($_REQUEST['gender_id']) AND !empty($_REQUEST['occasion_id']) AND !empty($_REQUEST['status_id']) AND !empty($_REQUEST['body_type_id']) AND !empty($_REQUEST['budget_id']))) {
                 $query_str1 .= " AND ";
                 $str .= "&";
             }
@@ -225,7 +225,7 @@
 
         }
         if (!empty($_POST['occasion_id'])) {
-            if (!empty($_REQUEST['body_type_id']) || !empty($_REQUEST['budget_id']) || !empty($_REQUEST['age_group_id']) || (!empty($_REQUEST['gender_id']) AND !empty($_REQUEST['age_group_id']) AND !empty($_REQUEST['occasion_id']) AND !empty($_REQUEST['producttype1']) AND !empty($_REQUEST['body_type_id']) AND !empty($_REQUEST['budget_id']))) {
+            if (!empty($_REQUEST['body_type_id']) || !empty($_REQUEST['budget_id']) || !empty($_REQUEST['age_group_id']) || (!empty($_REQUEST['gender_id']) AND !empty($_REQUEST['age_group_id']) AND !empty($_REQUEST['occasion_id']) AND !empty($_REQUEST['status_id']) AND !empty($_REQUEST['body_type_id']) AND !empty($_REQUEST['budget_id']))) {
                 $query_str1 .= " AND ";
                 $str .= "&";
             }
@@ -237,7 +237,7 @@
         }
 
         if (!empty($_POST['gender_id'])) {
-            if (!empty($_REQUEST['body_type_id']) || !empty($_REQUEST['budget_id']) || !empty($_REQUEST['age_group_id']) || !empty($_REQUEST['occasion_id']) || (!empty($_REQUEST['age_group_id']) AND !empty($_REQUEST['occasion_id']) AND !empty($_REQUEST['producttype1']) AND !empty($_REQUEST['body_type_id']) AND !empty($_REQUEST['budget_id']) AND !empty($_REQUEST['age_group_id']) AND !empty($_REQUEST['occasion_id']))) {
+            if (!empty($_REQUEST['body_type_id']) || !empty($_REQUEST['budget_id']) || !empty($_REQUEST['age_group_id']) || !empty($_REQUEST['occasion_id']) || (!empty($_REQUEST['age_group_id']) AND !empty($_REQUEST['occasion_id']) AND !empty($_REQUEST['status_id']) AND !empty($_REQUEST['body_type_id']) AND !empty($_REQUEST['budget_id']) AND !empty($_REQUEST['age_group_id']) AND !empty($_REQUEST['occasion_id']))) {
                 $query_str1 .= " AND ";
                 $str .= "&";
             }
@@ -249,23 +249,23 @@
             $str .= "gender_id=" . $_POST['gender_id'];
 
         }
-        if (!empty($_REQUEST['producttype1'])) {
+        if (!empty($_REQUEST['status_id'])) {
             if (!empty($_REQUEST['body_type_id']) || !empty($_REQUEST['budget_id']) || !empty($_REQUEST['age_group_id']) || !empty($_REQUEST['gender_id']) || !empty($_REQUEST['occasion_id']) || (!empty($_REQUEST['gender_id']) AND !empty($_REQUEST['age_group_id']) AND !empty($_REQUEST['occasion_id']) AND !empty($_REQUEST['body_type_id']) AND !empty($_REQUEST['budget_id']) AND !empty($_REQUEST['age_group_id']))) {
                 $query_str1 .= " AND ";
                 $str .= "&";
             }
 
-            $query_str1 .= "product_type='";
-            $query_str1 .= $_POST['producttype1'];
+            $query_str1 .= "l.status_id='";
+            $query_str1 .= $_POST['status_id'];
             $query_str1 .= " ' ";
 
 
-            $str .= "producttype=" . $_POST['producttype1'];
+            $str .= "status_id=" . $_POST['status_id'];
         }
 
         if (!empty($_REQUEST['filter'])) {
             $valid = true;
-            if (!empty($_REQUEST['gender_id']) || !empty($_REQUEST['body_type_id']) || !empty($_REQUEST['budget_id']) || !empty($_REQUEST['age_group_id']) || !empty($_REQUEST['occasion_id']) || !empty($_REQUEST['producttype1']) || (!empty($_REQUEST['gender_id']) AND !empty($_REQUEST['body_type_id']) AND !empty($_REQUEST['budget_id']) AND !empty($_REQUEST['age_group_id']) AND !empty($_REQUEST['occasion_id']) AND !empty($_REQUEST['producttype1']))) {
+            if (!empty($_REQUEST['gender_id']) || !empty($_REQUEST['body_type_id']) || !empty($_REQUEST['budget_id']) || !empty($_REQUEST['age_group_id']) || !empty($_REQUEST['occasion_id']) || !empty($_REQUEST['status_id']) || (!empty($_REQUEST['gender_id']) AND !empty($_REQUEST['body_type_id']) AND !empty($_REQUEST['budget_id']) AND !empty($_REQUEST['age_group_id']) AND !empty($_REQUEST['occasion_id']) AND !empty($_REQUEST['status_id']))) {
                 $query_str1 .= " AND ( ";
 
             } else {
@@ -289,9 +289,9 @@
 
         //$filter_err="Please Select atleast 1 filter";
         //$valid=false;
-        //if(!empty($_POST['gender_id']) || !empty($_POST['body_type_id']) || !empty($_POST['budget_id']) || !empty($_POST['age_group_id']) || !empty($_POST['occasion_id']) || !empty($_POST['producttype1']))
+        //if(!empty($_POST['gender_id']) || !empty($_POST['body_type_id']) || !empty($_POST['budget_id']) || !empty($_POST['age_group_id']) || !empty($_POST['occasion_id']) || !empty($_POST['status_id']))
         //{
-        if (!empty($_POST['body_type_id']) || !empty($_POST['budget_id']) || !empty($_POST['gender_id']) || !empty($_POST['age_group_id']) || !empty($_POST['occasion_id']) || !empty($_POST['producttype1']) || !empty($_POST['filter'])) {
+        if (!empty($_POST['body_type_id']) || !empty($_POST['budget_id']) || !empty($_POST['gender_id']) || !empty($_POST['age_group_id']) || !empty($_POST['occasion_id']) || !empty($_POST['status_id']) || !empty($_POST['filter'])) {
 
             $valid = true;
             $filter_err = "";
@@ -320,7 +320,7 @@ echo $sql1;
 
         /*
        else{
-          if(empty($_REQUEST['gender_id']) AND empty($_REQUEST['body_type_id']) AND empty($_REQUEST['budget_id']) AND empty($_REQUEST['age_group_id']) AND empty($_REQUEST['occasion_id']) AND empty($_REQUEST['producttype1']) ){
+          if(empty($_REQUEST['gender_id']) AND empty($_REQUEST['body_type_id']) AND empty($_REQUEST['budget_id']) AND empty($_REQUEST['age_group_id']) AND empty($_REQUEST['occasion_id']) AND empty($_REQUEST['status_id']) ){
               $filter_err="Please Select atleast 1 filter";
               $valid=false;
           }
@@ -473,52 +473,16 @@ echo $sql1;
                                     </select>
                                 </div>
                                 <div class="col-lg-4">
-                                    <select class="form-control mb15" name="producttype1">
-                                        <option value="">Select Product Type</option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Shirts") echo "selected"; ?>
-                                            value="Shirts">Shirts
+                                    <select class="form-control mb15" name="status_id">
+                                        <option value="">Select Status</option>
+                                        <option <?php if (isset($_REQUEST['status_id']) && $_REQUEST['status_id'] == "1") echo "selected"; ?>
+                                            value="1">Active
                                         </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Saree") echo "selected"; ?>
-                                            value="Saree">Saree
+                                        <option <?php if (isset($_REQUEST['status_id']) && $_REQUEST['status_id'] == "2") echo "selected"; ?>
+                                            value="2">Inactive
                                         </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Ethnic top") echo "selected"; ?>
-                                            value="Ethnic top">Ethnic top
-                                        </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Ethnic Bottom") echo "selected"; ?>
-                                            value="Ethnic Bottom">Ethnic Bottom
-                                        </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Top wear") echo "selected"; ?>
-                                            value="Top wear">Top wear
-                                        </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Winter Wear") echo "selected"; ?>
-                                            value="Winter Wear">Winter Wear
-                                        </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Skirts") echo "selected"; ?>
-                                            value="Skirts">Skirts
-                                        </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Jeans") echo "selected"; ?>
-                                            value="Jeans">Jeans
-                                        </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Pants") echo "selected"; ?>
-                                            value="Pants">Pants
-                                        </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Bags") echo "selected"; ?>
-                                            value="Bags">Bags
-                                        </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Footwear") echo "selected"; ?>
-                                            value="Footwear">Footwear
-                                        </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Jewelry") echo "selected"; ?>
-                                            value="Jewelry">Jewelry
-                                        </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Accessory ") echo "selected"; ?>
-                                            value="Accessory">Accessory
-                                        </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Cosmetics") echo "selected"; ?>
-                                            value="Cosmetics">Cosmetics
-                                        </option>
-                                        <option <?php if (isset($_REQUEST['producttype1']) && $_REQUEST['producttype1'] == "Lowers") echo "selected"; ?>
-                                            value="Lowers">Lowers
+                                        <option <?php if (isset($_REQUEST['status_id']) && $_REQUEST['status_id'] == "5") echo "selected"; ?>
+                                            value="5">Submitted
                                         </option>
                                     </select>
                                 </div>
