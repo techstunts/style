@@ -462,43 +462,46 @@ $(document).ready(function (){
                         <thead>
                           <tr>
                                <th><input name="select_all" value="1" type="checkbox"></th>
-          				            <th>id</th>
-                              <th>user_id</th>
-                              <th>occasion</th>
-                              <th>budget</th>
-                              <th>date</th>
-                              <th>username</th>
-                              <th>bodytype</th>
-                  	      <th>age</th>
-                  					  <th>Stylist name</th>
-                  					  
+                              <th>Request id</th>
+                              <th>Client id</th>
+                              <th>Client name</th>
+                              <th>Age</th>
+                              <th>Body type</th>
+                              <th>Occasion</th>
+                              <th>Budget</th>
+                              <th>Date</th>
+                              <th>Stylist</th>
+                              <th>Message</th>
+                              <th>Request Type</th>
                            </tr>
                         </thead>
                         <tfoot>
                       <tr>
-                               <th><input name="select_all" value="1" type="checkbox"></th>
-                              <th>id</th>
-                              <th>user_id</th>
-                              <th>occasion</th>
-                              <th>budget</th>
-                              <th>date</th>
-                              <th>username</th>
-                             <th>bodytype</th>
-                              <th>age</th>
-                              <th>Stylist name</th>
-                             
+                          <th><input name="select_all" value="1" type="checkbox"></th>
+                          <th>Request id</th>
+                          <th>Client id</th>
+                          <th>Client name</th>
+                          <th>Age</th>
+                          <th>Body type</th>
+                          <th>Occasion</th>
+                          <th>Budget</th>
+                          <th>Date</th>
+                          <th>Stylist</th>
+                          <th>Message</th>
+                          <th>Request Type</th>
                       </tr>
                     </tfoot>
                         <tbody>
           		<?php
-          			  $query='select sr.user_id, lo.name, lb.name, sr.created_at, u.username, u.bodytype,
-                                      u.age, s.name, sr.id
+          			  $query='select sr.id, sr.user_id, u.username, u.age, u.bodytype, lo.name, lb.name, sr.created_at,
+                                      s.name, sr.description, le.name
                               from style_requests sr
                               join userdetails u on sr.user_id = u.user_id
                               join stylists s on u.stylish_id = s.stylish_id
                               left join style_requests_recommendations srr on sr.id = srr.style_request_id
                               join lu_budget lb on sr.budget_id = lb.id
                               join lu_occasion lo on sr.occasion_id = lo.id
+                              join lu_entity_type le on sr.entity_type_id = le.id
                               where srr.recommendation_id is NULL
                               ORDER BY sr.id DESC';
                 //echo $query;
@@ -513,16 +516,18 @@ $(document).ready(function (){
 
           					?>
           			  <tr>
-          			  <td></td>
-          			  <td><?php echo $resultSet[8] ?></td>
-          				<td><?php echo $resultSet[0]?></td>
+                      <td></td>
+                      <td><?php echo $resultSet[0] ?></td>
           				<td><?php echo $resultSet[1]?></td>
           				<td><?php echo $resultSet[2]?></td>
           				<td><?php echo $resultSet[3]?></td>
           				<td><?php echo $resultSet[4]?></td>
           				<td><?php echo $resultSet[5]?></td>
           				<td><?php echo $resultSet[6]?></td>
-          				<td><?php echo $resultSet[7]?></td>          
+          				<td><?php echo $resultSet[7]?></td>
+          				<td><?php echo $resultSet[8]?></td>
+          				<td><?php echo $resultSet[9]?></td>
+          				<td><?php echo $resultSet[10]?></td>
                               </tr>
                           	<?php }}?>	
                         </tbody>
