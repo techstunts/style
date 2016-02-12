@@ -454,6 +454,12 @@ $(document).ready(function (){
       </div><!-- row -->
     
           	  <h4>Pending Notification/ Request</h4>
+                 <?php
+                 if(isset($_REQUEST['noskip']))
+                     echo '<a href="' . $_SERVER['PHP_SELF'] . '">Skip old records and test users</a>';
+                 else
+                     echo '<a href="' . $_SERVER['PHP_SELF'] . '?noskip=1">Skip no records</a>';
+                 ?>
                 <div class="row">
 
                   <div>
@@ -493,6 +499,12 @@ $(document).ready(function (){
                     </tfoot>
                         <tbody>
           		<?php
+                    $skip_records_clause = '';
+                    if(!isset($_REQUEST['noskip'])){
+                        $skip_users = '132, 141, 606, 515, 520, 292, 402, 584';
+                        $skip_records_clause = 'AND u.user_id not in (' . $skip_users . ')
+                                                AND sr.id >= 747';
+                    }
           			  $query='select sr.id, sr.user_id, u.username, u.age, u.bodytype, lo.name, lb.name, sr.created_at,
                                       s.name, sr.description, le.name
                               from style_requests sr
@@ -503,6 +515,7 @@ $(document).ready(function (){
                               join lu_occasion lo on sr.occasion_id = lo.id
                               join lu_entity_type le on sr.entity_type_id = le.id
                               where srr.recommendation_id is NULL
+                              ' . $skip_records_clause . '
                               ORDER BY sr.id DESC';
                 //echo $query;
                   	$res = mysql_query($query);			 
