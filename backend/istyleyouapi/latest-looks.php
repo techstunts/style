@@ -26,12 +26,15 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
 
         $page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
         $occasions = array('Wine & Dine', 'Casuals', 'Ethnic/Festive', 'Work Wear');
-        if (isset($_GET['occasion']) && $_GET['occasion'] != '') {
+        if (isset($_GET['occasion']) && $_GET['occasion'] != '' && strtolower($_GET['occasion']) != 'all') {
             $occasions = array_intersect($occasions, array(mysql_real_escape_string($_GET['occasion'])));
+            $records_count = 16;
+        }
+        else{
+            $records_count = 4;
         }
 
-        $record_start = intval($page * 4);
-        $records_count = 4;
+        $record_start = intval($page * $records_count);
 
         $gender_id = Lookup::getId('gender', $gender);
 
