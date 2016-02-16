@@ -1,6 +1,7 @@
 <?php
 include("db_config.php");
 include("common.php");
+include("Lookup.php");
 
 $request_valid = false;
 if($_SERVER['REQUEST_METHOD'] != "GET"){
@@ -30,13 +31,15 @@ if ($request_valid === true) {
 
     if ($user_rows > 0) {
         $user_data = mysql_fetch_array($user_res);
+        $gender = $user_data[1];
+        $gender_id = Lookup::getId('gender', $gender);
 
         $looks = array();
 
         $page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
 
-        $record_start = intval($page * 10);
-        $records_count = 10;
+        $records_per_page = 10;
+        $record_start = intval($page * $records_per_page);
 
         $looks_sql =
             "Select l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name, uf.fav_id
@@ -44,12 +47,13 @@ if ($request_valid === true) {
         join lu_occasion o on l.occasion_id = o.id
         LEFT JOIN usersfav uf ON l.id = uf.look_id and uf.user_id = '$userid'
         where l.stylish_id = '$stylist_id'
+            AND l.gender_id = '$gender_id'
             AND l.id NOT IN
                 (Select look_id
                 from users_unlike
                 where user_id='$userid')
         ORDER BY l.created_at DESC
-        LIMIT $record_start, $records_count ";
+        LIMIT $record_start, $records_per_page ";
         //echo $looks_sql . "<br /><br />";
 
         $looks_res = mysql_query($looks_sql);

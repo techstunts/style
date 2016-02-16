@@ -57,13 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
             $latest_looks_res = mysql_query($latest_looks_sql);
 
             while ($data = mysql_fetch_array($latest_looks_res)) {
-                $latest_looks[] = $data;
+                $latest_looks[$data[0]] = $data;
             }
             unset($latest_looks_res);
         }
 
         if (count($latest_looks) > 0) {
-            $looks_and_products = getLooksDetails($latest_looks, $userid);
+            krsort($latest_looks);
+            $looks_and_products = getLooksDetails(array_values($latest_looks), $userid);
 
             $response = array('result' => 'success', 'latest_looks' => $looks_and_products);
         } else {

@@ -4,12 +4,18 @@ include("ProductLink.php");
 
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GET['userid'])) {
     $userid = $_GET['userid'];
+
+    $page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
+    $records_per_page = 20;
+    $record_start = intval($page * $records_per_page);
+
     $sql = "Select l.id as look_id, l.description, l.image, l.price, l.name
 		  from looks l
 		  where l.id NOT IN (Select look_id from users_unlike where user_id='$userid')
 		  AND l.id IN (Select look_id from usersfav where user_id='$userid')
 		  and l.status_id = 1
-		  ORDER BY l.id DESC LIMIT 5 ";
+		  ORDER BY l.id DESC
+		  LIMIT $record_start, $records_per_page ";
     $res = mysql_query($sql);
     $row = mysql_num_rows($res);
 
