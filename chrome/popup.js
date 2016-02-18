@@ -176,12 +176,18 @@ document.addEventListener('DOMContentLoaded', function() {
   
   saveButton.addEventListener('click', function() {
 
+			document.getElementById('response').innerHTML = "Saving...";
 
 			var kvpairs = [];
 			var input_elements = document.getElementsByTagName('input');
 			for (var i = 0; i < input_elements.length; i++ ) {
 				 var e = input_elements[i];
 				 kvpairs.push(encodeURIComponent(e.name) + "=" + encodeURIComponent(e.value));
+			}
+			var select_elements = document.getElementsByTagName('select');
+			for (var i = 0; i < select_elements.length; i++ ) {
+			  var e = select_elements[i];
+			  kvpairs.push(encodeURIComponent(e.name) + "=" + encodeURIComponent(e.value));
 			}
 			var textarea_elements = document.getElementsByTagName('textarea');
 			for (var i = 0; i < textarea_elements.length; i++ ) {
@@ -204,15 +210,18 @@ document.addEventListener('DOMContentLoaded', function() {
 				if (xmlDoc.readyState === 4 && xmlDoc.status === 200) {
 					console.log(xmlDoc.responseText);
 					console.log(xmlDoc.responseText[0]);
+
 					var response = JSON.parse(xmlDoc.responseText);
+					console.log(response);
+					console.log(response[0]);
+					console.log(response[1]);
+
 					if(response[0])
 					{
-						var alink = document.createElement('a');
-						alink.href = response[1];
-						alink.text = 'Check product';
-						alink.target = 'New';
-						saveButton.parentNode.appendChild(alink); 
-						alert("Product saved");
+						document.getElementById('response').innerHTML = "<a href='" + response[1] + "' target='New'>Check product</a>";
+					}
+					else{
+						document.getElementById('response').innerHTML = "<label style='color:red;'>" + response[1] + "</label>";
 					}
 				}
 			}

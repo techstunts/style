@@ -18,6 +18,7 @@
 		<button id="fetch">Fetch this product!</button> <button id="save">Save this product!</button>
 		<input type="hidden" name="url" id="url" />
 		<input type="hidden" name="merchant" id="merchant" />
+		<label id="response"></label>
 	</div>
     <br/>
 		
@@ -28,7 +29,106 @@
 
 	<div class="row">
 		<div class="label">Category:</div>
-		<div class="input"><input name="category" id="category" type="text" value=""/></div>
+		<div class="input">
+			<select name="category" id="category">
+				<option value="">Category </option>
+				<option value="Accessories">Accessories</option>
+				<option value="Belts">&nbsp;&nbsp;Belts</option>
+				<option value="Caps">&nbsp;&nbsp;Caps</option>
+				<option value="Hats">&nbsp;&nbsp;&nbsp;&nbsp;Hats</option>
+				<option value="Eye Glasses">&nbsp;&nbsp;Eye Glasses</option>
+				<option value="Pens">&nbsp;&nbsp;Pens</option>
+				<option value="Scarves">&nbsp;&nbsp;Scarves</option>
+				<option value="Sunglasses">&nbsp;&nbsp;Sunglasses</option>
+				<option value="Aviators">&nbsp;&nbsp;&nbsp;&nbsp;Aviators</option>
+				<option value="Cat Eye">&nbsp;&nbsp;&nbsp;&nbsp;Cat Eye</option>
+				<option value="Oval Frames">&nbsp;&nbsp;&nbsp;&nbsp;Oval Frames</option>
+				<option value="Rectangle Frame">&nbsp;&nbsp;&nbsp;&nbsp;Rectangle Frame</option>
+				<option value="Retro">&nbsp;&nbsp;&nbsp;&nbsp;Retro</option>
+				<option value="Round Frame">&nbsp;&nbsp;&nbsp;&nbsp;Round Frame</option>
+				<option value="Wayfares">&nbsp;&nbsp;&nbsp;&nbsp;Wayfares</option>
+				<option value="Wrap Around">&nbsp;&nbsp;&nbsp;&nbsp;Wrap Around</option>
+				<option value="Tech Accessories">&nbsp;&nbsp;Tech Accessories</option>
+				<option value="Tie">&nbsp;&nbsp;Tie</option>
+				<option value="Pocket Square">&nbsp;&nbsp;&nbsp;&nbsp;Pocket Square</option>
+				<option value="Watches">&nbsp;&nbsp;Watches</option>
+				<option value="Analog">&nbsp;&nbsp;&nbsp;&nbsp;Analog</option>
+				<option value="Chronograph">&nbsp;&nbsp;&nbsp;&nbsp;Chronograph</option>
+				<option value="Digital">&nbsp;&nbsp;&nbsp;&nbsp;Digital</option>
+				<option value="Bags">Bags</option>
+				<option value="Backpacks">&nbsp;&nbsp;Backpacks</option>
+				<option value="Cluthes">&nbsp;&nbsp;Cluthes</option>
+				<option value="Handbags">&nbsp;&nbsp;Handbags</option>
+				<option value="Laptop Bags">&nbsp;&nbsp;Laptop Bags</option>
+				<option value="Messenger Bags">&nbsp;&nbsp;Messenger Bags</option>
+				<option value="Sling Bags">&nbsp;&nbsp;Sling Bags</option>
+				<option value="Totes">&nbsp;&nbsp;Totes</option>
+				<option value="Travel Bags">&nbsp;&nbsp;Travel Bags</option>
+				<option value="Wallet">&nbsp;&nbsp;Wallet</option>
+				<option value="Clothing">Clothing</option>
+				<option value="Dresses">&nbsp;&nbsp;Dresses</option>
+				<option value="Innerwear">&nbsp;&nbsp;Innerwear</option>
+				<option value="Jackets">&nbsp;&nbsp;Jackets</option>
+				<option value="Coats">&nbsp;&nbsp;&nbsp;&nbsp;Coats</option>
+				<option value="Jeans">&nbsp;&nbsp;Jeans</option>
+				<option value="Denims">&nbsp;&nbsp;&nbsp;&nbsp;Denims</option>
+				<option value="Jumpsuits">&nbsp;&nbsp;Jumpsuits</option>
+				<option value="Kurta">&nbsp;&nbsp;Kurta</option>
+				<option value="Kurti">&nbsp;&nbsp;Kurti</option>
+				<option value="Leggings">&nbsp;&nbsp;Leggings</option>
+				<option value="Jeggings">&nbsp;&nbsp;&nbsp;&nbsp;Jeggings</option>
+				<option value="Salwar Churidar">&nbsp;&nbsp;Salwar Churidar</option>
+				<option value="Saree">&nbsp;&nbsp;Saree</option>
+				<option value="Shirts">&nbsp;&nbsp;Shirts</option>
+				<option value="Shorts">&nbsp;&nbsp;Shorts</option>
+				<option value="Capri">&nbsp;&nbsp;&nbsp;&nbsp;Capri</option>
+				<option value="Skirts">&nbsp;&nbsp;&nbsp;&nbsp;Skirts</option>
+				<option value="Sleepwear">&nbsp;&nbsp;Sleepwear</option>
+				<option value="Suits">&nbsp;&nbsp;Suits</option>
+				<option value="Blazers">&nbsp;&nbsp;&nbsp;&nbsp;Blazers</option>
+				<option value="Sweaters">&nbsp;&nbsp;Sweaters</option>
+				<option value="Cardigan">&nbsp;&nbsp;&nbsp;&nbsp;Cardigan</option>
+				<option value="Pullovers">&nbsp;&nbsp;&nbsp;&nbsp;Pullovers</option>
+				<option value="Sweatshirts">&nbsp;&nbsp;Sweatshirts</option>
+				<option value="Swimwear">&nbsp;&nbsp;Swimwear</option>
+				<option value="Beachwear">&nbsp;&nbsp;&nbsp;&nbsp;Beachwear</option>
+				<option value="T-Shirt">&nbsp;&nbsp;T-Shirt</option>
+				<option value="Henley">&nbsp;&nbsp;&nbsp;&nbsp;Henley</option>
+				<option value="Polos">&nbsp;&nbsp;&nbsp;&nbsp;Polos</option>
+				<option value="Tees">&nbsp;&nbsp;&nbsp;&nbsp;Tees</option>
+				<option value="Tops">&nbsp;&nbsp;Tops</option>
+				<option value="Trousers">&nbsp;&nbsp;Trousers</option>
+				<option value="Tunic ">&nbsp;&nbsp;Tunic </option>
+				<option value="Fashion Jewellery">Fashion Jewellery</option>
+				<option value="Anklets">&nbsp;&nbsp;Anklets</option>
+				<option value="Bands">&nbsp;&nbsp;Bands</option>
+				<option value="Bangles">&nbsp;&nbsp;Bangles</option>
+				<option value="Broches">&nbsp;&nbsp;Broches</option>
+				<option value="Earings">&nbsp;&nbsp;Earings</option>
+				<option value="Mangalsutras">&nbsp;&nbsp;Mangalsutras</option>
+				<option value="Necklaces ">&nbsp;&nbsp;Necklaces </option>
+				<option value="Pendants">&nbsp;&nbsp;Pendants</option>
+				<option value="Rings">&nbsp;&nbsp;Rings</option>
+				<option value="Toe Rings">&nbsp;&nbsp;Toe Rings</option>
+				<option value="Traditional Jewellery">&nbsp;&nbsp;Traditional Jewellery</option>
+				<option value="Shoes">Shoes</option>
+				<option value="Bellies">&nbsp;&nbsp;Bellies</option>
+				<option value="Boots">&nbsp;&nbsp;Boots</option>
+				<option value="Flat">&nbsp;&nbsp;Flat</option>
+				<option value="Flip Flops">&nbsp;&nbsp;Flip Flops</option>
+				<option value="Floaters">&nbsp;&nbsp;Floaters</option>
+				<option value="Formal shoe">&nbsp;&nbsp;Formal shoe</option>
+				<option value="Heels">&nbsp;&nbsp;Heels</option>
+				<option value="Loafers">&nbsp;&nbsp;Loafers</option>
+				<option value="Peep Toes">&nbsp;&nbsp;Peep Toes</option>
+				<option value="Sandals">&nbsp;&nbsp;Sandals</option>
+				<option value="Sneakers">&nbsp;&nbsp;Sneakers</option>
+				<option value="Sports Shoes">&nbsp;&nbsp;Sports Shoes</option>
+				<option value="Stilttos">&nbsp;&nbsp;Stilttos</option>
+				<option value="Unused">&nbsp;&nbsp;Unused</option>
+				<option value="Wedges">&nbsp;&nbsp;Wedges</option>
+			</select>
+		</div>
 	</div>
 
 	<div class="row">
@@ -38,7 +138,13 @@
 
 	<div class="row">
 		<div class="label">Gender:</div>
-		<div class="input"><input name="gender" id="gender" type="text" value=""/></div>
+		<div class="input">
+			<select class="form-control" name="gender" id="gender">
+				<option value="">Gender </option>
+				<option value="Female">Female </option>
+				<option value="Male">Male </option>
+			</select>
+		</div>
 	</div>
 
 	<div class="row">
@@ -48,12 +154,74 @@
 
 	<div class="row">
 		<div class="label">Primary color:</div>
-		<div class="input"><input name="color1" id="color1" type="text" value=""/></div>
+		<div class="input">
+			<select id="color1" name="color1">
+				<option value="">Color </option>
+				<option value="Black">Black </option>
+				<option value="Blue">Blue </option>
+				<option value="White">White </option>
+				<option value="Multi">Multi </option>
+				<option value="Pink">Pink </option>
+				<option value="Green">Green </option>
+				<option value="Off White">Off White </option>
+				<option value="Grey">Grey </option>
+				<option value="Red">Red </option>
+				<option value="Yellow">Yellow </option>
+				<option value="Navy Blue">Navy Blue </option>
+				<option value="Orange">Orange </option>
+				<option value="Purple">Purple </option>
+				<option value="Beige">Beige </option>
+				<option value="Maroon">Maroon </option>
+				<option value="Peach">Peach </option>
+				<option value="Brown">Brown </option>
+				<option value="Olive">Olive </option>
+				<option value="Magenta">Magenta </option>
+				<option value="Golden">Golden </option>
+				<option value="Nude">Nude </option>
+				<option value="Silver">Silver </option>
+				<option value="Khaki">Khaki </option>
+				<option value="Coffee">Coffee </option>
+				<option value="Tan">Tan </option>
+				<option value="Copper">Copper </option>
+				<option value="Turquoise">Turquoise </option>
+			</select>
+		</div>
     </div>
 
 	<div class="row">
 		<div class="label">Secondary color:</div>
-		<div class="input"><input name="color2" id="color2" type="text" value=""/></div>
+		<div class="input">
+			<select id="color2" name="color2">
+				<option value="">Color </option>
+				<option value="Black">Black </option>
+				<option value="Blue">Blue </option>
+				<option value="White">White </option>
+				<option value="Multi">Multi </option>
+				<option value="Pink">Pink </option>
+				<option value="Green">Green </option>
+				<option value="Off White">Off White </option>
+				<option value="Grey">Grey </option>
+				<option value="Red">Red </option>
+				<option value="Yellow">Yellow </option>
+				<option value="Navy Blue">Navy Blue </option>
+				<option value="Orange">Orange </option>
+				<option value="Purple">Purple </option>
+				<option value="Beige">Beige </option>
+				<option value="Maroon">Maroon </option>
+				<option value="Peach">Peach </option>
+				<option value="Brown">Brown </option>
+				<option value="Olive">Olive </option>
+				<option value="Magenta">Magenta </option>
+				<option value="Golden">Golden </option>
+				<option value="Nude">Nude </option>
+				<option value="Silver">Silver </option>
+				<option value="Khaki">Khaki </option>
+				<option value="Coffee">Coffee </option>
+				<option value="Tan">Tan </option>
+				<option value="Copper">Copper </option>
+				<option value="Turquoise">Turquoise </option>
+			</select>
+		</div>
     </div>
 
 	<div class="row">

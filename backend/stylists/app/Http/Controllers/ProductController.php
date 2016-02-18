@@ -90,6 +90,7 @@ class ProductController extends Controller
         parent::initWhereConditions($request);
     }
 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -97,15 +98,44 @@ class ProductController extends Controller
      */
     public function getCreate(Request $request)
     {
-        $merchant = Merchant::where('name', $request->input('merchant'))->first();
+        $validator = Validator::make($request->all(), [
+            'merchant' => 'required|min:4',
+            'brand' => 'required|min:2',
+            'category' => 'required|min:2',
+            'gender' => 'required|min:4',
+            'color1' => 'required|min:3',
+            'color2' => 'min:3',
+        ]);
 
+        $error_messages = "";
+        if($validator->fails()){
+            foreach($validator->errors()->getMessages() as $v){
+                $error_messages .=  $v[0] . "<br/>";
+            }
+            echo json_encode([false, $error_messages]);
+            return;
+        }
+
+        $merchant = Merchant::where('name', $request->input('merchant'))->first();
         $brand = Brand::where(['name' => $request->input('brand')])->first();
         $category = Category::where(['name' => $request->input('category')])->first();
         $gender = Gender::where(['name' => $request->input('gender')])->first();
         $primary_color = Color::where(['name' => $request->input('color1')])->first();
         $secondary_color = Color::where(['name' => $request->input('color2')])->first();
 
-        if ($merchant && $brand && $request->input('name')) {
+        $required_values = array('merchant', 'brand', 'category', 'gender', 'primary_color');
+        $error_messages = "";
+        foreach($required_values as $v){
+            if(!isset($$v) || !$$v->id) {
+                $error_messages .=  strtoupper(substr($v, 0, 1)) . substr($v, 1) . " not found. Please contact admin.<br/>";
+            }
+        }
+        if($error_messages != ""){
+            echo json_encode([false, $error_messages]);
+            return;
+        }
+
+        if ($merchant && $brand && $request->input('name') && $category && $gender && $primary_color) {
             $product = new Product();
             $product->merchant_id = $merchant->id;
             $product->name = htmlentities($request->input('name'));
@@ -114,10 +144,14 @@ class ProductController extends Controller
             $product->product_link = $request->input('url');
             $product->upload_image = $request->input('image0');
             $product->image_name = $request->input('image0');
-            $product->brand_id = $brand->id ? $brand->id : BrandEnum::Others;
-            $product->category_id = $category ? $category->id : CategoryEnum::Others;
-            $product->gender_id = $gender ? $gender->id : "";
-            $product->primary_color_id = $primary_color ? $primary_color->id : "";
+            //$product->brand_id = $brand->id ? $brand->id : BrandEnum::Others;
+            $product->brand_id = $brand->id;
+            //$product->category_id = $category ? $category->id : CategoryEnum::Others;
+            $product->category_id = $category->id;
+            //$product->gender_id = $gender ? $gender->id : "";
+            $product->gender_id = $gender->id;
+            //$product->primary_color_id = $primary_color ? $primary_color->id : "";
+            $product->primary_color_id = $primary_color->id;
             $product->secondary_color_id = $secondary_color ? $secondary_color->id : "";
             $product->stylish_id = $request->user()->stylish_id != '' ? $request->user()->stylish_id : '';
 
@@ -127,8 +161,6 @@ class ProductController extends Controller
             } else {
                 echo json_encode([false, "Product cant be stored"]);
             }
-        } else {
-            echo json_encode([false, "Please enter product name"]);
         }
     }
 
