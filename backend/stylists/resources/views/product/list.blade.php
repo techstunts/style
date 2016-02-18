@@ -21,6 +21,15 @@
 
             <div class="clear"></div>
 
+            <div class="filters">
+                @include('product.update_category')
+                @foreach($errors->all() as $e)
+                    <span class="errorMsg">{{$e}}</span><br/>
+                @endforeach
+            </div>
+
+            <div class="clear"></div>
+
             <ol class="selectable" id="selectable">
             @if(count($products) == 0)
                 No Products found
@@ -33,6 +42,7 @@
                         <div class="extra text">
                             <span><a href="{{$product->product_link}}">View</a></span>
                             <span>{{$product->product_type}}</span>
+                            <span>{{$product->category->name}}</span>
                             <span>{{$product->price}}</span>
                             <span>{{$genders_list[$product->gender_id]->name}}</span>
                         </div>

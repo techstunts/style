@@ -9,12 +9,14 @@ use App\Models\Lookups\Color;
 use App\Models\Enums\Category as CategoryEnum;
 use App\Models\Enums\Brand as BrandEnum;
 use App\Merchant;
+use App\Models\Lookups\Lookup;
 use App\Product;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use App\SelectOptions;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Validator;
 
 class ProductController extends Controller
 {
@@ -53,6 +55,9 @@ class ProductController extends Controller
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
         $view_properties['search'] = $request->input('search');
+
+        $category_obj = new Category();
+        $view_properties['category_tree'] = $category_obj->getCategoryTree();
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -164,25 +169,127 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function getEdit($id)
     {
-        //
+        $product = Product::find($this->resource_id);
+        $view_properties = null;
+        if($product){
+            $lookup = new Lookup();
+            $category_obj = new Category();
+
+            $view_properties['product'] = $product;
+            $view_properties['gender_id'] = intval($product->gender_id);
+            $view_properties['genders'] = $lookup->type('gender')->get();
+            $view_properties['category_id'] = intval($product->category_id);
+            $view_properties['category_tree'] = $category_obj->getCategoryTree();
+            $view_properties['primary_color_id'] = intval($product->primary_color_id);
+            $view_properties['colors'] = $lookup->type('color')->get();
+            $view_properties['price'] = $product->price;
+        }
+        else{
+            return view('404', array('title' => 'Product not found'));
+        }
+
+        return view('product.edit', $view_properties);
+    }
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|max:256|min:5',
+            'description' => 'required|min:25',
+            'gender_id' => 'required',
+            'category_id' => 'required',
+            'primary_color_id' => 'required',
+            'price' => 'required|min:2',
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function postUpdate(Request $request)
     {
-        //
+        $validator = $this->validator($request->all());
+        if($validator->fails()){
+            return redirect('product/edit/' . $this->resource_id)
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $product = Product::find($this->resource_id);
+        $product->name = isset($request->name) && $request->name != '' ? $request->name : '';
+        $product->description = isset($request->description) && $request->description != '' ? $request->description : '';
+        $product->price = isset($request->price) && $request->price != '' ? $request->price : '';
+        $product->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
+        $product->category_id = isset($request->category_id) && $request->category_id != '' ? $request->category_id : '';
+        $product->primary_color_id = isset($request->primary_color_id) && $request->primary_color_id != '' ? $request->primary_color_id : '';
+        $product->save();
+
+        return redirect('product/view/' . $this->resource_id);
     }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function postUpdateCategory(Request $request)
+    {
+        $this->base_table = 'products';
+        $this->initWhereConditions($request);
+
+        $validator = Validator::make($request->all(), [
+            'merchant_id' => 'integer',
+            'stylish_id' => 'integer',
+            'brand_id' => 'integer',
+            'old_category_id' => 'required|integer',
+            'category_id' => 'required|integer|min:1',
+            'gender_id' => 'integer',
+            'search' => 'alpha_dash',
+        ]);
+
+        if($validator->fails()){
+            foreach($validator->errors()->getMessages() as $k  => $v){
+                echo $v[0] . "<br/>";
+            }
+
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        if(isset($this->where_conditions['products.category_id'])){
+            unset($this->where_conditions['products.category_id']);
+        }
+
+        if($request->input('old_category_id') != ""){
+            $this->where_conditions['products.category_id'] = $request->input('old_category_id');
+        }
+        //var_dump($this->where_conditions);
+
+        $products = DB::table('products')
+            ->where($this->where_conditions)
+            ->whereRaw($this->where_raw)
+            ->orderBy('id', 'desc')
+            ->take($this->records_per_page)
+            ->update(['category_id' => $request->input('category_id')]);
+        //echo "done";
+        return Redirect::back()
+            ->withErrors(['Records updated'])
+            ->withInput();
+    }
+
+
 
     /**
      * Remove the specified resource from storage.

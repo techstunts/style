@@ -301,7 +301,7 @@ class LookController extends Controller
                 ->withInput();
         }
 
-        $look = look::find($this->resource_id);
+        $look = Look::find($this->resource_id);
         $look->name = isset($request->name) && $request->name != '' ? $request->name : '';
         $look->description = isset($request->description) && $request->description != '' ? $request->description : '';
         $look->age_group_id = isset($request->age_group_id) && $request->age_group_id != '' ? $request->age_group_id : '';
