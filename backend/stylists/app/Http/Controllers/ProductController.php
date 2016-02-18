@@ -71,8 +71,8 @@ class ProductController extends Controller
         $genders_list[0] = new Gender();
 
         $products =
-            Product::
-            where($this->where_conditions)
+            Product::with('category','primary_color','secondary_color')
+                ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
