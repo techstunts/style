@@ -13,6 +13,7 @@
                     @include('brand.select')
                     @include('category.select')
                     @include('common.gender.select')
+                    @include('common.color.select')
                     @include('common.search')
                     <input type="submit" name="filter" value="Filter"/>
                 </form>
@@ -21,14 +22,18 @@
 
             <div class="clear"></div>
 
-            <div class="filters">
-                @include('product.update_category')
-                @foreach($errors->all() as $e)
-                    <span class="errorMsg">{{$e}}</span><br/>
-                @endforeach
-            </div>
+            @foreach($errors->all() as $e)
+                <span class="errorMsg">{{$e}}</span><br/>
+            @endforeach
 
-            <div class="clear"></div>
+            @if(Auth::user()->hasRole('admin') )
+                <div class="filters">
+                    @include('product.update_category')
+                </div>
+
+                <div class="clear"></div>
+            @endif
+
 
             <ol class="selectable" id="selectable">
             @if(count($products) == 0)
@@ -45,6 +50,8 @@
                             <span>{{$product->category->name}}</span>
                             <span>{{$product->price}}</span>
                             <span>{{$genders_list[$product->gender_id]->name}}</span>
+                            <span>{{$product->primary_color->name}}
+                                {{$product->secondary_color->id != 0 ? "({$product->secondary_color->name})" : ""}}</span>
                         </div>
                     </div>
                 </li>

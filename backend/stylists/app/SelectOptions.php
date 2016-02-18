@@ -85,15 +85,19 @@ class SelectOptions{
         return $this->get_lookup_data_with_count('age_group');
     }
 
+    public function colors(){
+        return $this->get_lookup_data_with_count('color', 'primary_color_id');
+    }
+
     //To be cached
-    protected function get_lookup_data_with_count($lookup_type){
+    protected function get_lookup_data_with_count($lookup_type, $count_table_fk=""){
         $whereClauses = $this->whereClauses;
 
         $lookup_table = 'lu_' . $lookup_type;
         $lookup_table_pk_col = $lookup_table. '.id';
         $lookup_table_name_col = $lookup_table. '.name';
         $count_table_id_col = $this->table . '.id';
-        $count_table_fk_col = $this->table . '.' . $lookup_type . '_id';
+        $count_table_fk_col = $this->table . '.' . ($count_table_fk!="" ? $count_table_fk : $lookup_type . '_id');
         $count_table_fk = $lookup_type . '_id';
 
         unset($whereClauses[$count_table_fk]);

@@ -14,14 +14,15 @@ use App\Product;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['stylish_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id'];
-    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders'];
+    protected $filter_ids = ['stylish_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id','primary_color_id'];
+    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders','colors'];
 
     /**
      * Display a listing of the resource.
@@ -48,7 +49,8 @@ class ProductController extends Controller
             'merchants' => $this->merchants,
             'brands' => $this->brands,
             'categories' => $this->categories,
-            'genders' => $this->genders
+            'genders' => $this->genders,
+            'colors' => $this->colors
         );
 
         foreach ($this->filter_ids as $filter) {
@@ -245,6 +247,12 @@ class ProductController extends Controller
      */
     public function postUpdateCategory(Request $request)
     {
+        if(!Auth::user()->hasRole('admin')){
+            return Redirect::back()
+                ->withErrors(['You do not have permission to do bulk category update'])
+                ->withInput();
+        }
+
         $this->base_table = 'products';
         $this->initWhereConditions($request);
 
@@ -255,6 +263,7 @@ class ProductController extends Controller
             'old_category_id' => 'required|integer',
             'category_id' => 'required|integer|min:1',
             'gender_id' => 'integer',
+            'primary_color_id' => 'integer',
             'search' => 'alpha_dash',
         ]);
 
