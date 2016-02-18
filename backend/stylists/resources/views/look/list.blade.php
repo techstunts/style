@@ -17,6 +17,7 @@
                     @include('common.age_group.select')
                     @include('common.search')
                     <input type="submit" name="filter" value="Filter"/>
+                    <a href="{{url('look/list')}}" class="clearall">Clear All</a>
                 </form>
                 {!! $looks->render() !!}
             </div>

@@ -16,6 +16,7 @@
                     @include('common.color.select')
                     @include('common.search')
                     <input type="submit" name="filter" value="Filter"/>
+                    <a href="{{url('product/list')}}" class="clearall">Clear All</a>
                 </form>
                 {!! $products->render() !!}
             </div>

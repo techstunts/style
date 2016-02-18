@@ -32,6 +32,7 @@ div.filters form input[type="submit"]{background-color: #D32F2F;border: 1px beig
 div.filters form.approve{margin-left: 10px;}
 div.filters form.approve input[type="submit"]{background-color: white;border: none;color:#D32F2F;text-decoration:underline;cursor:pointer;}
 div.filters form input.search{width:150px;}
+div.filters form a.clearall{color: #000;font-size: 12px;text-decoration: underline;}
 
 span.errorMsg{color:red;}
 
@@ -41,7 +42,7 @@ div.message div.error{color:red}
 form.create_look{float:left;}
 form.create_look div{margin:0 0 5px 0px; text-align:left;float: left;width:500px;}
 form.create_look input,select{margin-right: 10px;}
-form.create_look input[type=text],textarea{min-width: 400px;}
+form.create_look input[type=text], textarea{min-width: 400px;}
 
 /* Selectable css */
 #feedback { font-size: 1.4em; }
