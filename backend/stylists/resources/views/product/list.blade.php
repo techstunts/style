@@ -29,7 +29,7 @@
 
             @if(Auth::user()->hasRole('admin') )
                 <div class="filters">
-                    @include('product.update_category')
+                    @include('product.bulk_update')
                 </div>
 
                 <div class="clear"></div>
@@ -51,7 +51,7 @@
                             <span>{{$product->category->name}}</span>
                             <span>{{$product->price}}</span>
                             <span>{{$genders_list[$product->gender_id]->name}}</span>
-                            <span>{{$product->primary_color->name}}
+                            <span style="background-color:{{$product->primary_color->name}}">{{$product->primary_color->name}}
                                 {{$product->secondary_color->id != 0 ? "({$product->secondary_color->name})" : ""}}</span>
                         </div>
                     </div>

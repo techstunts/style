@@ -44,22 +44,25 @@ class ProductController extends Controller
         $this->initWhereConditions($request);
         $this->initFilters();
 
+        $lookup = new Lookup();
+        $category_obj = new Category();
+
         $view_properties = array(
             'stylists' => $this->stylists,
             'merchants' => $this->merchants,
             'brands' => $this->brands,
             'categories' => $this->categories,
             'genders' => $this->genders,
-            'colors' => $this->colors
+            'colors' => $this->colors,
+            'category_tree' => $category_obj->getCategoryTree(),
+            'gender_list' => $lookup->type('gender')->get(),
+            'color_list' => $lookup->type('color')->get(),
         );
 
         foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
         $view_properties['search'] = $request->input('search');
-
-        $category_obj = new Category();
-        $view_properties['category_tree'] = $category_obj->getCategoryTree();
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -245,27 +248,57 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function postUpdateCategory(Request $request)
+    public function postBulkUpdate(Request $request)
     {
+        $bulk_update_fields = ['category_id','gender_id','primary_color_id'];
+
         if(!Auth::user()->hasRole('admin')){
             return Redirect::back()
-                ->withErrors(['You do not have permission to do bulk category update'])
+                ->withErrors(['You do not have permission to do bulk update'])
                 ->withInput();
         }
 
         $this->base_table = 'products';
         $this->initWhereConditions($request);
 
-        $validator = Validator::make($request->all(), [
+        $valdation_clauses = [
             'merchant_id' => 'integer',
             'stylish_id' => 'integer',
             'brand_id' => 'integer',
-            'old_category_id' => 'required|integer',
-            'category_id' => 'required|integer|min:1',
             'gender_id' => 'integer',
             'primary_color_id' => 'integer',
+            'category_id' => 'integer',
             'search' => 'alpha_dash',
-        ]);
+        ];
+
+        $update_clauses = [];
+
+        foreach($bulk_update_fields as $filter){
+            if($request->input($filter) != ""){
+                $valdation_clauses['old_' . $filter] = 'required|integer';
+                $valdation_clauses[$filter] = 'required|integer|min:1';
+
+                unset($this->where_conditions['products.' . $filter]);
+
+                $update_clauses[$filter] = $request->input($filter);
+            }
+
+            /*if(isset($this->where_conditions['products.' . $filter])){
+                unset($this->where_conditions['products.' . $filter]);
+            }*/
+
+            if($request->input('old_' .  $filter) != ""){
+                $this->where_conditions['products.' . $filter] = $request->input('old_' . $filter);
+            }
+        }
+
+        if(count($update_clauses) == 0){
+            return Redirect::back()
+                ->withErrors(['Please specify at least 1 field to bulk update'])
+                ->withInput();
+        }
+
+        $validator = Validator::make($request->all(), $valdation_clauses);
 
         if($validator->fails()){
             foreach($validator->errors()->getMessages() as $k  => $v){
@@ -277,22 +310,13 @@ class ProductController extends Controller
                 ->withInput();
         }
 
-        if(isset($this->where_conditions['products.category_id'])){
-            unset($this->where_conditions['products.category_id']);
-        }
-
-        if($request->input('old_category_id') != ""){
-            $this->where_conditions['products.category_id'] = $request->input('old_category_id');
-        }
-        //var_dump($this->where_conditions);
-
-        $products = DB::table('products')
+        DB::table('products')
             ->where($this->where_conditions)
             ->whereRaw($this->where_raw)
             ->orderBy('id', 'desc')
             ->take($this->records_per_page)
-            ->update(['category_id' => $request->input('category_id')]);
-        //echo "done";
+            ->update($update_clauses);
+
         return Redirect::back()
             ->withErrors(['Records updated'])
             ->withInput();
