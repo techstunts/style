@@ -101,9 +101,15 @@ class SelectOptions{
         $count_table_fk = $lookup_type . '_id';
 
         unset($whereClauses[$count_table_fk]);
-        $data = DB::table($this->table)
-            ->join($lookup_table, $count_table_fk_col, '=', $lookup_table_pk_col)
-            ->where($whereClauses)
+
+        $data = DB::table($lookup_table)
+            ->leftjoin($this->table, function ($join) use($lookup_table_pk_col, $count_table_fk_col, $whereClauses) {
+               $join->on($lookup_table_pk_col, '=', $count_table_fk_col);
+                foreach($whereClauses as $k => $v) {
+                    $join->where($k, '=', $v);
+                }
+
+            })
             ->whereRaw($this->whereRawClauses)
             ->select($lookup_table_pk_col, $lookup_table_name_col, DB::raw('COUNT(' . $count_table_id_col . ') as product_count'))
             ->groupBy($lookup_table_pk_col, $lookup_table_name_col)
