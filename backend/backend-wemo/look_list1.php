@@ -489,6 +489,31 @@
                                     </button>
                                 </div>
                             </div>
+                            <div class="row row-pad-5">
+                                <div class="col-lg-12">
+                                    Targeted app view:<br/>
+                                    <?php
+                                        $app_sections = array(
+                                            "1" => "Style suggest",
+                                            "2" => "Trending",
+                                            "3" => "My Requests",
+                                            "4" => "My Products",
+                                            "5" => "Ask Advice",
+                                            "6" => "Ask Look",
+                                            "7" => "Ask Product",
+                                            "8" => "Stylist",
+                                            );
+                                        foreach($app_sections as $id => $name){
+                                            $checked = "";
+                                            if(isset($_REQUEST['app_section']) && $_REQUEST['app_section'] == $id){
+                                                $checked = "checked=checked";
+                                            }
+                                            echo "<label><input type='radio' name='app_section' value='{$id}' {$checked}> {$name}</label>";
+                                        }
+                                    ?>
+
+                                </div>
+                            </div>
                         </div><!-- panel-body -->
 
                         <?php
@@ -604,9 +629,15 @@
                     <?php
                 }
                 }
+
+                $app_section = 3;
+                if(isset($_POST['app_section']) && $_POST['app_section']!=""){
+                    $app_section = $_POST['app_section'];
+                }
                 ?>
                 <div id="send" class="stick">
                     <button name="send" id="button1" class="btn btn-success">Send</button>
+                    <input type="hidden" name="app_section" value="<?php echo $app_section;?>"/>
                 </div>
             </form>
 
@@ -644,6 +675,11 @@
 
 
     if (isset($_POST['send']) && !empty($_REQUEST['select'])) {
+
+        $app_section = 3;
+        if(isset($_POST['app_section']) && $_POST['app_section']!=""){
+            $app_section = $_POST['app_section'];
+        }
 
         $id = $_SESSION["users"];
         foreach ($id as $uid1) {
@@ -698,7 +734,15 @@
             }
             include_once 'push.php';
             $push = new pushmessage();
-            $params = array("pushtype" => "android", "registration_id" => $regid, "message" => $stylish . " has sent you looks", "message_summery" => $stylish . " has sent you looks", "look_url" => $firstlook);
+            $params = array(
+                "pushtype" => "android",
+                "registration_id" => $regid,
+                "message" => $stylish . " has sent you looks",
+                "message_summery" => $stylish . " has sent you looks",
+                "look_url" => $firstlook,
+                'app_section' => $app_section
+            );
+
             $rtn = $push->sendMessage($params);
         }
 
@@ -706,6 +750,8 @@
     }
 
     ?>
+
+
 </section>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>

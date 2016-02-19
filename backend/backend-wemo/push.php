@@ -37,7 +37,8 @@ class pushmessage{
                     'data' => array(
                                     'message' => $params["message"],
                                     'message_summery'=>$params["message_summery"],
-                                    'look_url'=>$params["look_url"]
+                                    'look_url'=>$params["look_url"],
+                                    'app_section'=> ((isset($params["app_section"]) && $params["app_section"] != "") ? $params["app_section"] : "3")
                                 )
                     );
          
