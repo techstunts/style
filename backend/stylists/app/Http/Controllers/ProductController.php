@@ -99,6 +99,9 @@ class ProductController extends Controller
     public function getCreate(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'name' => 'required|min:5',
+            'price' => 'required|numeric',
+            'desc' => 'required|min:5',
             'merchant' => 'required|min:4',
             'brand' => 'required|min:2',
             'category' => 'required|min:2',
