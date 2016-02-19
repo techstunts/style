@@ -275,7 +275,7 @@
 
             foreach ($filtering as $value) {
                 if (!empty($value)) {
-                    $query_str1 .= "stylish_id='";
+                    $query_str1 .= "l.stylish_id='";
                     $query_str1 .= $value;
                     $query_str1 .= " ' ";
 
