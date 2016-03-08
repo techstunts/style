@@ -126,7 +126,7 @@ class ProductController extends Controller
         $primary_color = Color::where(['name' => $request->input('color1')])->first();
         $secondary_color = Color::where(['name' => $request->input('color2')])->first();
 
-        $required_values = array('merchant', 'brand', 'category', 'gender', 'primary_color');
+        $required_values = array('merchant', 'category', 'gender', 'primary_color');
         $error_messages = "";
         foreach($required_values as $v){
             if(!isset($$v) || !$$v->id) {
@@ -138,7 +138,7 @@ class ProductController extends Controller
             return;
         }
 
-        if ($merchant && $brand && $request->input('name') && $category && $gender && $primary_color) {
+        if ($merchant && $request->input('name') && $category && $gender && $primary_color) {
             $product = new Product();
             $product->merchant_id = $merchant->id;
             $product->name = htmlentities($request->input('name'));
@@ -147,8 +147,8 @@ class ProductController extends Controller
             $product->product_link = $request->input('url');
             $product->upload_image = $request->input('image0');
             $product->image_name = $request->input('image0');
-            //$product->brand_id = $brand->id ? $brand->id : BrandEnum::Others;
-            $product->brand_id = $brand->id;
+            $product->brand_id = isset($brand) && $brand->id ? $brand->id : BrandEnum::Others;
+            //$product->brand_id = $brand->id;
             //$product->category_id = $category ? $category->id : CategoryEnum::Others;
             $product->category_id = $category->id;
             //$product->gender_id = $gender ? $gender->id : "";
@@ -162,8 +162,11 @@ class ProductController extends Controller
                 $product_url = url('product/view/' . $product->id);
                 echo json_encode([true, $product_url]);
             } else {
-                echo json_encode([false, "Product cant be stored"]);
+                echo json_encode([false, "Product save failed. Please contact admin."]);
             }
+        }
+        else{
+            echo json_encode([false, "Product required info missing. Please contact admin."]);
         }
     }
 
