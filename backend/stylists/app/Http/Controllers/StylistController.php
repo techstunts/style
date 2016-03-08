@@ -108,11 +108,11 @@ class StylistController extends Controller
             $lookup = new Lookup();
 
             $view_properties['stylist'] = $stylist;
-            $view_properties['gender_id'] = $stylist->gender_id;
+            $view_properties['gender_id'] = intval($stylist->gender_id);
             $view_properties['genders'] = $lookup->type('gender')->get();
-            $view_properties['status_id'] = $stylist->status_id;
+            $view_properties['status_id'] = intval($stylist->status_id);
             $view_properties['statuses'] = $lookup->type('status')->get();
-            $view_properties['expertise_id'] = $stylist->expertise_id;
+            $view_properties['expertise_id'] = intval($stylist->expertise_id);
             $view_properties['expertises'] = $lookup->type('expertise')->get();
             $view_properties['designation_id'] = intval($stylist->designation_id);
             $view_properties['designations'] = $lookup->type('designation')->get();

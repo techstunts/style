@@ -251,17 +251,17 @@ class LookController extends Controller
             $lookup = new Lookup();
 
             $view_properties['look'] = $look;
-            $view_properties['gender_id'] = $look->gender_id;
+            $view_properties['gender_id'] = intval($look->gender_id);
             $view_properties['genders'] = $lookup->type('gender')->get();
-            $view_properties['status_id'] = $look->status_id;
+            $view_properties['status_id'] = intval($look->status_id);
             $view_properties['statuses'] = $lookup->type('status')->get();
-            $view_properties['occasion_id'] = $look->occasion_id;
+            $view_properties['occasion_id'] = intval($look->occasion_id);
             $view_properties['occasions'] = $lookup->type('occasion')->get();
-            $view_properties['age_group_id'] = $look->age_group_id;
+            $view_properties['age_group_id'] = intval($look->age_group_id);
             $view_properties['age_groups'] = $lookup->type('age_group')->get();
-            $view_properties['budget_id'] = $look->budget_id;
+            $view_properties['budget_id'] = intval($look->budget_id);
             $view_properties['budgets'] = $lookup->type('budget')->get();
-            $view_properties['body_type_id'] = $look->body_type_id;
+            $view_properties['body_type_id'] = intval($look->body_type_id);
             $view_properties['body_types'] = $lookup->type('body_type')->get();
         }
         else{
