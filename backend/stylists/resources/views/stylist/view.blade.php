@@ -74,12 +74,12 @@
                                         </a>
                                     @endforeach
                                     <br />
-                                    <a style="color:blue;font-size:13px;" href="{{url('look/list?stylish_id=' . $stylist->stylish_id)}}">View all</a>
-                                    <a style="color:blue;font-size:13px;" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=1')}}">Active</a>
-                                    <a style="color:blue;font-size:13px;" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=6')}}">Approved</a>
-                                    <a style="color:blue;font-size:13px;" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=5')}}">Submitted</a>
-                                    <a style="color:blue;font-size:13px;" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=4')}}">In Progress</a>
-                                    <a style="color:blue;font-size:13px;" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=7')}}">Rejected</a>
+                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->stylish_id)}}">View all</a>
+                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=1')}}">Active</a>
+                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=6')}}">Approved</a>
+                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=5')}}">Submitted</a>
+                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=4')}}">In Progress</a>
+                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=7')}}">Rejected</a>
                                 @else
                                     None
                                 @endif
@@ -100,7 +100,7 @@
                         <tr class="row">
                             <td class="head">Clients</td>
                             <td class="content">
-                                <a style="color:blue;font-size:13px;" href="{{url('client/list?stylish_id=' . $stylist->stylish_id)}}">View All</a>
+                                <a class="product_link" href="{{url('client/list?stylish_id=' . $stylist->stylish_id)}}">View All</a>
                             </td>
                         </tr>
                     </table>

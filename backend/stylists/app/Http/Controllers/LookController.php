@@ -54,8 +54,6 @@ class LookController extends Controller
             $this->status_rules[$status['id']] = $status;
         }
 
-        //var_export($this->status_rules);die;
-
     }
 
     public function getList(Request $request){
@@ -78,8 +76,8 @@ class LookController extends Controller
         $view_properties['from_date'] = $request->input('from_date');
         $view_properties['to_date'] = $request->input('to_date');
 
-        $view_properties['from_rs'] = $request->input('from_rs');
-        $view_properties['to_rs'] = $request->input('to_rs');
+        $view_properties['min_price'] = $request->input('min_price');
+        $view_properties['max_price'] = $request->input('max_price');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);

@@ -1,1 +1,1 @@
-<input type="text" name="search" value="{{$search}}" placeholder="Search Text" class="form-control search_new">
+<input type="text" name="search" value="{{$search}}" placeholder="Search Text" class="form-control search_text">

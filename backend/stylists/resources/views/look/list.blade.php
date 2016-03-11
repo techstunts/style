@@ -32,10 +32,7 @@
                 No Looks found
             @endif
 
-                {{--{{var_dump($looks)}}--}}
             @foreach($looks as $look)
-{{--                    {{var_dump($look['stylist']->name)}}--}}
-{{--                {{exit()}}--}}
                 <li class="ui-state-default" look_id="{{$look->id}}">
                     <div class="items">
                         <div class="name text"><a href="{{url('look/view/' . $look->id)}}">{{$look->name == "" ? "Error! Look name empty" : $look->name }}</a></div>
