@@ -100,7 +100,7 @@
                         <tr class="row">
                             <td class="head">Clients</td>
                             <td class="content">
-                                <a style="color:blue;font-size:13px;" href="{{url('look/list?stylish_id=' . $stylist->stylish_id)}}">View All</a>
+                                <a style="color:blue;font-size:13px;" href="{{url('client/list?stylish_id=' . $stylist->stylish_id)}}">View All</a>
                             </td>
                         </tr>
                     </table>
