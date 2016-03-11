@@ -63,6 +63,11 @@ class ProductController extends Controller
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
         $view_properties['search'] = $request->input('search');
+        $view_properties['from_date'] = $request->input('from_date');
+        $view_properties['to_date'] = $request->input('to_date');
+
+        $view_properties['from_rs'] = $request->input('from_rs');
+        $view_properties['to_rs'] = $request->input('to_rs');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);

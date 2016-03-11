@@ -62,7 +62,6 @@ class LookController extends Controller
         $this->base_table = 'looks';
         $this->initWhereConditions($request);
         $this->initFilters();
-
         $view_properties = array(
             'stylists' => $this->stylists,
             'statuses' => $this->statuses,
@@ -72,11 +71,15 @@ class LookController extends Controller
             'budgets' => $this->budgets,
             'age_groups' => $this->age_groups
         );
-
         foreach($this->filter_ids as $filter){
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
         $view_properties['search'] = $request->input('search');
+        $view_properties['from_date'] = $request->input('from_date');
+        $view_properties['to_date'] = $request->input('to_date');
+
+        $view_properties['from_rs'] = $request->input('from_rs');
+        $view_properties['to_rs'] = $request->input('to_rs');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -94,7 +97,6 @@ class LookController extends Controller
         if(!$request->has('status_id') || $request->input('status_id') != LookupStatus::Deleted){
             $remove_deleted_looks = 'looks.status_id != ' . LookupStatus::Deleted;
         }
-
         $looks  =
             Look::with('gender','status','body_type','budget','occasion','age_group')
                 ->where($this->where_conditions)
@@ -226,9 +228,9 @@ class LookController extends Controller
         if($look){
             $products = $look->products;
             $status = Status::find($look->status_id);
-            //var_dump($look, $look->stylist, $product_ids, $products);
             $view_properties = array('look' => $look, 'products' => $products, 'stylist' => $look->stylist,
                 'status' => $status);
+            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $look->id == Auth::user()->stylish_id;
         }
         else{
             return view('404', array('title' => 'Look not found'));
