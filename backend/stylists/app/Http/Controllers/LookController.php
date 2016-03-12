@@ -77,6 +77,7 @@ class LookController extends Controller
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
         $view_properties['search'] = $request->input('search');
+        $view_properties['exact_word'] = $request->input('exact_word');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
