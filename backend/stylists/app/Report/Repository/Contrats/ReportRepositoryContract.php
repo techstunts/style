@@ -9,7 +9,11 @@
 namespace App\Report\Repository\Contrats;
 
 
+use App\Report\Entities\ReportEntity;
+
 interface ReportRepositoryContract {
 
     public function getFilterValues($table, $columnId, $columName);
+
+    public function getReportData(ReportEntity $reportEntity, $inputParam);
 }

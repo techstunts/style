@@ -10,6 +10,7 @@ use App\Report\Parser\Parser;
 use App\Report\Exceptions\ReportEntityException;
 use App\Report\Builders\Filter;
 use App\Report\Entities\ReportEntity;
+use App\Report\Repository\ReportRepository;
 class Reporter {
 
     private $reportEntities;
@@ -26,6 +27,12 @@ class Reporter {
         $reportEntity = $this->getReportEntity($reportId);
         $this->updateFilterValues($reportEntity);
         return $reportEntity;
+    }
+	//@todo refactor 
+    public function collectReport($reportId, $inputParams){
+        $reportEntity = $this->getReportEntity($reportId);
+        $repo = new ReportRepository();
+        $repo->getReportData($reportEntity, $inputParams);
     }
 
     private function getReportEntity($reportId){

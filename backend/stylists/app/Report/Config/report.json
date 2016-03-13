@@ -17,8 +17,8 @@
       "status_id": {
         "where_type": "or_where",
         "column": "status_id",
-        "value": "2",
-        "operator": "="
+        "value": "0",
+        "operator": ">"
       }
     },
     "attributes": {
@@ -70,7 +70,7 @@
         "column_id": "id",
         "column_name": "name",
         "table_name": "lu_age_group",
-        "parent_table_column_id": "stylish_id"
+        "parent_table_column_id": "age_group_id"
       },
       "status": {
         "type": "ref",

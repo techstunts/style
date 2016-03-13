@@ -21,7 +21,7 @@ class Relationship {
     private $joinClause; 
     
     public function __construct($joinType, $table, array $joinCondition) {
-        $this->joinType = JoinType::getType($joinType);
+        $this->joinType = $joinType;
         $this->table = $table;
         $this->joinClause = new JoinClause($joinCondition[JoinClause::LEFT], $joinCondition[JoinClause::OPERATOR], $joinCondition[JoinClause::RIGHT]) ;
     }

@@ -33,10 +33,10 @@ class Condition {
      */
     public function __construct($whereType, $column, $value, $operator) {
         $this->validator($whereType, $column, $value, $operator);
-        $this->whereType = !empty($whereType)? WhereType::getType($whereType):null;
+        $this->whereType = $whereType;
         $this->column = $column;
         $this->value = $value;
-        $this->operator = !empty($operator)? ComparisonOperators::getType($operator):null;
+        $this->operator = $operator;
     }
 
     private function validator($whereType, $column, $value, $operator){
@@ -65,36 +65,36 @@ class Condition {
     }
 
     private function validateAndWhere($column, $value, $operator){
-        if(empty($value) || !is_string($value)) throw new ConditionException("Condition \"".self::VALUE."\" must not empty.");
+        if(!isset($value) || strlen($value) === 0 || !is_string($value)) throw new ConditionException("Condition \"".self::VALUE."\" must not empty.");
         if(!empty($operator) && !ComparisonOperators::isValidValue($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" is not valid, for column \"$column\".");
         return true;
     }
 
     private function validateOrWhere($column, $value, $operator){
-        if(empty($value) || !is_string($value)) throw new ConditionException("Condition \"".self::VALUE."\" must not empty.");
+        if(!isset($value) || strlen($value) === 0 || !is_string($value)) throw new ConditionException("Condition \"".self::VALUE."\" must not empty.");
         if(!empty($operator) && !ComparisonOperators::isValidValue($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" is not valid, for column \"$column\".");
         return true;
     }
 
     private function validateWhereBetween($column, $value, $operator){
-        if(empty($value) || !is_array($value)) throw new ConditionException("Condition \"".self::VALUE."\" must be not empty and array only, for column \"$column\".");
+        if(!isset($value) || !is_array($value)) throw new ConditionException("Condition \"".self::VALUE."\" must be not empty and array only, for column \"$column\".");
         if(!empty($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" operator should be empty, for column \"$column\".");
         return true;
     }
 
     private function validateWhereNotBetween($column, $value, $operator){
-        if(empty($value) || !is_array($value)) throw new ConditionException("Condition \"".self::VALUE."\" must be not empty and array only, for column \"$column\".");
+        if(!isset($value) ||  !is_array($value)) throw new ConditionException("Condition \"".self::VALUE."\" must be not empty and array only, for column \"$column\".");
         if(!empty($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" operator should be empty, for column \"$column\".");
         return true;
     }
 
     private function validateWhereIn($column, $value, $operator){
-        if(empty($value) || !is_array($value)) throw new ConditionException("Condition \"".self::VALUE."\" must be not empty and array only, for column \"$column\".");
+        if(!isset($value) ||  !is_array($value)) throw new ConditionException("Condition \"".self::VALUE."\" must be not empty and array only, for column \"$column\".");
         if(!empty($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" operator should be empty, for column \"$column\".");
         return true;
     }
     private function validateWhereNotIn($column, $value, $operator){
-        if(empty($value) || !is_array($value)) throw new ConditionException("Condition \"".self::VALUE."\" must be not empty and array only, for column \"$column\".");
+        if(!isset($value) ||  !is_array($value)) throw new ConditionException("Condition \"".self::VALUE."\" must be not empty and array only, for column \"$column\".");
         if(!empty($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" operator should be empty, for column \"$column\".");
         return true;
     }

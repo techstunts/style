@@ -8,8 +8,13 @@
 
 namespace App\Report\Parser;
 
+use App\Report\Entities\ReportEntity;
+use Illuminate\Http\Request;
+use Input;
 
-class QueryParser
-{
+class QueryParser {
 
+    public function parse(ReportEntity $reportEntity){
+
+    }
 }

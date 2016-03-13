@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use App\Report\Reporter;
 use Illuminate\Http\Request;
+use Input;
 
 class ReportController extends Controller {
 
@@ -26,5 +27,11 @@ class ReportController extends Controller {
     public function index(Request $request, $report_id){
         $reportEntity = $this->reporter->report($report_id);
         return view('report.index', array('reportEntity' => $reportEntity));
+    }
+
+	
+    public function query(Request $request, $report_id){
+	//@todo refactor
+        $reportEntity = $this->reporter->collectReport($report_id,  $request->all());
     }
 }
