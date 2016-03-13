@@ -1,27 +1,22 @@
 <?php
-
 /**
  * Created by IntelliJ IDEA.
  * User: hrishikesh.mishra
- * Date: 07/03/16
- * Time: 6:03 PM
+ * Date: 13/03/16
+ * Time: 4:28 PM
  */
+
 namespace App\Report\Entities\Enums;
+
 use App\Report\Exceptions\InvalidEnumException;
 
-class AttributeType {
+class FilterType {
 
-    /**
-     * If attribute presents in different table
-     * instead of primary table, we use Ref type.
-     */
-    const REF = "ref";
+    const SINGLE_SELECT = "single_select";
+    const MULTI_SELECT = "multi_select";
+    const DATE_RANGE = "date_range";
 
-    /**
-     * If attribute presents in same table,
-     * we use Self type.
-     */
-    const SELF = "self";
+    private static $multiValuesFilter = array(self::SINGLE_SELECT, self::MULTI_SELECT);
 
     private static $constants = array();
 
@@ -50,4 +45,9 @@ class AttributeType {
         if($key == false) throw new InvalidEnumException("Invalid enum : $type");
         return $key;
     }
+
+    public static function isFilterWithMultiValue($filterType){
+        return in_array($filterType, self::$multiValuesFilter);
+    }
+
 }

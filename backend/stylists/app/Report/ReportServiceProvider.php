@@ -17,9 +17,13 @@ class ReportServiceProvider extends ServiceProvider {
 
     public function register() {
         $this->app->singleton('App\Report\Reporter');
+        $this->app->singleton('App\Report\Repository\Contrats\ReportRepositoryContract', 'App\Report\Repository\ReportRepository');
     }
 
     public function provides() {
-        return ['App\Report\Reporter'];
+        return [
+                    'App\Report\Reporter',
+                    'App\Report\Repository\Contrats\ReportRepositoryContract'
+                ];
     }
 }

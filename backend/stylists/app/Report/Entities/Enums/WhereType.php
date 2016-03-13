@@ -1,27 +1,23 @@
 <?php
-
 /**
  * Created by IntelliJ IDEA.
  * User: hrishikesh.mishra
- * Date: 07/03/16
- * Time: 6:03 PM
+ * Date: 13/03/16
+ * Time: 2:15 PM
  */
+
 namespace App\Report\Entities\Enums;
 use App\Report\Exceptions\InvalidEnumException;
 
-class AttributeType {
+class WhereType {
 
-    /**
-     * If attribute presents in different table
-     * instead of primary table, we use Ref type.
-     */
-    const REF = "ref";
-
-    /**
-     * If attribute presents in same table,
-     * we use Self type.
-     */
-    const SELF = "self";
+    const OR_WHERE = "or_where";
+    const WHERE_BETWEEN = "where_between";
+    const WHERE_NOT_BETWEEN = "where_not_between";
+    const WHERE_IN = "where_in";
+    const WHERE_NOT_IN = "where_not_in";
+    const WHERE_NOT_NULL = "where_not_null";
+    const WHERE_NULL = "where_null";
 
     private static $constants = array();
 

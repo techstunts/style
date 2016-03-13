@@ -9,19 +9,20 @@ use App\Report\Entities\Attributes\Contracts\ReferenceAttributeContract;
  * Date: 07/03/16
  * Time: 7:32 PM
  */
-class ReferenceAttribute extends ReferenceAttributeContract
-{
+class ReferenceAttribute extends ReferenceAttributeContract {
+
 
     /**
      * ReferenceAttribute constructor.
-     * @param AttributeFieldType $fieldType
+     * @param $filterType
      * @param $showInReport
      * @param $displayName
-     * @param $tableId
+     * @param $columnId
+     * @param $columnName
      * @param $tableName
-     * @param $parentTableId
+     * @param $parentTableColumnId
      */
-    public function __construct($fieldType, $showInReport, $displayName, $tableId, $tableName, $parentTableId) {
-        parent::__construct($fieldType, $showInReport, $displayName, $tableId, $tableName, $parentTableId);
+    public function __construct($filterType, $showInReport, $displayName, $columnId, $columnName, $tableName, $parentTableColumnId) {
+        parent::__construct($filterType, $showInReport, $displayName, $columnId, $columnName, $tableName, $parentTableColumnId);
     }
 }

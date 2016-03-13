@@ -1,28 +1,17 @@
 <?php
 
 /**
- * Created by IntelliJ IDEA.
- * User: hrishikesh.mishra
- * Date: 07/03/16
- * Time: 6:03 PM
+ * Table JoinType
+ *
+ * @author hrishikesh.mishra
  */
 namespace App\Report\Entities\Enums;
 use App\Report\Exceptions\InvalidEnumException;
 
-class AttributeType {
-
-    /**
-     * If attribute presents in different table
-     * instead of primary table, we use Ref type.
-     */
-    const REF = "ref";
-
-    /**
-     * If attribute presents in same table,
-     * we use Self type.
-     */
-    const SELF = "self";
-
+class JoinType {
+    
+    const LEFT_JOIN = "left_join";
+    
     private static $constants = array();
 
     private static function getConstants(){
@@ -50,4 +39,5 @@ class AttributeType {
         if($key == false) throw new InvalidEnumException("Invalid enum : $type");
         return $key;
     }
+     
 }

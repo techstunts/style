@@ -36,4 +36,4 @@ Route::group(['middleware' => 'auth'], function(){
     Route::any('collection/{action}/{id?}/{action_id?}', 'CollectionController@index');
 });
 
-Route::get('report/', 'ReportController@index');
+Route::any('report/{report_id}', 'ReportController@index');

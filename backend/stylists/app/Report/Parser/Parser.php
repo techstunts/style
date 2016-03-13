@@ -9,6 +9,7 @@
 namespace App\Report\Parser;
 use App\Report\Parser\QueryParser;
 use App\Report\Parser\ConfigParser;
+use App\Report\Builder\Query\ViewFilter;
 
 class Parser {
 
@@ -24,7 +25,7 @@ class Parser {
     }
 
     public function getReportEntities(){
-        $this->configParser->parseReportConfig();
+        return $this->configParser->parseReportConfig();
     }
 
 }

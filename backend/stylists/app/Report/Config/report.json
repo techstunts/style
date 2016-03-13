@@ -1,0 +1,88 @@
+{
+  "looks": {
+    "display_name": "Looks Report",
+    "table_name": "looks",
+    "relationships": {
+      "reco": {
+        "join_type": "left_join",
+        "table": "lu_body_type",
+        "join_clause": {
+          "left": "lu_body_type.id",
+          "operator": "=",
+          "right": "looks.body_type_id"
+        }
+      }
+    },
+    "conditions": {
+      "status_id": {
+        "where_type": "or_where",
+        "column": "status_id",
+        "value": "2",
+        "operator": "="
+      }
+    },
+    "attributes": {
+      "budget": {
+        "type": "ref",
+        "filter_type": "multi_select",
+        "show_in_report": true,
+        "display_name": "Budget",
+        "column_id": "id",
+        "column_name": "name",
+        "table_name": "lu_budget",
+        "parent_table_column_id": "budget_id"
+      },
+      "occasion": {
+        "type": "ref",
+        "filter_type": "multi_select",
+        "show_in_report": true,
+        "display_name": "Occasion",
+        "column_id": "id",
+        "column_name": "name",
+        "table_name": "lu_occasion",
+        "parent_table_column_id": "occasion_id"
+      },
+      "body_type": {
+        "type": "ref",
+        "filter_type": "single_select",
+        "show_in_report": true,
+        "display_name": "Body Type",
+        "column_id": "id",
+        "column_name": "name",
+        "table_name": "lu_body_type",
+        "parent_table_column_id": "body_type_id"
+      },
+      "stylist": {
+        "type": "ref",
+        "filter_type": "multi_select",
+        "show_in_report": true,
+        "display_name": "Stylist",
+        "column_id": "stylish_id",
+        "column_name": "name",
+        "table_name": "stylists",
+        "parent_table_column_id": "stylish_id"
+      },
+      "age_group": {
+        "type": "ref",
+        "filter_type": "multi_select",
+        "show_in_report": true,
+        "display_name": "Age Group",
+        "column_id": "id",
+        "column_name": "name",
+        "table_name": "lu_age_group",
+        "parent_table_column_id": "stylish_id"
+      },
+      "status": {
+        "type": "ref",
+        "filter_type": "multi_select",
+        "show_in_report": true,
+        "display_name": "Status",
+        "column_id": "id",
+        "column_name": "name",
+        "table_name": "lu_status",
+        "parent_table_column_id": "status_id"
+      }
+
+    }
+  }
+}

@@ -23,7 +23,8 @@ class ReportController extends Controller {
         $this->reporter = $reporter;
     }
 
-    public function index(Request $request){
-        dd($this->reporter->report());
+    public function index(Request $request, $report_id){
+        $reportEntity = $this->reporter->report($report_id);
+        return view('report.index', array('reportEntity' => $reportEntity));
     }
 }
