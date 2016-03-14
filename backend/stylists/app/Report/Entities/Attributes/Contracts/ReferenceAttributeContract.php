@@ -22,9 +22,9 @@ abstract class ReferenceAttributeContract extends Attribute{
     const TABLE_NAME = "table_name";
     const PARENT_TABLE_COLUMN_ID = "parent_table_column_id";
 
-    private $showInReport;
-    private $displayName;
-    private $columnId;
+    private $showInReport; //@todo move to parent
+    private $displayName; //@todo move to parent
+    private $columnId; //@todo move to parent
     private $columnName;
     private $tableName;
     private $parentTableColumnId;

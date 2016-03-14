@@ -30,6 +30,10 @@ use App\Report\Entities\Enums\FilterType as FilterType;
                 {{ csrf_field() }}
             </form>
         </div>
+
+        <div class="report-output">
+            @include('report.filters.report', ['reportEntity' => $reportEntity])
+        </div>
     </div>
 
     <style>
@@ -62,6 +66,7 @@ use App\Report\Entities\Enums\FilterType as FilterType;
             margin:0 5px;
             width: 180px;
             border: 1px solid #000;
+            color:#000;
         }
 
         div.report-index .clr {
@@ -71,5 +76,45 @@ use App\Report\Entities\Enums\FilterType as FilterType;
             clear: both;
         }
 
+        .report-output .hide {
+            display: none;
+        }
+
+        .report-output .report-title{
+            width: 95%;
+            text-align: center;
+            font-size: 25px;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .report-output .show-all-attr{
+            font-size: 10px;
+            color: #0AD;
+            text-decoration: underline;
+        }
+        .report-output .report-main-table tr td.attr {
+            font-weight:bold;
+            padding-left: 10px;
+        }
+        .report-output .report-main-table tr {
+            border-bottom: 2px solid #000;
+        }
+
+        .report-output .report-main-table .report-attr-val-table tr {
+            border-bottom: none;
+        }
+        .report-output .report-main-table .report-attr-val-table tr td {
+            padding: 0 7px;
+            border-bottom: .5px solid #000;
+            line-height: 25px;
+        }
     </style>
+
+    <script type="text/javascript">
+        $(".show-all-attr").click(function(){
+            $(this).parent().parent().find(".extra-attr").removeClass("hide");
+            //$(this).parent().parent().css({"color": "red", "border": "2px solid red"});
+        });
+    </script>
 @endsection
