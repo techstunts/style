@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\CombineImages;
 use App\Look;
 use App\LookProduct;
 use App\Models\Enums\Status as LookupStatus;
@@ -12,7 +11,6 @@ use App\Models\Lookups\Status;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Validator;
@@ -195,9 +193,11 @@ class LookController extends Controller
 
         $look->price = $look_price;
 
-        $lookImage = new CombineImages();
-        if($lookImage->createLook($src_image_paths, $look->name)){
-            $look->image = $lookImage->targetImage;
+        $look_template_ns = "App\\Models\\LookTemplates\\";
+        $look_template_class = $look_template_ns . "EqualAreas";
+        $lookTemplate = new $look_template_class;
+        if($lookTemplate->createLook($src_image_paths, $look->name)){
+            $look->image = $lookTemplate->targetImage;
             if($look->save()){
                 foreach($look_products as &$lp){
                     $lp['look_id'] = $look->id;
