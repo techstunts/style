@@ -44,7 +44,12 @@ abstract class Controller extends BaseController
 
         if($request->input('search') != "" and strlen(trim($request->input('search')))>0){
             $search_term  = trim($request->input('search'));
-            $where_raw[] = "({$this->base_table}.name like '%{$search_term}%' OR {$this->base_table}.description like '%{$search_term}%')";
+            if($request->input('exact_word') == "search exact word"){
+                $this->where_raw[] = "({$this->base_table}.name REGEXP '[[:<:]]{$search_term}[[:>:]]' OR {$this->base_table}.description REGEXP '[[:<:]]{$search_term}[[:>:]]')";
+            }
+            else{
+                $this->where_raw[] = "({$this->base_table}.name like '%{$search_term}%' OR {$this->base_table}.description like '%{$search_term}%')";
+            }
         }
 
         if($request->input('from_date') != ""){

@@ -54,12 +54,14 @@ class LookController extends Controller
             $this->status_rules[$status['id']] = $status;
         }
 
+
     }
 
     public function getList(Request $request){
         $this->base_table = 'looks';
         $this->initWhereConditions($request);
         $this->initFilters();
+
         $view_properties = array(
             'stylists' => $this->stylists,
             'statuses' => $this->statuses,
@@ -69,10 +71,12 @@ class LookController extends Controller
             'budgets' => $this->budgets,
             'age_groups' => $this->age_groups
         );
+
         foreach($this->filter_ids as $filter){
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
         $view_properties['search'] = $request->input('search');
+        $view_properties['exact_word'] = $request->input('exact_word');
         $view_properties['from_date'] = $request->input('from_date');
         $view_properties['to_date'] = $request->input('to_date');
 
@@ -95,6 +99,7 @@ class LookController extends Controller
         if(!$request->has('status_id') || $request->input('status_id') != LookupStatus::Deleted){
             $remove_deleted_looks = 'looks.status_id != ' . LookupStatus::Deleted;
         }
+
         $looks  =
             Look::with('gender','status','body_type','budget','occasion','age_group')
                 ->where($this->where_conditions)
@@ -251,17 +256,17 @@ class LookController extends Controller
             $lookup = new Lookup();
 
             $view_properties['look'] = $look;
-            $view_properties['gender_id'] = $look->gender_id;
+            $view_properties['gender_id'] = intval($look->gender_id);
             $view_properties['genders'] = $lookup->type('gender')->get();
-            $view_properties['status_id'] = $look->status_id;
+            $view_properties['status_id'] = intval($look->status_id);
             $view_properties['statuses'] = $lookup->type('status')->get();
-            $view_properties['occasion_id'] = $look->occasion_id;
+            $view_properties['occasion_id'] = intval($look->occasion_id);
             $view_properties['occasions'] = $lookup->type('occasion')->get();
-            $view_properties['age_group_id'] = $look->age_group_id;
+            $view_properties['age_group_id'] = intval($look->age_group_id);
             $view_properties['age_groups'] = $lookup->type('age_group')->get();
-            $view_properties['budget_id'] = $look->budget_id;
+            $view_properties['budget_id'] = intval($look->budget_id);
             $view_properties['budgets'] = $lookup->type('budget')->get();
-            $view_properties['body_type_id'] = $look->body_type_id;
+            $view_properties['body_type_id'] = intval($look->body_type_id);
             $view_properties['body_types'] = $lookup->type('body_type')->get();
         }
         else{
