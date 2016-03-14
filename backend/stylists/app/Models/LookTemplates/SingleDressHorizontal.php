@@ -1,12 +1,7 @@
 <?php
-namespace App;
-class CombineImages
+namespace App\Models\LookTemplates;
+class SingleDressHorizontal extends CombineImages
 {
-
-    protected $mapWidth = 630;
-    protected $mapHeight = 880;
-    protected $bgColor;
-    public $targetImage;
 
     public function createLook($src_image_paths, $look_name){
         $mapImage = imagecreatetruecolor($this->mapWidth, $this->mapHeight);
@@ -15,8 +10,7 @@ class CombineImages
 
         $images_folder = $_SERVER['DOCUMENT_ROOT'] . '/images/';
 
-        $dst_width = floor($this->mapWidth/2);
-        $dst_height = floor($this->mapHeight/2);
+        $dress = true;
 
         /*
          *  PUT SRC IMAGES ON BASE IMAGE
@@ -27,12 +21,17 @@ class CombineImages
                 $src_image_path = $images_folder . $src_image_path;
             }
 
-            list ($x, $y) = $this->indexToCoords($index);
+            list ($x, $y) = $this->indexToCoords($index, $dress);
 
-            $tileImg = $this->compress_image($src_image_path, 99);
+            $tileImg = $this->compress_image($src_image_path, 99, $dress);
 
-            imagecopy($mapImage, $tileImg, $x, $y, 0, 0, $dst_width, $dst_height);
+            $src_width = imagesx($tileImg);
+            $src_height = imagesy($tileImg);
+
+            imagecopy($mapImage, $tileImg, $x, $y, 0, 0, $src_width, $src_height);
             imagedestroy($tileImg);
+
+            $dress = false;
         }
 
         $filename =  $look_name . '-' . uniqid() . '-' . time(). '.jpeg';
@@ -42,20 +41,36 @@ class CombineImages
         return imagejpeg($mapImage, $images_folder . $this->targetImage);
     }
 
-    protected function indexToCoords($index)
+    protected function indexToCoords($index, $dress)
     {
-        $x = ($index % 2) * floor($this->mapWidth / 2);
-        $y = floor($index / 2) * floor($this->mapHeight / 2);
+        if($dress){
+            $x = floor($this->mapWidth * 1 / 8);
+            $y = 0;
+        }
+        else{
+            $x = ($index * floor($this->mapWidth * 1 / 16)) + (($index - 1) * floor($this->mapWidth * 1 / 4));
+            $y = floor($this->mapHeight * 3 / 4);
+        }
 
         return Array($x, $y);
     }
 
-    protected function compress_image($src, $quality)
+    protected function compress_image($src, $quality, $dress)
     {
-        $dst_width = floor($this->mapWidth/2);
-        $dst_height = floor($this->mapHeight/2);
-
         list($src_width, $src_height) = getimagesize($src);
+
+        if($dress){
+            $factor = 3/4;
+        }
+        else{
+            $factor = 1/4;
+        }
+        $dst_width =  floor($this->mapWidth * $factor);
+        $max_height = floor($this->mapHeight * $factor);
+        $ideal_height = ($src_height / $src_width) * $dst_width;
+        $dst_height = $ideal_height <= $max_height ? $ideal_height : $max_height;
+
+
         $info = getimagesize($src);
 
         $img=imagecreatetruecolor($dst_width, $dst_height);
