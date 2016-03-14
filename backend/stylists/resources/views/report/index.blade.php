@@ -113,8 +113,8 @@ use App\Report\Entities\Enums\FilterType as FilterType;
 
     <script type="text/javascript">
         $(".show-all-attr").click(function(){
+            $(this).hide();
             $(this).parent().parent().find(".extra-attr").removeClass("hide");
-            //$(this).parent().parent().css({"color": "red", "border": "2px solid red"});
         });
     </script>
 @endsection
