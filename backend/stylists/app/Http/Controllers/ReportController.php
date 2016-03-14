@@ -31,7 +31,7 @@ class ReportController extends Controller {
 
 	
     public function query(Request $request, $report_id){
-	//@todo refactor
-        $reportEntity = $this->reporter->collectReport($report_id,  $request->all());
+        $report = $this->reporter->collectReport($report_id,  $request->all());
+        return response()->json($report);
     }
 }

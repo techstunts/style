@@ -32,7 +32,7 @@ class Reporter {
     public function collectReport($reportId, $inputParams){
         $reportEntity = $this->getReportEntity($reportId);
         $repo = new ReportRepository();
-        $repo->getReportData($reportEntity, $inputParams);
+        return $repo->getReportData($reportEntity, $inputParams);
     }
 
     private function getReportEntity($reportId){

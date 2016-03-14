@@ -41,22 +41,22 @@ class ReportRepository implements ReportRepositoryContract{
     public function getReportData(ReportEntity $reportEntity, $inputParam) {
         $table = DB::table($reportEntity->getTable());
 
-        echo "<pre>";
-        DB::listen(function($sql, $bindings, $time) {
-            var_dump($sql);
-            var_dump($bindings);
-            var_dump($time);
-        });
+//        echo "<pre>";
+//        DB::listen(function($sql, $bindings, $time) {
+//            var_dump($sql);
+//            var_dump($bindings);
+//            var_dump($time);
+//        });
 
 
         $this->buildRelationship($reportEntity, $table);
         $this->buildCondition($reportEntity, $table);
         $this->buildUserClause($reportEntity->getAttributes(), $table, $inputParam);
 
-        $data = $this->getGroupData($reportEntity, $table);
+        return $this->getGroupData($reportEntity, $table);
 
 
-        dd($data);
+//        dd($data);
     }
 
     private function getGroupData(ReportEntity $reportEntity, $table){
@@ -67,7 +67,7 @@ class ReportRepository implements ReportRepositoryContract{
             if(!$attribute->getShowInReport()) continue;
             $tmpTable = clone $table;
             $groupByColumn =  $attribute->getParentTableColumnId();
-            $groupValues[$attributeKey] = $tmpTable->select(DB::raw("count(*) as count_$groupByColumn, $groupByColumn"))->groupBy($attribute->getParentTableColumnId())->get();
+            $groupValues[$attributeKey] = $tmpTable->select(DB::raw("count(*) as total_count, $groupByColumn as attribute_id"))->groupBy($attribute->getParentTableColumnId())->get();
             unset($tmpTable);
         }
 
