@@ -39,7 +39,6 @@ abstract class Controller extends BaseController
                 $this->where_conditions[$this->base_table . '.' . $filter_id] = $request->input($filter_id);
             }
         }
-
         $where_raw = [];
 
         if($request->input('search') != "" and strlen(trim($request->input('search')))>0){
@@ -67,10 +66,17 @@ abstract class Controller extends BaseController
         if($request->input('max_price') != ""){
             $where_raw[] = "({$this->base_table}.price <= '{$request->input('max_price')}')";
         }
+
+        if($request->input('product_id') != ""){
+            $ids_arr = [] ;
+            foreach($request->input('product_id') as $product){
+                $ids_arr[] = $product;
+            }
+            $where_raw[] = "{$this->base_table}.id IN(". implode(", ", $ids_arr) . ")";
+        }
         if($where_raw){
             $this->where_raw = implode(" AND ", $where_raw);
         }
-
     }
 
     public function initFilters(){

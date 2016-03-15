@@ -186,24 +186,30 @@ $(document).ready(function(){
     $( "#sortable" ).sortable();
 
     $( "#update_selected" ).click(function(){
-        var categoryId = $(this).parent('form').children('#category_id').val();
-        var genderId = $(this).parent('form').children('#gender_id').val();
+        var category_id = $(this).parent('form').children('#category_id').val();
+        var gender_id = $(this).parent('form').children('#gender_id').val();
         var primary_color_id = $(this).parent('form').children('#primary_color_id').val();
 
+        var actionUrl = $(this).attr('action_url');
 
-        //$.ajax({
-        //    type: 'POST',
-        //    url: '/product/selectedUpdate',
-        //    data: {
-        //        'category_id': categoryId,
-        //        'gender_id' : genderId,
-        //        'primary_color_id' : primary_color_id
-        //    },
-        //
-        //    success: function (data) {
-        //        var names = data
-        //        $('#cand').html(data);
-        //    }
-        //});
+        event.preventDefault();
+        var newForm = jQuery('<form>', {
+            'action': actionUrl,
+            'method': 'GET'
+        }).append(
+            jQuery('<input>', {'name': 'category_id', 'value': category_id,'type': 'hidden'})
+        ).append(
+            jQuery('<input>', {'name': 'gender_id', 'value': gender_id,'type': 'hidden'})
+        ).append(
+            jQuery('<input>', {'name': 'primary_color_id', 'value': primary_color_id,'type': 'hidden'})
+        );
+
+        jQuery('.ui-selected').each(function(){
+            newForm.append(
+                jQuery('<input>', {'name': 'product_id[]', 'value': $(this).attr('product_id'),'type': 'hidden'})
+            )
+        })
+
+        newForm.submit();
     });
 });

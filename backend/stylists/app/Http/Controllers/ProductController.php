@@ -367,16 +367,19 @@ class ProductController extends Controller
             ->withInput();
     }
 
-    public function postSelectedUpdate(Request $request)
+    public function getUpdateSelected(Request $request)
     {
         $bulk_update_fields = ['category_id','gender_id','primary_color_id'];
-    var_dump('in the new method');
         if(!Auth::user()->hasRole('admin')){
             return Redirect::back()
                 ->withErrors(['You do not have permission to do bulk update'])
                 ->withInput();
         }
-
+        if(is_null($request->product_id)){
+            return Redirect::back()
+                ->withErrors(['Please select at least one item to be updated'])
+                ->withInput();
+        }
         $this->base_table = 'products';
         $this->initWhereConditions($request);
 
@@ -384,14 +387,13 @@ class ProductController extends Controller
 
         foreach($bulk_update_fields as $filter){
             if($request->input($filter) != ""){
-                $valdation_clauses[$filter] = 'required|integer|min:1';
+                $valdation_clauses[$filter] = 'required|integer|min:0';
 
                 unset($this->where_conditions['products.' . $filter]);
 
                 $update_clauses[$filter] = $request->input($filter);
             }
         }
-
         if(count($update_clauses) == 0){
             return Redirect::back()
                 ->withErrors(['Please specify at least one field to selected update'])
