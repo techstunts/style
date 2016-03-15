@@ -184,4 +184,26 @@ $(document).ready(function(){
     $('#lightbox #close').bind('click', closeLightbox);
     $('form.create_look').bind('submit', submitLightboxForm);
     $( "#sortable" ).sortable();
+
+    $( "#update_selected" ).click(function(){
+        var categoryId = $(this).parent('form').children('#category_id').val();
+        var genderId = $(this).parent('form').children('#gender_id').val();
+        var primary_color_id = $(this).parent('form').children('#primary_color_id').val();
+
+
+        //$.ajax({
+        //    type: 'POST',
+        //    url: '/product/selectedUpdate',
+        //    data: {
+        //        'category_id': categoryId,
+        //        'gender_id' : genderId,
+        //        'primary_color_id' : primary_color_id
+        //    },
+        //
+        //    success: function (data) {
+        //        var names = data
+        //        $('#cand').html(data);
+        //    }
+        //});
+    });
 });
