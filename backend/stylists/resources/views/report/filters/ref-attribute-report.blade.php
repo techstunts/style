@@ -1,13 +1,13 @@
 <tr>
-    <td class="attr">
+    <td class="attr {{$attributeKey}}-title-col" >
         {{$attribute->getDisplayName()}}
     </td>
     <?php
         $filterValuesCount = is_array($attribute->getFilterValues())? count($attribute->getFilterValues()) : 0;
     ?>
-    <td>
+    <td class="attr-val">
         <table class="report-attr-val-table" border="1">
-            <tr class="report-attr-title {{$attributeKey}}}-title-row">
+            <tr class="report-attr-title {{$attributeKey}}-title-row">
                 <?php $attributeCounter = 0; ?>
                 @foreach ($attribute->getFilterValues() as $id => $val)
                     <?php $attributeCounter++; ?>
@@ -24,11 +24,11 @@
                 @endforeach
             </tr>
 
-            <tr class="report-attr-val {{$attributeKey}}}-val-row">
+            <tr class="report-attr-val {{$attributeKey}}-val-row">
                 <?php $attributeCounter = 0; ?>
                 @foreach ($attribute->getFilterValues() as $id => $val)
                     <?php $attributeCounter++; ?>
-                    <td class="{{$attributeKey}}-val-col-{{$id}}
+                    <td class="{{$attributeKey}}-val-col-{{$id}} {{$attributeKey}}-val-col
                         @if(($filterValuesCount > $columnLimit) && ($attributeCounter > $columnLimit ))
                             hide extra-attr
                          @endif ">

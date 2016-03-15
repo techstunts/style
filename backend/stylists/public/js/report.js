@@ -40,6 +40,7 @@ var Report = {
                         }
                     }
                 }
+                Report.updateFilterCounts(attribute);
             }
         }
     },
@@ -50,6 +51,7 @@ var Report = {
 
     clearReport: function(){
         $(".alan-report .report-attr-val-table .report-attr-val td").html("&nbsp;");
+        $(".alan-report .attr .attr-count").remove();
     },
 
     showAllAttribute: function () {
@@ -57,7 +59,21 @@ var Report = {
             $(this).hide();
             $(this).parent().parent().parent().find("td.extra-attr").removeClass("hide");
         });
+    },
+
+    updateFilterCounts: function(attribute){
+        var totalCount = 0;
+
+        $("."+attribute+"-val-col").each(function(index){
+            console.log(attribute +" : " + $(this).text());
+            var count = parseInt($(this).text());
+            if(!isNaN(count)){
+                totalCount +=  count;
+            }
+        });
+        $("."+attribute+"-title-col").html( $("."+attribute+"-title-col").text() + "<div class='attr-count'>("+totalCount+")</div>");
     }
+
 }
 
 $(function(){
