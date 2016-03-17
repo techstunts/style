@@ -320,6 +320,11 @@ class LookController extends Controller
         return redirect('look/view/' . $this->resource_id);
     }
 
+    public function getCollage(Request $request)
+    {
+        return view('look/collage');
+    }
+
     /**
      * Remove the specified resource from storage.
      *
