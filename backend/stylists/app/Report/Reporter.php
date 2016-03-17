@@ -6,20 +6,22 @@
  * Time: 8:50 PM
  */
 namespace App\Report;
+use App\Report\Builders\FilterValue;
 use App\Report\Parser\Parser;
 use App\Report\Exceptions\ReportEntityException;
-use App\Report\Builders\Filter;
 use App\Report\Entities\ReportEntity;
-use App\Report\Repository\ReportRepository;
+use App\Report\Repository\Contrats\ReportRepositoryContract;
 class Reporter {
 
     private $reportEntities;
     private $filter;
     private $parser;
+    private $reportRepository;
 
-    public function __construct(Parser $parser, Filter $filter ){
+    public function __construct(Parser $parser, FilterValue $filter, ReportRepositoryContract $reportRepository ){
         $this->parser = $parser;
         $this->filter = $filter;
+        $this->reportRepository = $reportRepository;
         $this->reportEntities = $parser->getReportEntities();
     }
 
@@ -28,11 +30,10 @@ class Reporter {
         $this->updateFilterValues($reportEntity);
         return $reportEntity;
     }
-	//@todo refactor 
+
     public function collectReport($reportId, $inputParams){
         $reportEntity = $this->getReportEntity($reportId);
-        $repo = new ReportRepository();
-        return $repo->getReportData($reportEntity, $inputParams);
+        return $this->reportRepository->getReportData($reportEntity, $inputParams);
     }
 
     private function getReportEntity($reportId){

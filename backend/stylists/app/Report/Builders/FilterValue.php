@@ -17,7 +17,7 @@ use App\Report\Exceptions\AttributeException;
 use App\Report\Repository\Contrats\ReportRepositoryContract;
 use App\Report\Entities\Attributes\Contracts\ReferenceAttributeContract;
 
-class Filter {
+class FilterValue {
 
     const ID = "id";
     const VAL = "val";
