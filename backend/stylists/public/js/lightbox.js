@@ -204,7 +204,7 @@ $(document).ready(function(){
             jQuery('<input>', {'name': 'primary_color_id', 'value': primary_color_id,'type': 'hidden'})
         );
 
-        jQuery('.ui-selected').each(function(){
+        jQuery('ol.selectable li.ui-selected').each(function(){
             newForm.append(
                 jQuery('<input>', {'name': 'product_id[]', 'value': $(this).attr('product_id'),'type': 'hidden'})
             )
