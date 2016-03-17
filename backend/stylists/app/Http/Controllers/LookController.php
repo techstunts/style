@@ -233,7 +233,7 @@ class LookController extends Controller
             $status = Status::find($look->status_id);
             $view_properties = array('look' => $look, 'products' => $products, 'stylist' => $look->stylist,
                 'status' => $status);
-            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $look->id == Auth::user()->stylish_id;
+            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $look->stylish_id == Auth::user()->stylish_id;
         }
         else{
             return view('404', array('title' => 'Look not found'));
