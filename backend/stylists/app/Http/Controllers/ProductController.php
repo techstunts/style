@@ -387,7 +387,7 @@ class ProductController extends Controller
 
         foreach($bulk_update_fields as $filter){
             if($request->input($filter) != ""){
-                $valdation_clauses[$filter] = 'required|integer|min:0';
+                $valdation_clauses[$filter] = 'required|integer|min:1';
 
                 unset($this->where_conditions['products.' . $filter]);
 
@@ -415,8 +415,6 @@ class ProductController extends Controller
         DB::table('products')
             ->where($this->where_conditions)
             ->whereRaw($this->where_raw)
-            ->orderBy('id', 'desc')
-            ->take($this->records_per_page)
             ->update($update_clauses);
 
         return Redirect::back()

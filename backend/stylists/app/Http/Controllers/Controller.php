@@ -70,6 +70,7 @@ abstract class Controller extends BaseController
         if($request->input('product_id') != ""){
             $ids_arr = [] ;
             foreach($request->input('product_id') as $product){
+                if($product)
                 $ids_arr[] = $product;
             }
             $where_raw[] = "{$this->base_table}.id IN(". implode(", ", $ids_arr) . ")";
