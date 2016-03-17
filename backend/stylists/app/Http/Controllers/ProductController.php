@@ -65,6 +65,12 @@ class ProductController extends Controller
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
 
+        $view_properties['from_date'] = $request->input('from_date');
+        $view_properties['to_date'] = $request->input('to_date');
+
+        $view_properties['min_price'] = $request->input('min_price');
+        $view_properties['max_price'] = $request->input('max_price');
+
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
