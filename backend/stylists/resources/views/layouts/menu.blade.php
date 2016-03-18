@@ -8,6 +8,7 @@
                         <li><a href="{!! url('auth/login') !!}">Login</a></li>
                     @else
                         <li><a href="/stylist/list">Stylists</a></li>
+                        <li><a href="/requests/list">Requests</a></li>
                         <li><a href="/client/list">Clients</a></li>
                         @if(Auth::user()->hasRole('admin'))
                             <li><a href="/merchant/product/list">Merchant Products</a></li>

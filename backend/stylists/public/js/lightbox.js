@@ -173,9 +173,11 @@ function unselectProduct(e){
 }
 
 $(document).ready(function(){
-    $( "#selectable" ).selectable({
-        selected: selectProduct
-    });
+    if($('#selectable').length){
+        $( "#selectable" ).selectable({
+            selected: selectProduct
+        });
+    }
     $('div.remove').bind('click', unselectProduct);
     $.cookie.json = true;
     updateSelectedProductSnapshotView();

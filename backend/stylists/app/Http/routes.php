@@ -34,6 +34,8 @@ Route::group(['middleware' => 'auth'], function(){
     Route::any('stylist/{action}/{id?}', 'StylistController@index');
 
     Route::any('collection/{action}/{id?}/{action_id?}', 'CollectionController@index');
+
+    Route::any('requests/{action}/{id?}/{action_id?}', 'StyleRequestsController@index');
 });
 
 
