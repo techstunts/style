@@ -11,7 +11,7 @@
 .alan-report div.filters .query-form ul.filler-options li{list-style:none;border:1px solid #000;display:inline;margin:5px;padding:5px;font-size:14px;float:left}
 .alan-report div.filters .query-form ul.filler-options li select{font-size:14px;margin:0 5px;width:180px;border:1px solid #000;color:#000}
 .alan-report div.filters .query-form .search-btm,div.report-index .clr{clear:both}
-.alan-report .report-output .hide{display:none}
+.alan-report .hide{display:none}
 .alan-report .report-output .report-title{
     text-align:center;font-size:25px;font-weight:700; margin:50px 10px 10px 10px; line-height: 40px;}
 .alan-report .report-output .report-main-table {
@@ -36,3 +36,21 @@
 }
 .alan-report .report-output .report-main-table .report-attr-val-table tr{border-bottom:none}
 .alan-report .report-output .report-main-table .report-attr-val-table tr td{ padding:0 7px;border-bottom:.5px solid #000;line-height:25px; text-align: center;}
+.alan-report .loader{
+    width: 22px;
+    height: 20px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    background-image: url(/images/report-loader.gif);
+    float: left;
+}
+
+.alan-report .report-btm {
+    background-color: #D32F2F;
+    border: 1px #F5F5DC;
+    color: #FFF;
+    font-weight: bold;
+    padding: 3px 4px 3px 4px;
+    margin: 1px 2px 0px 0px;
+    float: left;
+}

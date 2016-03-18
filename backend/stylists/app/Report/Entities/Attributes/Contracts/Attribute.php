@@ -18,7 +18,7 @@ abstract class Attribute {
     private $type;
     private $filterType;
     private $filterValues;
-
+    
     /**
      * Attribute constructor.
      * @param $type

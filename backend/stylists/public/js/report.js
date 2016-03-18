@@ -2,6 +2,7 @@ var Report = {
     init: function(){
         Report.submitReportForm();
         Report.showAllAttribute();
+        Report.initDateRange();
     },
 
     submitReportForm: function () {
@@ -9,19 +10,23 @@ var Report = {
             event.preventDefault();
             Report.clearReport();
 
+            if(!Report.isValidDateRange()) return false;
+
+            Report.toggleLoader(true);
             var $form = $(this),
                 url   = $form.attr('action'),
                 data  = $form.serialize();
-
             $.ajax({
                     'type':'GET',
                     'url': url,
                     'data': data,
                     'dataType': 'json',
                     'success': function(data){
+                        Report.toggleLoader(false);
                         Report.renderReport(data);
                     },
                     'error': function(data){
+                        Report.toggleLoader(false);
                         alert("Something went wrong!!");
                     }
                 });
@@ -64,16 +69,56 @@ var Report = {
     updateFilterCounts: function(attribute){
         var totalCount = 0;
 
-        $("."+attribute+"-val-col").each(function(index){
-            console.log(attribute +" : " + $(this).text());
+        $(".alan-report ."+attribute+"-val-col").each(function(index){
             var count = parseInt($(this).text());
             if(!isNaN(count)){
                 totalCount +=  count;
             }
         });
-        $("."+attribute+"-title-col").html( $("."+attribute+"-title-col").text() + "<div class='attr-count'>("+totalCount+")</div>");
-    }
+        $(".alan-report  ."+attribute+"-title-col").html( $(".alan-report  ."+attribute+"-title-col").text() + "<div class='attr-count'>("+totalCount+")</div>");
+    },
 
+    initDateRange: function(){
+        if($(".alan-report .report-date-range").length) {
+            $('.alan-report .report-date-range').pickadate({
+                format: 'dd mmm yyyy'
+            });
+        }
+    },
+
+    isValidDateRange: function() {
+        /** No date range found **/
+        if($(".alan-report .report-date-range").length == 0) return true;
+
+        var isValidDates = true;
+        $(".alan-report .report-date-range").each(function(index){
+            if($.trim($(this).val()) == "") {
+                alert("Please select data for " +  $(this).data("attributename") + ".");
+                isValidDates = false;
+                return false;
+            }
+            var toDate, fromDate;
+            toDate = new Date($("#" + $(this).data("attributekey")+"_to_date").val());
+            fromDate = new Date($("#" + $(this).data("attributekey")+"_from_date").val());
+            if(toDate < fromDate){
+                alert("\"To Date\" should not be less than \"From Date\" for " + $(this).data("attributename") + ".");
+                isValidDates = false;
+                return false;
+            }
+        });
+
+        return isValidDates;
+    },
+
+    toggleLoader: function(showLoader){
+        if(showLoader) {
+            $(".alan-report .report-btm").val("Loading..");
+            $(".alan-report .loader").removeClass("hide");
+        } else {
+            $(".alan-report .report-btm").val("Report");
+            $(".alan-report .loader").addClass("hide");
+        }
+    }
 }
 
 $(function(){

@@ -19,13 +19,14 @@ use App\Report\Entities\Enums\FilterType as FilterType;
                                 @elseif ($attribute->getFilterType() === FilterType::MULTI_SELECT)
                                     @include('report.filters.multi-select', ['attribute' => $attribute, 'attributeKey' =>$attributeKey])
                                 @elseif ($attribute->getFilterType() === FilterType::DATE_RANGE)
-                                    @include('report.filters.single-select', ['attribute' => $attribute, 'attributeKey' =>$attributeKey])
+                                    @include('report.filters.date', ['attribute' => $attribute, 'attributeKey' =>$attributeKey])
                                 @endif
                             </li>
                         @endforeach
                         <div class="clr"></div>
                         <div>
-                            <input type="submit" value="Report" class="search-btm"/>
+                            <input type="submit" value="Report" class="report-btm"/>
+                            <span class="loader hide"></span>
                         </div>
 
                     </ul>
@@ -38,5 +39,10 @@ use App\Report\Entities\Enums\FilterType as FilterType;
             </div>
         </div>
     </div>
+
+    <link href="{!! asset('/css/classic.css') !!}" rel="stylesheet">
+    <link href="{!! asset('/css/classic.date.css') !!}" rel="stylesheet">
+    <script src="{!! asset('/js/picker.js') !!}"></script>
+    <script src="{!! asset('/js/picker.date.js') !!}"></script>
     <script src="{!! asset('js/report.js') !!}"></script>
 @endsection
