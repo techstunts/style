@@ -26,7 +26,7 @@
                         <div class="image"><img src="{{$client->userimage}}" /></div>
                         <div class="extra text">
                             <span>{{$client->gender}}</span>
-                            <span>{{$client->stylist->name}}</span>
+                            <span>{{$client->stylist ? $client->stylist->name : ""}}</span>
                             <span>{{$client->age}}</span>
                             <span>{{$client->bodytype}}</span>
                             <span>{{$client->bodyshape}}</span>

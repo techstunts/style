@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\CombineImages;
 use App\Look;
 use App\LookProduct;
 use App\Models\Enums\Status as LookupStatus;
@@ -12,7 +11,6 @@ use App\Models\Lookups\Status;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Validator;
@@ -54,7 +52,6 @@ class LookController extends Controller
             $this->status_rules[$status['id']] = $status;
         }
 
-        //var_export($this->status_rules);die;
 
     }
 
@@ -77,6 +74,12 @@ class LookController extends Controller
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
         $view_properties['search'] = $request->input('search');
+        $view_properties['exact_word'] = $request->input('exact_word');
+        $view_properties['from_date'] = $request->input('from_date');
+        $view_properties['to_date'] = $request->input('to_date');
+
+        $view_properties['min_price'] = $request->input('min_price');
+        $view_properties['max_price'] = $request->input('max_price');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -194,9 +197,11 @@ class LookController extends Controller
 
         $look->price = $look_price;
 
-        $lookImage = new CombineImages();
-        if($lookImage->createLook($src_image_paths, $look->name)){
-            $look->image = $lookImage->targetImage;
+        $look_template_ns = "App\\Models\\LookTemplates\\";
+        $look_template_class = $look_template_ns . "EqualAreas";
+        $lookTemplate = new $look_template_class;
+        if($lookTemplate->createLook($src_image_paths, $look->name)){
+            $look->image = $lookTemplate->targetImage;
             if($look->save()){
                 foreach($look_products as &$lp){
                     $lp['look_id'] = $look->id;
@@ -226,9 +231,9 @@ class LookController extends Controller
         if($look){
             $products = $look->products;
             $status = Status::find($look->status_id);
-            //var_dump($look, $look->stylist, $product_ids, $products);
             $view_properties = array('look' => $look, 'products' => $products, 'stylist' => $look->stylist,
                 'status' => $status);
+            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $look->id == Auth::user()->stylish_id;
         }
         else{
             return view('404', array('title' => 'Look not found'));
@@ -251,17 +256,17 @@ class LookController extends Controller
             $lookup = new Lookup();
 
             $view_properties['look'] = $look;
-            $view_properties['gender_id'] = $look->gender_id;
+            $view_properties['gender_id'] = intval($look->gender_id);
             $view_properties['genders'] = $lookup->type('gender')->get();
-            $view_properties['status_id'] = $look->status_id;
+            $view_properties['status_id'] = intval($look->status_id);
             $view_properties['statuses'] = $lookup->type('status')->get();
-            $view_properties['occasion_id'] = $look->occasion_id;
+            $view_properties['occasion_id'] = intval($look->occasion_id);
             $view_properties['occasions'] = $lookup->type('occasion')->get();
-            $view_properties['age_group_id'] = $look->age_group_id;
+            $view_properties['age_group_id'] = intval($look->age_group_id);
             $view_properties['age_groups'] = $lookup->type('age_group')->get();
-            $view_properties['budget_id'] = $look->budget_id;
+            $view_properties['budget_id'] = intval($look->budget_id);
             $view_properties['budgets'] = $lookup->type('budget')->get();
-            $view_properties['body_type_id'] = $look->body_type_id;
+            $view_properties['body_type_id'] = intval($look->body_type_id);
             $view_properties['body_types'] = $lookup->type('body_type')->get();
         }
         else{
