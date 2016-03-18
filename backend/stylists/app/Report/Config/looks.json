@@ -1,5 +1,4 @@
-{
-  "looks": {
+ {
     "display_name": "Looks Report",
     "table_name": "looks",
     "relationships": {
@@ -85,4 +84,3 @@
 
     }
   }
-}

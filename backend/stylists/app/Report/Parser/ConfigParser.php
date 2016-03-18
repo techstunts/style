@@ -15,31 +15,24 @@ use App\Report\Entities\ReportEntity;
 use App\Report\Entities\Attributes\ReferenceAttribute;
 use App\Report\Entities\Attributes\Contracts\Attribute;
 use App\Report\Entities\Enums\AttributeType;
+use App\Report\Exceptions\ReportEntityException;
+use Mockery\CountValidator\Exception;
 
 class ConfigParser {
 
     const CONFIG_DIR = "config";
-    const CONFIG_FILE = "report.json";
     const PARENT_DIR = "..";
+    const FILE_EXTENSION =".json";
 
-    private static $reportConfig;
-
-    private static function getReportConfig(){
-        if(is_null(self::$reportConfig)){
-            self::$reportConfig = json_decode(file_get_contents(__DIR__.DIRECTORY_SEPARATOR.self::PARENT_DIR.DIRECTORY_SEPARATOR.self::CONFIG_DIR.DIRECTORY_SEPARATOR.self::CONFIG_FILE), true);
-        }
-        return self::$reportConfig;
+    public function getReportEntity($reportId){
+        return $this->parseReportConfig($this->getReportConfig($reportId));
     }
 
-    public function parseReportConfig(){
-        $reportEntities = array();
-        foreach(self::getReportConfig() as $reportKey => $reportConfig){
-            $reportEntities[$reportKey] = new ReportEntity( $reportConfig[ReportEntity::DISPLAY_NAME], $reportConfig[ReportEntity::TABLE_NAME],
-                                                            $this->parseAttributeConfig($reportConfig[ReportEntity::ATTRIBUTES]),
-                                                            $this->parseRelationshipConfig($reportConfig[ReportEntity::RELATIONSHIPS]),
-                                                            $this->parseConditionsConfig($reportConfig[ReportEntity::CONDITIONS]) );
-        }
-        return $reportEntities;
+    private function parseReportConfig(array $reportConfig){
+        return new ReportEntity($reportConfig[ReportEntity::DISPLAY_NAME], $reportConfig[ReportEntity::TABLE_NAME],
+                                    $this->parseAttributeConfig($reportConfig[ReportEntity::ATTRIBUTES]),
+                                    $this->parseRelationshipConfig($reportConfig[ReportEntity::RELATIONSHIPS]),
+                                    $this->parseConditionsConfig($reportConfig[ReportEntity::CONDITIONS]) );
     }
 
     private function parseRelationshipConfig(array $relationships){
@@ -87,5 +80,19 @@ class ConfigParser {
                                         $attributeConfig[ReferenceAttribute::COLUMN_ID], $attributeConfig[ReferenceAttribute::COLUMN_NAME], $attributeConfig[ReferenceAttribute::TABLE_NAME], $attributeConfig[ReferenceAttribute::PARENT_TABLE_COLUMN_ID]);
     }
 
+    private function getReportConfig($reportId){
+        $configFile = $this->getConfigFile($reportId);
+        if(!$this->isConfigExist($configFile)) throw new ReportEntityException($reportId ." Report Entity not exist. ");
+        return json_decode(file_get_contents($configFile), true);
+
+    }
+
+    private function isConfigExist($configFile){
+        return file_exists($configFile);
+    }
+
+    private function getConfigFile($reportId){
+        return implode(DIRECTORY_SEPARATOR, array(__DIR__ , self::PARENT_DIR, self::CONFIG_DIR, $reportId)).self::FILE_EXTENSION;
+    }
 
 }

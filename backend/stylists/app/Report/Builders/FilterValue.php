@@ -19,19 +19,16 @@ use App\Report\Entities\Attributes\Contracts\ReferenceAttributeContract;
 
 class FilterValue {
 
-    const ID = "id";
-    const VAL = "val";
-
     private $reportRepository;
 
     /**
-     * Filter constructor.
+     * Filter Value constructor.
      */
     public function __construct(ReportRepositoryContract $reportRepository) {
         $this->reportRepository = $reportRepository;
     }
 
-    public function build(ReportEntity $reportEntity){
+    public function update(ReportEntity $reportEntity){
         foreach($reportEntity->getAttributes() as $attribute){
             if(FilterType::isFilterWithMultiValue($attribute->getFilterType())) $this->setFilterValues($attribute);
         }
