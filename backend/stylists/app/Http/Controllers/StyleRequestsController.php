@@ -33,19 +33,6 @@ class StyleRequestsController extends Controller
         return $this->$method($request);
     }
 
-    protected function initStatusRules(){
-        $rules_file = app_path() . '/Models/Rules/look.xml';
-        $data = implode("", file($rules_file));
-
-        $xml = simplexml_load_string($data);
-        $json = json_encode($xml);
-        $status_rules = json_decode($json,TRUE);
-
-        foreach($status_rules['statuses']['status'] as $status){
-            $this->status_rules[$status['id']] = $status;
-        }
-    }
-
     public function getList(Request $request){
         $this->base_table = 'style_requests';
         $this->initWhereConditions($request);
