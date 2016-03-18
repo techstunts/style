@@ -26,60 +26,77 @@
         "filter_type": "multi_select",
         "show_in_report": true,
         "display_name": "Budget",
-        "column_id": "id",
-        "column_name": "name",
+        "id_column": "id",
+        "name_column": "name",
         "table_name": "lu_budget",
-        "parent_table_column_id": "budget_id"
+        "parent_table_id_column": "budget_id"
       },
       "occasion": {
         "type": "ref",
         "filter_type": "multi_select",
         "show_in_report": true,
         "display_name": "Occasion",
-        "column_id": "id",
-        "column_name": "name",
+        "id_column": "id",
+        "name_column": "name",
         "table_name": "lu_occasion",
-        "parent_table_column_id": "occasion_id"
+        "parent_table_id_column": "occasion_id"
       },
       "body_type": {
         "type": "ref",
-        "filter_type": "single_select",
+        "filter_type": "multi_select",
         "show_in_report": true,
         "display_name": "Body Type",
-        "column_id": "id",
-        "column_name": "name",
+        "id_column": "id",
+        "name_column": "name",
         "table_name": "lu_body_type",
-        "parent_table_column_id": "body_type_id"
+        "parent_table_id_column": "body_type_id"
+      },
+      "gender": {
+        "type": "ref",
+        "filter_type": "multi_select",
+        "show_in_report": true,
+        "display_name": "Gender",
+        "id_column": "id",
+        "name_column": "name",
+        "table_name": "lu_gender",
+        "parent_table_id_column": "gender_id"
       },
       "stylist": {
         "type": "ref",
         "filter_type": "multi_select",
         "show_in_report": true,
         "display_name": "Stylist",
-        "column_id": "stylish_id",
-        "column_name": "name",
+        "id_column": "stylish_id",
+        "name_column": "name",
         "table_name": "stylists",
-        "parent_table_column_id": "stylish_id"
+        "parent_table_id_column": "stylish_id"
       },
       "age_group": {
         "type": "ref",
         "filter_type": "multi_select",
         "show_in_report": true,
         "display_name": "Age Group",
-        "column_id": "id",
-        "column_name": "name",
+        "id_column": "id",
+        "name_column": "name",
         "table_name": "lu_age_group",
-        "parent_table_column_id": "age_group_id"
+        "parent_table_id_column": "age_group_id"
       },
       "status": {
         "type": "ref",
         "filter_type": "multi_select",
         "show_in_report": true,
         "display_name": "Status",
-        "column_id": "id",
-        "column_name": "name",
+        "id_column": "id",
+        "name_column": "name",
         "table_name": "lu_status",
-        "parent_table_column_id": "status_id"
+        "parent_table_id_column": "status_id"
+      },
+      "created_at": {
+        "type": "non_ref",
+        "filter_type": "date_range",
+        "show_in_report": false,
+        "display_name": "Date Range",
+        "id_column": "created_at"
       }
 
     }

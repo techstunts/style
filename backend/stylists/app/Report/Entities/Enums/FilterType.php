@@ -50,4 +50,8 @@ class FilterType {
         return in_array($filterType, self::$multiValuesFilter);
     }
 
+    public static function getMultiValueFilters(){
+        return self::$multiValuesFilter;
+    }
+
 }

@@ -19,7 +19,7 @@ use App\Report\Entities\Enums\FilterType as FilterType;
                                 @elseif ($attribute->getFilterType() === FilterType::MULTI_SELECT)
                                     @include('report.filters.multi-select', ['attribute' => $attribute, 'attributeKey' =>$attributeKey])
                                 @elseif ($attribute->getFilterType() === FilterType::DATE_RANGE)
-                                    @include('report.filters.date', ['attribute' => $attribute, 'attributeKey' =>$attributeKey])
+                                    @include('report.filters.date-range', ['attribute' => $attribute, 'attributeKey' =>$attributeKey])
                                 @endif
                             </li>
                         @endforeach

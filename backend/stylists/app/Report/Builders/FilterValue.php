@@ -9,13 +9,15 @@
 
 namespace App\Report\Builders;
 
+use App\Report\Entities\Attributes\NonReferenceAttribute;
+use App\Report\Entities\Attributes\ReferenceAttribute;
 use App\Report\Entities\Enums\AttributeType;
 use App\Report\Entities\ReportEntity;
 use App\Report\Entities\Attributes\Contracts\Attribute;
 use App\Report\Entities\Enums\FilterType;
 use App\Report\Exceptions\AttributeException;
 use App\Report\Repository\Contrats\ReportRepositoryContract;
-use App\Report\Entities\Attributes\Contracts\ReferenceAttributeContract;
+
 
 class FilterValue {
 
@@ -37,24 +39,33 @@ class FilterValue {
     private function setFilterValues($attribute){
         switch($attribute->getType()){
             case AttributeType::REF: return $this->setReferenceFilterValues($attribute);
-            case AttributeType::SELF: return $this->setSelfFilterValues($attribute);
+            case AttributeType::NON_REF: return $this->setSelfFilterValues($attribute);
             default: throw new AttributeException("Invalid attribute for setting filter value");
         }
     }
 
-    private function setReferenceFilterValues(ReferenceAttributeContract $attribute){
-        $filterValues = $this->reportRepository->getFilterValues($attribute->getTableName(), $attribute->getColumnId(), $attribute->getColumnName());
+    private function setReferenceFilterValues(ReferenceAttribute $attribute){
+        $filterValues = $this->reportRepository->getFilterValues($attribute->getTableName(), $attribute->getIdColumn(), $attribute->getNameColumn());
         //@todo, do we really need this one, why not we directly assign filterValue to attribute
         $sortedFilterValues = array();
         if(!empty($filterValues)) {
             foreach ($filterValues as $value) {
-                $sortedFilterValues [$value->{$attribute->getColumnId()}] = $value->{$attribute->getColumnName()};
+                $sortedFilterValues [$value->{$attribute->getIdColumn()}] = $value->{$attribute->getNameColumn()};
             }
         }
         $attribute->setFilterValues($sortedFilterValues);
     }
 
-    private function setSelfFilterValues(Attribute $attribute){
-
+    //@todo can we combine these both functions
+    private function setSelfFilterValues(NonReferenceAttribute $attribute){
+        $filterValues = $this->reportRepository->getFilterValues($attribute->getTableName(), $attribute->getIdColumn(), $attribute->getNameColumn());
+        //@todo, do we really need this one, why not we directly assign filterValue to attribute
+        $sortedFilterValues = array();
+        if(!empty($filterValues)) {
+            foreach ($filterValues as $value) {
+                $sortedFilterValues [$value->{$attribute->getIdColumn()}] = $value->{$attribute->getNameColumn()};
+            }
+        }
+        $attribute->setFilterValues($sortedFilterValues);
     }
 }

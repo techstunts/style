@@ -36,12 +36,13 @@ class ReportRepository implements ReportRepositoryContract{
 
     private function getGroupData(ReportEntity $reportEntity, $table){
         $groupValues = array();
+        //@todo add check to attribute type on show in repot
         foreach($reportEntity->getAttributes() as $attributeKey => $attribute){
             //@todo, move this attribute to Attribute
             if(!$attribute->getShowInReport()) continue;
             $tmpTable = clone $table;
-            $groupByColumn =  $attribute->getParentTableColumnId();
-            $groupValues[$attributeKey] = $tmpTable->select(DB::raw("count(*) as total_count, $groupByColumn as attribute_id"))->groupBy($attribute->getParentTableColumnId())->get();
+            $groupByColumn =  $attribute->getParentTableIdColumn();
+            $groupValues[$attributeKey] = $tmpTable->select(DB::raw("count(*) as total_count, $groupByColumn as attribute_id"))->groupBy($groupByColumn)->get();
             unset($tmpTable);
         }
 

@@ -88,20 +88,33 @@ var Report = {
 
     isValidDateRange: function() {
         /** No date range found **/
-        if($(".alan-report .report-date-range").length == 0) return true;
+        if($(".alan-report .report-date-range-js").length == 0) return true;
 
         var isValidDates = true;
-        $(".alan-report .report-date-range").each(function(index){
-            if($.trim($(this).val()) == "") {
-                alert("Please select data for " +  $(this).data("attributename") + ".");
-                isValidDates = false;
-                return false;
-            }
-            var toDate, fromDate;
-            toDate = new Date($("#" + $(this).data("attributekey")+"_to_date").val());
-            fromDate = new Date($("#" + $(this).data("attributekey")+"_from_date").val());
-            if(toDate < fromDate){
-                alert("\"To Date\" should not be less than \"From Date\" for " + $(this).data("attributename") + ".");
+        $(".alan-report .report-date-range-js").each(function(index){
+            var attributeKey = $(this).data("attributekey"),
+                attributeName = $(this).data("attributename");
+
+            var toDateSelector = $("#" + attributeKey +"_to_date"),
+                fromDateSelector = $("#" +attributeKey +"_from_date");
+
+            /** If both dates (to and from) not empty, then check for date range. **/
+            if($.trim(toDateSelector.val()) != "" && $.trim(fromDateSelector.val()) !=""){
+                var toDate, fromDate;
+                toDate = new Date(toDateSelector.val());
+                fromDate = new Date(fromDateSelector.val());
+                if(toDate < fromDate){
+                    alert("\"To Date\" should not be less than \"From Date\" for " + attributeName + ".");
+                    isValidDates = false;
+                    return false;
+                }
+
+            /** if both dates are empty then don't need any validation **/
+            } else if($.trim(toDateSelector.val()) == "" && $.trim(fromDateSelector.val()) =="") {
+
+            /** If one of date is non empty and other one is empty **/
+            } else {
+                alert("Please select data for " + attributeName + ".");
                 isValidDates = false;
                 return false;
             }

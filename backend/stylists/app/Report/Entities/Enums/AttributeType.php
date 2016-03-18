@@ -19,9 +19,9 @@ class AttributeType {
 
     /**
      * If attribute presents in same table,
-     * we use Self type.
+     * we use NON_REF type.
      */
-    const SELF = "self";
+    const NON_REF = "non_ref";
 
     private static $constants = array();
 
