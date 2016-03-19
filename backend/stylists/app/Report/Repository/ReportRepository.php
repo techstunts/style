@@ -14,15 +14,17 @@ use App\Report\Utils\ReportUtils;
 use DB;
 use App\Report\Builders\QueryBuilder;
 
-class ReportRepository implements ReportRepositoryContract{
+class ReportRepository implements ReportRepositoryContract {
 
     private $queryBuilder;
+    private $enableQueryLogger;
 
     /**
      * ReportRepository constructor.
      * @param $queryBuilder
      */
     public function __construct(QueryBuilder $queryBuilder) {
+        $this->enableQueryLogger = false;
         $this->queryBuilder = $queryBuilder;
     }
 
@@ -37,50 +39,43 @@ class ReportRepository implements ReportRepositoryContract{
         return $this->getGroupData($reportEntity, $table, $userInput);
     }
 
-    private function getGroupData(ReportEntity $reportEntity, $table, $userInput){
+    private function getGroupData(ReportEntity $reportEntity, $table, $userInput) {
         $groupValues = array();
         //@todo add check to attribute type on show in repot
-        foreach($reportEntity->getAttributes() as $attributeKey => $attribute){
-            if(!$this->isShowAttributeInReport($attributeKey, $attribute, $userInput)) continue;
+        foreach ($reportEntity->getAttributes() as $attributeKey => $attribute) {
+            if (!$this->isShowAttributeInReport($attributeKey, $attribute, $userInput)) continue;
             $tmpTable = clone $table;
-            $groupByColumn =  $attribute->getParentTableIdColumn();
-            $groupValues[$attributeKey] = $tmpTable->select(DB::raw("count(*) as total_count, $groupByColumn as attribute_id"))->groupBy($groupByColumn)->get();
+            $groupByColumn = $attribute->getParentTableIdColumn();
+            $query = $tmpTable->select(DB::raw("count(*) as ".ReportConstant::TOTAL_COUNT.", $groupByColumn as ".ReportConstant::ATTRIBUTE_ID))->groupBy($groupByColumn);
+            $groupValues[ReportConstant::DATA][$attributeKey] = $query->get();
+            $groupValues[ReportConstant::QUERY][$attributeKey] = $this->queryLogger($query->toSql(), $query->getBindings());
+
             unset($tmpTable);
         }
         return $groupValues;
     }
 
-    private function isShowAttributeInReport($attributeKey, $attribute, $userInput){
+    private function isShowAttributeInReport($attributeKey, $attribute, $userInput) {
         $showOnlyAttribute = ReportUtils::getValueFromArray($userInput, ReportConstant::SHOW_ONLY_ATTRIBUTES);
-        if(!$attribute->getShowInReport()) return false;
-        if(!empty($showOnlyAttribute) && $attributeKey != $showOnlyAttribute) return false;
+        if (!$attribute->getShowInReport()) return false;
+        if (!empty($showOnlyAttribute) && $attributeKey != $showOnlyAttribute) return false;
         return true;
     }
 
-    /**
-     *
-     * Call when you want to debug db queries
-     *
-     */
-    private function __debugQuery(){
-
-        DB::listen(function($query, $bindings, $time) {
+    private function queryLogger($query, $bindings) {
+        if(!$this->enableQueryLogger) return null;
+        if (!empty($bindings) && is_array($bindings)){
             foreach ($bindings as $i => $binding) {
                 if ($binding instanceof \DateTime) {
                     $bindings[$i] = $binding->format('\'Y-m-d H:i:s\'');
                 } else if (is_string($binding)) {
-                    $bindings[$i] = "'$binding'";//`enter code here`
+                    $bindings[$i] = "'$binding'";
                 }
             }
-
-            // Insert bindings into query
             $query = str_replace(array('%', '?'), array('%%', '%s'), $query);
             $query = vsprintf($query, $bindings);
-
-            // Debug SQL queries
-            echo '<br /><br/>SQL: [' . $query . ']';
-
-        });
-
+        }
+        return $query;
     }
 }
+

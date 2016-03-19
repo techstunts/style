@@ -17,15 +17,16 @@ var Report = {
             Report.toggleLoader(true);
             var $form = $(this),
                 url   = $form.attr('action'),
-                data  = $form.serialize();
+                formData  = $form.serialize();
             $.ajax({
                     'type':'GET',
                     'url': url,
-                    'data': data,
+                    'data': formData,
                     'dataType': 'json',
                     'success': function(data){
                         Report.toggleLoader(false);
-                        Report.renderReport(data);
+                        Report.renderReport(data.data);
+                        Report.queryLogger(data.query);
                     },
                     'error': function(data){
                         Report.toggleLoader(false);
@@ -50,6 +51,17 @@ var Report = {
                 Report.updateFilterCounts(attribute);
             }
         }
+    },
+
+    queryLogger: function(query){
+        if(query && (typeof query === 'object')) {
+            for (attribute in query) {
+                if(query[attribute]) {
+                    console.log(attribute + " :: " + query[attribute]);
+                }
+            }
+        }
+
     },
 
     updateAttributeValue: function(attribute, totalCount, attributeId) {

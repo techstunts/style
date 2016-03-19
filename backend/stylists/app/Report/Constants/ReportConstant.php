@@ -36,6 +36,13 @@ class ReportConstant {
     const SHOW_ONLY_ATTRIBUTES = "show-only-attributes";
     const FROM_DATE = "from_date";
     const TO_DATE = "to_date";
+    const QUERY = "query";
+    const DATA = "data";
+    const TOTAL_COUNT = "total_count";
+    const ATTRIBUTE_ID = "attribute_id";
+
+
+
 
 
 }
