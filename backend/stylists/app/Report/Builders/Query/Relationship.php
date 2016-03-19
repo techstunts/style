@@ -11,6 +11,7 @@ namespace App\Report\Builders\Query;
 use App\Report\Entities\ReportEntity;
 use App\Report\Entities\Enums\JoinType;
 use App\Report\Entities\Relationships\Relationship as RelationshipEntity;
+
 class Relationship {
 
     public function build(ReportEntity $reportEntity, $table){
@@ -27,8 +28,6 @@ class Relationship {
                             $relationship->getJoinClause()->getLeft(),
                             $relationship->getJoinClause()->getOperator(),
                             $relationship->getJoinClause()->getRight());
-
-
     }
 
 }

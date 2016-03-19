@@ -104,6 +104,7 @@ class ConfigParser {
     private function getReportConfig($reportId){
         $configFile = $this->getConfigFile($reportId);
         if(!$this->isConfigExist($configFile)) throw new ReportEntityException($reportId ." Report Entity not exist. ");
+        //@todo, check json failure exception
         return json_decode(file_get_contents($configFile), true);
 
     }

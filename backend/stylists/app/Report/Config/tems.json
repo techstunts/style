@@ -36,10 +36,14 @@
     }
   },
   "conditions": {
-    "status_id": {
-      "column": "entity_type_id",
+    "entity_type_id": {
+      "column": "recommendations.entity_type_id",
       "value": "2",
       "operator": "="
+    },
+    "entity_type_id2": {
+      "where_type" : "where_null",
+      "column": "recommendations.id"
     }
   },
   "attributes": {
@@ -75,7 +79,7 @@
     },
     "gender": {
       "type": "ref",
-      "filter_type": "multi_select",
+      "filter_type": "single_select",
       "show_in_report": true,
       "display_name": "Gender",
       "id_column": "id",

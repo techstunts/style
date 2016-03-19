@@ -6,7 +6,7 @@
  * Time: 8:50 PM
  */
 namespace App\Report;
-use App\Report\Builders\FilterValue;
+use App\Report\Builders\FilterValueUpdater;
 use App\Report\Parser\ConfigParser;
 use App\Report\Parser\Parser;
 use App\Report\Entities\ReportEntity;
@@ -16,7 +16,7 @@ class Reporter {
     private $filterValue;
     private $configParser;
 
-    public function __construct(ConfigParser $configParser, FilterValue $filterValue, ReportRepositoryContract $reportRepository ){
+    public function __construct(ConfigParser $configParser, FilterValueUpdater $filterValue, ReportRepositoryContract $reportRepository ){
         $this->configParser = $configParser;
         $this->filterValue = $filterValue;
         $this->reportRepository = $reportRepository;

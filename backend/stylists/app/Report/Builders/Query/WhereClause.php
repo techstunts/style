@@ -62,11 +62,11 @@ class WhereClause {
     }
 
     private function buildWhereNotNull($table, Condition $condition){
-        $table->whereNotNull($condition->getColumn(), $condition->getValue());
+        $table->whereNotNull($condition->getColumn());
     }
 
     private function buildWhereNull($table, Condition $condition){
-        $table->whereNull($condition->getColumn(), $condition->getValue());
+        $table->whereNull($condition->getColumn());
     }
 
 }

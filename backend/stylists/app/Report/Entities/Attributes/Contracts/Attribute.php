@@ -39,8 +39,12 @@ abstract class Attribute {
         if(!FilterType::isValidValue($filterType)) throw new AttributeException("Attribute \"".ReportConstant::FILTER_TYPE."\" is not valid, value must in [" .ReportUtils::convertArrayToString(FilterType::getAllowedValues()). "]");
         if(empty($displayName) || !is_string($displayName)) throw new AttributeException("Attribute \"".ReportConstant::DISPLAY_NAME."\" must not be empty.");
         if(is_null($showInReport) || !is_bool($showInReport)) throw new AttributeException("Attribute \"".ReportConstant::SHOW_IN_REPORT."\" must not be empty.");
+        if($this->filterType === FilterType::DATE_RANGE && $showInReport) throw new AttributeException("Attribute \"".ReportConstant::SHOW_IN_REPORT."\" must be false for filter type \"". FilterType::DATE_RANGE."\".");
         return true;
     }
+
+
+    public abstract function getGroupByColumn();
 
     /**
      * @return mixed

@@ -109,7 +109,7 @@
       "filter_type": "date_range",
       "show_in_report": false,
       "display_name": "Date Range",
-      "id_column": "related_report_links.created_at"
+      "id_column": "recommendations.created_at"
     }
 
   }

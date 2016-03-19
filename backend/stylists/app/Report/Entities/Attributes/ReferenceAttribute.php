@@ -57,6 +57,11 @@ class ReferenceAttribute extends Attribute {
         return true;
     }
 
+    public function getGroupByColumn() {
+        return $this->parentTableIdColumn;
+    }
+
+
     /**
      * @return mixed
      */

@@ -30,7 +30,8 @@ class ReportRepository implements ReportRepositoryContract {
     }
 
     public function getFilterValues($table, $columnId, $columName) {
-        return DB::table($table)->select($columnId, $columName)->get();
+        if(empty($columName)) return DB::table($table)->select($columnId)->distinct()->get();
+        else return DB::table($table)->select($columnId, $columName)->get();
     }
 
     public function getReportData(ReportEntity $reportEntity, $userInput) {
@@ -41,11 +42,10 @@ class ReportRepository implements ReportRepositoryContract {
 
     private function getGroupData(ReportEntity $reportEntity, $table, $userInput) {
         $groupValues = array();
-        //@todo add check to attribute type on show in repot
         foreach ($reportEntity->getAttributes() as $attributeKey => $attribute) {
             if (!$this->isShowAttributeInReport($attributeKey, $attribute, $userInput)) continue;
             $tmpTable = clone $table;
-            $groupByColumn = $attribute->getParentTableIdColumn();
+            $groupByColumn = $attribute->getGroupByColumn();
             $query = $tmpTable->select(DB::raw("count(*) as ".ReportConstant::TOTAL_COUNT.", $groupByColumn as ".ReportConstant::ATTRIBUTE_ID))->groupBy($groupByColumn);
             $groupValues[ReportConstant::DATA][$attributeKey] = $query->get();
             $groupValues[ReportConstant::QUERY][$attributeKey] = $this->queryLogger($query->toSql(), $query->getBindings());
@@ -76,5 +76,6 @@ class ReportRepository implements ReportRepositoryContract {
         }
         return $query;
     }
+
 }
 
