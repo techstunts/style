@@ -33,12 +33,14 @@ class ConfigParser {
     private function parseReportConfig(array $reportConfig){
         return new ReportEntity(    ReportUtils::getValueFromArray($reportConfig, ReportEntity::DISPLAY_NAME),
                                     ReportUtils::getValueFromArray($reportConfig, ReportEntity::TABLE_NAME),
+                                    ReportUtils::getValueFromArray($reportConfig, ReportEntity::RELATED_REPORT_LINKS),
                                     $this->parseAttributeConfig(ReportUtils::getValueFromArray($reportConfig, ReportEntity::ATTRIBUTES)),
                                     $this->parseRelationshipConfig(ReportUtils::getValueFromArray($reportConfig, ReportEntity::RELATIONSHIPS)),
                                     $this->parseConditionsConfig(ReportUtils::getValueFromArray($reportConfig, ReportEntity::CONDITIONS)));
     }
 
-    private function parseRelationshipConfig(array $relationships){
+    private function parseRelationshipConfig($relationships){
+        if(empty($relationship)) return;
         $relationshipObjects = array();
         foreach($relationships as $relationshipKey => $relationship){
             $relationshipObjects[$relationshipKey] = new Relationship(  ReportUtils::getValueFromArray($relationship, Relationship::JOIN_TYPE),
@@ -48,7 +50,8 @@ class ConfigParser {
         return $relationshipObjects;
     }
 
-    private function parseConditionsConfig(array $conditions){
+    private function parseConditionsConfig($conditions){
+        if(empty($conditions)) return;
         $conditionObjects = array();
         foreach($conditions as $conditionKey => $condition){
             $conditionObjects[$conditionKey] = new Condition(   ReportUtils::getValueFromArray($condition, Condition::WHERE_TYPE),

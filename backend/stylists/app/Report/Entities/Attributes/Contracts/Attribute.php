@@ -9,6 +9,8 @@ namespace App\Report\Entities\Attributes\Contracts;
 
 use App\Report\Entities\Enums\AttributeType;
 use App\Report\Entities\Enums\FilterType;
+use App\Report\Exceptions\AttributeException;
+use App\Report\Utils\ReportUtils;
 
 abstract class Attribute {
 
@@ -39,7 +41,7 @@ abstract class Attribute {
     }
 
     private function validateAttributes($filterType, $displayName, $showInReport) {
-        if(!FilterType::isValidValue($filterType)) throw new AttributeException("Attribute \"".self::DISPLAY_NAME."\" is not valid, value must in [" .implode(",", FilterType::getAllowedValues()) . "]");
+        if(!FilterType::isValidValue($filterType)) throw new AttributeException("Attribute \"".self::FILTER_TYPE."\" is not valid, value must in [" .ReportUtils::convertArrayToString(FilterType::getAllowedValues()). "]");
         if(empty($displayName) || !is_string($displayName)) throw new AttributeException("Attribute \"".self::DISPLAY_NAME."\" must not be empty.");
         if(is_null($showInReport) || !is_bool($showInReport)) throw new AttributeException("Attribute \"".self::SHOW_IN_REPORT."\" must not be empty.");
         return true;

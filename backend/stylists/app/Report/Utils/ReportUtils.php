@@ -11,6 +11,7 @@ namespace App\Report\Utils;
 
 class ReportUtils {
 
+    const SEPARATOR = ", ";
     /**
      * This will prevent "Undefined index error exception"
      * @param array $array
@@ -20,4 +21,23 @@ class ReportUtils {
     public static function getValueFromArray(array $array, $index){
         return isset($array[$index])? $array[$index]:null;
     }
+
+    /**
+     * @param array $array
+     * @return string
+     */
+    public static function convertArrayToString(array $array = array()){
+        return implode(self::SEPARATOR, $array);
+    }
+
+    /**
+     * @param $values
+     * @return bool
+     */
+    public static function isEmpty($values){
+        if(is_string($values) && trim($values) === "") return true;
+        if(is_array($values) && count($values) === 0) return true;
+        return false;
+    }
+
 }

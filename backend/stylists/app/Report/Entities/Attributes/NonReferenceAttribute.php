@@ -12,6 +12,7 @@ use App\Report\Entities\Attributes\Contracts\Attribute;
 use App\Report\Entities\Enums\AttributeType;
 use App\Report\Entities\Enums\FilterType;
 use App\Report\Exceptions\AttributeException;
+use App\Report\Utils\ReportUtils;
 
 class NonReferenceAttribute extends Attribute {
 
@@ -36,7 +37,7 @@ class NonReferenceAttribute extends Attribute {
 
     private function isNameColumnRequired($filterType, $nameColumn){
         if(FilterType::isFilterWithMultiValue($filterType) && (empty($nameColumn) || !is_string($nameColumn)))
-            throw new AttributeException("Attribute \"".self::NAME_COLUMN."\" must not empty, if filter type is [.".implode(",", FilterType::getMultiValueFilters())."]");
+            throw new AttributeException("Attribute \"".self::NAME_COLUMN."\" must not empty, if filter type is [.".ReportUtils::convertArrayToString(FilterType::getMultiValueFilters())."]");
         return true;
     }
 

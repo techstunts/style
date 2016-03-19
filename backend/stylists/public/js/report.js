@@ -3,6 +3,8 @@ var Report = {
         Report.submitReportForm();
         Report.showAllAttribute();
         Report.initDateRange();
+        Report.relatedReport();
+        Report.showReportOf();
     },
 
     submitReportForm: function () {
@@ -131,7 +133,27 @@ var Report = {
             $(".alan-report .report-btm").val("Report");
             $(".alan-report .loader").addClass("hide");
         }
+    },
+
+    relatedReport: function(){
+        $(".alan-report .related-report #related-report-selector").on('change', function(){
+            var path = $(this).val();
+            if(path !== "") window.location = path;
+        });
+    },
+
+    showReportOf: function(){
+        $(".alan-report .show-only-attr").on('change', function(){
+            var attributeKey = $(this).val();
+            if($.trim(attributeKey) == ""){
+                $(".alan-report .report-row").show();
+            }else {
+                $(".alan-report .report-row").hide();
+                $(".alan-report ."+attributeKey+"-report-row").show();
+            }
+        });
     }
+
 }
 
 $(function(){

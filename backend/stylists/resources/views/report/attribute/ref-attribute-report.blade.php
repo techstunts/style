@@ -1,4 +1,4 @@
-<tr>
+<tr class="{{$attributeKey}}-report-row report-row">
     <td class="attr {{$attributeKey}}-title-col" >
         {{$attribute->getDisplayName()}}
     </td>

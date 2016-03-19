@@ -7,7 +7,7 @@
     @foreach ($reportEntity->getAttributes() as $attributeKey => $attribute)
         @if( $attribute->getType() === AttributeType::REF)
             @if( $attribute->getShowInReport() === true)
-                @include('report.filters.ref-attribute-report', ['attribute' => $attribute, 'attributeKey' =>$attributeKey])
+                @include('report.attribute.ref-attribute-report', ['attribute' => $attribute, 'attributeKey' =>$attributeKey])
             @endif
         @endif
     @endforeach

@@ -1,18 +1,36 @@
 {
-  "display_name": "Looks Report",
-  "table_name": "looks",
+  "display_name": "Recommended Report",
+  "table_name": "recommendations",
   "related_report_links" : {
+    "looks" : {
+      "link" : "/report/looks",
+      "display_name" : "Looks"
+    },
     "user-request-look" : {
       "link" : "/report/user-requested-looks",
       "display_name" : "Looks requests by users"
     },
-    "recommended-look" : {
-      "link" : "/report/recommended-looks",
-      "display_name" : "Recommended looks"
-    },
     "favorite-look" : {
       "link" : "/report/favorite-looks",
       "display_name" : "Favorite Looks"
+    }
+  },
+  "relationships": {
+    "look": {
+      "join_type": "left_join",
+      "table": "looks",
+      "join_clause": {
+        "left": "recommendations.entity_id",
+        "operator": "=",
+        "right": "looks.id"
+      }
+    }
+  },
+  "conditions": {
+    "status_id": {
+      "column": "entity_type_id",
+      "value": "2",
+      "operator": "="
     }
   },
   "attributes": {
@@ -91,7 +109,7 @@
       "filter_type": "date_range",
       "show_in_report": false,
       "display_name": "Date Range",
-      "id_column": "looks.created_at"
+      "id_column": "related_report_links.created_at"
     }
 
   }

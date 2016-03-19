@@ -9,6 +9,9 @@ use App\Report\Entities\Enums\FilterType as FilterType;
     <div class="alan-report">
         <h1>{{$reportEntity->getDisplayName()}}</h1>
         <div class="report-index">
+            <div class="related-report">
+                @include('report.partial.related-report', ['relatedLinks' => $reportEntity->getRelatedReportLink()])
+            </div>
             <div class="filters">
                 <form class="query-form" method="get" action="{!! url('report/looks/query') !!}">
                     <ul class="filler-options">
@@ -24,8 +27,11 @@ use App\Report\Entities\Enums\FilterType as FilterType;
                             </li>
                         @endforeach
                         <div class="clr"></div>
-                        <div>
+
+                        <div class="control">
+                            @include('report.partial.show-in-report-attribute', ['attributes' => $reportEntity->getAttributes()])
                             <input type="submit" value="Report" class="report-btm"/>
+                            <input type="reset" value="Clear" class="clear-btm"/>
                             <span class="loader hide"></span>
                         </div>
 
@@ -33,9 +39,9 @@ use App\Report\Entities\Enums\FilterType as FilterType;
                     {{ csrf_field() }}
                 </form>
             </div>
-
+            <div class="clr"></div>
             <div class="report-output">
-                @include('report.filters.report', ['reportEntity' => $reportEntity])
+                @include('report.partial.report', ['reportEntity' => $reportEntity])
             </div>
         </div>
     </div>

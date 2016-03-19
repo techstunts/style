@@ -6,7 +6,7 @@
 .alan-report h1 { text-align: center;}
 
 
-.alan-report div.filters .query-form{float:left;border:2px solid;}
+.alan-report div.filters .query-form{float:left;border:2px solid; width: 1000px;}
 .alan-report div.filters .query-form .filler-options{margin:30px 0}
 .alan-report div.filters .query-form ul.filler-options li{list-style:none;border:1px solid #000;display:inline;margin:5px;padding:5px;font-size:14px;float:left}
 .alan-report div.filters .query-form ul.filler-options li select{font-size:14px;margin:0 5px;width:180px;border:1px solid #000;color:#000}
@@ -36,7 +36,7 @@
 }
 .alan-report .report-output .report-main-table .report-attr-val-table tr{border-bottom:none}
 .alan-report .report-output .report-main-table .report-attr-val-table tr td{ padding:0 7px;border-bottom:.5px solid #000;line-height:25px; text-align: center;}
-.alan-report .loader{
+.alan-report  div.filters .loader{
     width: 22px;
     height: 20px;
     background-repeat: no-repeat;
@@ -45,12 +45,47 @@
     float: left;
 }
 
-.alan-report .report-btm {
+.alan-report div.filters .control {
+    border: 1px solid #000;
+    padding: 4px 2px;
+    width: 70%;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.alan-report  div.filters .control .report-btm,
+    .alan-report  div.filters .control .clear-btm,
+    .alan-report  div.filters .control .title ,
+    .alan-report  div.filters .control .show-only-attr{
     background-color: #D32F2F;
     border: 1px #F5F5DC;
     color: #FFF;
     font-weight: bold;
     padding: 3px 4px 3px 4px;
     margin: 1px 2px 0px 0px;
-    float: left;
 }
+
+.alan-report  div.filters .control .title  {
+    background-color: #fff;
+    color: #000;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.alan-report div.filters .report-date-range{
+    color: #000;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.alan-report .related-report{
+    color: #000;
+    font-size: 14px;
+}
+.alan-report .related-report .title{
+}
+.alan-report .related-report #related-report-selector{
+    border: 1px solid #000;
+}
+
+

@@ -1,0 +1,55 @@
+{
+  "display_name": "Looks Requests by Users",
+  "table_name": "style_requests",
+  "related_report_links" : {
+    "looks" : {
+      "link" : "/report/looks",
+      "display_name" : "Looks"
+    },
+    "recommended-look" : {
+      "link" : "/report/recommended-looks",
+      "display_name" : "Recommended looks"
+    },
+    "favorite-look" : {
+      "link" : "/report/favorite-looks",
+      "display_name" : "Favorite Looks"
+    }
+  },
+  "conditions": {
+    "status_id": {
+      "column": "entity_type_id",
+      "value": "2",
+      "operator": "="
+    }
+  },
+  "attributes": {
+    "budget": {
+      "type": "ref",
+      "filter_type": "multi_select",
+      "show_in_report": true,
+      "display_name": "Budget",
+      "id_column": "id",
+      "name_column": "name",
+      "table_name": "lu_budget",
+      "parent_table_id_column": "style_requests.budget_id"
+    },
+    "occasion": {
+      "type": "ref",
+      "filter_type": "multi_select",
+      "show_in_report": true,
+      "display_name": "Occasion",
+      "id_column": "id",
+      "name_column": "name",
+      "table_name": "lu_occasion",
+      "parent_table_id_column": "style_requests.occasion_id"
+    },
+    "created_at": {
+      "type": "non_ref",
+      "filter_type": "date_range",
+      "show_in_report": false,
+      "display_name": "Date Range",
+      "id_column": "style_requests.created_at"
+    }
+
+  }
+}

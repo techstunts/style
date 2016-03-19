@@ -25,9 +25,9 @@ class QueryBuilder {
         $this->whereClause = $whereClause;
     }
 
-    public function build(ReportEntity $reportEntity, $table, $filterValues){
+    public function build(ReportEntity $reportEntity, $table, $userInput){
         $this->whereClause->build($reportEntity, $table);
         $this->relationship->build($reportEntity, $table);
-        $this->filters->build($reportEntity, $table, $filterValues);
+        $this->filters->build($reportEntity, $table, $userInput);
     }
 }
