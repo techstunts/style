@@ -6,15 +6,12 @@
  */
 namespace App\Report\Entities\Relationships;
 
+use App\Report\Constants\ReportConstant;
 use App\Report\Exceptions\JoinClauseException;
 use App\Report\Entities\Enums\ComparisonOperators;
 
 class JoinClause {
 
-    const LEFT = "left";
-    const OPERATOR = "operator";
-    const RIGHT = "right";
-      
     private $left; 
     private $operator;     
     private $right; 
@@ -27,10 +24,10 @@ class JoinClause {
     }
     
     private function validate($left, $operator, $right) { 
-        if(empty($left) || !is_string($left)) throw new JoinClauseException("JoinClause \"".self::LEFT."\" must not empty.");
-        if(empty($operator) || !is_string($operator)) throw new JoinClauseException("JoinClause \"".self::OPERATOR."\"must not empty.");
-        if(!ComparisonOperators::isValidValue($operator)) throw new JoinClauseException("JoinClause\"".self::OPERATOR."\" is not valid.");
-        if(empty($right) || !is_string($right)) throw new JoinClauseException("JoinClause \"".self::RIGHT."\" must not empty.");
+        if(empty($left) || !is_string($left)) throw new JoinClauseException("JoinClause \"".ReportConstant::LEFT."\" must not empty.");
+        if(empty($operator) || !is_string($operator)) throw new JoinClauseException("JoinClause \"".ReportConstant::OPERATOR."\"must not empty.");
+        if(!ComparisonOperators::isValidValue($operator)) throw new JoinClauseException("JoinClause\"".ReportConstant::OPERATOR."\" is not valid.");
+        if(empty($right) || !is_string($right)) throw new JoinClauseException("JoinClause \"".ReportConstant::RIGHT."\" must not empty.");
         return true; 
     }
 

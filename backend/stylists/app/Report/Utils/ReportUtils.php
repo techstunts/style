@@ -35,7 +35,7 @@ class ReportUtils {
      * @return bool
      */
     public static function isEmpty($values){
-        if(is_string($values) && trim($values) === "") return true;
+        if(is_string($values) && trim($values) == "") return true;
         if(is_array($values) && count($values) === 0) return true;
         return false;
     }

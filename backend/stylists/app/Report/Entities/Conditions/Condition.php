@@ -8,16 +8,12 @@
  */
 
 namespace App\Report\Entities\Conditions;
+use App\Report\Constants\ReportConstant;
 use App\Report\Entities\Enums\WhereType;
 use App\Report\Exceptions\ConditionException;
 use App\Report\Entities\Enums\ComparisonOperators;
 
 class Condition {
-
-    const WHERE_TYPE = "where_type";
-    const COLUMN = "column";
-    const VALUE = "value";
-    const OPERATOR = "operator";
 
     private $whereType;
     private $column;
@@ -40,7 +36,7 @@ class Condition {
     }
 
     private function validator($whereType, $column, $value, $operator){
-        if(empty($column) || !is_string($column)) throw new ConditionException("Condition \"".self::COLUMN."\" must not empty.");
+        if(empty($column) || !is_string($column)) throw new ConditionException("Condition \"".ReportConstant::COLUMN."\" must not empty.");
         $this->validateCondition($whereType, $column, $value, $operator);
         return true;
 
@@ -48,7 +44,7 @@ class Condition {
 
     private function validateCondition($whereType, $column, $value, $operator){
         if(!empty($whereType)){
-            if(!WhereType::isValidValue($whereType)) throw new ConditionException("Condition \"".self::WHERE_TYPE."\" is not valid, for \"$column\".");
+            if(!WhereType::isValidValue($whereType)) throw new ConditionException("Condition \"".ReportConstant::WHERE_TYPE."\" is not valid, for \"$column\".");
 
             switch($whereType){
                 case WhereType::OR_WHERE: return $this->validateOrWhere($column, $value, $operator);
@@ -58,54 +54,54 @@ class Condition {
                 case WhereType::WHERE_NOT_IN: return $this->validateWhereNotIn($column, $value, $operator);
                 case WhereType::WHERE_NOT_NULL: return $this->validateWhereNotNull($column, $value, $operator);
                 case WhereType::WHERE_NULL: return $this->validateWhereNull($column, $value, $operator);
-                default : throw new ConditionException("Condition \"".self::WHERE_TYPE."\" is not valid, for column \"$column\".");
+                default : throw new ConditionException("Condition \"".ReportConstant::WHERE_TYPE."\" is not valid, for column \"$column\".");
             }
         }
         return $this->validateAndWhere($column, $value, $operator);
     }
 
     private function validateAndWhere($column, $value, $operator){
-        if(!isset($value) || strlen($value) === 0 || !is_string($value)) throw new ConditionException("Condition \"".self::VALUE."\" must not empty.");
-        if(!empty($operator) && !ComparisonOperators::isValidValue($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" is not valid, for column \"$column\".");
+        if(!isset($value) || strlen($value) === 0 || !is_string($value)) throw new ConditionException("Condition \"".ReportConstant::VALUE."\" must not empty.");
+        if(!empty($operator) && !ComparisonOperators::isValidValue($operator)) throw new ConditionException("Condition \"".ReportConstant::OPERATOR."\" is not valid, for column \"$column\".");
         return true;
     }
 
     private function validateOrWhere($column, $value, $operator){
-        if(!isset($value) || strlen($value) === 0 || !is_string($value)) throw new ConditionException("Condition \"".self::VALUE."\" must not empty.");
-        if(!empty($operator) && !ComparisonOperators::isValidValue($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" is not valid, for column \"$column\".");
+        if(!isset($value) || strlen($value) === 0 || !is_string($value)) throw new ConditionException("Condition \"".ReportConstant::VALUE."\" must not empty.");
+        if(!empty($operator) && !ComparisonOperators::isValidValue($operator)) throw new ConditionException("Condition \"".ReportConstant::OPERATOR."\" is not valid, for column \"$column\".");
         return true;
     }
 
     private function validateWhereBetween($column, $value, $operator){
-        if(!isset($value) || !is_array($value)) throw new ConditionException("Condition \"".self::VALUE."\" must be not empty and array only, for column \"$column\".");
-        if(!empty($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" operator should be empty, for column \"$column\".");
+        if(!isset($value) || !is_array($value)) throw new ConditionException("Condition \"".ReportConstant::VALUE."\" must be not empty and array only, for column \"$column\".");
+        if(!empty($operator)) throw new ConditionException("Condition \"".ReportConstant::OPERATOR."\" operator should be empty, for column \"$column\".");
         return true;
     }
 
     private function validateWhereNotBetween($column, $value, $operator){
-        if(!isset($value) ||  !is_array($value)) throw new ConditionException("Condition \"".self::VALUE."\" must be not empty and array only, for column \"$column\".");
-        if(!empty($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" operator should be empty, for column \"$column\".");
+        if(!isset($value) ||  !is_array($value)) throw new ConditionException("Condition \"".ReportConstant::VALUE."\" must be not empty and array only, for column \"$column\".");
+        if(!empty($operator)) throw new ConditionException("Condition \"".ReportConstant::OPERATOR."\" operator should be empty, for column \"$column\".");
         return true;
     }
 
     private function validateWhereIn($column, $value, $operator){
-        if(!isset($value) ||  !is_array($value)) throw new ConditionException("Condition \"".self::VALUE."\" must be not empty and array only, for column \"$column\".");
-        if(!empty($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" operator should be empty, for column \"$column\".");
+        if(!isset($value) ||  !is_array($value)) throw new ConditionException("Condition \"".ReportConstant::VALUE."\" must be not empty and array only, for column \"$column\".");
+        if(!empty($operator)) throw new ConditionException("Condition \"".ReportConstant::OPERATOR."\" operator should be empty, for column \"$column\".");
         return true;
     }
     private function validateWhereNotIn($column, $value, $operator){
-        if(!isset($value) ||  !is_array($value)) throw new ConditionException("Condition \"".self::VALUE."\" must be not empty and array only, for column \"$column\".");
-        if(!empty($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" operator should be empty, for column \"$column\".");
+        if(!isset($value) ||  !is_array($value)) throw new ConditionException("Condition \"".ReportConstant::VALUE."\" must be not empty and array only, for column \"$column\".");
+        if(!empty($operator)) throw new ConditionException("Condition \"".ReportConstant::OPERATOR."\" operator should be empty, for column \"$column\".");
         return true;
     }
     private function validateWhereNotNull($column, $value, $operator){
-        if(!empty($value)) throw new ConditionException("Condition \"".self::VALUE."\" value should be empty, for column \"$column\".");
-        if(!empty($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" operator should be empty, for column \"$column\".");
+        if(!empty($value)) throw new ConditionException("Condition \"".ReportConstant::VALUE."\" value should be empty, for column \"$column\".");
+        if(!empty($operator)) throw new ConditionException("Condition \"".ReportConstant::OPERATOR."\" operator should be empty, for column \"$column\".");
         return true;
     }
     private function validateWhereNull($column, $value, $operator){
-        if(!empty($value)) throw new ConditionException("Condition \"".self::VALUE."\" value should be empty, for column \"$column\".");
-        if(!empty($operator)) throw new ConditionException("Condition \"".self::OPERATOR."\" operator should be empty, for column \"$column\".");
+        if(!empty($value)) throw new ConditionException("Condition \"".ReportConstant::VALUE."\" value should be empty, for column \"$column\".");
+        if(!empty($operator)) throw new ConditionException("Condition \"".ReportConstant::OPERATOR."\" operator should be empty, for column \"$column\".");
         return true;
     }
 

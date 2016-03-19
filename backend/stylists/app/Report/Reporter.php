@@ -9,7 +9,6 @@ namespace App\Report;
 use App\Report\Builders\FilterValue;
 use App\Report\Parser\ConfigParser;
 use App\Report\Parser\Parser;
-use App\Report\Exceptions\ReportEntityException;
 use App\Report\Entities\ReportEntity;
 use App\Report\Repository\Contrats\ReportRepositoryContract;
 class Reporter {

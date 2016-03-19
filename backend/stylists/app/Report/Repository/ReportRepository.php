@@ -7,6 +7,7 @@
  */
 
 namespace App\Report\Repository;
+use App\Report\Constants\ReportConstant;
 use App\Report\Entities\ReportEntity;
 use App\Report\Repository\Contrats\ReportRepositoryContract;
 use App\Report\Utils\ReportUtils;
@@ -16,7 +17,6 @@ use App\Report\Builders\QueryBuilder;
 class ReportRepository implements ReportRepositoryContract{
 
     private $queryBuilder;
-    const SHOW_ONLY_ATTRIBUTES = "show-only-attributes";
 
     /**
      * ReportRepository constructor.
@@ -51,7 +51,7 @@ class ReportRepository implements ReportRepositoryContract{
     }
 
     private function isShowAttributeInReport($attributeKey, $attribute, $userInput){
-        $showOnlyAttribute = ReportUtils::getValueFromArray($userInput, self::SHOW_ONLY_ATTRIBUTES);
+        $showOnlyAttribute = ReportUtils::getValueFromArray($userInput, ReportConstant::SHOW_ONLY_ATTRIBUTES);
         if(!$attribute->getShowInReport()) return false;
         if(!empty($showOnlyAttribute) && $attributeKey != $showOnlyAttribute) return false;
         return true;

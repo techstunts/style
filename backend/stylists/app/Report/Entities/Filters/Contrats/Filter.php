@@ -11,8 +11,6 @@ use App\Report\Entities\Enums\FilterType;
 
 abstract class Filter {
 
-    const TYPE = "type";
-
     private $type;
 
     /**

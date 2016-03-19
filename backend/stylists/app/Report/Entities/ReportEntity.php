@@ -8,6 +8,7 @@
  */
 namespace App\Report\Entities;
 
+use App\Report\Constants\ReportConstant;
 use App\Report\Exceptions\ReportEntityException;
 use App\Report\Entities\Attributes\Contracts\Attribute;
 use App\Report\Entities\Conditions\Condition;
@@ -17,13 +18,6 @@ use App\Report\Utils\ReportUtils;
 
 class ReportEntity {
 
-    const DISPLAY_NAME = "display_name";
-    const TABLE_NAME = "table_name";
-    const RELATED_REPORT_LINKS = "related_report_links";
-    const RELATIONSHIPS = "relationships";    
-    const CONDITIONS = "conditions";
-    const ATTRIBUTES = "attributes";
-        
     private $displayName;
     private $table;
     private $relatedReportLink;
@@ -48,12 +42,12 @@ class ReportEntity {
     }
 
     private function validate($displayName, $table, array $attributes, array $relationships = null, array $conditions = null) {
-        if(empty($displayName) || !is_string($displayName)) throw new ReportEntityException("Report entity \"".self::DISPLAY_NAME."\" must not be empty.");
-        if(empty($table) || !is_string($table)) throw new ReportEntityException("Report entity \"".self::TABLE_NAME."\" must not be empty.");
-        if(!$this->validateRelationships($relationships)) throw new ReportEntityException("Report entity\"".self::RELATIONSHIPS."\" value is not valid.");
-        if(!$this->validateConditions($conditions)) throw new ReportEntityException("Report entity\"".self::CONDITIONS."\" value is not valid.");
-        if(empty($attributes) || !is_array($attributes)) throw new ReportEntityException("Report entity \"".self::ATTRIBUTES."\" must not be empty.");
-        if(!$this->validateAttributes($attributes)) throw new ReportEntityException("Report entity\"".self::ATTRIBUTES."\" value is not valid.");
+        if(empty($displayName) || !is_string($displayName)) throw new ReportEntityException("Report entity \"".ReportConstant::DISPLAY_NAME."\" must not be empty.");
+        if(empty($table) || !is_string($table)) throw new ReportEntityException("Report entity \"".ReportConstant::TABLE_NAME."\" must not be empty.");
+        if(!$this->validateRelationships($relationships)) throw new ReportEntityException("Report entity\"".ReportConstant::RELATIONSHIPS."\" value is not valid.");
+        if(!$this->validateConditions($conditions)) throw new ReportEntityException("Report entity\"".ReportConstant::CONDITIONS."\" value is not valid.");
+        if(empty($attributes) || !is_array($attributes)) throw new ReportEntityException("Report entity \"".ReportConstant::ATTRIBUTES."\" must not be empty.");
+        if(!$this->validateAttributes($attributes)) throw new ReportEntityException("Report entity\"".ReportConstant::ATTRIBUTES."\" value is not valid.");
         return true;
     }
 
@@ -82,11 +76,11 @@ class ReportEntity {
 
     private function createRelatedReportLink($relatedReportLinks){
         if(empty($relatedReportLinks)) return null;
-        if(!is_array($relatedReportLinks) || count($relatedReportLinks) === 0) throw new ReportEntityException("Report entity \"".self::RELATED_REPORT_LINKS."\" must be array.");
+        if(!is_array($relatedReportLinks) || count($relatedReportLinks) === 0) throw new ReportEntityException("Report entity \"".ReportConstant::RELATED_REPORT_LINKS."\" must be array.");
         $relatedReportLinkList = array();
         foreach($relatedReportLinks as $relatedReportLink){
-            $relatedReportLinkList[] =  new RelatedReportLink(  ReportUtils::getValueFromArray($relatedReportLink, RelatedReportLink::LINK),
-                                                                ReportUtils::getValueFromArray($relatedReportLink, RelatedReportLink::DISPLAY_NAME));
+            $relatedReportLinkList[] =  new RelatedReportLink(  ReportUtils::getValueFromArray($relatedReportLink, ReportConstant::LINK),
+                                                                ReportUtils::getValueFromArray($relatedReportLink, ReportConstant::DISPLAY_NAME));
         }
         return $relatedReportLinkList;
     }

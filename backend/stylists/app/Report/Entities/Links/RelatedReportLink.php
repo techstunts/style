@@ -8,12 +8,10 @@
  */
 namespace App\Report\Entities\Links;
 
+use App\Report\Constants\ReportConstant;
 use App\Report\Exceptions\RelatedReportLinkException;
 
 class RelatedReportLink {
-
-    const LINK = "link";
-    const DISPLAY_NAME = "display_name";
 
     private $link;
     private $displayName;
@@ -29,8 +27,8 @@ class RelatedReportLink {
     }
 
     private function validateLink($link, $displayName){
-        if(empty($link) || !is_string($link) || trim($link) === "") throw new RelatedReportLinkException("RelatedReportLink \"".self::LINK."\" should not be empty.");
-        if(empty($displayName) || !is_string($displayName) || trim($displayName) === "") throw new RelatedReportLinkException("RelatedReportLink \"".self::LINK."\" should not be empty.");
+        if(empty($link) || !is_string($link) || trim($link) === "") throw new RelatedReportLinkException("RelatedReportLink \"".ReportConstant::LINK."\" should not be empty.");
+        if(empty($displayName) || !is_string($displayName) || trim($displayName) === "") throw new RelatedReportLinkException("RelatedReportLink \"".ReportConstant::DISPLAY_NAME."\" should not be empty.");
         return true;
     }
 

@@ -8,6 +8,7 @@
  */
 namespace App\Report\Entities\Attributes;
 
+use App\Report\Constants\ReportConstant;
 use App\Report\Entities\Enums\AttributeFieldType;
 use App\Report\Entities\Enums\AttributeType;
 use App\Report\Entities\Enums\FilterType;
@@ -15,11 +16,6 @@ use App\Report\Exceptions\AttributeException;
 use App\Report\Entities\Attributes\Contracts\Attribute;
 
 class ReferenceAttribute extends Attribute {
-
-    const ID_COLUMN = "id_column";
-    const NAME_COLUMN = "name_column";
-    const TABLE_NAME = "table_name";
-    const PARENT_TABLE_ID_COLUMN = "parent_table_id_column";
 
     private $idColumn;
     private $nameColumn;
@@ -48,16 +44,16 @@ class ReferenceAttribute extends Attribute {
 
 
     protected function validateReferenceAttribute($filterType, $idColumn, $nameColumn, $tableName, $parentTableColumnId){
-        if(empty($idColumn) || !is_string($idColumn)) throw new AttributeException("Attribute \"".self::ID_COLUMN."\" must not empty.");
-        if(empty($tableName) || !is_string($tableName)) throw new AttributeException("Attribute \"".self::TABLE_NAME."\" must not empty.");
-        if(empty($parentTableColumnId) || !is_string($parentTableColumnId)) throw new AttributeException("Attribute \"".self::PARENT_TABLE_ID_COLUMN."\" must not empty.");
+        if(empty($idColumn) || !is_string($idColumn)) throw new AttributeException("Attribute \"".ReportConstant::ID_COLUMN."\" must not empty.");
+        if(empty($tableName) || !is_string($tableName)) throw new AttributeException("Attribute \"".ReportConstant::TABLE_NAME."\" must not empty.");
+        if(empty($parentTableColumnId) || !is_string($parentTableColumnId)) throw new AttributeException("Attribute \"".ReportConstant::PARENT_TABLE_ID_COLUMN."\" must not empty.");
         $this->isNameColumnRequired($filterType, $nameColumn);
         return true;
     }
 
     private function isNameColumnRequired($filterType, $nameColumn){
         if(FilterType::isFilterWithMultiValue($filterType) && (empty($nameColumn) || !is_string($nameColumn)))
-            throw new AttributeException("Attribute \"".self::NAME_COLUMN."\" must not empty, if filter type is [.".implode(",", FilterType::getMultiValueFilters())."]");
+            throw new AttributeException("Attribute \"".ReportConstant::NAME_COLUMN."\" must not empty, if filter type is [.".implode(",", FilterType::getMultiValueFilters())."]");
         return true;
     }
 

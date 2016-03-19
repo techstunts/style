@@ -8,6 +8,7 @@
 
 namespace App\Report\Parser;
 
+use App\Report\Constants\ReportConstant;
 use App\Report\Entities\Attributes\NonReferenceAttribute;
 use App\Report\Entities\Conditions\Condition;
 use App\Report\Entities\Relationships\Relationship;
@@ -31,21 +32,21 @@ class ConfigParser {
     }
 
     private function parseReportConfig(array $reportConfig){
-        return new ReportEntity(    ReportUtils::getValueFromArray($reportConfig, ReportEntity::DISPLAY_NAME),
-                                    ReportUtils::getValueFromArray($reportConfig, ReportEntity::TABLE_NAME),
-                                    ReportUtils::getValueFromArray($reportConfig, ReportEntity::RELATED_REPORT_LINKS),
-                                    $this->parseAttributeConfig(ReportUtils::getValueFromArray($reportConfig, ReportEntity::ATTRIBUTES)),
-                                    $this->parseRelationshipConfig(ReportUtils::getValueFromArray($reportConfig, ReportEntity::RELATIONSHIPS)),
-                                    $this->parseConditionsConfig(ReportUtils::getValueFromArray($reportConfig, ReportEntity::CONDITIONS)));
+        return new ReportEntity(    ReportUtils::getValueFromArray($reportConfig, ReportConstant::DISPLAY_NAME),
+                                    ReportUtils::getValueFromArray($reportConfig, ReportConstant::TABLE_NAME),
+                                    ReportUtils::getValueFromArray($reportConfig, ReportConstant::RELATED_REPORT_LINKS),
+                                    $this->parseAttributeConfig(ReportUtils::getValueFromArray($reportConfig, ReportConstant::ATTRIBUTES)),
+                                    $this->parseRelationshipConfig(ReportUtils::getValueFromArray($reportConfig, ReportConstant::RELATIONSHIPS)),
+                                    $this->parseConditionsConfig(ReportUtils::getValueFromArray($reportConfig, ReportConstant::CONDITIONS)));
     }
 
     private function parseRelationshipConfig($relationships){
         if(empty($relationship)) return;
         $relationshipObjects = array();
         foreach($relationships as $relationshipKey => $relationship){
-            $relationshipObjects[$relationshipKey] = new Relationship(  ReportUtils::getValueFromArray($relationship, Relationship::JOIN_TYPE),
-                                                                        ReportUtils::getValueFromArray($relationship, Relationship::TABLE),
-                                                                        ReportUtils::getValueFromArray($relationship, Relationship::JOIN_CLAUSE));
+            $relationshipObjects[$relationshipKey] = new Relationship(  ReportUtils::getValueFromArray($relationship, ReportConstant::JOIN_TYPE),
+                                                                        ReportUtils::getValueFromArray($relationship, ReportConstant::TABLE),
+                                                                        ReportUtils::getValueFromArray($relationship, ReportConstant::JOIN_CLAUSE));
         }
         return $relationshipObjects;
     }
@@ -54,10 +55,10 @@ class ConfigParser {
         if(empty($conditions)) return;
         $conditionObjects = array();
         foreach($conditions as $conditionKey => $condition){
-            $conditionObjects[$conditionKey] = new Condition(   ReportUtils::getValueFromArray($condition, Condition::WHERE_TYPE),
-                                                                ReportUtils::getValueFromArray($condition, Condition::COLUMN),
-                                                                ReportUtils::getValueFromArray($condition, Condition::VALUE),
-                                                                ReportUtils::getValueFromArray($condition, Condition::OPERATOR));
+            $conditionObjects[$conditionKey] = new Condition(   ReportUtils::getValueFromArray($condition, ReportConstant::WHERE_TYPE),
+                                                                ReportUtils::getValueFromArray($condition, ReportConstant::COLUMN),
+                                                                ReportUtils::getValueFromArray($condition, ReportConstant::VALUE),
+                                                                ReportUtils::getValueFromArray($condition, ReportConstant::OPERATOR));
         }
         return $conditionObjects;
     }
@@ -71,7 +72,7 @@ class ConfigParser {
     }
 
     private function getAttributeObject(array $attributeConfig){
-        switch($attributeConfig[Attribute::TYPE]){
+        switch($attributeConfig[ReportConstant::TYPE]){
             case AttributeType::REF:
                 return $this->getReferenceAttributeObject($attributeConfig);
             case AttributeType::NON_REF :
@@ -82,21 +83,21 @@ class ConfigParser {
     }
 
     private function getNonReferenceAttributeObject(array $attributeConfig){
-        return new NonReferenceAttribute(   ReportUtils::getValueFromArray($attributeConfig, Attribute::FILTER_TYPE),
-                                            ReportUtils::getValueFromArray($attributeConfig, Attribute::SHOW_IN_REPORT),
-                                            ReportUtils::getValueFromArray($attributeConfig, Attribute::DISPLAY_NAME),
-                                            ReportUtils::getValueFromArray($attributeConfig, NonReferenceAttribute::ID_COLUMN),
-                                            ReportUtils::getValueFromArray($attributeConfig, NonReferenceAttribute::NAME_COLUMN));
+        return new NonReferenceAttribute(   ReportUtils::getValueFromArray($attributeConfig, ReportConstant::FILTER_TYPE),
+                                            ReportUtils::getValueFromArray($attributeConfig, ReportConstant::SHOW_IN_REPORT),
+                                            ReportUtils::getValueFromArray($attributeConfig, ReportConstant::DISPLAY_NAME),
+                                            ReportUtils::getValueFromArray($attributeConfig, ReportConstant::ID_COLUMN),
+                                            ReportUtils::getValueFromArray($attributeConfig, ReportConstant::NAME_COLUMN));
     }
 
     private function getReferenceAttributeObject(array $attributeConfig){
-        return new ReferenceAttribute(  ReportUtils::getValueFromArray($attributeConfig, Attribute::FILTER_TYPE),
-                                        ReportUtils::getValueFromArray($attributeConfig, Attribute::SHOW_IN_REPORT),
-                                        ReportUtils::getValueFromArray($attributeConfig, Attribute::DISPLAY_NAME),
-                                        ReportUtils::getValueFromArray($attributeConfig, ReferenceAttribute::ID_COLUMN),
-                                        ReportUtils::getValueFromArray($attributeConfig, ReferenceAttribute::NAME_COLUMN),
-                                        ReportUtils::getValueFromArray($attributeConfig, ReferenceAttribute::TABLE_NAME),
-                                        ReportUtils::getValueFromArray($attributeConfig, ReferenceAttribute::PARENT_TABLE_ID_COLUMN));
+        return new ReferenceAttribute(  ReportUtils::getValueFromArray($attributeConfig, ReportConstant::FILTER_TYPE),
+                                        ReportUtils::getValueFromArray($attributeConfig, ReportConstant::SHOW_IN_REPORT),
+                                        ReportUtils::getValueFromArray($attributeConfig, ReportConstant::DISPLAY_NAME),
+                                        ReportUtils::getValueFromArray($attributeConfig, ReportConstant::ID_COLUMN),
+                                        ReportUtils::getValueFromArray($attributeConfig, ReportConstant::NAME_COLUMN),
+                                        ReportUtils::getValueFromArray($attributeConfig, ReportConstant::TABLE_NAME),
+                                        ReportUtils::getValueFromArray($attributeConfig, ReportConstant::PARENT_TABLE_ID_COLUMN));
     }
 
     private function getReportConfig($reportId){

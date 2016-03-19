@@ -8,6 +8,7 @@
 
 namespace App\Report\Builders\Query;
 
+use App\Report\Constants\ReportConstant;
 use App\Report\Entities\Attributes\NonReferenceAttribute;
 use App\Report\Entities\Attributes\ReferenceAttribute;
 use App\Report\Entities\ReportEntity;
@@ -24,12 +25,9 @@ class Filter {
 
     const DB_DATE_FORMAT = "Y-m-d";
     const USER_INPUT_DATE_FORMAT = "d M Y";
-    const FROM_DATE = "from_date";
-    const TO_DATE = "to_date";
-    const ATTRIBUTES = "attributes";
 
     public function build(ReportEntity $reportEntity, $table, $userInput){
-        $filterValues = ReportUtils::getValueFromArray($userInput, self::ATTRIBUTES);
+        $filterValues = ReportUtils::getValueFromArray($userInput, ReportConstant::ATTRIBUTES);
         $attributes = $reportEntity->getAttributes();
         if($this->isEmptyFilter($attributes, $filterValues)) return;
         foreach($filterValues as $param => $values){
@@ -75,14 +73,14 @@ class Filter {
     }
 
     private function buildDateRangeClauseForRefAttribute($table, $conditionTable, $idColumn, $parentTableIdColumn, $values){
-        $fromDate = Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT,  $values[self::FROM_DATE])->format(self::DB_DATE_FORMAT);
-        $toDate = Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT,  $values[self::TO_DATE])->format(self::DB_DATE_FORMAT);
+        $fromDate = Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT,  $values[ReportConstant::FROM_DATE])->format(self::DB_DATE_FORMAT);
+        $toDate = Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT,  $values[ReportConstant::TO_DATE])->format(self::DB_DATE_FORMAT);
         $table->whereBetween($parentTableIdColumn, array($fromDate, $toDate));
     }
 
     private function buildDateRangeClauseForNonRefAttribute($table, $idColumn, $values){
-        $fromDate = Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT,  $values[self::FROM_DATE])->format(self::DB_DATE_FORMAT);
-        $toDate = Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT,  $values[self::TO_DATE])->format(self::DB_DATE_FORMAT);
+        $fromDate = Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT,  $values[ReportConstant::FROM_DATE])->format(self::DB_DATE_FORMAT);
+        $toDate = Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT,  $values[ReportConstant::TO_DATE])->format(self::DB_DATE_FORMAT);
         $table->whereBetween($idColumn, array($fromDate, $toDate));
     }
 

@@ -13,7 +13,6 @@ use App\Report\Entities\Attributes\NonReferenceAttribute;
 use App\Report\Entities\Attributes\ReferenceAttribute;
 use App\Report\Entities\Enums\AttributeType;
 use App\Report\Entities\ReportEntity;
-use App\Report\Entities\Attributes\Contracts\Attribute;
 use App\Report\Entities\Enums\FilterType;
 use App\Report\Exceptions\AttributeException;
 use App\Report\Repository\Contrats\ReportRepositoryContract;
