@@ -18,6 +18,7 @@ use App\Report\Utils\ReportUtils;
 
 class ReportEntity {
 
+    private $reportId;
     private $displayName;
     private $table;
     private $relatedReportLink;
@@ -31,8 +32,9 @@ class ReportEntity {
      * @param $table
      * @param array $attributes
      */
-    public function __construct($displayName, $table, $relatedReportLinks, array $attributes, array $relationships = null, array $conditions = null ) {
-        $this->validate($displayName, $table, $attributes, $relationships, $conditions);
+    public function __construct($reportId, $displayName, $table, $relatedReportLinks, array $attributes, array $relationships = null, array $conditions = null ) {
+        $this->validate($reportId, $displayName, $table, $attributes, $relationships, $conditions);
+        $this->reportId = $reportId;
         $this->displayName = $displayName;
         $this->relatedReportLink = $this->createRelatedReportLink($relatedReportLinks);
         $this->relationships = $relationships;
@@ -41,7 +43,8 @@ class ReportEntity {
         $this->attributes = $attributes;
     }
 
-    private function validate($displayName, $table, array $attributes, array $relationships = null, array $conditions = null) {
+    private function validate($reportId, $displayName, $table, array $attributes, array $relationships = null, array $conditions = null) {
+        if(empty($reportId) || !is_string($reportId)) throw new ReportEntityException("Report entity \"".ReportConstant::REPORT_ID."\" must not be empty.");
         if(empty($displayName) || !is_string($displayName)) throw new ReportEntityException("Report entity \"".ReportConstant::DISPLAY_NAME."\" must not be empty.");
         if(empty($table) || !is_string($table)) throw new ReportEntityException("Report entity \"".ReportConstant::TABLE_NAME."\" must not be empty.");
         if(!$this->validateRelationships($relationships)) throw new ReportEntityException("Report entity\"".ReportConstant::RELATIONSHIPS."\" value is not valid.");
@@ -84,6 +87,14 @@ class ReportEntity {
         }
         return $relatedReportLinkList;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getReportId() {
+        return $this->reportId;
+    }
+
     /**
      * @return mixed
      */

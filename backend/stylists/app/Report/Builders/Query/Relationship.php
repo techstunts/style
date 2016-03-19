@@ -15,7 +15,6 @@ class Relationship {
 
     public function build(ReportEntity $reportEntity, $table){
         if(empty($reportEntity->getRelationships())) return;
-
         foreach($reportEntity->getRelationships() as $relationship){
             switch($relationship->getJoinType()){
                 case JoinType::LEFT_JOIN: $this->buildLeftJoin($relationship, $table); break;
@@ -28,6 +27,8 @@ class Relationship {
                             $relationship->getJoinClause()->getLeft(),
                             $relationship->getJoinClause()->getOperator(),
                             $relationship->getJoinClause()->getRight());
+
+
     }
 
 }

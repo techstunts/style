@@ -1,5 +1,5 @@
 <tr class="{{$attributeKey}}-report-row report-row">
-    <td class="attr {{$attributeKey}}-title-col" >
+    <td class="attr {{$attributeKey}}-title-col" data-attrdisplayname="{{$attribute->getDisplayName()}}" data-attrkey="{{$attributeKey}}}">
         {{$attribute->getDisplayName()}}
     </td>
     <?php

@@ -49,7 +49,6 @@ class ReportRepository implements ReportRepositoryContract {
             $query = $tmpTable->select(DB::raw("count(*) as ".ReportConstant::TOTAL_COUNT.", $groupByColumn as ".ReportConstant::ATTRIBUTE_ID))->groupBy($groupByColumn);
             $groupValues[ReportConstant::DATA][$attributeKey] = $query->get();
             $groupValues[ReportConstant::QUERY][$attributeKey] = $this->queryLogger($query->toSql(), $query->getBindings());
-
             unset($tmpTable);
         }
         return $groupValues;

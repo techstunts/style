@@ -89,7 +89,8 @@ var Report = {
                 totalCount +=  count;
             }
         });
-        $(".alan-report  ."+attribute+"-title-col").html( $(".alan-report  ."+attribute+"-title-col").text() + "<div class='attr-count'>("+totalCount+")</div>");
+        var attrDisplayName =  $(".alan-report  ."+attribute+"-title-col").data("attrdisplayname");
+        $(".alan-report  ."+attribute+"-title-col").html( attrDisplayName + "<div class='attr-count'>("+totalCount+")</div>");
     },
 
     initDateRange: function(){

@@ -13,7 +13,7 @@ use App\Report\Entities\Enums\FilterType as FilterType;
                 @include('report.partial.related-report', ['relatedLinks' => $reportEntity->getRelatedReportLink()])
             </div>
             <div class="filters">
-                <form class="query-form" method="get" action="{!! url('report/looks/query') !!}">
+                <form class="query-form" method="get" action="{!! url('report/'.$reportEntity->getReportId().'/query') !!}">
                     <ul class="filler-options">
                         @foreach ($reportEntity->getAttributes() as $attributeKey => $attribute)
                             <li class="filter">

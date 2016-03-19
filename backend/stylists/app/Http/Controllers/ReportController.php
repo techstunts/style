@@ -31,7 +31,6 @@ class ReportController extends Controller {
 
 
     public function query(Request $request, $report_id){
-       // sleep(1000);
         $report = $this->reporter->report($report_id,  $request->all());
         return response()->json($report);
     }

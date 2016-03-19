@@ -28,11 +28,12 @@ class ConfigParser {
     const FILE_EXTENSION =".json";
 
     public function getReportEntity($reportId){
-        return $this->parseReportConfig($this->getReportConfig($reportId));
+        return $this->parseReportConfig($reportId, $this->getReportConfig($reportId));
     }
 
-    private function parseReportConfig(array $reportConfig){
-        return new ReportEntity(    ReportUtils::getValueFromArray($reportConfig, ReportConstant::DISPLAY_NAME),
+    private function parseReportConfig($reportId, array $reportConfig){
+        return new ReportEntity( $reportId,
+                                    ReportUtils::getValueFromArray($reportConfig, ReportConstant::DISPLAY_NAME),
                                     ReportUtils::getValueFromArray($reportConfig, ReportConstant::TABLE_NAME),
                                     ReportUtils::getValueFromArray($reportConfig, ReportConstant::RELATED_REPORT_LINKS),
                                     $this->parseAttributeConfig(ReportUtils::getValueFromArray($reportConfig, ReportConstant::ATTRIBUTES)),
@@ -41,7 +42,7 @@ class ConfigParser {
     }
 
     private function parseRelationshipConfig($relationships){
-        if(empty($relationship)) return;
+        if(empty($relationships)) return;
         $relationshipObjects = array();
         foreach($relationships as $relationshipKey => $relationship){
             $relationshipObjects[$relationshipKey] = new Relationship(  ReportUtils::getValueFromArray($relationship, ReportConstant::JOIN_TYPE),

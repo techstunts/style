@@ -40,6 +40,7 @@ class ReportConstant {
     const DATA = "data";
     const TOTAL_COUNT = "total_count";
     const ATTRIBUTE_ID = "attribute_id";
+    const REPORT_ID = "report_id";
 
 
 
