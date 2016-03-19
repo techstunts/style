@@ -27,12 +27,12 @@ use App\Report\Entities\Enums\FilterType as FilterType;
                             </li>
                         @endforeach
                         <div class="clr"></div>
-
                         <div class="control">
-                            @include('report.partial.show-in-report-attribute', ['attributes' => $reportEntity->getAttributes()])
-                            <input type="submit" value="Report" class="report-btm"/>
-                            <input type="reset" value="Clear" class="clear-btm"/>
-                            <span class="loader hide"></span>
+                                @include('report.partial.show-in-report-attribute', ['attributes' => $reportEntity->getAttributes()])
+                                <input type="submit" value="Report" class="report-btm"/>
+                                <input type="reset" value="Clear" class="clear-btm"/>
+                                <span class="loader hide"></span>
+                                <div class="clr"></div>
                         </div>
 
                     </ul>

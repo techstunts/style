@@ -63,6 +63,7 @@
     font-weight: bold;
     padding: 3px 4px 3px 4px;
     margin: 1px 2px 0px 0px;
+    float: left;
 }
 
 .alan-report  div.filters .control .title  {
@@ -86,6 +87,10 @@
 }
 .alan-report .related-report #related-report-selector{
     border: 1px solid #000;
+}
+
+.alan-report .status-title-row .status-1 {
+    background-color: #fff!important;
 }
 
 

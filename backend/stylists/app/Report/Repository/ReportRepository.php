@@ -13,6 +13,7 @@ use App\Report\Repository\Contrats\ReportRepositoryContract;
 use App\Report\Utils\ReportUtils;
 use DB;
 use App\Report\Builders\QueryBuilder;
+use Illuminate\Support\Facades\Config;
 
 class ReportRepository implements ReportRepositoryContract {
 
@@ -24,7 +25,7 @@ class ReportRepository implements ReportRepositoryContract {
      * @param $queryBuilder
      */
     public function __construct(QueryBuilder $queryBuilder) {
-        $this->enableQueryLogger = false;
+        $this->enableQueryLogger =  Config::get('report.enableQueryLogger');
         $this->queryBuilder = $queryBuilder;
     }
 
@@ -33,7 +34,6 @@ class ReportRepository implements ReportRepositoryContract {
     }
 
     public function getReportData(ReportEntity $reportEntity, $userInput) {
-        //$this->__debugQuery();
         $table = DB::table($reportEntity->getTable());
         $this->queryBuilder->build($reportEntity, $table, $userInput);
         return $this->getGroupData($reportEntity, $table, $userInput);
