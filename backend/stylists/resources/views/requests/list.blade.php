@@ -28,34 +28,34 @@
                         <thead>
                         <tr>
                             <th><input name="select_all" value="1" type="checkbox"></th>
-                            <th>Request id</th>
-                            <th>Client id</th>
-                            <th>Client name</th>
-                            <th>Age</th>
-                            <th>Body type</th>
-                            <th>Occasion</th>
-                            <th>Budget</th>
-                            <th>Date</th>
-                            <th>Stylist</th>
-                            <th>Message</th>
-                            <th>Request Type</th>
+                            <th class="font-size-table-header">Request id</th>
+                            <th class="font-size-table-header">Client id</th>
+                            <th class="font-size-table-header">Client name</th>
+                            <th class="font-size-table-header">Age</th>
+                            <th class="font-size-table-header">Body type</th>
+                            <th class="font-size-table-header">Occasion</th>
+                            <th class="font-size-table-header">Budget</th>
+                            <th class="font-size-table-header">Date</th>
+                            <th class="font-size-table-header">Stylist</th>
+                            <th class="font-size-table-header">Message</th>
+                            <th class="font-size-table-header">Request Type</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($requests as $request)
                             <tr>
                                 <td><input name="request" value="{{$request->request_id}}" type="checkbox"></td>
-                                <td> {{$request->request_id}} </td>
-                                <td>{{$request->user_id}}</td>
-                                <td>{{$request->username}}</td>
-                                <td>{{$request->age}}</td>
-                                <td> {{$request->bodytype}} </td>
-                                <td> {{$request->occasion}} </td>
-                                <td> {{$request->budget}} </td>
-                                <td> {{$request->created_at}} </td>
-                                <td> {{$request->stylist_name}} </td>
-                                <td> {{$request->description}} </td>
-                                <td> {{$request->request_type}} </td>
+                                <td class="table-font-size"> {{$request->request_id}} </td>
+                                <td class="table-font-size">{{$request->user_id}}</td>
+                                <td class="table-font-size">{{$request->username}}</td>
+                                <td class="table-font-size">{{$request->age}}</td>
+                                <td class="table-font-size"> {{$request->bodytype}} </td>
+                                <td class="table-font-size"> {{$request->occasion}} </td>
+                                <td class="table-font-size"> {{$request->budget}} </td>
+                                <td class="table-font-size"> {{$request->created_at}} </td>
+                                <td class="table-font-size"> {{$request->stylist_name}} </td>
+                                <td class="table-font-size"> {{$request->description}} </td>
+                                <td class="table-font-size"> {{$request->request_type}} </td>
                             </tr>
                         @endforeach
                         </tbody>
