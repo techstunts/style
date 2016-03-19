@@ -29,7 +29,7 @@
   "conditions": {
     "status_id": {
       "where_type" : "where_not_null",
-      "column": "entity_type_id"
+      "column": "usersfav.look_id"
     }
   },
   "attributes": {

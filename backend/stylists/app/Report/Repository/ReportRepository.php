@@ -35,21 +35,21 @@ class ReportRepository implements ReportRepositoryContract {
     }
 
     public function getReportData(ReportEntity $reportEntity, $userInput) {
-        $table = DB::table($reportEntity->getTable());
-        $this->queryBuilder->build($reportEntity, $table, $userInput);
-        return $this->getGroupData($reportEntity, $table, $userInput);
+        $queryBuilder = DB::table($reportEntity->getTable());
+        $this->queryBuilder->build($reportEntity, $queryBuilder, $userInput);
+        return $this->getGroupData($reportEntity, $queryBuilder, $userInput);
     }
 
-    private function getGroupData(ReportEntity $reportEntity, $table, $userInput) {
+    private function getGroupData(ReportEntity $reportEntity, $queryBuilder, $userInput) {
         $groupValues = array();
         foreach ($reportEntity->getAttributes() as $attributeKey => $attribute) {
             if (!$this->isShowAttributeInReport($attributeKey, $attribute, $userInput)) continue;
-            $tmpTable = clone $table;
+            $tmpQueryBuilder = clone $queryBuilder;
             $groupByColumn = $attribute->getGroupByColumn();
-            $query = $tmpTable->select(DB::raw("count(*) as ".ReportConstant::TOTAL_COUNT.", $groupByColumn as ".ReportConstant::ATTRIBUTE_ID))->groupBy($groupByColumn);
+            $query = $tmpQueryBuilder->select(DB::raw("count(*) as ".ReportConstant::TOTAL_COUNT.", $groupByColumn as ".ReportConstant::ATTRIBUTE_ID))->groupBy($groupByColumn);
             $groupValues[ReportConstant::DATA][$attributeKey] = $query->get();
-            $groupValues[ReportConstant::QUERY][$attributeKey] = $this->queryLogger($query->toSql(), $query->getBindings());
-            unset($tmpTable);
+            $groupValues[ReportConstant::QUERY][$attributeKey] = $this->queryLogger($query);
+            unset($tmpQueryBuilder);
         }
         return $groupValues;
     }
@@ -61,8 +61,12 @@ class ReportRepository implements ReportRepositoryContract {
         return true;
     }
 
-    private function queryLogger($query, $bindings) {
+    private function queryLogger($queryBuilder) {
         if(!$this->enableQueryLogger) return null;
+
+        $query = $queryBuilder->toSql();
+        $bindings = $queryBuilder->getBindings();
+
         if (!empty($bindings) && is_array($bindings)){
             foreach ($bindings as $i => $binding) {
                 if ($binding instanceof \DateTime) {

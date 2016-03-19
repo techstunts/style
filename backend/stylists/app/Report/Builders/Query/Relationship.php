@@ -14,11 +14,11 @@ use App\Report\Entities\Relationships\Relationship as RelationshipEntity;
 
 class Relationship {
 
-    public function build(ReportEntity $reportEntity, $table){
+    public function build(ReportEntity $reportEntity, $queryBuilder){
         if(empty($reportEntity->getRelationships())) return;
         foreach($reportEntity->getRelationships() as $relationship){
             switch($relationship->getJoinType()){
-                case JoinType::LEFT_JOIN: $this->buildLeftJoin($relationship, $table); break;
+                case JoinType::LEFT_JOIN: $this->buildLeftJoin($relationship, $queryBuilder); break;
             }
         }
     }
