@@ -17,6 +17,7 @@ use App\Report\Entities\ReportEntity;
 use App\Report\Entities\Attributes\ReferenceAttribute;
 use App\Report\Entities\Attributes\Contracts\Attribute;
 use App\Report\Entities\Enums\AttributeType;
+use App\Report\Exceptions\JsonException;
 use App\Report\Exceptions\ReportEntityException;
 use App\Report\Utils\ReportUtils;
 
@@ -104,9 +105,10 @@ class ConfigParser {
     private function getReportConfig($reportId){
         $configFile = $this->getConfigFile($reportId);
         if(!$this->isConfigExist($configFile)) throw new ReportEntityException($reportId ." Report Entity not exist. ");
-        //@todo, check json failure exception
-        return json_decode(file_get_contents($configFile), true);
-
+        $configData = json_decode(file_get_contents($configFile), true);
+        $jsonError = json_last_error();
+        if($jsonError) throw new JsonException("Got json exception during config parsing, exception is [".ReportUtils::getJsonLastErrorMsg($jsonError) ."]" );
+        return $configData;
     }
 
     private function isConfigExist($configFile){

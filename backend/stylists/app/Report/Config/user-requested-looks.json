@@ -1,5 +1,5 @@
 {
-  "display_name": "Looks Requests by Users",
+  "display_name": "Looks Requests by Users Report",
   "table_name": "style_requests",
   "related_report_links" : {
     "looks" : {
