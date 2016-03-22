@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use App\Report\Reporter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Input;
 
 class ReportController extends Controller {
@@ -25,6 +26,9 @@ class ReportController extends Controller {
     }
 
     public function index(Request $request, $report_id){
+        if(!Auth::user()->hasRole('admin')){
+            return redirect('look/list')->withError('Report access denied!');
+        }
         $reportEntity = $this->reporter->getReportEntity($report_id);
         return view('report.index', array('reportEntity' => $reportEntity));
     }

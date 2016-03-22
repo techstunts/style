@@ -7,6 +7,9 @@
                         <li><a href="{!! url('auth/register') !!}">Sign Up</a></li>
                         <li><a href="{!! url('auth/login') !!}">Login</a></li>
                     @else
+                        @if(Auth::user()->hasRole('admin'))
+                            <li><a href="/report/looks">Reports</a></li>
+                        @endif
                         <li><a href="/stylist/list">Stylists</a></li>
                         <li><a href="/client/list">Clients</a></li>
                         @if(Auth::user()->hasRole('admin'))

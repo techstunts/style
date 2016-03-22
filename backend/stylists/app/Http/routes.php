@@ -34,7 +34,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::any('stylist/{action}/{id?}', 'StylistController@index');
 
     Route::any('collection/{action}/{id?}/{action_id?}', 'CollectionController@index');
+
+    Route::get('report/{report_id}', 'ReportController@index');
+
+    Route::get('report/{report_id}/query', 'ReportController@query');
 });
 
-Route::get('report/{report_id}', 'ReportController@index');
-Route::get('report/{report_id}/query', 'ReportController@query');
