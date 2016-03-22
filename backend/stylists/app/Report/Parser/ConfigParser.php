@@ -24,7 +24,7 @@ use App\Report\Utils\ReportUtils;
 
 class ConfigParser {
 
-    const CONFIG_DIR = "config";
+    const CONFIG_DIR = "Config";
     const PARENT_DIR = "..";
     const FILE_EXTENSION =".json";
 
