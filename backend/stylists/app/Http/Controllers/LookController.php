@@ -322,6 +322,9 @@ class LookController extends Controller
 
     public function getCollage(Request $request)
     {
+        if(!Auth::user()->hasRole('admin')){
+            return redirect('look/list')->withError('Collage access denied!');
+        }
         return view('look/collage');
     }
 
