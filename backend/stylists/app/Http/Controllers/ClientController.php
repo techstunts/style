@@ -41,6 +41,16 @@ class ClientController extends Controller
         $this->base_table = 'userdetails';
         $this->initWhereConditions($request);
         $this->initFilters();
+        $app_sections = array(
+            "1" => "Style suggest",
+            "2" => "Trending",
+            "3" => "My Requests",
+            "4" => "My Products",
+            "5" => "Ask Advice",
+            "6" => "Ask Look",
+            "7" => "Ask Product",
+            "8" => "Stylist",
+        );
 
         $view_properties = array(
             'stylists' => $this->stylists,
@@ -62,6 +72,7 @@ class ClientController extends Controller
                 ->appends($paginate_qs);
 
         $view_properties['clients'] = $clients;
+        $view_properties['app_sections'] = $app_sections;
         return view('client.list', $view_properties);
     }
 

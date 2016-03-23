@@ -15,6 +15,7 @@
                         </form>
                     @endif
                     {!! $clients->render() !!}
+
                     <a class="btn" data-popup-open="send-looks" href="#">Send Looks</a>
                 </div>
 
@@ -40,7 +41,7 @@
                         <tbody>
                         @foreach($clients as $client)
                             <tr>
-                                
+
                                 <td>{{$client->user_id}}</td>
                                 <td class="table-font-size"><a
                                             href="{{url("client/view/".$client->user_id)}}"> {{$client->username}}</a>
@@ -84,8 +85,10 @@
                         <p class="btn"  id="send-look"  data-valuee="2" data-popup-open="send-looks" style="float: left">Send Looks</p>
                         <p class="btn" id="send-product" data-valuee="1" data-popup-open="send-looks" style="float: left">Send Products</p>
                         <p class="btn" id="send-tip" data-valuee="4" data-popup-open="send-looks" style="float: left">Send Tips</p>
+                        @include('common.app_section.select')
                     </div>
                     <div class="clear"></div>
+
                     <div id="filters" >
 
                     </div>

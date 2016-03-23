@@ -313,9 +313,7 @@ $(document).ready(function () {
             $("#popup-items :checked").each(function(){
                 look_ids.push($(this).val());
             });
-
-            console.log(look_ids);
-            console.log(rows_selected);
+            var app_section = $("#app_section").val();
 
             $.ajaxSetup({
                 headers:{
@@ -326,7 +324,7 @@ $(document).ready(function () {
             $.ajax({
                 type: "POST",
                 url: '/notifications/pushNotifications',
-                data: {entity_ids: look_ids, entity_type_id: '2', client_ids: rows_selected},
+                data: {entity_ids: look_ids, entity_type_id: '2', client_ids: rows_selected, app_section: app_section},
                 success: function (message) {
                    alert("Sent Successfully");
                 }
