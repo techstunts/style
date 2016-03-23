@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lookups\Lookup;
-use App\Models\Lookups\Status;
+use App\Models\Lookups\StylistStatus;
 use App\Stylist;
 use Illuminate\Http\Request;
 
@@ -32,8 +32,8 @@ class StylistController extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
-        $status_list = Status::all()->keyBy('id');
-        $status_list[0] = new Status();
+        $status_list = StylistStatus::all()->keyBy('id');
+        $status_list[0] = new StylistStatus();
 
         $stylists =
             Stylist::with('gender','expertise','designation')
@@ -73,8 +73,8 @@ class StylistController extends Controller
 
         $view_properties = null;
         if($stylist){
-            $status_list = Status::all()->keyBy('id');
-            $status_list[0] = new Status();
+            $status_list = StylistStatus::all()->keyBy('id');
+            $status_list[0] = new StylistStatus();
 
             $view_properties['stylist'] = $stylist;
             $view_properties['status_list'] = $status_list;
@@ -111,7 +111,7 @@ class StylistController extends Controller
             $view_properties['gender_id'] = intval($stylist->gender_id);
             $view_properties['genders'] = $lookup->type('gender')->get();
             $view_properties['status_id'] = intval($stylist->status_id);
-            $view_properties['statuses'] = $lookup->type('status')->get();
+            $view_properties['statuses'] = $lookup->type('stylist_status')->get();
             $view_properties['expertise_id'] = intval($stylist->expertise_id);
             $view_properties['expertises'] = $lookup->type('expertise')->get();
             $view_properties['designation_id'] = intval($stylist->designation_id);
