@@ -15,6 +15,7 @@
                         </form>
                     @endif
                     {!! $clients->render() !!}
+                    <a class="btn" data-popup-open="send-looks" href="#">Send Looks</a>
                 </div>
 
                 <div class="clear"></div>
@@ -39,8 +40,8 @@
                         <tbody>
                         @foreach($clients as $client)
                             <tr>
-                                {{--                            {{dd($client)}}--}}
-                                <td></td>
+                                
+                                <td>{{$client->user_id}}</td>
                                 <td class="table-font-size"><a
                                             href="{{url("client/view/".$client->user_id)}}"> {{$client->username}}</a>
                                 </td>
@@ -58,7 +59,7 @@
                                     {{$client->denimprice ? 'Denim:'. $client->denimprice : ''}}<br/>
                                     {{$client->footwearprice ? 'Footwear:'. $client->footwearprice : ''}}
                                 </td>
-                                <td class="table-font-size"> {{$client->stylist->name ? $client->stylist->name : ''}} </td>
+                                <td class="table-font-size"> {{$client->stylist ? $client->stylist->name : ''}} </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -74,16 +75,34 @@
             </div>
 
             @include('look.create')
+
+            <div class="popup" data-valuee="2" data-popup="send-looks">
+                <div class="popup-inner">
+
+                    <p><a data-popup-close="send-looks" href="#" style="float: right">Close</a></p>
+                    <div id="entity" >
+                        <p class="btn"  id="send-look"  data-valuee="2" data-popup-open="send-looks" style="float: left">Send Looks</p>
+                        <p class="btn" id="send-product" data-valuee="1" data-popup-open="send-looks" style="float: left">Send Products</p>
+                        <p class="btn" id="send-tip" data-valuee="4" data-popup-open="send-looks" style="float: left">Send Tips</p>
+                    </div>
+                    <div class="clear"></div>
+                    <div id="filters" >
+
+                    </div>
+                    <div>
+                        <a class="btn" data-popup-open="send-looks" value="Filter">Filter</a>
+
+                        <a class="clearall" data-popup-open="send-looks">Clear All</a>
+                        <a class="btn" id="send" value="send">Send</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.css">
 
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#client_table').DataTable();
-        });
-    </script>
+    <script src="/js/datatable.js"></script>
 
 @endsection

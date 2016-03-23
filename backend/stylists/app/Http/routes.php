@@ -36,6 +36,8 @@ Route::group(['middleware' => 'auth'], function(){
     Route::any('collection/{action}/{id?}/{action_id?}', 'CollectionController@index');
 
     Route::any('requests/{action}/{id?}/{action_id?}', 'StyleRequestsController@index');
+
+    Route::any('notifications/{action}/{id?}/{action_id?}', 'NotificationsController@index');
 });
 
 

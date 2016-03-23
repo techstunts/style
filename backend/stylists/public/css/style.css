@@ -1,107 +1,499 @@
-nav{overflow: auto}
-nav ul{padding: 0 0 0 2px;}
-nav li{float:left; margin: 0px 2px 4px 0px;padding: 3px 5px;list-style: none; border: 1px solid wheat; background-color: #E91E63;}
-nav li a{color: white; text-decoration: none; padding:3px; }
-div.items{float:left;margin:5px; height: 350px; width: 260px; border: 2px solid beige;  overflow: hidden;}
-div.items div{min-height:10px;}
-div.items div.image{height:280px;}
-div.items img{max-height:280px;}
-div.items div.text{padding: 2px 0 3px 0;font-size:11px; color:grey; font-family: Arial;}
-div.items div.name{font-size:12px;}
-div.items div.extra {display:block;}
-div.items div.extra span{background-color:#E91E63;overflow:overlay;color:wheat;margin:0 5px 0 0;padding:0 1px;}
-div.items div.extra a{color: wheat;}
-div.items div.extra a.action{padding: 6px 12px 0px 5px;margin: 0 5px 0 0;background-image: url(/images/glyphicons-halflings-sprite-sheet.png);}
-div.items div.extra a.Active{background-position: 354px -122px;}
-div.items div.extra a.Inactive{background-position: 323px -122px;}
-div.items div.extra a.Deleted{background-position: 384px -123px;}
-div.items div.extra a.InProgress{background-position: 354px -122px;}
-div.items div.extra a.Submitted{background-position: 354px -183px;}
-div.items div.extra a.Approved{background-position: 477px -183px;}
-div.items div.extra a.Rejected{background-position: 447px -183px;}
-div.items div.name a{color:grey; text-decoration: underline;}
-ul.pager {list-style: none;padding: 0px;margin:0px;}
-ul.pager li{float: left;padding: 0 6px 0 6px;margin: 0 5px 0 3px;}
-ul.pager li a{color: grey; padding: 2px 14px;}
-ul.pager li > span { padding: 2px 14px;}
+nav {
+    overflow: auto
+}
 
-div.filters{padding: 5px 0 5px 2px;}
-div.filters form{float:left;}
-div.filters form select, div.filters form input, div.filters form label{padding: 2px 0 1px 1px; color: grey; background-color: white; border: 1px solid #d3d3d3;max-width: 200px;display: inline;width: 90px;height: initial;font-size: 10px;}
-div.filters form input[type="submit"]{background-color: #D32F2F;border: 1px beige;color: white;font-weight: bold;padding: 3px 4px 3px 4px;margin:1px 5px 0px 0px;}
-div.filters form input[type="checkbox"]{width:10px;}
-div.filters form label{border:none;}
-div.filters form.approve{margin-left: 10px;}
-div.filters form.approve input[type="submit"]{background-color: white;border: none;color:#D32F2F;text-decoration:underline;cursor:pointer;}
-div.filters form input.search{width:55px;}
-div.filters form input.search_text{width:120px;}
+nav ul {
+    padding: 0 0 0 2px;
+}
 
-div.filters form a.clearall{color: #000;font-size: 12px;text-decoration: underline;}
+nav li {
+    float: left;
+    margin: 0px 2px 4px 0px;
+    padding: 3px 5px;
+    list-style: none;
+    border: 1px solid wheat;
+    background-color: #E91E63;
+}
 
-span.errorMsg{color:red;}
+nav li a {
+    color: white;
+    text-decoration: none;
+    padding: 3px;
+}
 
-div.message{position: fixed; top: 30px; left: 500px; display:block;}
-div.message div.error{color:red}
+div.items {
+    float: left;
+    margin: 5px;
+    height: 350px;
+    width: 260px;
+    border: 2px solid beige;
+    overflow: hidden;
+}
 
-form.create_look{float:left;}
-form.create_look div{margin:0 0 5px 0px; text-align:left;float: left;width:500px;}
-form.create_look input,select{margin-right: 10px;}
-form.create_look input[type=text], textarea{min-width: 400px;}
+div.items div {
+    min-height: 10px;
+}
+
+div.items div.image {
+    height: 280px;
+}
+
+div.items img {
+    max-height: 280px;
+}
+
+div.items div.text {
+    padding: 2px 0 3px 0;
+    font-size: 11px;
+    color: grey;
+    font-family: Arial;
+}
+
+div.items div.name {
+    font-size: 12px;
+}
+
+div.items div.extra {
+    display: block;
+}
+
+div.items div.extra span {
+    background-color: #E91E63;
+    overflow: overlay;
+    color: wheat;
+    margin: 0 5px 0 0;
+    padding: 0 1px;
+}
+
+div.items div.extra a {
+    color: wheat;
+}
+
+div.items div.extra a.action {
+    padding: 6px 12px 0px 5px;
+    margin: 0 5px 0 0;
+    background-image: url(/images/glyphicons-halflings-sprite-sheet.png);
+}
+
+div.items div.extra a.Active {
+    background-position: 354px -122px;
+}
+
+div.items div.extra a.Inactive {
+    background-position: 323px -122px;
+}
+
+div.items div.extra a.Deleted {
+    background-position: 384px -123px;
+}
+
+div.items div.extra a.InProgress {
+    background-position: 354px -122px;
+}
+
+div.items div.extra a.Submitted {
+    background-position: 354px -183px;
+}
+
+div.items div.extra a.Approved {
+    background-position: 477px -183px;
+}
+
+div.items div.extra a.Rejected {
+    background-position: 447px -183px;
+}
+
+div.items div.name a {
+    color: grey;
+    text-decoration: underline;
+}
+
+ul.pager {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+ul.pager li {
+    float: left;
+    padding: 0 6px 0 6px;
+    margin: 0 5px 0 3px;
+}
+
+ul.pager li a {
+    color: grey;
+    padding: 2px 14px;
+}
+
+ul.pager li > span {
+    padding: 2px 14px;
+}
+
+div.filters {
+    padding: 5px 0 5px 2px;
+}
+
+div.filters form {
+    float: left;
+}
+
+div.filters form select, div.filters form input, div.filters form label {
+    padding: 2px 0 1px 1px;
+    color: grey;
+    background-color: white;
+    border: 1px solid #d3d3d3;
+    max-width: 200px;
+    display: inline;
+    width: 90px;
+    height: initial;
+    font-size: 10px;
+}
+
+div.filters form input[type="submit"] {
+    background-color: #D32F2F;
+    border: 1px beige;
+    color: white;
+    font-weight: bold;
+    padding: 3px 4px 3px 4px;
+    margin: 1px 5px 0px 0px;
+}
+
+div.filters form input[type="checkbox"] {
+    width: 10px;
+}
+
+div.filters form label {
+    border: none;
+}
+
+div.filters form.approve {
+    margin-left: 10px;
+}
+
+div.filters form.approve input[type="submit"] {
+    background-color: white;
+    border: none;
+    color: #D32F2F;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+div.filters form input.search {
+    width: 55px;
+}
+
+div.filters form input.search_text {
+    width: 120px;
+}
+
+div.filters form a.clearall {
+    color: #000;
+    font-size: 12px;
+    text-decoration: underline;
+}
+
+span.errorMsg {
+    color: red;
+}
+
+div.message {
+    position: fixed;
+    top: 30px;
+    left: 500px;
+    display: block;
+}
+
+div.message div.error {
+    color: red
+}
+
+form.create_look {
+    float: left;
+}
+
+form.create_look div {
+    margin: 0 0 5px 0px;
+    text-align: left;
+    float: left;
+    width: 500px;
+}
+
+form.create_look input, select {
+    margin-right: 10px;
+}
+
+form.create_look input[type=text], textarea {
+    min-width: 400px;
+}
 
 /* Selectable css */
-#feedback { font-size: 1.4em; }
-ol.selectable .ui-selecting { background: #FECA40; }
-ol.selectable .ui-selected { background: #F39814; color: white; }
-ol.selectable { list-style-type: none; margin: 0; padding: 0;  }
-ol.selectable li { margin: 3px; float: left; text-align: center; background: white;}
+#feedback {
+    font-size: 1.4em;
+}
+
+ol.selectable .ui-selecting {
+    background: #FECA40;
+}
+
+ol.selectable .ui-selected {
+    background: #F39814;
+    color: white;
+}
+
+ol.selectable {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ol.selectable li {
+    margin: 3px;
+    float: left;
+    text-align: center;
+    background: white;
+}
 
 /* Sortable css*/
-#sortable {width: 500px; left: 50%; margin-left: 10%;float:left;margin-top: 0;}
-#sortable li img{max-width: 200px; }
+#sortable {
+    width: 500px;
+    left: 50%;
+    margin-left: 10%;
+    float: left;
+    margin-top: 0;
+}
+
+#sortable li img {
+    max-width: 200px;
+}
 
 /* Lightbox css */
-div.trigger_lightbox {position: fixed; bottom: 20px; right: 20px; border: 1px solid wheat; color: white; background-color: #D32F2F; padding: 5px; font-family: arial; cursor: pointer;}
-div#lightbox {width: 100%; height: 100%; top: 0; left: 50%; position: fixed; background: url('/images/overlay.png'); text-align: center;margin-left: -50%;overflow: scroll;display:none;}
-div#lightbox p#close{margin-right:20px; text-align:right; color: #fff; font-size: 12px; cursor: pointer;}
-div#lightbox li.ui-state-default{margin-right: 5px;display: -webkit-inline-box;}
-div#lightbox .form-control{display: inline;width:initial;}
+div.trigger_lightbox {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border: 1px solid wheat;
+    color: white;
+    background-color: #D32F2F;
+    padding: 5px;
+    font-family: arial;
+    cursor: pointer;
+}
 
-div.clear{clear: both;}
+div#lightbox {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 50%;
+    position: fixed;
+    background: url('/images/overlay.png');
+    text-align: center;
+    margin-left: -50%;
+    overflow: scroll;
+    display: none;
+}
 
-div.selected_products{position: fixed; top: 20px; right: 20px; cursor: pointer;}
-div.selected_products span{background-repeat: no-repeat;background-position: top;background-size: cover;width: 100px;height: 100px; border: 1px solid wheat;display: none;margin: 2px 0 0 0;}
-div.selected_products div.remove{position: relative; left: 80px; cursor: pointer; font-size: small; background-color: beige; width: 20px; text-align: center; color: gray;}
+div#lightbox p#close {
+    margin-right: 20px;
+    text-align: right;
+    color: #fff;
+    font-size: 12px;
+    cursor: pointer;
+}
 
+div#lightbox li.ui-state-default {
+    margin-right: 5px;
+    display: -webkit-inline-box;
+}
 
-div.resource_view{margin:5px;}
-div.resource_view div.image{float:left;}
-div.resource_view div.image img{max-height:700px;max-width: 550px;}
-div.resource_view table.info{float:left;width:500px;margin-left: 5px;}
-div.resource_view tr.row{text-align: left;padding: 5px}
-div.resource_view tr.row td{max-width: 490px;}
-div.resource_view tr.row td.title, td.description{padding-bottom:10px;}
-div.resource_view tr.row td.title{font-size: 20px;}
-div.resource_view tr.row td.description{color: gray;}
-div.resource_view tr.row td.head{color: gray;max-width:100px}
-div.resource_view tr.row td.content{width: 400px;max-width:390px}
-div.resource_view tr.row td.content img{max-width: 100px;max-height: 100px;margin-right: 5px;}
-div.resource_view tr.row td.content img.icon{max-width: 30px;max-height: 30px;}
-div.resource_view tr.row td.content img.entity{max-width: 170px;max-height: 170px;border: 1px solid #d3d3d3;margin-bottom: 5px;}
-div.resource_view tr.row a.product_link{color:blue;font-size:13px;}
+div#lightbox .form-control {
+    display: inline;
+    width: initial;
+}
 
+div.clear {
+    clear: both;
+}
+
+div.selected_products {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+div.selected_products span {
+    background-repeat: no-repeat;
+    background-position: top;
+    background-size: cover;
+    width: 100px;
+    height: 100px;
+    border: 1px solid wheat;
+    display: none;
+    margin: 2px 0 0 0;
+}
+
+div.selected_products div.remove {
+    position: relative;
+    left: 80px;
+    cursor: pointer;
+    font-size: small;
+    background-color: beige;
+    width: 20px;
+    text-align: center;
+    color: gray;
+}
+
+div.resource_view {
+    margin: 5px;
+}
+
+div.resource_view div.image {
+    float: left;
+}
+
+div.resource_view div.image img {
+    max-height: 700px;
+    max-width: 550px;
+}
+
+div.resource_view table.info {
+    float: left;
+    width: 500px;
+    margin-left: 5px;
+}
+
+div.resource_view tr.row {
+    text-align: left;
+    padding: 5px
+}
+
+div.resource_view tr.row td {
+    max-width: 490px;
+}
+
+div.resource_view tr.row td.title, td.description {
+    padding-bottom: 10px;
+}
+
+div.resource_view tr.row td.title {
+    font-size: 20px;
+}
+
+div.resource_view tr.row td.description {
+    color: gray;
+}
+
+div.resource_view tr.row td.head {
+    color: gray;
+    max-width: 100px
+}
+
+div.resource_view tr.row td.content {
+    width: 400px;
+    max-width: 390px
+}
+
+div.resource_view tr.row td.content img {
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 5px;
+}
+
+div.resource_view tr.row td.content img.icon {
+    max-width: 30px;
+    max-height: 30px;
+}
+
+div.resource_view tr.row td.content img.entity {
+    max-width: 170px;
+    max-height: 170px;
+    border: 1px solid #d3d3d3;
+    margin-bottom: 5px;
+}
+
+div.resource_view tr.row a.product_link {
+    color: blue;
+    font-size: 13px;
+}
 
 /*Css for CLIENT LIST*/
 
-.font-size-table-header{
+.font-size-table-header {
     font-size: 77%;
-    background-color:grey;
-    color:white;
+    background-color: grey;
+    color: white;
 }
-.image-width{
-    width:auto;
+
+.image-width {
+    width: auto;
     height: 10px;
     align-items: center;
 }
-.table-font-size{
+
+.table-font-size {
     font-size: 77%;
+}
+
+/*Pop-up on client list page */
+
+/* Outer */
+.popup {
+    width: 100%;
+    height: 100%;
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.75);
+}
+
+/* Inner */
+.popup-inner {
+    max-width: 920px;
+    width: 90%;
+    padding: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 1);
+    border-radius: 3px;
+    background: #FFFFFF;
+ /*   padding-top: 57px;*/
+    max-height: 500px;
+    overflow: scroll;
+}
+
+/* Close Button */
+.popup-close {
+    width: 30px;
+    height: 30px;
+    padding-top: 4px;
+    display: inline-block;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    transition: ease 0.25s all;
+    -webkit-transform: translate(50%, -50%);
+    transform: translate(50%, -50%);
+    border-radius: 1000px;
+    background: rgba(0, 0, 0, 0.8);
+    font-family: Arial, Sans-Serif;
+    font-size: 20px;
+    text-align: center;
+    line-height: 100%;
+    color: #fff;
+}
+
+.popup-close:hover {
+    -webkit-transform: translate(50%, -50%) rotate(180deg);
+    transform: translate(50%, -50%) rotate(180deg);
+    background: rgba(0, 0, 0, 1);
+    text-decoration: none;
+}
+
+.pop-up-item {
+    height: 190px !important;
+    width: 202px;
 }
