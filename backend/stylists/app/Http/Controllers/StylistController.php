@@ -99,8 +99,11 @@ class StylistController extends Controller
     public function getEdit()
     {
         $stylist = Stylist::find($this->resource_id);
-        if(!Auth::user()->hasRole('admin') && $stylist->stylish_id != Auth::user()->stylish_id){
-            return view('404', array('title' => 'You do not have permission to change this Stylist\'s details'));
+        $is_admin = Auth::user()->hasRole('admin');
+        if(!$is_admin){
+            if($stylist->stylish_id != Auth::user()->stylish_id){
+                return view('404', array('title' => 'You do not have permission to change this Stylist\'s details'));
+            }
         }
 
         $view_properties = null;
@@ -116,6 +119,7 @@ class StylistController extends Controller
             $view_properties['expertises'] = $lookup->type('expertise')->get();
             $view_properties['designation_id'] = intval($stylist->designation_id);
             $view_properties['designations'] = $lookup->type('designation')->get();
+            $view_properties['is_admin'] = $is_admin;
         }
         else{
             return view('404', array('title' => 'Stylist not found'));
@@ -179,17 +183,27 @@ class StylistController extends Controller
         $stylist->description = isset($request->description) && $request->description != '' ? $request->description : '';
         $stylist->age = isset($request->age) && $request->age != '' ? $request->age : '';
         $stylist->profile = isset($request->profile) && $request->profile != '' ? $request->profile : '';
-        $stylist->code = isset($request->code) && $request->code != '' ? $request->code : '';
-        $stylist->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : '';;
+        if(Auth::user()->hasRole('admin')){
+            $stylist->code = isset($request->code) && $request->code != '' ? $request->code : '';
+        }
+        $stylist->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : '';
         $stylist->expertise_id = isset($request->expertise_id) && $request->expertise_id != '' ? $request->expertise_id : '';
         $stylist->designation_id = isset($request->designation_id) && $request->designation_id != '' ? $request->designation_id : '';
         $stylist->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
-        $stylist->blog_url = isset($request->blog_url) && $request->blog_url != '' ? $request->blog_url : '';;
-        $stylist->facebook_id = isset($request->facebook_id) && $request->facebook_id != '' ? $request->facebook_id : '';;
-        $stylist->twitter_id = isset($request->twitter_id) && $request->twitter_id != '' ? $request->twitter_id : '';;
-        $stylist->pinterest_id = isset($request->pinterest_id) && $request->pinterest_id != '' ? $request->pinterest_id : '';;
-        $stylist->instagram_id = isset($request->instagram_id) && $request->instagram_id != '' ? $request->instagram_id : '';;
-        $stylist->save();
+        $stylist->blog_url = isset($request->blog_url) && $request->blog_url != '' ? $request->blog_url : '';
+        $stylist->facebook_id = isset($request->facebook_id) && $request->facebook_id != '' ? $request->facebook_id : '';
+        $stylist->twitter_id = isset($request->twitter_id) && $request->twitter_id != '' ? $request->twitter_id : '';
+        $stylist->pinterest_id = isset($request->pinterest_id) && $request->pinterest_id != '' ? $request->pinterest_id : '';
+        $stylist->instagram_id = isset($request->instagram_id) && $request->instagram_id != '' ? $request->instagram_id : '';
+        try{
+            $stylist->save();
+        }
+        catch(\Exception $e){
+            return redirect('stylist/edit/' . $this->resource_id)
+                ->withErrors([$e->getMessage()])
+                ->withInput();
+
+        }
 
         return redirect('stylist/view/' . $this->resource_id);
     }
