@@ -50,23 +50,23 @@ $(document).ready(function () {
         [],
         ['genders', 'budgets', 'colors', 'stylists'],
         ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
+        [],
         []
     ];
     var entity_filter_ids = [
         [],
         ['id', 'id', 'id', 'stylish_id'],
         ['id', 'id', 'id', 'id', 'id', 'id', 'stylish_id'],
+        [],
         []
     ];
     var entity_fields_ids = [
         [],
         ['gender_id', 'budget_id', 'primary_color_id', 'stylish_id'],
         ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'stylish_id'],
+        [],
         []
     ];
-
-    var superset_filter = ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists', 'colors'];
-    var filters_selected = {};
 
     $(window).scroll(function () {
         var windowpos = $(window).scrollTop() + 60;
@@ -89,7 +89,7 @@ $(document).ready(function () {
             alert("Please select at least one record");
             return false;
         }
-//console.log($chkbox_checked);
+
         var ids = $.map(table.rows('.selected').data(), function (item) {
             return item[1]
         });
@@ -120,10 +120,9 @@ $(document).ready(function () {
 
     });
 
-
     // Array holding selected row IDs
     var rows_selected = [];
-    var table = $('#client_table').DataTable({
+    var table = $('#datatable').DataTable({
 
         'columnDefs': [{
             'targets': 0,
@@ -148,7 +147,7 @@ $(document).ready(function () {
     });
 
     // Handle click on checkbox
-    $('#client_table tbody').on('click', 'input[type="checkbox"]', function (e) {
+    $('#datatable tbody').on('click', 'input[type="checkbox"]', function (e) {
         var $row = $(this).closest('tr');
 
         // Get row data
@@ -183,16 +182,16 @@ $(document).ready(function () {
     });
 
     // Handle click on table cells with checkboxes
-    $('#client_table').on('click', 'tbody td, thead th:first-child', function (e) {
+    $('#datatable').on('click', 'tbody td, thead th:first-child', function (e) {
         $(this).parent().find('input[type="checkbox"]').trigger('click');
     });
 
     // Handle click on "Select all" control
-    $('#client_table thead input[name="select_all"]').on('click', function (e) {
+    $('#datatable thead input[name="select_all"]').on('click', function (e) {
         if (this.checked) {
-            $('#client_table tbody input[type="checkbox"]:not(:checked)').trigger('click');
+            $('#datatable tbody input[type="checkbox"]:not(:checked)').trigger('click');
         } else {
-            $('#client_table tbody input[type="checkbox"]:checked').trigger('click');
+            $('#datatable tbody input[type="checkbox"]:checked').trigger('click');
         }
 
         // Prevent click event from propagating to parent
@@ -211,26 +210,6 @@ $(document).ready(function () {
         entity_url = "http://api.istyleyou.in/" + entity[entity_id] + "/list?";
         $('#filters').parents('form').attr('action', entity_url)
     });
-
-    $(".clearall").on('click', function (e) {
-        category_id = '';
-        gender_id = '';
-        color_id = '';
-        budget_id = '';
-        entity_url = "http://api.istyleyou.in/" + entity[entity_id] + "/list?";
-    });
-    if (category_id != '') {
-        entity_url = entity_url + '&category_id=' + category_id;
-    }
-    if (gender_id != '') {
-        entity_url = entity_url + '&gender_id=' + gender_id;
-    }
-    if (color_id != '') {
-        entity_url = entity_url + '&color_id=' + color_id;
-    }
-    if (budget_id != '') {
-        entity_url = entity_url + '&budget_id=' + budget_id;
-    }
 
     function initializeFilters(){
         if ($("#filters select").length == 0) {
@@ -276,11 +255,11 @@ $(document).ready(function () {
         }
     }
 
-
     //----- OPEN
     $('[data-popup-open]').on('click', function (e) {
         var targeted_popup_class = jQuery(this).attr('data-popup-open');
         $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+
         if (entity_id == '') {
             entity_id = $('[data-popup="' + targeted_popup_class + '"]').attr('data-valuee');
         }
@@ -312,7 +291,6 @@ $(document).ready(function () {
             look_ids.push($(this).val());
         });
 
-        //console.log(look_ids);
         var app_section = $("#app_section").val();
 
         $.ajaxSetup({
@@ -334,7 +312,7 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             url: '/notifications/pushNotifications',
-            data: {entity_ids: look_ids, entity_type_id: '2', client_ids: rows_selected, app_section: app_section},
+            data: {entity_ids: look_ids, entity_type_id: entity_id, client_ids: rows_selected, app_section: app_section},
             success: function (message) {
                 alert("Sent Successfully");
             }
@@ -356,16 +334,21 @@ function showEntities(entity_url){
         url: entity_url,
         success: function (item) {
             $(".popup-inner > .items").remove();
-            for (var i = 0; i < item.data.length; i++) {
-                var str = '<div class="items pop-up-item" id="popup-items">'
-                    + '<div class="name text"> <a href="' + '/' + entity[entity_id] + '/view/' + item.data[i].id + '">' + item.data[i].name + '</a></div>'
-                    + '<div class="image"><img src="' + item.data[i].image + '"/>'
-                    + '<span>' + item.data[i].price + '</span>'
-                    + '<input class="look_ids" name="look_ids" id="look_ids" value="' + item.data[i].id + '" type="checkbox">'
-                    + '</div>'
-                    + '</div>'
-                    + '</div>';
+            if (!item.data.length){
+                var str = "No data found";
                 $(".popup-inner").append(str);
+            }else {
+                for (var i = 0; i < item.data.length; i++) {
+                    var str = '<div class="items pop-up-item" id="popup-items">'
+                        + '<div class="name text"> <a href="' + '/' + entity[entity_id] + '/view/' + item.data[i].id + '">' + item.data[i].name + '</a></div>'
+                        + '<div class="image"><img src="' + item.data[i].image + '"/>'
+                        + '<span>' + item.data[i].price + '</span>'
+                        + '<input class="look_ids" name="look_ids" id="look_ids" value="' + item.data[i].id + '" type="checkbox">'
+                        + '</div>'
+                        + '</div>'
+                        + '</div>';
+                    $(".popup-inner").append(str);
+                }
             }
         }
     });

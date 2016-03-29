@@ -42,6 +42,16 @@ class StyleRequestsController extends Controller
             'occasions' => $this->occasions,
             'budgets' => $this->budgets,
         );
+        $app_sections = array(
+            "1" => "Style suggest",
+            "2" => "Trending",
+            "3" => "My Requests",
+            "4" => "My Products",
+            "5" => "Ask Advice",
+            "6" => "Ask Look",
+            "7" => "Ask Product",
+            "8" => "Stylist",
+        );
 
         foreach($this->filter_ids as $filter){
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
@@ -82,6 +92,7 @@ class StyleRequestsController extends Controller
                 ->appends($paginate_qs);
         $view_properties['requests'] = $requests;
         $view_properties['status_rules'] = $this->status_rules;
+        $view_properties['app_sections'] = $app_sections;
         return view('requests.list', $view_properties);
     }
 
