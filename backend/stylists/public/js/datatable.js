@@ -48,13 +48,19 @@ $(document).ready(function () {
     var all_filters = [];
     var entity_filters = [
         [],
-        ['genders', 'budgets', 'colors', 'stylists', 'category'],
+        ['genders', 'budgets', 'colors', 'stylists'],
         ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
         []
     ];
     var entity_filter_ids = [
         [],
-        ['gender_id', 'budget_id', 'primary_color_id', 'stylish_id', 'category_id'],
+        ['id', 'id', 'id', 'stylish_id'],
+        ['id', 'id', 'id', 'id', 'id', 'id', 'stylish_id'],
+        []
+    ];
+    var entity_fields_ids = [
+        [],
+        ['gender_id', 'budget_id', 'primary_color_id', 'stylish_id'],
         ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'stylish_id'],
         []
     ];
@@ -231,25 +237,11 @@ $(document).ready(function () {
             $.ajax({
                 url: 'http://api.istyleyou.in/filters/list',
                 success: function (data) {
-
-                    for (i in superset_filter) {
-                        prop = superset_filter[i];
-                        all_filters[prop] = data[prop];
-                    }
-
+                    all_filters[1] = data;
                     $.ajax({
                         url: 'http://api.istyleyou.in/look/filters',
                         success: function (data) {
-
-                            for (i in superset_filter) {
-                                prop = superset_filter[i];
-                                if (all_filters[prop]) {
-                                } else {
-
-                                    all_filters[prop] = data[prop];
-                                }
-                            }
-
+                            all_filters[2] = data;
                             showFilters();
                         }
                     });
@@ -266,15 +258,19 @@ $(document).ready(function () {
         $("#filters select").remove();
 
         for (var filter_count = 0; filter_count < entity_filters[entity_id].length; filter_count++) {
+            var filter_name = entity_filters[entity_id][filter_count];
+            var filter_id = entity_filter_ids[entity_id][filter_count];
+            var field_id = entity_fields_ids[entity_id][filter_count];
 
-            var filter_str = '<select name="' + entity_filter_ids[entity_id][filter_count] + '">'
-                + '<option value="">' + entity_filters[entity_id][filter_count] + '</option>';
+            var filter_str = '<select name="' + field_id + '">' +
+                '<option value="">' + filter_name + '</option>';
 
-            for (var i = 0; i < all_filters[entity_filters[entity_id][filter_count]].length; i++) {
-                filter_str = filter_str + '<option value="' + all_filters[entity_filters[entity_id][filter_count]][i].id + '" >'
-                    + all_filters[entity_filters[entity_id][filter_count]][i].name + '</option>';
+            for (var i = 0; i < all_filters[entity_id][filter_name].length; i++) {
+                var id = all_filters[entity_id][filter_name][i][filter_id];
+                var name = all_filters[entity_id][filter_name][i].name;
+                filter_str += '<option value="' + id + '" >' + name  + '</option>';
             }
-            filter_str = filter_str + '</select>';
+            filter_str += '</select>';
 
             $("#filters").append(filter_str);
         }
@@ -312,9 +308,11 @@ $(document).ready(function () {
 
     $("#send").on('click', function (e) {
         var look_ids = [];
-        $("#popup-items :checked").each(function () {
+        $(".popup-inner > #popup-items :checked").each(function () {
             look_ids.push($(this).val());
         });
+
+        //console.log(look_ids);
         var app_section = $("#app_section").val();
 
         $.ajaxSetup({
