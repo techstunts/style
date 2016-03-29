@@ -31,24 +31,36 @@ function updateDataTableSelectAllCtrl(table) {
     }
 }
 
+var entity_id = '';
+
 $(document).ready(function () {
+    var entity_url = '';
     var category_id = '';
     var gender_id = '';
     var color_id = '';
     var budget_id = '';
     var look_ids = [];
-    var filter_ids = ['category_id', 'gender_id', 'color_id', 'budget_id'];
-    var entity= ['','product', 'look', '', 'tips'];
+    var filter_fetched = 0;
+    var entity = ['', 'product', 'look', '', 'tips'];
     var entity_id = '';
     var s = $("#send");
     var pos = s.position();
+    var all_filters = [];
+    var entity_filters = [
+        [],
+        ['genders', 'budgets', 'colors', 'stylists', 'category'],
+        ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
+        []
+    ];
+    var entity_filter_ids = [
+        [],
+        ['gender_id', 'budget_id', 'primary_color_id', 'stylish_id', 'category_id'],
+        ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'stylish_id'],
+        []
+    ];
 
-    //var filter = {
-    //    " " : '',
-    //    "product":[{"category_id" : 'category_id' , "gender_id": 'gender_id', "color_id" : 'color_id', "budget_id" : 'budget_id'},],
-    //    "look" : [{"stylish_id": 'stylish_id', "gender_id": 'gender_id',"occasion_id": 'occasion_id', "body_type_id": 'body_type_id', "budget_id": 'budget_id', "age_group_id": 'age_group_id'}],
-    //    "" : '',
-    //};
+    var superset_filter = ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists', 'colors'];
+    var filters_selected = {};
 
     $(window).scroll(function () {
         var windowpos = $(window).scrollTop() + 60;
@@ -181,165 +193,182 @@ $(document).ready(function () {
         e.stopPropagation();
     });
 
-
-
-
-    $(function () {
-        //----- OPEN
-        var url = '';
-        $('[data-popup-open]').on('click', function (e) {
-            var targeted_popup_class = jQuery(this).attr('data-popup-open');
-            $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
-            entity_id = $('[data-popup="' + targeted_popup_class + '"]').attr('data-valuee');
-            url = "http://api.istyleyou.in/"+entity[entity_id]+"/list?";
-
-            $("#send-look").on('click', function () {
-                entity_id = $(this).attr("data-valuee")
-                url = "http://api.istyleyou.in/"+entity[entity_id]+"/list?";
-            });
-            $("#send-product").on('click', function () {
-                entity_id = $(this).attr("data-valuee")
-                url = "http://api.istyleyou.in/"+entity[entity_id]+"/list?";
-            });
-            $("#send-tip").on('click', function () {
-                entity_id = $(this).attr("data-valuee")
-                url = "http://api.istyleyou.in/"+entity[entity_id]+"/list?";
-            });
-
-
-            $(".clearall").on('click', function (e) {
-                category_id = '';
-                gender_id = '';
-                color_id = '';
-                budget_id = '';
-            });
-            if(category_id != ''){
-                url = url + '&category_id=' + category_id;
-            }
-            if(gender_id != ''){
-                url = url + '&gender_id=' + gender_id;
-            }
-            if(color_id != ''){
-                url = url + '&color_id=' + color_id;
-            }
-            if(budget_id != ''){
-                url = url + '&budget_id=' + budget_id;
-            }
-
-            $.ajax({
-                url: url,
-                success: function (item) {
-                    $(".popup-inner > .items").remove();
-                    for (var i = 0; i < item.data.length; i++) {
-                        var str = '<div class="items pop-up-item" id="popup-items">'
-                            + '<div class="name text"> <a href="'+'/product/view/'+item.data[i].id + '">' + item.data[i].name + '</a></div>'
-                            + '<div class="image"><img src="' + item.data[i].image + '"/>'
-                            + '<span>' + item.data[i].price + '</span>'
-                            + '<input class="look_ids" name="look_ids" id="look_ids" value="'+item.data[i].id+'" type="checkbox">'
-                            + '</div>'
-                            + '</div>'
-                            + '</div>';
-                        $(".popup-inner").append(str);
-                    }
-
-                    //for filters
-                    $.ajax({
-                        url: 'http://api.istyleyou.in/category/list/1',
-                        success: function (category) {
-                            $("#filters > .category").remove();
-                            var str = '<select class="category" name="category_id">'
-                                + '<option value="">Category</option>';
-                            for (var i = 0; i < category.data.length; i++) {
-                                str = str + '<option value="' + category.data[i].id + '" ' + category.data[i].id + '==' + category_id + '? "selected" : "">' + category.data[i].name + '</option>';
-                            }
-                            str = str + '</select>';
-                            $("#filters").append(str);
-                            $(".category").change(function () {
-                                category_id = $(this).val();
-                            });
-                        }
-                    });
-                    $.ajax({
-                        url: 'http://api.istyleyou.in/filters/list',
-                        success: function (filters) {
-                            var genders = filters.genders;
-                            var colors = filters.colors;
-                            var budgets = filters.budgets;
-                            $("#filters > .gender").remove();
-                            $("#filters > .color").remove();
-                            $("#filters > .budget").remove();
-
-                            var str = '<select class="gender" name="gender_id">'
-                                + '<option value="">Gender</option>';
-                            for (var i = 0; i < genders.length; i++) {
-                                str = str + '<option value="' + genders[i].id + '" ' + genders[i].id + '==' + gender_id + '? "selected" : "">' + genders[i].name + '</option>';
-                            }
-                            str = str + '</select>';
-
-                            str = str + '<select class="color" name="color_id">'
-                                + '<option value="">Color</option>';
-                            for (var i = 0; i < colors.length; i++) {
-                                str = str + '<option value="' + colors[i].id + '" ' + colors[i].id + '==' + color_id + '? "selected" : "">' + colors[i].name + '</option>';
-                            }
-                            str = str + '</select>';
-
-                            str = str + '<select class="budget" name="budget_id">'
-                                    + '<option value="">Budget</option>';
-                                for (var i = 0; i < budgets.length; i++) {
-                                    str = str + '<option value="' + budgets[i].id + '" ' + budgets[i].id + '==' + budget_id + '? "selected" : "">' + budgets[i].name + '</option>';
-                                }
-                                str = str + '</select>';
-
-                            $("#filters").append(str);
-                            $(".gender").change(function () {
-                                gender_id = $(this).val();
-                            });
-                            $(".color").change(function () {
-                                color_id = $(this).val();
-                            });
-                            $(".budget").change(function () {
-                                budget_id = $(this).val();
-                            });
-                        }
-                    });
-
-                }
-            });
-            e.preventDefault();
-        });
-
-        $("#send").on('click', function (e) {
-            var look_ids = [];
-            $("#popup-items :checked").each(function(){
-                look_ids.push($(this).val());
-            });
-            var app_section = $("#app_section").val();
-
-            $.ajaxSetup({
-                headers:{
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                type: "POST",
-                url: '/notifications/pushNotifications',
-                data: {entity_ids: look_ids, entity_type_id: '2', client_ids: rows_selected, app_section: app_section},
-                success: function (message) {
-                   alert("Sent Successfully");
-                }
-            });
-            e.preventDefault();
-        });
-
-        //----- CLOSE
-        $('[data-popup-close]').on('click', function (e) {
-            var targeted_popup_class = jQuery(this).attr('data-popup-close');
-            $('[data-popup="' + targeted_popup_class + '"]').fadeOut(350);
-
-            e.preventDefault();
-        });
+    $("#send-looks").on('click', function () {
+        entity_id = $(this).attr("data-valuee")
+        entity_url = '';
+        entity_url = "http://api.istyleyou.in/" + entity[entity_id] + "/list?";
+        $('#filters').parents('form').attr('action', entity_url)
+    });
+    $("#send-products").on('click', function () {
+        entity_id = $(this).attr("data-valuee")
+        entity_url = '';
+        entity_url = "http://api.istyleyou.in/" + entity[entity_id] + "/list?";
+        $('#filters').parents('form').attr('action', entity_url)
     });
 
+    $(".clearall").on('click', function (e) {
+        category_id = '';
+        gender_id = '';
+        color_id = '';
+        budget_id = '';
+        entity_url = "http://api.istyleyou.in/" + entity[entity_id] + "/list?";
+    });
+    if (category_id != '') {
+        entity_url = entity_url + '&category_id=' + category_id;
+    }
+    if (gender_id != '') {
+        entity_url = entity_url + '&gender_id=' + gender_id;
+    }
+    if (color_id != '') {
+        entity_url = entity_url + '&color_id=' + color_id;
+    }
+    if (budget_id != '') {
+        entity_url = entity_url + '&budget_id=' + budget_id;
+    }
 
+    function initializeFilters(){
+        if ($("#filters select").length == 0) {
+            $.ajax({
+                url: 'http://api.istyleyou.in/filters/list',
+                success: function (data) {
+
+                    for (i in superset_filter) {
+                        prop = superset_filter[i];
+                        all_filters[prop] = data[prop];
+                    }
+
+                    $.ajax({
+                        url: 'http://api.istyleyou.in/look/filters',
+                        success: function (data) {
+
+                            for (i in superset_filter) {
+                                prop = superset_filter[i];
+                                if (all_filters[prop]) {
+                                } else {
+
+                                    all_filters[prop] = data[prop];
+                                }
+                            }
+
+                            showFilters();
+                        }
+                    });
+
+                }
+            });
+        }
+        else{
+            showFilters();
+        }
+    }
+
+    function showFilters(){
+        $("#filters select").remove();
+
+        for (var filter_count = 0; filter_count < entity_filters[entity_id].length; filter_count++) {
+
+            var filter_str = '<select name="' + entity_filter_ids[entity_id][filter_count] + '">'
+                + '<option value="">' + entity_filters[entity_id][filter_count] + '</option>';
+
+            for (var i = 0; i < all_filters[entity_filters[entity_id][filter_count]].length; i++) {
+                filter_str = filter_str + '<option value="' + all_filters[entity_filters[entity_id][filter_count]][i].id + '" >'
+                    + all_filters[entity_filters[entity_id][filter_count]][i].name + '</option>';
+            }
+            filter_str = filter_str + '</select>';
+
+            $("#filters").append(filter_str);
+        }
+    }
+
+
+    //----- OPEN
+    $('[data-popup-open]').on('click', function (e) {
+        var targeted_popup_class = jQuery(this).attr('data-popup-open');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+        if (entity_id == '') {
+            entity_id = $('[data-popup="' + targeted_popup_class + '"]').attr('data-valuee');
+        }
+        if (entity_url == '') {
+            entity_url = "http://api.istyleyou.in/" + entity[entity_id] + "/list?";
+        }
+
+        $('#filters').parents('form').attr('action', entity_url)
+
+        initializeFilters();
+
+        showEntities(entity_url);
+
+        $('#filters').parents("form").submit(function (e) {
+
+            url = $(this).attr('action') + $('#filters').parents('form').serialize();
+
+            showEntities(url);
+
+            e.preventDefault();
+        });
+
+        e.preventDefault();
+    });
+
+    $("#send").on('click', function (e) {
+        var look_ids = [];
+        $("#popup-items :checked").each(function () {
+            look_ids.push($(this).val());
+        });
+        var app_section = $("#app_section").val();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        });
+
+        if (look_ids.length <= 0) {
+            alert('Please select at least one item');
+            return false;
+        }
+
+        if (rows_selected.length <= 0) {
+            alert('Please select at least one client');
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '/notifications/pushNotifications',
+            data: {entity_ids: look_ids, entity_type_id: '2', client_ids: rows_selected, app_section: app_section},
+            success: function (message) {
+                alert("Sent Successfully");
+            }
+        });
+        e.preventDefault();
+    });
+
+    //----- CLOSE
+    $('[data-popup-close]').on('click', function (e) {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(350);
+
+        e.preventDefault();
+    });
 });
+
+function showEntities(entity_url){
+    $.ajax({
+        url: entity_url,
+        success: function (item) {
+            $(".popup-inner > .items").remove();
+            for (var i = 0; i < item.data.length; i++) {
+                var str = '<div class="items pop-up-item" id="popup-items">'
+                    + '<div class="name text"> <a href="' + '/' + entity[entity_id] + '/view/' + item.data[i].id + '">' + item.data[i].name + '</a></div>'
+                    + '<div class="image"><img src="' + item.data[i].image + '"/>'
+                    + '<span>' + item.data[i].price + '</span>'
+                    + '<input class="look_ids" name="look_ids" id="look_ids" value="' + item.data[i].id + '" type="checkbox">'
+                    + '</div>'
+                    + '</div>'
+                    + '</div>';
+                $(".popup-inner").append(str);
+            }
+        }
+    });
+}

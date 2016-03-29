@@ -16,7 +16,7 @@
                     @endif
                     {!! $clients->render() !!}
 
-                    <a class="btn" data-popup-open="send-looks" href="#">Send Looks</a>
+                    <a class="btn" data-popup-open="send-looks" href="#">Send</a>
                 </div>
 
                 <div class="clear"></div>
@@ -82,22 +82,23 @@
 
                     <p><a data-popup-close="send-looks" href="#" style="float: right">Close</a></p>
                     <div id="entity" >
-                        <p class="btn"  id="send-look"  data-valuee="2" data-popup-open="send-looks" style="float: left">Send Looks</p>
-                        <p class="btn" id="send-product" data-valuee="1" data-popup-open="send-looks" style="float: left">Send Products</p>
-                        <p class="btn" id="send-tip" data-valuee="4" data-popup-open="send-looks" style="float: left">Send Tips</p>
+                        <p class="btn"  id="send-looks"  data-valuee="2" data-popup-open="send-looks" style="float: left">Send Looks</p>
+                        <p class="btn" id="send-products" data-valuee="1" data-popup-open="send-looks" style="float: left">Send Products</p>
                         @include('common.app_section.select')
                     </div>
                     <div class="clear"></div>
 
-                    <div id="filters" >
+                    <form method="get" action="http://api.istyleyou.in/{entuty_type}/list">
+                        <div id="filters" >
 
-                    </div>
-                    <div>
-                        <a class="btn" data-popup-open="send-looks" value="Filter">Filter</a>
+                        </div>
+                        <div>
+                            <input class="btn" type="submit" value="Filter"> </input>
 
-                        <a class="clearall" data-popup-open="send-looks">Clear All</a>
-                        <a class="btn" id="send" value="send">Send</a>
-                    </div>
+                            <a class="clearall" data-popup-open="send-looks">Clear All</a>
+                            <a class="btn" id="send" value="send">Send</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
