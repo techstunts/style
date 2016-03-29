@@ -3,7 +3,7 @@
 
   "name": "IStyleYou Product Plugin",
   "description": "This extension will read a product page content and post it to IStyleYou Catalog",
-  "version": "1.14",
+  "version": "1.15",
 
   "browser_action": {
    "default_icon": "icon.png",

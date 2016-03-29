@@ -5,6 +5,10 @@
 @section('content')
 <div id="contentCntr">
     <div class="container">
+        @foreach($errors->all() as $e)
+            <span class="errorMsg">{{$e}}</span><br/>
+        @endforeach
+
         <ol class="selectable">
             <li class="ui-state-default" id="{{$stylist->stylish_id}}">
                 <div class="resource_view">
@@ -139,14 +143,16 @@
                                 </td>
                             </tr>
 
-                            <tr class="row">
-                                <td class="title" colspan="2">
-                                    <input class="form-control" placeholder="Code" type="code" name="code" value="{{ old('code') != "" ? old('code') : $stylist->code }}">
-                                    @if($code_error = $errors->first('code'))
-                                        <span class="errorMsg">{{$code_error}}</span>
-                                    @endif
-                                </td>
-                            </tr>
+                            @if($is_admin)
+                                <tr class="row">
+                                    <td class="title" colspan="2">
+                                        <input class="form-control" placeholder="Code" type="code" name="code" value="{{ old('code') != "" ? old('code') : $stylist->code }}">
+                                        @if($code_error = $errors->first('code'))
+                                            <span class="errorMsg">{{$code_error}}</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endif
 
                             <tr class="row">
                                 <td class="title" colspan="2">
