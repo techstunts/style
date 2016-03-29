@@ -38,6 +38,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::any('requests/{action}/{id?}/{action_id?}', 'StyleRequestsController@index');
 
     Route::any('notifications/{action}/{id?}/{action_id?}', 'NotificationsController@index');
-});
 
+    Route::get('report/{report_id}', 'ReportController@index');
+
+    Route::get('report/{report_id}/query', 'ReportController@query');
+});
 

@@ -521,6 +521,16 @@ echo $sql1;
 
                                 </div>
                             </div>
+                            <div class="row row-pad-5">
+                                <div class="col-lg-8">
+                                    <?php
+                                    if(isset($_REQUEST['skip_gender_check']) && $_REQUEST['skip_gender_check'] == "Skip"){
+                                    $checked = "checked=checked";
+                                    }
+                                    echo "<label><input type='checkbox' name='skip_gender_check' value='Skip' $checked> Send looks of any gender</label>";
+                                    ?>
+                                </div>
+                            </div>
                         </div><!-- panel-body -->
 
                         <?php
@@ -643,10 +653,16 @@ echo $sql1;
                 if(isset($_POST['app_section']) && $_POST['app_section']!=""){
                     $app_section = $_POST['app_section'];
                 }
+
+                $skip_gender_check = false;
+                if(isset($_POST['skip_gender_check']) && $_POST['skip_gender_check']!=""){
+                    $skip_gender_check = $_POST['skip_gender_check'];
+                }
                 ?>
                 <div id="send1" class="stick">
                     <button name="send" id="button1" class="btn btn-success">send</button>
                     <input type="hidden" name="app_section" value="<?php echo $app_section;?>"/>
+                    <input type="hidden" name="skip_gender_check" value="<?php echo $skip_gender_check;?>"/>
                 </div>
             </form>
 
@@ -690,6 +706,12 @@ echo $sql1;
             $app_section = $_POST['app_section'];
         }
 
+        $skip_gender_check = false;
+        if(isset($_POST['skip_gender_check']) && $_POST['skip_gender_check']=="Skip"){
+            $skip_gender_check = true;
+        }
+
+
         $ids = $_SESSION['style_request_ids'];
         unset($_SESSION['style_request_ids']);
 
@@ -724,7 +746,7 @@ echo $sql1;
                     $lg = $data12[0];
                     $lg = strtolower($lg);
                 }
-                if ($ug == $lg) {
+                if ($ug == $lg || $skip_gender_check) {
                     if ($r == 0) {
                         $sql = "select image from looks where id='$value'";
                         $res = mysql_query($sql);
