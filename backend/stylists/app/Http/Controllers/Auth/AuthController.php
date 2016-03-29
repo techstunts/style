@@ -7,9 +7,11 @@ use App\Stylist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use Session;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use App\Models\Validator\BlockedStylistsValidator;
 
 class AuthController extends Controller
 {
@@ -29,6 +31,9 @@ class AuthController extends Controller
     protected $redirectPath = '/look/list';
 
     protected $redirectAfterLogout = '/auth/login';
+
+    const BLOCKED_USER_MESSAGE = "User is blocked, please contact administrator.";
+
     /**
      * Create a new authentication controller instance.
      *
@@ -46,13 +51,29 @@ class AuthController extends Controller
      */
     public function index(Request $request, $action)
     {
+
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
+
 
         if(Auth::check() && $method != 'getLogout'){
             return redirect(property_exists($this, 'redirectPath') ? $this->redirectPath : '/');
         }
         
         return $this->$method($request->method() == 'POST' ? $request : null);
+    }
+
+
+    /**
+     * Login validation for blocked stylist
+     * @param Request $request
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
+     */
+    public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = []){
+        $rules["email"] .= "|blocked_stylist";
+        $messages['blocked_stylist'] = self::BLOCKED_USER_MESSAGE;
+        parent::validate($request, $rules, $messages, $customAttributes);
     }
 
     /**
@@ -83,6 +104,7 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'status_id' => BlockedStylistsValidator::BLOCKED_STATUS_ID
         ]);
 
         $stylist_role = Role::where('name','stylist')->firstOrFail();
@@ -90,5 +112,26 @@ class AuthController extends Controller
         $stylist->attachRole($stylist_role);
 
         return $stylist;
+    }
+
+    public function postRegister(Request $request) {
+        $validator = $this->validator($request->all());
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        $this->create($request->all());
+
+        return redirect('auth/thankyou')->with('status', 'User created!');
+    }
+
+    public function getThankyou(){
+        if(Session::has('status')){
+            return view('auth.thankyou');
+        }
+        return redirect($this->redirectAfterLogout);
     }
 }
