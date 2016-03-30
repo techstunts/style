@@ -216,20 +216,27 @@ class StylistController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        $fields = [
             'name' => 'required|max:255|min:5',
-            'email' => 'required|email|max:255',
             'age' => 'required|integer|max:50|min:18',
-            'status_id' => 'required|integer|max:20|min:1',
             'expertise_id' => 'required|integer|max:20|min:1',
             'gender_id' => 'required|integer|max:20|min:1',
-            'designation_id' => 'required|integer|max:20|min:1',
             'blog_url' => 'url|min:5',
             'facebook_id' => 'string|min:5',
             'twitter_id' => 'string|min:5',
             'pinterest_id' => 'string|min:5',
             'instagram_id' => 'string|min:5',
-        ]);
+        ];
+
+        if(Auth::user()->hasRole('admin')){
+            $fields = array_merge($fields,[
+                'email' => 'required|email|max:255',
+                'status_id' => 'required|integer|max:20|min:1',
+                'designation_id' => 'required|integer|max:20|min:1',
+                'code' => 'required|max:6|min:6',
+                ]);
+        }
+        return Validator::make($data, $fields);
     }
 
     /**
