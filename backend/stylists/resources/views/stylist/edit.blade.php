@@ -44,23 +44,34 @@
                                 </td>
                             </tr>
 
-                            <tr class="row">
-                                <td class="title" colspan="2">
-                                    <input class="form-control" placeholder="Email" type="email" name="email" value="{{ old('email') != "" ? old('email') : $stylist->email }}">
-                                    @if($email_error = $errors->first('email'))
-                                        <span class="errorMsg">{{$email_error}}</span>
-                                    @endif
-                                </td>
-                            </tr>
+                            @if($is_admin)
+                                <tr class="row">
+                                    <td class="title" colspan="2">
+                                        <input class="form-control" placeholder="Email" type="email" name="email" value="{{ old('email') != "" ? old('email') : $stylist->email }}">
+                                        @if($email_error = $errors->first('email'))
+                                            <span class="errorMsg">{{$email_error}}</span>
+                                        @endif
+                                    </td>
+                                </tr>
 
-                            <tr class="row">
-                                <td class="title" colspan="2">
-                                    @include('common.status.select')
-                                    @if($status_error = $errors->first('status_id'))
-                                        <span class="errorMsg">{{$status_error}}</span>
-                                    @endif
-                                </td>
-                            </tr>
+                                <tr class="row">
+                                    <td class="title" colspan="2">
+                                        @include('common.status.select')
+                                        @if($status_error = $errors->first('status_id'))
+                                            <span class="errorMsg">{{$status_error}}</span>
+                                        @endif
+                                    </td>
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="title" colspan="2">
+                                        @include('common.designation.select')
+                                        @if($designation_error = $errors->first('designation_id'))
+                                            <span class="errorMsg">{{$designation_error}}</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endif
 
                             <tr class="row">
                                 <td class="title" colspan="2">
@@ -85,15 +96,6 @@
                                     @include('common.gender.select')
                                     @if($gender_error = $errors->first('gender_id'))
                                         <span class="errorMsg">{{$gender_error}}</span>
-                                    @endif
-                                </td>
-                            </tr>
-
-                            <tr class="row">
-                                <td class="title" colspan="2">
-                                    @include('common.designation.select')
-                                    @if($designation_error = $errors->first('designation_id'))
-                                        <span class="errorMsg">{{$designation_error}}</span>
                                     @endif
                                 </td>
                             </tr>

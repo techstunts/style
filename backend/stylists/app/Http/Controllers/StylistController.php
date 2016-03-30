@@ -179,16 +179,16 @@ class StylistController extends Controller
         }
 
         $stylist->name = isset($request->name) && $request->name != '' ? $request->name : '';
-        $stylist->email = isset($request->email) && $request->email != '' ? $request->email : '';
         $stylist->description = isset($request->description) && $request->description != '' ? $request->description : '';
         $stylist->age = isset($request->age) && $request->age != '' ? $request->age : '';
         $stylist->profile = isset($request->profile) && $request->profile != '' ? $request->profile : '';
         if(Auth::user()->hasRole('admin')){
             $stylist->code = isset($request->code) && $request->code != '' ? $request->code : '';
+            $stylist->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : '';
+            $stylist->email = isset($request->email) && $request->email != '' ? $request->email : '';
+            $stylist->designation_id = isset($request->designation_id) && $request->designation_id != '' ? $request->designation_id : '';
         }
-        $stylist->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : '';
         $stylist->expertise_id = isset($request->expertise_id) && $request->expertise_id != '' ? $request->expertise_id : '';
-        $stylist->designation_id = isset($request->designation_id) && $request->designation_id != '' ? $request->designation_id : '';
         $stylist->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
         $stylist->blog_url = isset($request->blog_url) && $request->blog_url != '' ? $request->blog_url : '';
         $stylist->facebook_id = isset($request->facebook_id) && $request->facebook_id != '' ? $request->facebook_id : '';
