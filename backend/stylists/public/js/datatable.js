@@ -220,6 +220,10 @@ $(document).ready(function () {
         console.log(entity_url);
     });
 
+    $('#filters form .clearall').on('click', function () {
+        $('#filters form input[name="search"]').val('');
+    })
+
     function initializeFilters() {
         if ($("#filters select").length == 0) {
             $.ajax({

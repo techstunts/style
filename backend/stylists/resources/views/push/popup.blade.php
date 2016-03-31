@@ -15,6 +15,7 @@
             <form method="get" action="http://api.istyleyou.in/{entity_type}/list" style="float:none;">
                 <div class="options" style="float:left;"></div>
                 <div class="buttons">
+                    <input type="text" name="search" value="" placeholder="Search Text" class="form-control search">
                     <input class="btn" type="submit" value="Filter"> </input>
                     <a class="clearall" data-popup-open="send-entities">Clear All</a>
                     <a class="prev-page" data-popup-open="send-entities"> < </a>
