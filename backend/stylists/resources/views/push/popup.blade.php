@@ -2,23 +2,28 @@
     <div class="popup-inner">
 
         <p><a data-popup-close="send-looks" href="#" style="float: right">Close</a></p>
-        <div id="entity" >
-            <p class="btn"  id="send-looks"  data-valuee="2" data-popup-open="send-looks" style="float: left">Send Looks</p>
-            <p class="btn" id="send-products" data-valuee="1" data-popup-open="send-looks" style="float: left">Send Products</p>
-            @include('common.app_section.select')
-        </div>
+
+        <ul class="nav nav-tabs" id="entity">
+            <li class="active" id="send-looks" data-value="2" data-popup-open="send-looks"><a href="#">Looks</a></li>
+            <li id="send-products" data-value="1" data-popup-open="send-looks"><a href="#">Products</a></li>
+        </ul>
+
         <div class="clear"></div>
 
-        <form method="get" action="http://api.istyleyou.in/{entuty_type}/list">
-            <div id="filters" >
+        <div class="filters" id="filters" >
+            <form method="get" action="http://api.istyleyou.in/{entity_type}/list" style="float:none;">
+                <div class="options" style="float:left;"></div>
+                <div class="buttons">
+                    <input class="btn" type="submit" value="Filter"> </input>
+                    <a class="clearall" data-popup-open="send-looks">Clear All</a>
+                </div>
+            </form>
+        </div>
 
-            </div>
-            <div>
-                <input class="btn" type="submit" value="Filter"> </input>
-
-                <a class="clearall" data-popup-open="send-looks">Clear All</a>
-                <a class="btn" id="send" value="send">Send</a>
-            </div>
-        </form>
+        <div class="clear"></div>
+        <div class="mobile-app-send">
+            @include('common.app_section.select')
+            <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
+        </div>
     </div>
 </div>

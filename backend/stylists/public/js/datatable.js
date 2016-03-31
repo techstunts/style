@@ -31,7 +31,9 @@ function updateDataTableSelectAllCtrl(table) {
     }
 }
 
+//variables for navigation in various entity sections
 var entity_id = '';
+var entity = ['', 'product', 'look', '', 'tips'];
 
 $(document).ready(function () {
     var entity_url = '';
@@ -39,10 +41,7 @@ $(document).ready(function () {
     var gender_id = '';
     var color_id = '';
     var budget_id = '';
-    var look_ids = [];
     var filter_fetched = 0;
-    var entity = ['', 'product', 'look', '', 'tips'];
-    var entity_id = '';
     var s = $("#send");
     var pos = s.position();
     var all_filters = [];
@@ -113,11 +112,6 @@ $(document).ready(function () {
 
 
         });
-
-        // FOR DEMONSTRATION ONLY
-
-        // Output form data to a console
-
     });
 
     // Array holding selected row IDs
@@ -174,6 +168,13 @@ $(document).ready(function () {
             $row.removeClass('selected');
         }
 
+        if (rows_selected.length > 0) {
+            $(".container .btn").removeClass('disabled');
+            $(".container .btn").addClass('active');
+        } else {
+            $(".container .btn").addClass('disabled');
+        }
+
         // Update state of "Select all" control
         updateDataTableSelectAllCtrl(table);
 
@@ -198,20 +199,16 @@ $(document).ready(function () {
         e.stopPropagation();
     });
 
-    $("#send-looks").on('click', function () {
-        entity_id = $(this).attr("data-valuee")
+    $("ul.nav-tabs li").on('click', function () {
+        entity_id = $(this).attr("data-value");
         entity_url = '';
         entity_url = "http://api.istyleyou.in/" + entity[entity_id] + "/list?";
-        $('#filters').parents('form').attr('action', entity_url)
-    });
-    $("#send-products").on('click', function () {
-        entity_id = $(this).attr("data-valuee")
-        entity_url = '';
-        entity_url = "http://api.istyleyou.in/" + entity[entity_id] + "/list?";
-        $('#filters').parents('form').attr('action', entity_url)
+        $('#filters form').attr('action', entity_url);
+        $(this).parent('ul').children('li').removeClass('active');
+        $(this).addClass('active');
     });
 
-    function initializeFilters(){
+    function initializeFilters() {
         if ($("#filters select").length == 0) {
             $.ajax({
                 url: 'http://api.istyleyou.in/filters/list',
@@ -228,12 +225,12 @@ $(document).ready(function () {
                 }
             });
         }
-        else{
+        else {
             showFilters();
         }
     }
 
-    function showFilters(){
+    function showFilters() {
         $("#filters select").remove();
 
         for (var filter_count = 0; filter_count < entity_filters[entity_id].length; filter_count++) {
@@ -242,16 +239,16 @@ $(document).ready(function () {
             var field_id = entity_fields_ids[entity_id][filter_count];
 
             var filter_str = '<select name="' + field_id + '">' +
-                '<option value="">' + filter_name + '</option>';
+                '<option value="">' + filter_name.charAt(0).toUpperCase() + filter_name.slice(1) + '</option>';
 
             for (var i = 0; i < all_filters[entity_id][filter_name].length; i++) {
                 var id = all_filters[entity_id][filter_name][i][filter_id];
                 var name = all_filters[entity_id][filter_name][i].name;
-                filter_str += '<option value="' + id + '" >' + name  + '</option>';
+                filter_str += '<option value="' + id + '" >' + name + '</option>';
             }
             filter_str += '</select>';
 
-            $("#filters").append(filter_str);
+            $("#filters .options").append(filter_str);
         }
     }
 
@@ -267,15 +264,15 @@ $(document).ready(function () {
             entity_url = "http://api.istyleyou.in/" + entity[entity_id] + "/list?";
         }
 
-        $('#filters').parents('form').attr('action', entity_url)
+        $('#filters form').attr('action', entity_url)
 
         initializeFilters();
 
         showEntities(entity_url);
 
-        $('#filters').parents("form").submit(function (e) {
+        $('#filters form').submit(function (e) {
 
-            url = $(this).attr('action') + $('#filters').parents('form').serialize();
+            url = $(this).attr('action') + $('#filters form').serialize();
 
             showEntities(url);
 
@@ -286,9 +283,9 @@ $(document).ready(function () {
     });
 
     $("#send").on('click', function (e) {
-        var look_ids = [];
-        $(".popup-inner > #popup-items :checked").each(function () {
-            look_ids.push($(this).val());
+        var entity_ids = [];
+        $(".popup-inner > .pop-up-item :checked").each(function () {
+            entity_ids.push($(this).val());
         });
 
         var app_section = $("#app_section").val();
@@ -299,7 +296,7 @@ $(document).ready(function () {
             }
         });
 
-        if (look_ids.length <= 0) {
+        if (entity_ids.length <= 0) {
             alert('Please select at least one item');
             return false;
         }
@@ -312,7 +309,12 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             url: '/notifications/pushNotifications',
-            data: {entity_ids: look_ids, entity_type_id: entity_id, client_ids: rows_selected, app_section: app_section},
+            data: {
+                entity_ids: entity_ids,
+                entity_type_id: entity_id,
+                client_ids: rows_selected,
+                app_section: app_section
+            },
             success: function (message) {
                 alert("Sent Successfully");
             }
@@ -327,28 +329,52 @@ $(document).ready(function () {
 
         e.preventDefault();
     });
+
+
 });
 
-function showEntities(entity_url){
+function showEntities(entity_url) {
     $.ajax({
+        type: "GET",
         url: entity_url,
         success: function (item) {
             $(".popup-inner > .items").remove();
-            if (!item.data.length){
-                var str = "No data found";
+            if (!item.data.length) {
+                var str = '<div class="items">No data found</div>';
                 $(".popup-inner").append(str);
-            }else {
+            } else {
                 for (var i = 0; i < item.data.length; i++) {
-                    var str = '<div class="items pop-up-item" id="popup-items">'
-                        + '<div class="name text"> <a href="' + '/' + entity[entity_id] + '/view/' + item.data[i].id + '">' + item.data[i].name + '</a></div>'
-                        + '<div class="image"><img src="' + item.data[i].image + '"/>'
-                        + '<span>' + item.data[i].price + '</span>'
-                        + '<input class="look_ids" name="look_ids" id="look_ids" value="' + item.data[i].id + '" type="checkbox">'
-                        + '</div>'
-                        + '</div>'
-                        + '</div>';
+
+                    var content = "Price: " + item.data[i].price + "/- <br >" +
+                        "Description: " + item.data[i].description + "<br >" +
+                        "<img src='" + item.data[i].image + "' />";
+
+
+                    var str = '<div class="items pop-up-item" >' +
+                        '<div class="name text">' +
+                        '<input class="entity_ids" name="entity_ids" id="entity_ids" value="' + item.data[i].id + '" type="checkbox">' +
+                        '<a href="' + '/' + entity[entity_id] + '/view/' + item.data[i].id + '" target="_blank">' +
+                        item.data[i].name +
+                        '</a>' +
+                        '</div>' +
+                        '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="' + content + '">' +
+                        '<img src="' + item.data[i].image + '" class="pop-image-size"/>' +
+                        '</div>' +
+                        '</div>';
                     $(".popup-inner").append(str);
+
                 }
+
+                $(".popup-inner > .pop-up-item .entity_ids").on('click', function () {
+                    if ($(".popup-inner > .pop-up-item :checked").length > 0) {
+                        $(".mobile-app-send .btn").removeClass('disabled');
+                        $(".mobile-app-send .btn").addClass('active');
+                    } else {
+                        $(".mobile-app-send .btn").removeClass('active');
+                        $(".mobile-app-send .btn").addClass('disabled');
+                    }
+                });
+                $('.pop-up-item [data-toggle="popover"]').popover();
             }
         }
     });

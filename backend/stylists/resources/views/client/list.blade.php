@@ -15,9 +15,9 @@
                         </form>
                     @endif
                     {!! $clients->render() !!}
-
-                    <a class="btn" data-popup-open="send-looks" href="#">Send</a>
                 </div>
+
+                <a class="btn disabled btn-primary btn-xs" data-popup-open="send-looks" href="#">Send</a>
 
                 <div class="clear"></div>
 

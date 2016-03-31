@@ -19,6 +19,8 @@
     <script src="{!! asset('js/lightbox.js') !!}"></script>
     <script src="{!! asset('js/jquery.cookie.js') !!}"></script>
 
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
     <title>@yield('title')</title>
 
 </head>
