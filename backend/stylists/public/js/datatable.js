@@ -34,6 +34,8 @@ function updateDataTableSelectAllCtrl(table) {
 //variables for navigation in various entity sections
 var entity_id = '';
 var entity = ['', 'product', 'look', '', 'tips'];
+var next_page = '';
+var prev_page = '';
 
 $(document).ready(function () {
     var entity_url = '';
@@ -208,6 +210,16 @@ $(document).ready(function () {
         $(this).addClass('active');
     });
 
+    $(".prev-page").on('click', function () {
+        entity_url = prev_page;
+        console.log(entity_url);
+    });
+
+    $(".next-page").on('click', function () {
+        entity_url = next_page;
+        console.log(entity_url);
+    });
+
     function initializeFilters() {
         if ($("#filters select").length == 0) {
             $.ajax({
@@ -258,13 +270,13 @@ $(document).ready(function () {
         $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
 
         if (entity_id == '') {
-            entity_id = $('[data-popup="' + targeted_popup_class + '"]').attr('data-valuee');
+            entity_id = $('[data-popup="' + targeted_popup_class + '"]').attr('data-value');
         }
         if (entity_url == '') {
             entity_url = "http://api.istyleyou.in/" + entity[entity_id] + "/list?";
         }
 
-        $('#filters form').attr('action', entity_url)
+        $('#filters form').attr('action', entity_url);
 
         initializeFilters();
 
@@ -329,8 +341,6 @@ $(document).ready(function () {
 
         e.preventDefault();
     });
-
-
 });
 
 function showEntities(entity_url) {
@@ -338,6 +348,9 @@ function showEntities(entity_url) {
         type: "GET",
         url: entity_url,
         success: function (item) {
+            next_page = item.next_page_url;
+            prev_page = item.prev_page_url;
+
             $(".popup-inner > .items").remove();
             if (!item.data.length) {
                 var str = '<div class="items">No data found</div>';
@@ -375,6 +388,18 @@ function showEntities(entity_url) {
                     }
                 });
                 $('.pop-up-item [data-toggle="popover"]').popover();
+
+                if (item.prev_page_url == null){
+                    $(".buttons .prev-page").addClass('inactive');
+                }else{
+                    $(".buttons .prev-page").removeClass('inactive');
+                }
+
+                if (!item.next_page_url == null){
+                    $('.buttons .next-page').addClass('inactive');
+                }else{
+                    $('.buttons .next-page').removeClass('inactive');
+                }
             }
         }
     });

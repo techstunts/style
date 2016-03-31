@@ -521,3 +521,8 @@ div.resource_view tr.row a.product_link {
 
 .pop-image-size{
 }
+
+.inactive {
+    pointer-events: none;
+    cursor: default;
+}

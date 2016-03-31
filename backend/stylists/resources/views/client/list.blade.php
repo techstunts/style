@@ -17,7 +17,7 @@
                     {!! $clients->render() !!}
                 </div>
 
-                <a class="btn disabled btn-primary btn-xs" data-popup-open="send-looks" href="#">Send</a>
+                <a class="btn disabled btn-primary btn-xs" data-popup-open="send-entities" href="#">Send</a>
 
                 <div class="clear"></div>
 
