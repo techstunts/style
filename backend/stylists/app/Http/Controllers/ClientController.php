@@ -3,17 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Client;
-use App\Look;
 use App\Models\Enums\EntityType;
-use App\Models\Enums\Gender;
-use App\Product;
-use App\Models\Lookups\Status;
-use App\User;
+use App\Models\Lookups\AppSections;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
@@ -41,16 +36,6 @@ class ClientController extends Controller
         $this->base_table = 'userdetails';
         $this->initWhereConditions($request);
         $this->initFilters();
-        $app_sections = array(
-            "1" => "Style suggest",
-            "2" => "Trending",
-            "3" => "My Requests",
-            "4" => "My Products",
-            "5" => "Ask Advice",
-            "6" => "Ask Look",
-            "7" => "Ask Product",
-            "8" => "Stylist",
-        );
 
         $view_properties = array(
             'stylists' => $this->stylists,
@@ -72,7 +57,8 @@ class ClientController extends Controller
                 ->appends($paginate_qs);
 
         $view_properties['clients'] = $clients;
-        $view_properties['app_sections'] = $app_sections;
+        $view_properties['app_sections'] = AppSections::all();
+        $view_properties['entity_type_id'] = EntityType::LOOK;
         return view('client.list', $view_properties);
     }
 

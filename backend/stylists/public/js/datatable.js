@@ -32,8 +32,8 @@ function updateDataTableSelectAllCtrl(table) {
 }
 
 //variables for navigation in various entity sections
-var entity_id = '';
-var entity = ['', 'product', 'look', '', 'tips'];
+var entity_type_id = '';
+var entity = ['', 'product', 'look', '', 'tips', '', 'client'];
 var next_page = '';
 var prev_page = '';
 
@@ -68,6 +68,8 @@ $(document).ready(function () {
         [],
         []
     ];
+    var api_origin = $('#api_origin').val();
+    var stylish_id = $('#stylish_id').val();
 
     $(window).scroll(function () {
         var windowpos = $(window).scrollTop() + 60;
@@ -202,9 +204,9 @@ $(document).ready(function () {
     });
 
     $("ul.nav-tabs li").on('click', function () {
-        entity_id = $(this).attr("data-value");
+        entity_type_id = $(this).attr("data-value");
         entity_url = '';
-        entity_url = "http://api.istyleyou.in/" + entity[entity_id] + "/list?";
+        entity_url = api_origin + entity[entity_type_id] + "/list?";
         $('#filters form').attr('action', entity_url);
         $(this).parent('ul').children('li').removeClass('active');
         $(this).addClass('active');
@@ -212,12 +214,10 @@ $(document).ready(function () {
 
     $(".prev-page").on('click', function () {
         entity_url = prev_page;
-        console.log(entity_url);
     });
 
     $(".next-page").on('click', function () {
         entity_url = next_page;
-        console.log(entity_url);
     });
 
     $('#filters form .clearall').on('click', function () {
@@ -227,11 +227,11 @@ $(document).ready(function () {
     function initializeFilters() {
         if ($("#filters select").length == 0) {
             $.ajax({
-                url: 'http://api.istyleyou.in/filters/list',
+                url: api_origin + '/filters/list',
                 success: function (data) {
                     all_filters[1] = data;
                     $.ajax({
-                        url: 'http://api.istyleyou.in/look/filters',
+                        url: api_origin + '/look/filters',
                         success: function (data) {
                             all_filters[2] = data;
                             showFilters();
@@ -249,17 +249,17 @@ $(document).ready(function () {
     function showFilters() {
         $("#filters select").remove();
 
-        for (var filter_count = 0; filter_count < entity_filters[entity_id].length; filter_count++) {
-            var filter_name = entity_filters[entity_id][filter_count];
-            var filter_id = entity_filter_ids[entity_id][filter_count];
-            var field_id = entity_fields_ids[entity_id][filter_count];
+        for (var filter_count = 0; filter_count < entity_filters[entity_type_id].length; filter_count++) {
+            var filter_name = entity_filters[entity_type_id][filter_count];
+            var filter_id = entity_filter_ids[entity_type_id][filter_count];
+            var field_id = entity_fields_ids[entity_type_id][filter_count];
 
             var filter_str = '<select name="' + field_id + '">' +
                 '<option value="">' + filter_name.charAt(0).toUpperCase() + filter_name.slice(1) + '</option>';
 
-            for (var i = 0; i < all_filters[entity_id][filter_name].length; i++) {
-                var id = all_filters[entity_id][filter_name][i][filter_id];
-                var name = all_filters[entity_id][filter_name][i].name;
+            for (var i = 0; i < all_filters[entity_type_id][filter_name].length; i++) {
+                var id = all_filters[entity_type_id][filter_name][i][filter_id];
+                var name = all_filters[entity_type_id][filter_name][i].name;
                 filter_str += '<option value="' + id + '" >' + name + '</option>';
             }
             filter_str += '</select>';
@@ -273,16 +273,22 @@ $(document).ready(function () {
         var targeted_popup_class = jQuery(this).attr('data-popup-open');
         $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
 
-        if (entity_id == '') {
-            entity_id = $('[data-popup="' + targeted_popup_class + '"]').attr('data-value');
+        if (entity_type_id == '') {
+            entity_type_id = $('[data-popup="' + targeted_popup_class + '"]').attr('data-value');
         }
+
         if (entity_url == '') {
-            entity_url = "http://api.istyleyou.in/" + entity[entity_id] + "/list?";
+            if(entity_type_id == 6){
+                entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylish_id=" + stylish_id + "&";
+            }else {
+                entity_url = api_origin + entity[entity_type_id] + "/list?";
+            }
         }
 
         $('#filters form').attr('action', entity_url);
-
-        initializeFilters();
+        if(entity_type_id != 6){
+            initializeFilters();
+        }
 
         showEntities(entity_url);
 
@@ -324,15 +330,19 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url: '/notifications/pushNotifications',
+            url: '/recommendation/send',
             data: {
                 entity_ids: entity_ids,
-                entity_type_id: entity_id,
+                entity_type_id: entity_type_id,
                 client_ids: rows_selected,
                 app_section: app_section
             },
-            success: function (message) {
-                alert("Sent Successfully");
+            success: function (response) {
+                if(response.error_message != ""){
+                    alert(response.error_message);
+                }else {
+                    alert("Sent Successfully");
+                }
             }
         });
         e.preventDefault();
@@ -360,26 +370,49 @@ function showEntities(entity_url) {
                 var str = '<div class="items">No data found</div>';
                 $(".popup-inner").append(str);
             } else {
-                for (var i = 0; i < item.data.length; i++) {
+                if(entity_type_id != 6) {
+                    for (var i = 0; i < item.data.length; i++) {
 
-                    var content = "Price: " + item.data[i].price + "/- <br >" +
-                        "Description: " + item.data[i].description + "<br >" +
-                        "<img src='" + item.data[i].image + "' />";
+                        var content = "Price: " + item.data[i].price + "/- <br >" +
+                            "Description: " + item.data[i].description + "<br >" +
+                            "<img src='" + item.data[i].image + "' />";
 
 
-                    var str = '<div class="items pop-up-item" >' +
-                        '<div class="name text">' +
-                        '<input class="entity_ids" name="entity_ids" id="entity_ids" value="' + item.data[i].id + '" type="checkbox">' +
-                        '<a href="' + '/' + entity[entity_id] + '/view/' + item.data[i].id + '" target="_blank">' +
-                        item.data[i].name +
-                        '</a>' +
-                        '</div>' +
-                        '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="' + content + '">' +
-                        '<img src="' + item.data[i].image + '" class="pop-image-size"/>' +
-                        '</div>' +
-                        '</div>';
-                    $(".popup-inner").append(str);
+                        var str = '<div class="items pop-up-item" >' +
+                            '<div class="name text">' +
+                            '<input class="entity_ids" name="entity_ids" id="entity_ids" value="' + item.data[i].id + '" type="checkbox">' +
+                            '<a href="' + '/' + entity[entity_type_id] + '/view/' + item.data[i].id + '" target="_blank">' +
+                            item.data[i].name +
+                            '</a>' +
+                            '</div>' +
+                            '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="' + content + '">' +
+                            '<img src="' + item.data[i].image + '" class="pop-image-size"/>' +
+                            '</div>' +
+                            '</div>';
+                        $(".popup-inner").append(str);
 
+                    }
+                }else{
+                    for (var i = 0; i < item.data.length; i++) {
+
+                        var content = "Name: " + item.data[i].username + "<br >" +
+                            "<img src='" + item.data[i].userimage + "' />";
+
+
+                        var str = '<div class="items pop-up-item" >' +
+                            '<div class="name text">' +
+                            '<input class="entity_ids" name="entity_ids" id="entity_ids" value="' + item.data[i].id + '" type="checkbox">' +
+                            '<a href="' + '/' + entity[entity_type_id] + '/view/' + item.data[i].user_id + '" target="_blank">' +
+                            item.data[i].username +
+                            '</a>' +
+                            '</div>' +
+                            '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="' + content + '">' +
+                            '<img src="' + item.data[i].userimage + '" class="pop-image-size"/>' +
+                            '</div>' +
+                            '</div>';
+                        $(".popup-inner").append(str);
+
+                    }
                 }
 
                 $(".popup-inner > .pop-up-item .entity_ids").on('click', function () {
@@ -399,7 +432,7 @@ function showEntities(entity_url) {
                     $(".buttons .prev-page").removeClass('inactive');
                 }
 
-                if (!item.next_page_url == null){
+                if (item.next_page_url == null){
                     $('.buttons .next-page').addClass('inactive');
                 }else{
                     $('.buttons .next-page').removeClass('inactive');

@@ -1,13 +1,21 @@
-<div class="popup" data-value="2" data-popup="send-entities">
+<div class="popup" data-value="{{$entity_type_id}}" data-popup="send-entities">
     <div class="popup-inner">
-
+        <input type="hidden" value="{{env('API_ORIGIN')}}" id="api_origin">
         <p><a data-popup-close="send-entities" href="#" style="float: right">Close</a></p>
-
-        <ul class="nav nav-tabs" id="entity">
-            <li class="active" id="send-entities" data-value="2" data-popup-open="send-entities"><a href="#">Looks</a>
-            </li>
-            <li id="send-products" data-value="1" data-popup-open="send-entities"><a href="#">Products</a></li>
-        </ul>
+        @if($entity_type_id == "6")
+            <ul class="nav nav-tabs" id="entity">
+                <li class="active" id="send-entities" data-value="{{$entity_type_id}}" data-popup-open="send-entities">
+                    <a href="#">Clients</a>
+                </li>
+            </ul>
+        @else
+            <ul class="nav nav-tabs" id="entity">
+                <li class="active" id="send-entities" data-value="{{$entity_type_id}}" data-popup-open="send-entities"><a
+                            href="#">Looks</a>
+                </li>
+                <li id="send-products" data-value="1" data-popup-open="send-entities"><a href="#">Products</a></li>
+            </ul>
+        @endif
 
         <div class="clear"></div>
 

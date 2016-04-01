@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Enums\EntityType;
+use App\Models\Lookups\AppSections;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
@@ -41,16 +43,6 @@ class StyleRequestsController extends Controller
         $view_properties = array(
             'occasions' => $this->occasions,
             'budgets' => $this->budgets,
-        );
-        $app_sections = array(
-            "1" => "Style suggest",
-            "2" => "Trending",
-            "3" => "My Requests",
-            "4" => "My Products",
-            "5" => "Ask Advice",
-            "6" => "Ask Look",
-            "7" => "Ask Product",
-            "8" => "Stylist",
         );
 
         foreach($this->filter_ids as $filter){
@@ -92,7 +84,8 @@ class StyleRequestsController extends Controller
                 ->appends($paginate_qs);
         $view_properties['requests'] = $requests;
         $view_properties['status_rules'] = $this->status_rules;
-        $view_properties['app_sections'] = $app_sections;
+        $view_properties['app_sections'] = AppSections::all();
+        $view_properties['entity_type_id'] = EntityType::LOOK;
         return view('requests.list', $view_properties);
     }
 
