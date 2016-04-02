@@ -33,6 +33,12 @@ class PasswordController extends Controller
         $this->middleware('guest');
     }
 
+    public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = []){
+        $rules["email"] .= "|blocked_stylist";
+        $messages['blocked_stylist'] = AuthController::BLOCKED_USER_MESSAGE;
+        parent::validate($request, $rules, $messages, $customAttributes);
+    }
+
     public function index(Request $request, $action, $token = null)
     {
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
