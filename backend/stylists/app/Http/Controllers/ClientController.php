@@ -94,4 +94,12 @@ class ClientController extends Controller
         return $where;
     }
 
+    public function getChat(Request $request)
+    {
+        if(!Auth::user()->hasRole('admin')){
+            return redirect('look/list')->withError('Chat access denied!');
+        }
+        return view('client/chat');
+    }
+
 }
