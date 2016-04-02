@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'requests list')
+@section('title', 'Requests list')
 
 @section('content')
     <div id="contentCntr">
@@ -73,15 +73,12 @@
             </div>
         </div>
     </div>
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.css">
 
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>
     <script>
         $(document).ready(function () {
             $('#example').DataTable();
         });
     </script>
-    <script src="/js/datatable.js"></script>
 
 @endsection
 

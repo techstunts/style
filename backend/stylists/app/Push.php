@@ -4,12 +4,10 @@ namespace App;
 class Push
 {
 
-    public $androidAuthKey = "AIzaSyDRU5TJpogZL8v_nSVMoDN0QS3OS6jiJI0";
-    public $iosApnsCert = "\ck.pem";
+
 
     private function sendMessageAndroid($registration_id, $params)
     {
-        $this->androidAuthKey = "AIzaSyDRU5TJpogZL8v_nSVMoDN0QS3OS6jiJI0";//Auth Key Herer
 
         ## data is different from what your app is programmed
         $data = array(
@@ -19,13 +17,14 @@ class Push
                 'message' => $params["message"],
                 'message_summery' => $params["message_summery"],
                 'look_url' => $params["look_url"],
+                'url' => $params["url"],
                 'app_section' => ((isset($params["app_section"]) && $params["app_section"] != "") ? $params["app_section"] : "3")
             )
         );
 
         $headers = array(
             "Content-Type:application/json",
-            "Authorization:key=" . $this->androidAuthKey
+            "Authorization:key=" . env('ANDROID_AUTH_KEY')
         );
 
         $ch = curl_init();
@@ -43,7 +42,6 @@ class Push
         $rtn["code"] = "000";//means result OK
         $rtn["message"] = "OK";
         $rtn["result"] = $result;
-        print_r($rtn);
         return $rtn;
     }
 
@@ -58,10 +56,6 @@ class Push
         //$parm = array("msg"=>$params["msg"]);
         if ($params["registration_id"] && $params["message"]) {
             switch ($params["pushtype"]) {
-                case "ios":
-
-                    $this->sendMessageIos($params["registration_id"], $params);
-                    break;
                 case "android":
 
                     $this->sendMessageAndroid($params["registration_id"], $params);

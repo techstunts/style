@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Enums\EntityType;
+use App\Models\Enums\EntityTypeName;
 use App\Models\Lookups\AppSections;
 
 use App\Http\Requests;
@@ -16,8 +17,6 @@ class StyleRequestsController extends Controller
     protected $filter_ids = ['occasion_id', 'budget_id'];
     protected $filters = ['occasions', 'budgets'];
 
-    protected $status_rules;
-
     /**
      * Display a listing of the resource.
      *
@@ -28,9 +27,6 @@ class StyleRequestsController extends Controller
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
         if($id){
             $this->resource_id = $id;
-        }
-        if($action_id){
-            $this->action_resource_id = $action_id;
         }
         return $this->$method($request);
     }
@@ -45,6 +41,17 @@ class StyleRequestsController extends Controller
             'budgets' => $this->budgets,
         );
 
+        $entity_nav_tab = array(
+            EntityType::LOOK,
+            EntityType::PRODUCT
+        );
+
+        $view_properties['entity_type_name']= array(
+            EntityTypeName::LOOK,
+            EntityTypeName::PRODUCT
+        );
+        $view_properties['nav_tab_index'] = '0';
+
         foreach($this->filter_ids as $filter){
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
@@ -55,17 +62,10 @@ class StyleRequestsController extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
-        if(Auth::user()->hasRole('admin')){
-            $view_properties['user_role'] = 'admin';
-        }
-        else if(Auth::user()->hasRole('stylist')){
-            $view_properties['user_role'] = 'stylist';
-            if(strcmp($this->where_raw, "1==1")){
-                $this->where_raw = "stylists.stylish_id = ".Auth::user()->stylish_id;
-            }else{
+        if(Auth::user()->hasRole('stylist')){
                 $this->where_raw = $this->where_raw. " AND (stylists.stylish_id = ".Auth::user()->stylish_id.")";
-            }
         }
+
         $requests  = DB::table($this->base_table)
                 ->join('userdetails', $this->base_table . '.user_id', '=', 'userdetails.user_id')
                 ->join('stylists', 'userdetails.stylish_id', '=', 'stylists.stylish_id')
@@ -83,9 +83,8 @@ class StyleRequestsController extends Controller
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
         $view_properties['requests'] = $requests;
-        $view_properties['status_rules'] = $this->status_rules;
         $view_properties['app_sections'] = AppSections::all();
-        $view_properties['entity_type_id'] = EntityType::LOOK;
+        $view_properties['popup_entity_type_id'] = $entity_nav_tab;
         return view('requests.list', $view_properties);
     }
 
