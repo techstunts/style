@@ -36,14 +36,20 @@ var entity_type_id = '';
 var entity = ['', 'product', 'look', '', 'tips', '', 'client'];
 var next_page = '';
 var prev_page = '';
+var EntityType = {
+    PRODUCT     : 1,
+    LOOK        : 2,
+    STYLIST     : 3,
+    TIP         : 4,
+    COLLECTION  : 5,
+    CLIENT      : 6,
+    }
 
 $(document).ready(function () {
     var entity_url = '';
-    var category_id = '';
     var gender_id = '';
     var color_id = '';
     var budget_id = '';
-    var filter_fetched = 0;
     var s = $("#send");
     var pos = s.position();
     var all_filters = [];
@@ -278,7 +284,7 @@ $(document).ready(function () {
         }
 
         if (entity_url == '') {
-            if(entity_type_id == 6){
+            if(entity_type_id == EntityType.CLIENT){
                 entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylish_id=" + stylish_id + "&";
             }else {
                 entity_url = api_origin + entity[entity_type_id] + "/list?";
@@ -286,7 +292,7 @@ $(document).ready(function () {
         }
 
         $('#filters form').attr('action', entity_url);
-        if(entity_type_id != 6){
+        if(entity_type_id != EntityType.CLIENT){
             initializeFilters();
         }
 
@@ -370,7 +376,7 @@ function showEntities(entity_url) {
                 var str = '<div class="items">No data found</div>';
                 $(".popup-inner").append(str);
             } else {
-                if(entity_type_id != 6) {
+                if(entity_type_id != EntityType.CLIENT) {
                     for (var i = 0; i < item.data.length; i++) {
 
                         var content = "Price: " + item.data[i].price + "/- <br >" +
