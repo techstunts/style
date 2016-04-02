@@ -42,12 +42,12 @@ class ClientController extends Controller
             'stylists' => $this->stylists,
         );
 
-        $view_properties['popup_entity_type_id'] = array(
+        $view_properties['popup_entity_type_ids'] = array(
             EntityType::LOOK,
             EntityType::PRODUCT
         );
 
-        $view_properties['entity_type_name']= array(
+        $view_properties['entity_type_names']= array(
             EntityTypeName::LOOK,
             EntityTypeName::PRODUCT
         );

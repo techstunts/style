@@ -25,7 +25,7 @@
                 @if(count($requests) == 0)
                     No Looks found
                 @endif
-                <form name="frm-example" id="frm-example" method="POST" action="look_list.php">
+                <form name="frm-datatable" id="frm-datatable" method="POST" action="">
                     <table id="datatable" class="display select datatable" cellspacing="0" width="100%">
                         <thead>
                         <tr>

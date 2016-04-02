@@ -41,12 +41,12 @@ class StyleRequestsController extends Controller
             'budgets' => $this->budgets,
         );
 
-        $entity_nav_tab = array(
+        $entity_nav_tabs = array(
             EntityType::LOOK,
             EntityType::PRODUCT
         );
 
-        $view_properties['entity_type_name']= array(
+        $view_properties['entity_type_names']= array(
             EntityTypeName::LOOK,
             EntityTypeName::PRODUCT
         );
@@ -84,7 +84,7 @@ class StyleRequestsController extends Controller
                 ->appends($paginate_qs);
         $view_properties['requests'] = $requests;
         $view_properties['app_sections'] = AppSections::all();
-        $view_properties['popup_entity_type_id'] = $entity_nav_tab;
+        $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         return view('requests.list', $view_properties);
     }
 

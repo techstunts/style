@@ -77,53 +77,6 @@ $(document).ready(function () {
     var api_origin = $('#api_origin').val();
     var stylish_id = $('#stylish_id').val();
 
-    $(window).scroll(function () {
-        var windowpos = $(window).scrollTop() + 60;
-        if (windowpos >= pos.top) {
-            s.addClass("stick");
-        } else {
-            s.removeClass("stick");
-        }
-    });
-
-    // Handle form submission event
-    $('#frm-example').on('submit', function (e) {
-
-        var form = this;
-
-        var $table = table.table().node();
-        var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
-
-        if ($chkbox_checked.length === 0) {
-            alert("Please select at least one record");
-            return false;
-        }
-
-        var ids = $.map(table.rows('.selected').data(), function (item) {
-            return item[1]
-        });
-
-        // Iterate over all selected checkboxes
-        $.each(rows_selected, function (index, rowId) {
-            // Create a hidden element
-            $(form).append(
-                $('<input>')
-                    .attr('type', 'hidden')
-                    .attr('name', 'userid[]')
-                    .val(rowId)
-            );
-
-            $(form).append(
-                $('<input>')
-                    .attr('type', 'hidden')
-                    .attr('name', 'ids[]')
-                    .val(ids)
-            );
-
-
-        });
-    });
-
     // Array holding selected row IDs
     var rows_selected = [];
     var table = $('#datatable').DataTable({
@@ -320,7 +273,7 @@ $(document).ready(function () {
 
         $.ajaxSetup({
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                'X-CSRF-TOKEN': $(this).parent().children('input[name="_token"]').val()
             }
         });
 
@@ -371,56 +324,46 @@ function showEntities(entity_url) {
             next_page = item.next_page_url;
             prev_page = item.prev_page_url;
 
-            $(".popup-inner > .items").remove();
-            if (!item.data.length) {
-                var str = '<div class="items">No data found</div>';
-                $(".popup-inner").append(str);
-            } else {
-                if(entity_type_id != EntityType.CLIENT) {
+                $(".popup-inner > .items").remove();
+                if (item.data == null || !item.data.length) {
+                    var str = '<div class="items">No data found</div>';
+                    $(".popup-inner").append(str);
+                } else {
+                    var str = '<div class="items pop-up-item" >' +
+                        '<div class="name text">' +
+                        '<input class="entity_ids" name="entity_ids" id="entity_ids" value="{{item_id}}" type="checkbox">' +
+                        '<a href="' + '/' + entity[entity_type_id] + '/view/{{item_id}}" target="_blank">{{item_name}}</a>' +
+                        '</div>' +
+                        '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="{{item_popover}}">' +
+                        '<img src="{{item_image}}" class="pop-image-size"/>' +
+                        '</div>' +
+                        '</div>';
+
                     for (var i = 0; i < item.data.length; i++) {
+                        if (entity_type_id != EntityType.CLIENT) {
+                            var popover_data = "Price: " + item.data[i].price + "/- <br >" +
+                                "Description: " + item.data[i].description + "<br >" +
+                                "<img src='" + item.data[i].image + "' />";
+                            newstr = str;
 
-                        var content = "Price: " + item.data[i].price + "/- <br >" +
-                            "Description: " + item.data[i].description + "<br >" +
-                            "<img src='" + item.data[i].image + "' />";
+                            newstr = newstr.replace("{{item_id}}", item.data[i].id)
+                                .replace("{{item_name}}", item.data[i].name)
+                                .replace("{{item_popover}}", popover_data)
+                                .replace("{{item_image}}", item.data[i].image);
+                        }
+                        else {
+                            var popover_data = "Name: " + item.data[i].username + "<br >" +
+                                "<img src='" + item.data[i].userimage + "' />";
+                            newstr = str;
 
-
-                        var str = '<div class="items pop-up-item" >' +
-                            '<div class="name text">' +
-                            '<input class="entity_ids" name="entity_ids" id="entity_ids" value="' + item.data[i].id + '" type="checkbox">' +
-                            '<a href="' + '/' + entity[entity_type_id] + '/view/' + item.data[i].id + '" target="_blank">' +
-                            item.data[i].name +
-                            '</a>' +
-                            '</div>' +
-                            '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="' + content + '">' +
-                            '<img src="' + item.data[i].image + '" class="pop-image-size"/>' +
-                            '</div>' +
-                            '</div>';
-                        $(".popup-inner").append(str);
-
-                    }
-                }else{
-                    for (var i = 0; i < item.data.length; i++) {
-
-                        var content = "Name: " + item.data[i].username + "<br >" +
-                            "<img src='" + item.data[i].userimage + "' />";
-
-
-                        var str = '<div class="items pop-up-item" >' +
-                            '<div class="name text">' +
-                            '<input class="entity_ids" name="entity_ids" id="entity_ids" value="' + item.data[i].id + '" type="checkbox">' +
-                            '<a href="' + '/' + entity[entity_type_id] + '/view/' + item.data[i].user_id + '" target="_blank">' +
-                            item.data[i].username +
-                            '</a>' +
-                            '</div>' +
-                            '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="' + content + '">' +
-                            '<img src="' + item.data[i].userimage + '" class="pop-image-size"/>' +
-                            '</div>' +
-                            '</div>';
-                        $(".popup-inner").append(str);
-
+                            newstr = newstr.replace("{{item_id}}", item.data[i].user_id)
+                                .replace("{{item_name}}", item.data[i].user_name)
+                                .replace("{{item_popover}}", popover_data)
+                                .replace("{{item_image}}", item.data[i].user_image);
+                        }
+                        $(".popup-inner").append(newstr);
                     }
                 }
-
                 $(".popup-inner > .pop-up-item .entity_ids").on('click', function () {
                     if ($(".popup-inner > .pop-up-item :checked").length > 0) {
                         $(".mobile-app-send .btn").removeClass('disabled');
@@ -444,6 +387,6 @@ function showEntities(entity_url) {
                     $('.buttons .next-page').removeClass('inactive');
                 }
             }
-        }
+
     });
 }

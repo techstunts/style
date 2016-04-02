@@ -71,11 +71,11 @@ class LookController extends Controller
             'age_groups' => $this->age_groups
         );
 
-        $entity_nav_tab = array(
+        $entity_nav_tabs = array(
             EntityType::CLIENT
         );
 
-        $view_properties['entity_type_name']= array(
+        $view_properties['entity_type_names']= array(
             EntityTypeName::CLIENT
         );
         $view_properties['nav_tab_index'] = '0';
@@ -121,7 +121,7 @@ class LookController extends Controller
         $view_properties['status_rules'] = $this->status_rules;
         $view_properties['app_sections'] = AppSections::all();
         $view_properties['stylish_id'] = Auth::user()->stylish_id;
-        $view_properties['popup_entity_type_id'] = $entity_nav_tab;
+        $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         return view('look.list', $view_properties);
     }
 

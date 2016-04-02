@@ -1,22 +1,22 @@
-<div class="popup" data-value="{{$popup_entity_type_id[$nav_tab_index]}}" data-popup="send-entities">
+<div class="popup" data-value="{{$popup_entity_type_ids[$nav_tab_index]}}" data-popup="send-entities">
     <div class="popup-inner">
         <input type="hidden" value="{{env('API_ORIGIN')}}" id="api_origin">
         <p><a data-popup-close="send-entities" href="#" style="float: right">Close</a></p>
-        @if($popup_entity_type_id[$nav_tab_index] == $popup_entity_type_id)
+        @if($popup_entity_type_ids[$nav_tab_index] == $popup_entity_type_ids)
             <ul class="nav nav-tabs" id="entity">
-                @foreach($popup_entity_type_id as $entity_type_id)
-                    <li class="active" id="send-entities" data-value="{{$popup_entity_type_id}}"
+                @foreach($popup_entity_type_ids as $entity_type_id)
+                    <li class="active" id="send-entities" data-value="{{$entity_type_id}}"
                         data-popup-open="send-entities">
-                        <a href="#">{{$entity_type_name[$nav_tab_index++]}}</a>
+                        <a href="#">{{$entity_type_names[$nav_tab_index++]}}</a>
                     </li>
                 @endforeach
             </ul>
         @else
             <ul class="nav nav-tabs" id="entity">
-                @foreach($popup_entity_type_id as $entity_type_id)
+                @foreach($popup_entity_type_ids as $entity_type_id)
                     <li class="active" id="send-entities" data-value="{{$entity_type_id}}"
                         data-popup-open="send-entities"><a
-                                href="#">{{$entity_type_name[$nav_tab_index++]}}</a>
+                                href="#">{{$entity_type_names[$nav_tab_index++]}}</a>
                     </li>
                 @endforeach
             </ul>
@@ -39,6 +39,7 @@
 
         <div class="clear"></div>
         <div class="mobile-app-send">
+            {!! csrf_field() !!}
             @include('common.app_section.select')
             <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
         </div>

@@ -21,7 +21,7 @@
 
                 <div class="clear"></div>
 
-                <form name="frm-example" id="frm-example" method="POST" action="">
+                <form name="frm-datatable" id="frm-datatable" method="POST" action="">
                     <table id="datatable" class="display select datatable" cellspacing="0" width="100%">
                         <thead>
                         <tr>

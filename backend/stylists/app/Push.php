@@ -1,11 +1,10 @@
 <?php
 namespace App;
 
+use App\Models\Enums\AppSections;
+
 class Push
 {
-
-
-
     private function sendMessageAndroid($registration_id, $params)
     {
 
@@ -18,7 +17,7 @@ class Push
                 'message_summery' => $params["message_summery"],
                 'look_url' => $params["look_url"],
                 'url' => $params["url"],
-                'app_section' => ((isset($params["app_section"]) && $params["app_section"] != "") ? $params["app_section"] : "3")
+                'app_section' => ((isset($params["app_section"]) && $params["app_section"] != "") ? $params["app_section"] : AppSections::MY_REQUESTS)
             )
         );
 

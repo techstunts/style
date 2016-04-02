@@ -31,11 +31,11 @@ class RecommendationController extends Controller
 
     public function postSend(Request $request)
     {
-        $app_section = isset($request->app_section) && $request->app_section != "" ? $request->app_section : AppSections::MY_REQUESTS;
+        $app_section = $request->input('app_section') && $request->input('app_section') != "" ? $request->input('app_section') : AppSections::MY_REQUESTS;
 
         $entity_type_id = '';
-        if (isset($request->entity_type_id)) {
-            $entity_type_id = $request->entity_type_id;
+        if ($request->input('entity_type_id')) {
+            $entity_type_id = $request->input('entity_type_id');
         } else {
             return response()->json(
                 array(
@@ -44,10 +44,9 @@ class RecommendationController extends Controller
             );
         }
 
-        $client_ids = isset($request->client_ids) ? $request->client_ids : '';
-        $entity_ids = isset($request->entity_ids) ? $request->entity_ids : '';
+        $client_ids = $request->input('client_ids') ? $request->input('client_ids') : '';
+        $entity_ids = $request->input('entity_ids') ? $request->input('entity_ids') : '';
 
-        $stylish_id = Auth::user()->stylish_id;
         $entity_type_data = EntityType::where('id', $entity_type_id)->first();
         if(empty($entity_type_data)){
             return response()->json(
@@ -57,7 +56,7 @@ class RecommendationController extends Controller
             );
         }
 
-        $stylish_data = Stylist::where('stylish_id', $stylish_id)->first();
+        $stylish_data = Auth::user();
         if(empty($stylish_data)){
             return response()->json(
                 array(
@@ -65,6 +64,7 @@ class RecommendationController extends Controller
                 ), 200
             );
         }
+        $stylish_id = $stylish_data->stylish_id;
 
         $client_data = Client::whereIn('user_id', $client_ids)->get();
         if (empty($client_data)) {
@@ -88,11 +88,8 @@ class RecommendationController extends Controller
                 ), 200
             );
         }
-
-        sort($entity_ids);
-        sort($client_ids);
-        $clients_count = count($client_ids);
-        $entity_count = count($entity_ids);
+        $clients_count = count($client_data);
+        $entity_count = count($entity_data);
 
         $recommends_arr = array();
         $query_count = 0;
@@ -101,21 +98,21 @@ class RecommendationController extends Controller
             $message_pushed = 0;
             for ($j = 0; $j < $entity_count; $j++) {
                 $recommends_arr[$query_count] = array(
-                    'user_id' => $client_ids[$i],
+                    'user_id' => $client_data[$i]->user_id,
                     'recommendation_type_id' => RecommendationType::MANUAL,
                     'created_by' => $stylish_id,
                     'entity_type_id' => $entity_type_id,
-                    'entity_id' => $entity_ids[$j]
+                    'entity_id' => $entity_data[$j]->id
                 );
                 $query_count++;
                 if ($message_pushed == 0) {
                     $params = array(
                         "pushtype" => "android",
                         "registration_id" => $client_data[$i]->regId,
-                        "message" => $stylish_data->name . " has sent you" . $entity_type_data->name,
-                        "message_summery" => $stylish_data->name . " has sent you" . $entity_type_data->name,
-                        "look_url" => $entity_data[$j]->image,
-                        "url" => $entity_data[$j]->image,
+                        "message" => $stylish_data->name . " has sent you " . $entity_type_data->name,
+                        "message_summery" => $stylish_data->name . " has sent you " . $entity_type_data->name,
+                        "look_url" => env('IMAGE_BASE_URL').$entity_data[$j]->image,
+                        "url" => env('IMAGE_BASE_URL').$entity_data[$j]->image,
                         'app_section' => $app_section,
                     );
                     $push->sendMessage($params);
