@@ -3,17 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Client;
-use App\Look;
 use App\Models\Enums\EntityType;
-use App\Models\Enums\Gender;
-use App\Product;
-use App\Models\Lookups\Status;
-use App\User;
+use App\Models\Enums\EntityTypeName;
+use App\Models\Lookups\AppSections;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
@@ -45,6 +41,18 @@ class ClientController extends Controller
         $view_properties = array(
             'stylists' => $this->stylists,
         );
+
+        $view_properties['popup_entity_type_ids'] = array(
+            EntityType::LOOK,
+            EntityType::PRODUCT
+        );
+
+        $view_properties['entity_type_names']= array(
+            EntityTypeName::LOOK,
+            EntityTypeName::PRODUCT
+        );
+        $view_properties['nav_tab_index'] = '0';
+
         foreach($this->filter_ids as $filter){
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
@@ -62,6 +70,7 @@ class ClientController extends Controller
                 ->appends($paginate_qs);
 
         $view_properties['clients'] = $clients;
+        $view_properties['app_sections'] = AppSections::all();
         return view('client.list', $view_properties);
     }
 

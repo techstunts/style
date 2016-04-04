@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Look;
 use App\LookProduct;
+use App\Models\Enums\EntityType;
+use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\Status as LookupStatus;
 use App\Models\Lookups\Lookup;
 use App\Product;
 use App\Models\Lookups\Status;
+use App\Models\Lookups\AppSections;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -51,8 +54,6 @@ class LookController extends Controller
         foreach($status_rules['statuses']['status'] as $status){
             $this->status_rules[$status['id']] = $status;
         }
-
-
     }
 
     public function getList(Request $request){
@@ -69,6 +70,15 @@ class LookController extends Controller
             'budgets' => $this->budgets,
             'age_groups' => $this->age_groups
         );
+
+        $entity_nav_tabs = array(
+            EntityType::CLIENT
+        );
+
+        $view_properties['entity_type_names']= array(
+            EntityTypeName::CLIENT
+        );
+        $view_properties['nav_tab_index'] = '0';
 
         foreach($this->filter_ids as $filter){
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
@@ -109,6 +119,9 @@ class LookController extends Controller
 
         $view_properties['looks'] = $looks;
         $view_properties['status_rules'] = $this->status_rules;
+        $view_properties['app_sections'] = AppSections::all();
+        $view_properties['stylish_id'] = Auth::user()->stylish_id;
+        $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         return view('look.list', $view_properties);
     }
 

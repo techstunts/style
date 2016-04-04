@@ -35,6 +35,10 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::any('collection/{action}/{id?}/{action_id?}', 'CollectionController@index');
 
+    Route::any('requests/{action}/{id?}/', 'StyleRequestsController@index');
+
+    Route::any('recommendation/{action}/{id?}/', 'RecommendationController@index');
+
     Route::get('report/{report_id}', 'ReportController@index');
 
     Route::get('report/{report_id}/query', 'ReportController@query');

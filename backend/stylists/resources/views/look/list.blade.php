@@ -25,6 +25,8 @@
                 {!! $looks->render() !!}
             </div>
 
+            <a class="btn active btn-primary btn-xs" data-popup-open="send-entities" href="#">Send</a>
+
             <div class="clear"></div>
 
             <ol class="selectable" >
@@ -73,11 +75,12 @@
             </ol>
 
             <div class="clear"></div>
-
             {!! $looks->render() !!}
         </div>
 
         @include('look.create')
+        <input type="hidden" value="{{$stylish_id}}" id="stylish_id">
+        @include('push.popup')
     </div>
 </div>
 @endsection
