@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
+use App\Models\Enums\RecommendationType;
 use App\Models\Lookups\AppSections;
 use Illuminate\Http\Request;
 
@@ -71,6 +72,7 @@ class ClientController extends Controller
 
         $view_properties['clients'] = $clients;
         $view_properties['app_sections'] = AppSections::all();
+        $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
         return view('client.list', $view_properties);
     }
 

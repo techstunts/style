@@ -6,6 +6,7 @@ use App\Look;
 use App\LookProduct;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
+use App\Models\Enums\RecommendationType;
 use App\Models\Enums\Status as LookupStatus;
 use App\Models\Lookups\Lookup;
 use App\Product;
@@ -122,6 +123,8 @@ class LookController extends Controller
         $view_properties['app_sections'] = AppSections::all();
         $view_properties['stylish_id'] = Auth::user()->stylish_id;
         $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
+        $view_properties['entity_type_to_send'] = EntityType::LOOK;
+        $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
         return view('look.list', $view_properties);
     }
 

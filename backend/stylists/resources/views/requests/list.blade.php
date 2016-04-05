@@ -20,8 +20,7 @@
 
                 <div class="clear"></div>
 
-                <a class="btn disabled btn-primary btn-xs" data-popup-open="send-entities" href="#">Send</a>
-
+                @include('common.sendrecommendations')
                 @if(count($requests) == 0)
                     No Looks found
                 @endif

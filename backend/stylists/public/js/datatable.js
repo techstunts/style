@@ -1,38 +1,6 @@
-//
-// Updates "Select all" control in a data table
-//
-
-function updateDataTableSelectAllCtrl(table) {
-    var $table = table.table().node();
-    var $chkbox_all = $('tbody input[type="checkbox"]', $table);
-    var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
-    var chkbox_select_all = $('thead input[name="select_all"]', $table).get(0);
-
-    // If none of the checkboxes are checked
-    if ($chkbox_checked.length === 0) {
-        chkbox_select_all.checked = false;
-        if ('indeterminate' in chkbox_select_all) {
-            chkbox_select_all.indeterminate = false;
-        }
-
-        // If all of the checkboxes are checked
-    } else if ($chkbox_checked.length === $chkbox_all.length) {
-        chkbox_select_all.checked = true;
-        if ('indeterminate' in chkbox_select_all) {
-            chkbox_select_all.indeterminate = false;
-        }
-
-        // If some of the checkboxes are checked
-    } else {
-        chkbox_select_all.checked = true;
-        if ('indeterminate' in chkbox_select_all) {
-            chkbox_select_all.indeterminate = true;
-        }
-    }
-}
-
 //variables for navigation in various entity sections
 var entity_type_id = '';
+var entity_type_to_send = '';
 var entity = ['', 'product', 'look', '', 'tips', '', 'client'];
 var next_page = '';
 var prev_page = '';
@@ -44,14 +12,13 @@ var EntityType = {
     COLLECTION  : 5,
     CLIENT      : 6,
     }
+var style_request = 1;
 
 $(document).ready(function () {
     var entity_url = '';
     var gender_id = '';
     var color_id = '';
     var budget_id = '';
-    var s = $("#send");
-    var pos = s.position();
     var all_filters = [];
     var entity_filters = [
         [],
@@ -75,10 +42,12 @@ $(document).ready(function () {
         []
     ];
     var api_origin = $('#api_origin').val();
+    var recommendation_type_id = $('#recommendation_type_id').val();
     var stylish_id = $('#stylish_id').val();
 
     // Array holding selected row IDs
     var rows_selected = [];
+    var request_ids = [];
     var table = $('#datatable').DataTable({
 
         'columnDefs': [{
@@ -87,7 +56,7 @@ $(document).ready(function () {
             'orderable': false,
             'className': 'dt-body-center',
             'render': function (data, type, full, meta) {
-                return '<input type="checkbox" id="userid" value="">';
+                return '<input type="checkbox" value="">';
             }
         }],
         'order': [1, 'asc'],
@@ -103,6 +72,10 @@ $(document).ready(function () {
         }
     });
 
+    $('.dataTables_length').hide();
+    $('.dataTables_paginate').hide();
+    $('.dataTables_info').hide();
+    $('#frm-datatable #datatable_wrapper .dataTables_length select option').val('25').trigger('change');
     // Handle click on checkbox
     $('#datatable tbody').on('click', 'input[type="checkbox"]', function (e) {
         var $row = $(this).closest('tr');
@@ -112,6 +85,16 @@ $(document).ready(function () {
 
         // Get row ID
         var rowId = data[0];
+
+        if(recommendation_type_id == style_request){
+            var requestIndex = $.inArray(data[1], request_ids);
+
+            if (this.checked && requestIndex === -1) {
+                request_ids.push(data[1]);
+            } else if (!this.checked && requestIndex !== -1) {
+                request_ids.splice(requestIndex, 1);
+            }
+        }
 
         // Determine whether row ID is in the list of selected row IDs
         var index = $.inArray(rowId, rows_selected);
@@ -131,16 +114,13 @@ $(document).ready(function () {
             $row.removeClass('selected');
         }
 
+        var btn_recommendation = $(this).parents('div.container').children('a.btn_recommendation');
         if (rows_selected.length > 0) {
-            $(".container .btn").removeClass('disabled');
-            $(".container .btn").addClass('active');
+            btn_recommendation.removeClass('disabled');
+            btn_recommendation.addClass('active');
         } else {
-            $(".container .btn").addClass('disabled');
+            btn_recommendation.addClass('disabled');
         }
-
-        // Update state of "Select all" control
-        updateDataTableSelectAllCtrl(table);
-
         // Prevent click event from propagating to parent
         e.stopPropagation();
     });
@@ -160,6 +140,10 @@ $(document).ready(function () {
 
         // Prevent click event from propagating to parent
         e.stopPropagation();
+    });
+
+    $('.container .btn-primary').click(function(){
+        $('#send-entities_0').addClass('active');
     });
 
     $("ul.nav-tabs li").on('click', function () {
@@ -187,17 +171,21 @@ $(document).ready(function () {
         if ($("#filters select").length == 0) {
             $.ajax({
                 url: api_origin + '/filters/list',
+                beforeSend: toggleLoader,
                 success: function (data) {
                     all_filters[1] = data;
                     $.ajax({
                         url: api_origin + '/look/filters',
+                        beforeSend: toggleLoader,
                         success: function (data) {
                             all_filters[2] = data;
                             showFilters();
-                        }
+                        },
+                        complete: toggleLoader
                     });
 
-                }
+                },
+                complete: toggleLoader
             });
         }
         else {
@@ -265,17 +253,26 @@ $(document).ready(function () {
 
     $("#send").on('click', function (e) {
         var entity_ids = [];
-        $(".popup-inner > .pop-up-item :checked").each(function () {
-            entity_ids.push($(this).val());
-        });
+        if (entity_type_id == EntityType.CLIENT){
+            $('.items #popup-item :checked').each(function () {
+                entity_ids.push($(this).val());
+            });
+            $(".popup-inner > .pop-up-item :checked").each(function () {
+                rows_selected.push($(this).val());
+            });
+        }else {
+            $(".popup-inner > .pop-up-item :checked").each(function () {
+                entity_ids.push($(this).val());
+            });
+        }
 
         var app_section = $("#app_section").val();
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $(this).parent().children('input[name="_token"]').val()
-            }
-        });
+        if($(".entity-type-to-send").length > 0) {
+            entity_type_to_send = $(".entity-type-to-send").val();
+        }else{
+            entity_type_to_send = entity_type_id;
+        }
 
         if (entity_ids.length <= 0) {
             alert('Please select at least one item');
@@ -286,23 +283,32 @@ $(document).ready(function () {
             alert('Please select at least one client');
             return false;
         }
-
         $.ajax({
             type: "POST",
+            beforeSend: toggleLoader,
             url: '/recommendation/send',
             data: {
                 entity_ids: entity_ids,
-                entity_type_id: entity_type_id,
+                entity_type_id: entity_type_to_send,
                 client_ids: rows_selected,
-                app_section: app_section
+                app_section: app_section,
+                recommendation_type_id : recommendation_type_id,
+                style_request_ids : request_ids,
+                _token: $(this).parent().children('input[name="_token"]').val()
             },
             success: function (response) {
                 if(response.error_message != ""){
                     alert(response.error_message);
                 }else {
                     alert("Sent Successfully");
+                    $(".popup-inner > .pop-up-item input").attr('checked', false);
+                    $(".mobile-app-send .btn").removeClass('active');
+                    $(".mobile-app-send .btn").addClass('disabled');
+                    entity_ids = [];
+                    rows_selected = [];
                 }
-            }
+            },
+            complete: toggleLoader
         });
         e.preventDefault();
     });
@@ -314,11 +320,22 @@ $(document).ready(function () {
 
         e.preventDefault();
     });
+
+    $(".items .name .entity_ids").on('click', function () {
+        if ($(".items .name :checked").length > 0) {
+            $(".container .btn-primary").removeClass('disabled');
+            $(".container .btn-primary").addClass('active');
+        } else {
+            $(".container .btn-primary").removeClass('active');
+            $(".container .btn-primary").addClass('disabled');
+        }
+    });
 });
 
 function showEntities(entity_url) {
     $.ajax({
         type: "GET",
+        beforeSend: toggleLoader,
         url: entity_url,
         success: function (item) {
             next_page = item.next_page_url;
@@ -357,9 +374,9 @@ function showEntities(entity_url) {
                             newstr = str;
 
                             newstr = newstr.replace("{{item_id}}", item.data[i].user_id)
-                                .replace("{{item_name}}", item.data[i].user_name)
+                                .replace("{{item_name}}", item.data[i].username)
                                 .replace("{{item_popover}}", popover_data)
-                                .replace("{{item_image}}", item.data[i].user_image);
+                                .replace("{{item_image}}", item.data[i].userimage);
                         }
                         $(".popup-inner").append(newstr);
                     }
@@ -386,7 +403,12 @@ function showEntities(entity_url) {
                 }else{
                     $('.buttons .next-page').removeClass('inactive');
                 }
-            }
+            },
+        complete: toggleLoader
 
     });
+}
+
+function toggleLoader() {
+    $('.mobile-app-send img').toggle();
 }
