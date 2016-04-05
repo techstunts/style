@@ -17,8 +17,8 @@
                     {!! $clients->render() !!}
                 </div>
 
-                <a class="btn disabled btn-primary btn-xs" data-popup-open="send-entities" href="#">Send</a>
-
+                @include('common.sendrecommendations')
+                
                 <div class="clear"></div>
 
                 <form name="frm-datatable" id="frm-datatable" method="POST" action="">

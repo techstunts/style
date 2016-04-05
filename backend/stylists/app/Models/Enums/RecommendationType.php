@@ -1,7 +1,7 @@
 <?php
 namespace App\Models\Enums;
 class RecommendationType{
-    const USER_REQUEST = "1";
+    const STYLE_REQUEST = "1";
     const AUTOMATED = "2";
     const MANUAL = "3";
     const INSTANT_STYLING = "4";

@@ -1,11 +1,12 @@
 <div class="popup" data-value="{{$popup_entity_type_ids[$nav_tab_index]}}" data-popup="send-entities">
     <div class="popup-inner">
         <input type="hidden" value="{{env('API_ORIGIN')}}" id="api_origin">
+        <input type="hidden" value="{{$recommendation_type_id}}" id="recommendation_type_id">
         <p><a data-popup-close="send-entities" href="#" style="float: right">Close</a></p>
         @if($popup_entity_type_ids[$nav_tab_index] == $popup_entity_type_ids)
             <ul class="nav nav-tabs" id="entity">
                 @foreach($popup_entity_type_ids as $entity_type_id)
-                    <li class="active" id="send-entities" data-value="{{$entity_type_id}}"
+                    <li class="active" id="send-entities_{{$nav_tab_index}}" data-value="{{$entity_type_id}}"
                         data-popup-open="send-entities">
                         <a href="#">{{$entity_type_names[$nav_tab_index++]}}</a>
                     </li>
@@ -14,7 +15,7 @@
         @else
             <ul class="nav nav-tabs" id="entity">
                 @foreach($popup_entity_type_ids as $entity_type_id)
-                    <li class="active" id="send-entities" data-value="{{$entity_type_id}}"
+                    <li class="" id="send-entities_{{$nav_tab_index}}" data-value="{{$entity_type_id}}"
                         data-popup-open="send-entities"><a
                                 href="#">{{$entity_type_names[$nav_tab_index++]}}</a>
                     </li>
@@ -42,6 +43,7 @@
             {!! csrf_field() !!}
             @include('common.app_section.select')
             <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
+            <img class="loader" src="/images/popup-loader.gif" />
         </div>
     </div>
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
+use App\Models\Enums\RecommendationType;
 use App\Models\Lookups\AppSections;
 
 use App\Http\Requests;
@@ -65,6 +66,7 @@ class StyleRequestsController extends Controller
         if(Auth::user()->hasRole('stylist')){
                 $this->where_raw = $this->where_raw. " AND (stylists.stylish_id = ".Auth::user()->stylish_id.")";
         }
+        $this->where_raw = $this->where_raw. " AND recommendations.style_request_id is NULL";
 
         $requests  = DB::table($this->base_table)
                 ->join('userdetails', $this->base_table . '.user_id', '=', 'userdetails.user_id')
@@ -72,6 +74,7 @@ class StyleRequestsController extends Controller
                 ->join('lu_budget', 'lu_budget.id', '=', $this->base_table.'.budget_id')
                 ->join('lu_occasion', 'lu_occasion.id', '=', $this->base_table.'.occasion_id')
                 ->join('lu_entity_type', 'lu_entity_type.id', '=', $this->base_table.'.entity_type_id')
+                ->leftJoin('recommendations', $this->base_table.'.id', '=', 'recommendations.style_request_id')
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->select($this->base_table.'.id as request_id', 'userdetails.user_id', 'userdetails.username',
@@ -85,6 +88,8 @@ class StyleRequestsController extends Controller
         $view_properties['requests'] = $requests;
         $view_properties['app_sections'] = AppSections::all();
         $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
+        $view_properties['recommendation_type_id'] = RecommendationType::STYLE_REQUEST;
+
         return view('requests.list', $view_properties);
     }
 

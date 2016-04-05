@@ -13,6 +13,7 @@ use App\Client;
 use App\Stylist;
 use App\Look;
 use App\Product;
+use App\StyleRequests;
 use App\Models\Lookups\EntityType;
 use App\Models\Enums\AppSections;
 use App\Models\Enums\RecommendationType;
@@ -32,6 +33,8 @@ class RecommendationController extends Controller
     public function postSend(Request $request)
     {
         $app_section = $request->input('app_section') && $request->input('app_section') != "" ? $request->input('app_section') : AppSections::MY_REQUESTS;
+        $recommendation_type_id = $request->input('recommendation_type_id') ? $request->input('recommendation_type_id') : RecommendationType::MANUAL;
+        $style_request_ids = $request->input('style_request_ids');
 
         $entity_type_id = '';
         if ($request->input('entity_type_id')) {
@@ -48,7 +51,7 @@ class RecommendationController extends Controller
         $entity_ids = $request->input('entity_ids') ? $request->input('entity_ids') : '';
 
         $entity_type_data = EntityType::where('id', $entity_type_id)->first();
-        if(empty($entity_type_data)){
+        if (empty($entity_type_data)) {
             return response()->json(
                 array(
                     'error_message' => 'Entity type name not found'
@@ -56,8 +59,9 @@ class RecommendationController extends Controller
             );
         }
 
+
         $stylish_data = Auth::user();
-        if(empty($stylish_data)){
+        if (empty($stylish_data)) {
             return response()->json(
                 array(
                     'error_message' => 'Invalid stylist'
@@ -66,7 +70,14 @@ class RecommendationController extends Controller
         }
         $stylish_id = $stylish_data->stylish_id;
 
-        $client_data = Client::whereIn('user_id', $client_ids)->get();
+        $client_data = '';
+        if ($recommendation_type_id == RecommendationType::STYLE_REQUEST) {
+            $client_data = StyleRequests::with('client')
+                ->whereIn('id', $style_request_ids)->get();
+        }else{
+            $client_data = Client::whereIn('user_id', $client_ids)->get();
+        }
+
         if (empty($client_data)) {
             return response()->json(
                 array(
@@ -99,10 +110,11 @@ class RecommendationController extends Controller
             for ($j = 0; $j < $entity_count; $j++) {
                 $recommends_arr[$query_count] = array(
                     'user_id' => $client_data[$i]->user_id,
-                    'recommendation_type_id' => RecommendationType::MANUAL,
+                    'recommendation_type_id' => $recommendation_type_id,
                     'created_by' => $stylish_id,
                     'entity_type_id' => $entity_type_id,
-                    'entity_id' => $entity_data[$j]->id
+                    'entity_id' => $entity_data[$j]->id,
+                    'style_request_id' => $client_data[$i]->id ? $client_data[$i]->id : 0,
                 );
                 $query_count++;
                 if ($message_pushed == 0) {
@@ -111,8 +123,8 @@ class RecommendationController extends Controller
                         "registration_id" => $client_data[$i]->regId,
                         "message" => $stylish_data->name . " has sent you " . $entity_type_data->name,
                         "message_summery" => $stylish_data->name . " has sent you " . $entity_type_data->name,
-                        "look_url" => env('IMAGE_BASE_URL').$entity_data[$j]->image,
-                        "url" => env('IMAGE_BASE_URL').$entity_data[$j]->image,
+                        "look_url" => env('IMAGE_BASE_URL') . $entity_data[$j]->image,
+                        "url" => env('IMAGE_BASE_URL') . $entity_data[$j]->image,
                         'app_section' => $app_section,
                     );
                     $push->sendMessage($params);
@@ -121,7 +133,6 @@ class RecommendationController extends Controller
             }
         }
         Recommendation::insert($recommends_arr);
-
 
         return response()->json(
             array(

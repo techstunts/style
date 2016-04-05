@@ -518,11 +518,13 @@ div.resource_view tr.row a.product_link {
     height: initial;
     font-size: 10px;
 }
-
 .pop-image-size{
 }
-
 .inactive {
     pointer-events: none;
     cursor: default;
+}
+.loader{
+    display:none;
+    width: 30px;
 }
