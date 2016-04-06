@@ -30,7 +30,6 @@
                         <tr>
                             <th><input name="select_all" value="1" type="checkbox"></th>
                             <th class="font-size-table-header">Request id</th>
-                            <th class="font-size-table-header">Client id</th>
                             <th class="font-size-table-header">Client name</th>
                             <th class="font-size-table-header">Age</th>
                             <th class="font-size-table-header">Body type</th>
@@ -47,7 +46,6 @@
                             <tr>
                                 <td>{{$request->user_id}}</td>
                                 <td class="table-font-size"> {{$request->request_id}} </td>
-                                <td class="table-font-size">{{$request->user_id}}</td>
                                 <td class="table-font-size">{{$request->username}}</td>
                                 <td class="table-font-size">{{$request->age}}</td>
                                 <td class="table-font-size"> {{$request->bodytype}} </td>
