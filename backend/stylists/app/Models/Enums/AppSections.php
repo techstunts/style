@@ -9,4 +9,5 @@ class AppSections{
     const ASK_LOOK = "6";
     const ASK_PRODUCT = "7";
     const STYLIST = "8";
+    const CHAT = "9";
 }
