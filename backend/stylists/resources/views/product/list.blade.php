@@ -23,6 +23,8 @@
                 {!! $products->render() !!}
             </div>
 
+            @include('common.sendrecommendations')
+
             <div class="clear"></div>
 
             @foreach($errors->all() as $e)
@@ -45,12 +47,15 @@
             @foreach($products as $product)
                 <li class="ui-state-default" product_id="{{$product->id}}">
                     <div class="items">
-                        <div class="name text"><a href="{{url('product/view/' . $product->id)}}">{{$product->name}}</a></div>
+                        <div class="name text" id="popup-item">
+                            <a href="{{url('product/view/' . $product->id)}}">{{$product->name}}</a>
+                            <input class="entity_ids pull-right"  value="{{$product->id}}" type="checkbox">
+                        </div>
                         <div class="image"><img src="{!! strpos($product->upload_image, "uploadfile") === 0 ? asset('images/' . $product->upload_image) : $product->upload_image !!}" /></div>
                         <div class="extra text">
                             <span><a href="{{$product->product_link}}">View</a></span>
                             <span>{{$product->product_type}}</span>
-                            <span>{{$product->category->name}}</span>
+                            <span>{{$product->category ? $product->category->name : ''}}</span>
                             <span>{{$product->price}}</span>
                             <span>{{$genders_list[$product->gender_id]->name}}</span>
                             <span style="background-color:{{$product->primary_color->name}}">{{$product->primary_color->name}}
@@ -69,6 +74,8 @@
 
 
         @include('look.create')
+        <input type="hidden" value="{{$stylish_id}}" id="stylish_id">
+        @include('push.popup')
 
     </div>
 </div>
