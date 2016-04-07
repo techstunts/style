@@ -14,10 +14,15 @@ var EntityType = {
     }
 var style_request = 1;
 
+var EntitySent = {
+    NO : 0,
+    YES: 1,
+}
+
 $(document).ready(function () {
     var entity_url = '';
     var gender_id = '';
-    var color_id = '';
+    var entity_sent_once = EntitySent.NO;
     var budget_id = '';
     var all_filters = [];
     var entity_filters = [
@@ -134,10 +139,11 @@ $(document).ready(function () {
     $("ul.nav-tabs li").on('click', function () {
         entity_type_id = $(this).attr("data-value");
         entity_url = '';
-        entity_url = api_origin + entity[entity_type_id] + "/list?";
+        entity_url = api_origin + "/" +entity[entity_type_id] + "/list?";
         $('#filters form').attr('action', entity_url);
         $(this).parent('ul').children('li').removeClass('active');
         $(this).addClass('active');
+        $('#filters form .clearall').trigger('click');
     });
 
     $(".prev-page").on('click', function () {
@@ -150,6 +156,8 @@ $(document).ready(function () {
 
     $('#filters form .clearall').on('click', function () {
         $('#filters form input[name="search"]').val('');
+        $('#filters form input[name="min_price"]').val('');
+        $('#filters form input[name="max_price"]').val('');
     })
 
     function initializeFilters() {
@@ -213,7 +221,7 @@ $(document).ready(function () {
             if (entity_type_id == EntityType.CLIENT) {
                 entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylish_id=" + stylish_id + "&";
             } else {
-                entity_url = api_origin + entity[entity_type_id] + "/list?";
+                entity_url = api_origin +"/"+ entity[entity_type_id] + "/list?";
             }
         }
 
@@ -290,6 +298,7 @@ $(document).ready(function () {
                     $(".mobile-app-send .btn").removeClass('active');
                     $(".mobile-app-send .btn").addClass('disabled');
                     entity_ids = [];
+                    entity_sent_once = EntitySent.YES;
                 }
             },
             complete: toggleLoader
@@ -301,11 +310,13 @@ $(document).ready(function () {
     $('[data-popup-close]').on('click', function (e) {
         var targeted_popup_class = jQuery(this).attr('data-popup-close');
         $('[data-popup="' + targeted_popup_class + '"]').fadeOut(350);
-        $('#datatable tbody input[type="checkbox"]').attr('checked', false);
-        $('div.container a.btn_recommendation').addClass('disabled');
-        rows_selected = [];
-        if (recommendation_type_id == style_request) {
-            location.reload();
+        if (entity_sent_once == EntitySent.YES) {
+            $('#datatable tbody input[type="checkbox"]').attr('checked', false);
+            $('div.container a.btn_recommendation').addClass('disabled');
+            rows_selected = [];
+            if (recommendation_type_id == style_request) {
+                location.reload();
+            }
         }
         e.preventDefault();
     });

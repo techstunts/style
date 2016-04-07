@@ -89,6 +89,7 @@ class StyleRequestsController extends Controller
         $view_properties['app_sections'] = AppSections::all();
         $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         $view_properties['recommendation_type_id'] = RecommendationType::STYLE_REQUEST;
+        $view_properties['show_price_filters'] = 'YES';
 
         return view('requests.list', $view_properties);
     }

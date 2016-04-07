@@ -3,16 +3,6 @@
         <input type="hidden" value="{{env('API_ORIGIN')}}" id="api_origin">
         <input type="hidden" value="{{$recommendation_type_id}}" id="recommendation_type_id">
         <p><a data-popup-close="send-entities" href="#" style="float: right">Close</a></p>
-        @if($popup_entity_type_ids[$nav_tab_index] == $popup_entity_type_ids)
-            <ul class="nav nav-tabs" id="entity">
-                @foreach($popup_entity_type_ids as $entity_type_id)
-                    <li class="active" id="send-entities_{{$nav_tab_index}}" data-value="{{$entity_type_id}}"
-                        data-popup-open="send-entities">
-                        <a href="#">{{$entity_type_names[$nav_tab_index++]}}</a>
-                    </li>
-                @endforeach
-            </ul>
-        @else
             <ul class="nav nav-tabs" id="entity">
                 @foreach($popup_entity_type_ids as $entity_type_id)
                     <li class="" id="send-entities_{{$nav_tab_index}}" data-value="{{$entity_type_id}}"
@@ -21,7 +11,6 @@
                     </li>
                 @endforeach
             </ul>
-        @endif
 
         <div class="clear"></div>
 
@@ -29,6 +18,12 @@
             <form method="get" action={{env('API_ORIGIN')}}."{entity_type}/list" style="float:none;">
                 <div class="options" style="float:left;"></div>
                 <div class="buttons">
+                    @if(!empty($show_price_filters) && $show_price_filters == 'YES')
+                        <input type="text" name="min_price" value="" placeholder="Min Price"
+                               class="form-control search">
+                        <input type="text" name="max_price" value="" placeholder="Max Price"
+                               class="form-control search">
+                    @endif
                     <input type="text" name="search" value="" placeholder="Search Text" class="form-control search">
                     <input class="btn" type="submit" value="Filter"> </input>
                     <a class="clearall" data-popup-open="send-entities">Clear All</a>
@@ -43,7 +38,7 @@
             {!! csrf_field() !!}
             @include('common.app_section.select')
             <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
-            <img class="loader" src="/images/popup-loader.gif" />
+            <img class="loader" src="/images/popup-loader.gif"/>
         </div>
     </div>
 
