@@ -85,7 +85,6 @@ class RecommendationController extends Controller
                 ), 200
             );
         }
-
         $entity_data = '';
         if ($entity_type_id == EntityTypeId::PRODUCT) {
             $entity_data = Product::whereIn('id', $entity_ids)->get();
@@ -115,6 +114,7 @@ class RecommendationController extends Controller
                     'entity_type_id' => $entity_type_id,
                     'entity_id' => $entity_data[$j]->id,
                     'style_request_id' => $client_data[$i]->id ? $client_data[$i]->id : 0,
+                    'created_at' => date("Y-m-d H:i:s")
                 );
                 $query_count++;
                 if ($message_pushed == 0) {

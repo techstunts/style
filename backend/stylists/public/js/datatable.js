@@ -22,21 +22,21 @@ $(document).ready(function () {
     var all_filters = [];
     var entity_filters = [
         [],
-        ['genders', 'budgets', 'colors', 'stylists'],
+        ['genders', 'colors', 'stylists'],
         ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
         [],
         []
     ];
     var entity_filter_ids = [
         [],
-        ['id', 'id', 'id', 'stylish_id'],
+        ['id', 'id', 'stylish_id'],
         ['id', 'id', 'id', 'id', 'id', 'id', 'stylish_id'],
         [],
         []
     ];
     var entity_fields_ids = [
         [],
-        ['gender_id', 'budget_id', 'primary_color_id', 'stylish_id'],
+        ['gender_id', 'primary_color_id', 'stylish_id'],
         ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'stylish_id'],
         [],
         []
@@ -59,17 +59,7 @@ $(document).ready(function () {
                 return '<input type="checkbox" value="">';
             }
         }],
-        'order': [1, 'asc'],
-        'rowCallback': function (row, data, dataIndex) {
-            // Get row ID
-            var rowId = data[0];
-
-            // If row ID is in the list of selected row IDs
-            if ($.inArray(rowId, rows_selected) !== -1) {
-                $(row).find('input[type="checkbox"]').prop('checked', true);
-                $(row).addClass('selected');
-            }
-        }
+        'order': [1, 'desc'],
     });
 
     $('.dataTables_length').hide();
@@ -86,7 +76,7 @@ $(document).ready(function () {
         // Get row ID
         var rowId = data[0];
 
-        if(recommendation_type_id == style_request){
+        if (recommendation_type_id == style_request){
             var requestIndex = $.inArray(data[1], request_ids);
 
             if (this.checked && requestIndex === -1) {
@@ -125,11 +115,6 @@ $(document).ready(function () {
         e.stopPropagation();
     });
 
-    // Handle click on table cells with checkboxes
-    $('#datatable').on('click', 'tbody td, thead th:first-child', function (e) {
-        $(this).parent().find('input[type="checkbox"]').trigger('click');
-    });
-
     // Handle click on "Select all" control
     $('#datatable thead input[name="select_all"]').on('click', function (e) {
         if (this.checked) {
@@ -142,9 +127,9 @@ $(document).ready(function () {
         e.stopPropagation();
     });
 
-    $('.container .btn-primary').click(function(){
-        $('#send-entities_0').addClass('active');
-    });
+
+    $('.nav-tabs #send-entities_0').addClass('active');
+
 
     $("ul.nav-tabs li").on('click', function () {
         entity_type_id = $(this).attr("data-value");
@@ -225,15 +210,15 @@ $(document).ready(function () {
         }
 
         if (entity_url == '') {
-            if(entity_type_id == EntityType.CLIENT){
+            if (entity_type_id == EntityType.CLIENT) {
                 entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylish_id=" + stylish_id + "&";
-            }else {
+            } else {
                 entity_url = api_origin + entity[entity_type_id] + "/list?";
             }
         }
 
         $('#filters form').attr('action', entity_url);
-        if(entity_type_id != EntityType.CLIENT){
+        if (entity_type_id != EntityType.CLIENT) {
             initializeFilters();
         }
 
@@ -253,14 +238,14 @@ $(document).ready(function () {
 
     $("#send").on('click', function (e) {
         var entity_ids = [];
-        if (entity_type_id == EntityType.CLIENT){
+        if (entity_type_id == EntityType.CLIENT) {
             $('.items #popup-item :checked').each(function () {
                 entity_ids.push($(this).val());
             });
             $(".popup-inner > .pop-up-item :checked").each(function () {
                 rows_selected.push($(this).val());
             });
-        }else {
+        } else {
             $(".popup-inner > .pop-up-item :checked").each(function () {
                 entity_ids.push($(this).val());
             });
@@ -268,9 +253,9 @@ $(document).ready(function () {
 
         var app_section = $("#app_section").val();
 
-        if($(".entity-type-to-send").length > 0) {
+        if ($(".entity-type-to-send").length > 0) {
             entity_type_to_send = $(".entity-type-to-send").val();
-        }else{
+        } else {
             entity_type_to_send = entity_type_id;
         }
 
@@ -292,20 +277,22 @@ $(document).ready(function () {
                 entity_type_id: entity_type_to_send,
                 client_ids: rows_selected,
                 app_section: app_section,
-                recommendation_type_id : recommendation_type_id,
-                style_request_ids : request_ids,
+                recommendation_type_id: recommendation_type_id,
+                style_request_ids: request_ids,
                 _token: $(this).parent().children('input[name="_token"]').val()
             },
             success: function (response) {
-                if(response.error_message != ""){
+                if (response.error_message != "") {
                     alert(response.error_message);
-                }else {
+                } else {
                     alert("Sent Successfully");
                     $(".popup-inner > .pop-up-item input").attr('checked', false);
                     $(".mobile-app-send .btn").removeClass('active');
                     $(".mobile-app-send .btn").addClass('disabled');
                     entity_ids = [];
-                    rows_selected = [];
+                    if (recommendation_type_id == style_request) {
+                        location.reload();
+                    }
                 }
             },
             complete: toggleLoader
@@ -317,7 +304,9 @@ $(document).ready(function () {
     $('[data-popup-close]').on('click', function (e) {
         var targeted_popup_class = jQuery(this).attr('data-popup-close');
         $('[data-popup="' + targeted_popup_class + '"]').fadeOut(350);
-
+        $('#datatable tbody input[type="checkbox"]').attr('checked', false);
+        $('div.container a.btn_recommendation').addClass('disabled');
+        rows_selected = [];
         e.preventDefault();
     });
 
@@ -341,69 +330,71 @@ function showEntities(entity_url) {
             next_page = item.next_page_url;
             prev_page = item.prev_page_url;
 
-                $(".popup-inner > .items").remove();
-                if (item.data == null || !item.data.length) {
-                    var str = '<div class="items">No data found</div>';
-                    $(".popup-inner").append(str);
+            $(".popup-inner > .items").remove();
+            if (item.data == null || !item.data.length) {
+                var str = '<div class="items">No data found</div>';
+                $(".popup-inner").append(str);
+            } else {
+                var str = '<div class="items pop-up-item" >' +
+                    '<div class="name text">' +
+                    '<input class="entity_ids" name="entity_ids" id="entity_ids" value="{{item_id}}" type="checkbox">' +
+                    '<a href="' + '/' + entity[entity_type_id] + '/view//{{item_id}}" target="_blank">{{item_name}}</a>' +
+                    '</div>' +
+                    '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="{{item_popover}}">' +
+                    '<img src="{{item_image}}" class="pop-image-size"/>' +
+                    '</div>' +
+                    '</div>';
+
+                for (var i = 0; i < item.data.length; i++) {
+                    if (entity_type_id != EntityType.CLIENT) {
+                        var popover_data = "Price: " + item.data[i].price + "/- <br >" +
+                            "Description: " + item.data[i].description + "<br >" +
+                            "<img src='" + item.data[i].image + "' />";
+                        newstr = str;
+
+                        newstr = newstr.replace("{{item_id}}", item.data[i].id)
+                            .replace("/{{item_id}}", item.data[i].id)
+                            .replace("{{item_name}}", item.data[i].name)
+                            .replace("{{item_popover}}", popover_data)
+                            .replace("{{item_image}}", item.data[i].image);
+                    }
+                    else {
+                        var popover_data = "Name: " + item.data[i].username + "<br >" +
+                            "<img src='" + item.data[i].userimage + "' />";
+                        newstr = str;
+
+                        newstr = newstr.replace("{{item_id}}", item.data[i].user_id)
+                            .replace("/{{item_id}}", item.data[i].user_id)
+                            .replace("{{item_name}}", item.data[i].username)
+                            .replace("{{item_popover}}", popover_data)
+                            .replace("{{item_image}}", item.data[i].userimage);
+                    }
+                    $(".popup-inner").append(newstr);
+                }
+            }
+            $(".popup-inner > .pop-up-item .entity_ids").on('click', function () {
+                if ($(".popup-inner > .pop-up-item :checked").length > 0) {
+                    $(".mobile-app-send .btn").removeClass('disabled');
+                    $(".mobile-app-send .btn").addClass('active');
                 } else {
-                    var str = '<div class="items pop-up-item" >' +
-                        '<div class="name text">' +
-                        '<input class="entity_ids" name="entity_ids" id="entity_ids" value="{{item_id}}" type="checkbox">' +
-                        '<a href="' + '/' + entity[entity_type_id] + '/view/{{item_id}}" target="_blank">{{item_name}}</a>' +
-                        '</div>' +
-                        '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="{{item_popover}}">' +
-                        '<img src="{{item_image}}" class="pop-image-size"/>' +
-                        '</div>' +
-                        '</div>';
-
-                    for (var i = 0; i < item.data.length; i++) {
-                        if (entity_type_id != EntityType.CLIENT) {
-                            var popover_data = "Price: " + item.data[i].price + "/- <br >" +
-                                "Description: " + item.data[i].description + "<br >" +
-                                "<img src='" + item.data[i].image + "' />";
-                            newstr = str;
-
-                            newstr = newstr.replace("{{item_id}}", item.data[i].id)
-                                .replace("{{item_name}}", item.data[i].name)
-                                .replace("{{item_popover}}", popover_data)
-                                .replace("{{item_image}}", item.data[i].image);
-                        }
-                        else {
-                            var popover_data = "Name: " + item.data[i].username + "<br >" +
-                                "<img src='" + item.data[i].userimage + "' />";
-                            newstr = str;
-
-                            newstr = newstr.replace("{{item_id}}", item.data[i].user_id)
-                                .replace("{{item_name}}", item.data[i].username)
-                                .replace("{{item_popover}}", popover_data)
-                                .replace("{{item_image}}", item.data[i].userimage);
-                        }
-                        $(".popup-inner").append(newstr);
-                    }
+                    $(".mobile-app-send .btn").removeClass('active');
+                    $(".mobile-app-send .btn").addClass('disabled');
                 }
-                $(".popup-inner > .pop-up-item .entity_ids").on('click', function () {
-                    if ($(".popup-inner > .pop-up-item :checked").length > 0) {
-                        $(".mobile-app-send .btn").removeClass('disabled');
-                        $(".mobile-app-send .btn").addClass('active');
-                    } else {
-                        $(".mobile-app-send .btn").removeClass('active');
-                        $(".mobile-app-send .btn").addClass('disabled');
-                    }
-                });
-                $('.pop-up-item [data-toggle="popover"]').popover();
+            });
+            $('.pop-up-item [data-toggle="popover"]').popover();
 
-                if (item.prev_page_url == null){
-                    $(".buttons .prev-page").addClass('inactive');
-                }else{
-                    $(".buttons .prev-page").removeClass('inactive');
-                }
+            if (item.prev_page_url == null) {
+                $(".buttons .prev-page").addClass('inactive');
+            } else {
+                $(".buttons .prev-page").removeClass('inactive');
+            }
 
-                if (item.next_page_url == null){
-                    $('.buttons .next-page').addClass('inactive');
-                }else{
-                    $('.buttons .next-page').removeClass('inactive');
-                }
-            },
+            if (item.next_page_url == null) {
+                $('.buttons .next-page').addClass('inactive');
+            } else {
+                $('.buttons .next-page').removeClass('inactive');
+            }
+        },
         complete: toggleLoader
 
     });

@@ -18,7 +18,6 @@
                 </div>
 
                 @include('common.sendrecommendations')
-                
                 <div class="clear"></div>
 
                 <form name="frm-datatable" id="frm-datatable" method="POST" action="">
