@@ -290,9 +290,6 @@ $(document).ready(function () {
                     $(".mobile-app-send .btn").removeClass('active');
                     $(".mobile-app-send .btn").addClass('disabled');
                     entity_ids = [];
-                    if (recommendation_type_id == style_request) {
-                        location.reload();
-                    }
                 }
             },
             complete: toggleLoader
@@ -307,6 +304,9 @@ $(document).ready(function () {
         $('#datatable tbody input[type="checkbox"]').attr('checked', false);
         $('div.container a.btn_recommendation').addClass('disabled');
         rows_selected = [];
+        if (recommendation_type_id == style_request) {
+            location.reload();
+        }
         e.preventDefault();
     });
 
