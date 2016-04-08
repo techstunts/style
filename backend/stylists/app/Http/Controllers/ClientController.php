@@ -73,6 +73,7 @@ class ClientController extends Controller
         $view_properties['clients'] = $clients;
         $view_properties['app_sections'] = AppSections::all();
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
+        $view_properties['show_price_filters'] = 'YES';
         return view('client.list', $view_properties);
     }
 

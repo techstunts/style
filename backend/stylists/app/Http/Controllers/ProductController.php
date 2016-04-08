@@ -8,6 +8,10 @@ use App\Models\Lookups\Gender;
 use App\Models\Lookups\Color;
 use App\Models\Enums\Category as CategoryEnum;
 use App\Models\Enums\Brand as BrandEnum;
+use App\Models\Enums\EntityType;
+use App\Models\Enums\EntityTypeName;
+use App\Models\Enums\RecommendationType;
+use App\Models\Lookups\AppSections;
 use App\Merchant;
 use App\Models\Lookups\Lookup;
 use App\Product;
@@ -74,6 +78,15 @@ class ProductController extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
+        $entity_nav_tabs = array(
+            EntityType::CLIENT
+        );
+
+        $view_properties['entity_type_names']= array(
+            EntityTypeName::CLIENT
+        );
+        $view_properties['nav_tab_index'] = '0';
+
         $genders_list = Gender::all()->keyBy('id');
         $genders_list[0] = new Gender();
 
@@ -87,7 +100,12 @@ class ProductController extends Controller
 
         $view_properties['products'] = $products;
         $view_properties['genders_list'] = $genders_list;
-
+        $view_properties['logged_in_stylish_id'] = Auth::user()->stylish_id;
+        $view_properties['app_sections'] = AppSections::all();
+        $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
+        $view_properties['entity_type_to_send'] = EntityType::PRODUCT;
+        $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
+        $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
 
         return view('product.list', $view_properties);
     }
