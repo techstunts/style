@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lookups\Lookup;
-use App\Models\Lookups\Status;
+use App\Models\Lookups\StylistStatus;
 use App\Stylist;
 use Illuminate\Http\Request;
 
@@ -32,8 +32,8 @@ class StylistController extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
-        $status_list = Status::all()->keyBy('id');
-        $status_list[0] = new Status();
+        $status_list = StylistStatus::all()->keyBy('id');
+        $status_list[0] = new StylistStatus();
 
         $stylists =
             Stylist::with('gender','expertise','designation')
@@ -73,8 +73,8 @@ class StylistController extends Controller
 
         $view_properties = null;
         if($stylist){
-            $status_list = Status::all()->keyBy('id');
-            $status_list[0] = new Status();
+            $status_list = StylistStatus::all()->keyBy('id');
+            $status_list[0] = new StylistStatus();
 
             $view_properties['stylist'] = $stylist;
             $view_properties['status_list'] = $status_list;
@@ -99,8 +99,11 @@ class StylistController extends Controller
     public function getEdit()
     {
         $stylist = Stylist::find($this->resource_id);
-        if(!Auth::user()->hasRole('admin') && $stylist->stylish_id != Auth::user()->stylish_id){
-            return view('404', array('title' => 'You do not have permission to change this Stylist\'s details'));
+        $is_admin = Auth::user()->hasRole('admin');
+        if(!$is_admin){
+            if($stylist->stylish_id != Auth::user()->stylish_id){
+                return view('404', array('title' => 'You do not have permission to change this Stylist\'s details'));
+            }
         }
 
         $view_properties = null;
@@ -111,11 +114,12 @@ class StylistController extends Controller
             $view_properties['gender_id'] = intval($stylist->gender_id);
             $view_properties['genders'] = $lookup->type('gender')->get();
             $view_properties['status_id'] = intval($stylist->status_id);
-            $view_properties['statuses'] = $lookup->type('status')->get();
+            $view_properties['statuses'] = $lookup->type('stylist_status')->get();
             $view_properties['expertise_id'] = intval($stylist->expertise_id);
             $view_properties['expertises'] = $lookup->type('expertise')->get();
             $view_properties['designation_id'] = intval($stylist->designation_id);
             $view_properties['designations'] = $lookup->type('designation')->get();
+            $view_properties['is_admin'] = $is_admin;
         }
         else{
             return view('404', array('title' => 'Stylist not found'));
@@ -175,21 +179,31 @@ class StylistController extends Controller
         }
 
         $stylist->name = isset($request->name) && $request->name != '' ? $request->name : '';
-        $stylist->email = isset($request->email) && $request->email != '' ? $request->email : '';
         $stylist->description = isset($request->description) && $request->description != '' ? $request->description : '';
         $stylist->age = isset($request->age) && $request->age != '' ? $request->age : '';
         $stylist->profile = isset($request->profile) && $request->profile != '' ? $request->profile : '';
-        $stylist->code = isset($request->code) && $request->code != '' ? $request->code : '';
-        $stylist->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : '';;
+        if(Auth::user()->hasRole('admin')){
+            $stylist->code = isset($request->code) && $request->code != '' ? $request->code : '';
+            $stylist->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : '';
+            $stylist->email = isset($request->email) && $request->email != '' ? $request->email : '';
+            $stylist->designation_id = isset($request->designation_id) && $request->designation_id != '' ? $request->designation_id : '';
+        }
         $stylist->expertise_id = isset($request->expertise_id) && $request->expertise_id != '' ? $request->expertise_id : '';
-        $stylist->designation_id = isset($request->designation_id) && $request->designation_id != '' ? $request->designation_id : '';
         $stylist->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
-        $stylist->blog_url = isset($request->blog_url) && $request->blog_url != '' ? $request->blog_url : '';;
-        $stylist->facebook_id = isset($request->facebook_id) && $request->facebook_id != '' ? $request->facebook_id : '';;
-        $stylist->twitter_id = isset($request->twitter_id) && $request->twitter_id != '' ? $request->twitter_id : '';;
-        $stylist->pinterest_id = isset($request->pinterest_id) && $request->pinterest_id != '' ? $request->pinterest_id : '';;
-        $stylist->instagram_id = isset($request->instagram_id) && $request->instagram_id != '' ? $request->instagram_id : '';;
-        $stylist->save();
+        $stylist->blog_url = isset($request->blog_url) && $request->blog_url != '' ? $request->blog_url : '';
+        $stylist->facebook_id = isset($request->facebook_id) && $request->facebook_id != '' ? $request->facebook_id : '';
+        $stylist->twitter_id = isset($request->twitter_id) && $request->twitter_id != '' ? $request->twitter_id : '';
+        $stylist->pinterest_id = isset($request->pinterest_id) && $request->pinterest_id != '' ? $request->pinterest_id : '';
+        $stylist->instagram_id = isset($request->instagram_id) && $request->instagram_id != '' ? $request->instagram_id : '';
+        try{
+            $stylist->save();
+        }
+        catch(\Exception $e){
+            return redirect('stylist/edit/' . $this->resource_id)
+                ->withErrors([$e->getMessage()])
+                ->withInput();
+
+        }
 
         return redirect('stylist/view/' . $this->resource_id);
     }
@@ -202,20 +216,27 @@ class StylistController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        $fields = [
             'name' => 'required|max:255|min:5',
-            'email' => 'required|email|max:255',
             'age' => 'required|integer|max:50|min:18',
-            'status_id' => 'required|integer|max:20|min:1',
             'expertise_id' => 'required|integer|max:20|min:1',
             'gender_id' => 'required|integer|max:20|min:1',
-            'designation_id' => 'required|integer|max:20|min:1',
             'blog_url' => 'url|min:5',
             'facebook_id' => 'string|min:5',
             'twitter_id' => 'string|min:5',
             'pinterest_id' => 'string|min:5',
             'instagram_id' => 'string|min:5',
-        ]);
+        ];
+
+        if(Auth::user()->hasRole('admin')){
+            $fields = array_merge($fields,[
+                'email' => 'required|email|max:255',
+                'status_id' => 'required|integer|max:20|min:1',
+                'designation_id' => 'required|integer|max:20|min:1',
+                'code' => 'required|max:6|min:6',
+                ]);
+        }
+        return Validator::make($data, $fields);
     }
 
     /**

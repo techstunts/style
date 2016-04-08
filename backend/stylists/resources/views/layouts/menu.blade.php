@@ -8,6 +8,7 @@
                         <li><a href="{!! url('auth/login') !!}">Login</a></li>
                     @else
                         @if(Auth::user()->hasRole('admin'))
+                            <li><a href="/client/chat">Chat</a></li>
                             <li><a href="/report/looks">Reports</a></li>
                         @endif
                         <li><a href="/stylist/list">Stylists</a></li>
