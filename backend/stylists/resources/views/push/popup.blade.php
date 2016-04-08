@@ -2,7 +2,9 @@
     <div class="popup-inner">
         <input type="hidden" value="{{env('API_ORIGIN')}}" id="api_origin">
         <input type="hidden" value="{{$recommendation_type_id}}" id="recommendation_type_id">
-        <input type="hidden" value="{{$stylish_id}}" id="stylish_id">
+        @if(!empty($logged_in_stylish_id))
+            <input type="hidden" value="{{$logged_in_stylish_id}}" id="stylish_id">
+        @endif
         @if(!empty($is_owner_or_admin))
             <input type="hidden" value="{{$is_owner_or_admin}}" id="role_admin">
         @endif

@@ -100,7 +100,7 @@ class ProductController extends Controller
 
         $view_properties['products'] = $products;
         $view_properties['genders_list'] = $genders_list;
-        $view_properties['stylish_id'] = Auth::user()->stylish_id;
+        $view_properties['logged_in_stylish_id'] = Auth::user()->stylish_id;
         $view_properties['app_sections'] = AppSections::all();
         $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         $view_properties['entity_type_to_send'] = EntityType::PRODUCT;

@@ -122,7 +122,7 @@ class LookController extends Controller
         $view_properties['looks'] = $looks;
         $view_properties['status_rules'] = $this->status_rules;
         $view_properties['app_sections'] = AppSections::all();
-        $view_properties['stylish_id'] = $user_data->stylish_id;
+        $view_properties['logged_in_stylish_id'] = $user_data->stylish_id;
         $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         $view_properties['entity_type_to_send'] = EntityType::LOOK;
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
