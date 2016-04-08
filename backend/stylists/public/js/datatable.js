@@ -234,6 +234,9 @@ $(document).ready(function () {
                     $(".mobile-app-send .btn").removeClass('active');
                     $(".mobile-app-send .btn").addClass('disabled');
                     entity_ids = [];
+                    if (entity_type_id == EntityType.CLIENT) {
+                        rows_selected = [];
+                    }
                     entity_sent_once = EntitySent.YES;
                 }
             },
@@ -319,9 +322,9 @@ function showFilters() {
 function getEntityUrl(entity_type_id) {
     if (entity_type_id == EntityType.CLIENT) {
         console.log(role_admin);
-        if (role_admin ){
+        if (role_admin) {
             entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylish_id=&";
-        }else {
+        } else {
             entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylish_id=" + stylish_id + "&";
         }
     } else {
