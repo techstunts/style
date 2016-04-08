@@ -2,6 +2,10 @@
     <div class="popup-inner">
         <input type="hidden" value="{{env('API_ORIGIN')}}" id="api_origin">
         <input type="hidden" value="{{$recommendation_type_id}}" id="recommendation_type_id">
+        <input type="hidden" value="{{$stylish_id}}" id="stylish_id">
+        @if(!empty($is_owner_or_admin))
+            <input type="hidden" value="{{$is_owner_or_admin}}" id="role_admin">
+        @endif
         <p><a data-popup-close="send-entities" href="#" style="float: right">Close</a></p>
             <ul class="nav nav-tabs" id="entity">
                 @foreach($popup_entity_type_ids as $entity_type_id)

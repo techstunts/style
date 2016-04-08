@@ -105,6 +105,7 @@ class ProductController extends Controller
         $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         $view_properties['entity_type_to_send'] = EntityType::PRODUCT;
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
+        $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
 
         return view('product.list', $view_properties);
     }

@@ -42,6 +42,7 @@ var entity_fields_ids = [
 ];
 var api_origin = '';
 var stylish_id = '';
+var role_admin = '';
 
 
 $(document).ready(function () {
@@ -53,6 +54,7 @@ $(document).ready(function () {
 
     api_origin = $('#api_origin').val();
     stylish_id = $('#stylish_id').val();
+    role_admin = $('#role_admin').val();
 
     // Array holding selected row IDs
     var rows_selected = [];
@@ -150,10 +152,13 @@ $(document).ready(function () {
 
     $(".prev-page").on('click', function () {
         entity_url = prev_page;
+        showEntities(entity_url);
     });
 
     $(".next-page").on('click', function () {
         entity_url = next_page;
+        showEntities(entity_url);
+
     });
 
     $('#filters form .clearall').on('click', function () {
@@ -242,6 +247,7 @@ $(document).ready(function () {
         var targeted_popup_class = $(this).attr('data-popup-close');
         $('[data-popup="' + targeted_popup_class + '"]').fadeOut(350);
         $('#datatable tbody input[type="checkbox"]').attr('checked', false);
+        $('.items #popup-item :checked').attr('checked', false);
         $('div.container a.btn_recommendation').addClass('disabled');
         rows_selected = [];
         request_ids = [];
@@ -312,7 +318,12 @@ function showFilters() {
 
 function getEntityUrl(entity_type_id) {
     if (entity_type_id == EntityType.CLIENT) {
-        entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylish_id=" + stylish_id + "&";
+        console.log(role_admin);
+        if (role_admin ){
+            entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylish_id=&";
+        }else {
+            entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylish_id=" + stylish_id + "&";
+        }
     } else {
         entity_url = api_origin + "/" + entity[entity_type_id] + "/list?";
     }
