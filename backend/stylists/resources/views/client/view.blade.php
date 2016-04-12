@@ -19,7 +19,7 @@
                             <td class="head">Gender</td><td class="content">{{$client->gender}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Stylist</td><td class="content">{{$client->stylist->name}} </td>
+                            <td class="head">Stylist</td><td class="content">{{$client->stylist ? $client->stylist->name : ''}} </td>
                         </tr>
                         <tr class="row">
                             <td class="head">Age Group</td><td class="content">{{$client->age}} </td>

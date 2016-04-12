@@ -24,24 +24,26 @@ var entity_filters = [
     ['genders', 'colors', 'stylists'],
     ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
     [],
+    [],
+    [],
     []
 ];
 var entity_filter_ids = [
     [],
-    ['id', 'id', 'stylish_id'],
-    ['id', 'id', 'id', 'id', 'id', 'id', 'stylish_id'],
+    ['id', 'id', 'id'],
+    ['id', 'id', 'id', 'id', 'id', 'id', 'id'],
     [],
     []
 ];
 var entity_fields_ids = [
     [],
-    ['gender_id', 'primary_color_id', 'stylish_id'],
-    ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'stylish_id'],
+    ['gender_id', 'primary_color_id', 'stylist_id'],
+    ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'stylist_id'],
     [],
     []
 ];
 var api_origin = '';
-var stylish_id = '';
+var stylist_id = '';
 var role_admin = '';
 
 
@@ -53,7 +55,7 @@ $(document).ready(function () {
     var recommendation_type_id = $('#recommendation_type_id').val();
 
     api_origin = $('#api_origin').val();
-    stylish_id = $('#stylish_id').val();
+    stylist_id = $('#stylist_id').val();
     role_admin = $('#role_admin').val();
 
     // Array holding selected row IDs
@@ -321,11 +323,10 @@ function showFilters() {
 
 function getEntityUrl(entity_type_id) {
     if (entity_type_id == EntityType.CLIENT) {
-        console.log(role_admin);
         if (role_admin) {
-            entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylish_id=&";
+            entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylist_id=&";
         } else {
-            entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylish_id=" + stylish_id + "&";
+            entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylist_id=" + stylist_id + "&";
         }
     } else {
         entity_url = api_origin + "/" + entity[entity_type_id] + "/list?";

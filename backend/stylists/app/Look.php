@@ -22,12 +22,12 @@ class Look extends Model
      * @var array
      */
     protected $fillable = ['image', 'name', 'description', 'body_type_id', 'budget_id', 'age_group_id', 'occasion_id', 'gender_id',
-        'stylish_id', 'price', 'created_at'];
+        'stylist_id', 'price', 'created_at'];
 
     public $timestamps = true;
 
     public function stylist(){
-        return $this->belongsTo('App\Stylist', 'stylish_id');
+        return $this->belongsTo('App\Stylist', 'stylist_id');
     }
 
     public function products(){

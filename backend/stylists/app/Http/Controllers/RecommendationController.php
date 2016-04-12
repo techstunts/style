@@ -68,7 +68,7 @@ class RecommendationController extends Controller
                 ), 200
             );
         }
-        $stylish_id = $stylish_data->stylish_id;
+        $stylist_id = $stylish_data->id;
 
         $client_data = '';
         if ($recommendation_type_id == RecommendationType::STYLE_REQUEST) {
@@ -110,7 +110,7 @@ class RecommendationController extends Controller
                 $recommends_arr[$query_count] = array(
                     'user_id' => $client_data[$i]->user_id,
                     'recommendation_type_id' => $recommendation_type_id,
-                    'created_by' => $stylish_id,
+                    'created_by' => $stylist_id,
                     'entity_type_id' => $entity_type_id,
                     'entity_id' => $entity_data[$j]->id,
                     'style_request_id' => $client_data[$i]->id ? $client_data[$i]->id : 0,

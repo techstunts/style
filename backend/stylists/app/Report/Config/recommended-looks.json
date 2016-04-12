@@ -79,10 +79,10 @@
       "filter_type": "multi_select",
       "show_in_report": true,
       "display_name": "Stylist",
-      "id_column": "stylish_id",
+      "id_column": "id",
       "name_column": "name",
       "table_name": "stylists",
-      "parent_table_id_column": "looks.stylish_id"
+      "parent_table_id_column": "looks.stylist_id"
     },
     "age_group": {
       "type": "ref",

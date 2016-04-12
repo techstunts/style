@@ -6,7 +6,7 @@
 <div id="contentCntr">
     <div class="container">
         <ol class="selectable">
-            <li class="ui-state-default" id="{{$stylist->stylish_id}}">
+            <li class="ui-state-default" id="{{$stylist->id}}">
                 <div class="resource_view">
                     <div class="image">
                         <img src="{!! strpos($stylist->image, "stylish") === 0 ? asset('images/' . $stylist->image) : $stylist->image !!}"/>
@@ -16,7 +16,7 @@
                             <td class="title" colspan="2">
                                 {{$stylist->name}}
                                 @if($is_owner_or_admin)
-                                    <a style="color:blue;font-size:13px;" href="{{url('stylist/edit/' . $stylist->stylish_id)}}" title="{{$stylist->name}}" >Edit</a>
+                                    <a style="color:blue;font-size:13px;" href="{{url('stylist/edit/' . $stylist->id)}}" title="{{$stylist->name}}" >Edit</a>
                                 @endif
                             </td>
                         </tr>
@@ -74,12 +74,12 @@
                                         </a>
                                     @endforeach
                                     <br />
-                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->stylish_id)}}">View all</a>
-                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=1')}}">Active</a>
-                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=6')}}">Approved</a>
-                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=5')}}">Submitted</a>
-                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=4')}}">In Progress</a>
-                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->stylish_id.'&status_id=7')}}">Rejected</a>
+                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->id)}}">View all</a>
+                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->id.'&status_id=1')}}">Active</a>
+                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->id.'&status_id=6')}}">Approved</a>
+                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->id.'&status_id=5')}}">Submitted</a>
+                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->id.'&status_id=4')}}">In Progress</a>
+                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->id.'&status_id=7')}}">Rejected</a>
                                 @else
                                     None
                                 @endif
@@ -100,7 +100,7 @@
                         <tr class="row">
                             <td class="head">Clients</td>
                             <td class="content">
-                                <a class="product_link" href="{{url('client/list?stylish_id=' . $stylist->stylish_id)}}">View All</a>
+                                <a class="product_link" href="{{url('client/list?stylist_id=' . $stylist->id)}}">View All</a>
                             </td>
                         </tr>
                     </table>

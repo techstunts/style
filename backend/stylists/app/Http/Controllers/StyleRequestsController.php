@@ -64,13 +64,13 @@ class StyleRequestsController extends Controller
         unset($paginate_qs['page']);
 
         if(Auth::user()->hasRole('stylist')){
-                $this->where_raw = $this->where_raw. " AND (stylists.stylish_id = ".Auth::user()->stylish_id.")";
+                $this->where_raw = $this->where_raw. " AND (stylists.id = ".Auth::user()->id.")";
         }
         $this->where_raw = $this->where_raw. " AND recommendations.style_request_id is NULL";
 
         $requests  = DB::table($this->base_table)
                 ->join('userdetails', $this->base_table . '.user_id', '=', 'userdetails.user_id')
-                ->join('stylists', 'userdetails.stylish_id', '=', 'stylists.stylish_id')
+                ->join('stylists', 'userdetails.stylist_id', '=', 'stylists.id')
                 ->join('lu_budget', 'lu_budget.id', '=', $this->base_table.'.budget_id')
                 ->join('lu_occasion', 'lu_occasion.id', '=', $this->base_table.'.occasion_id')
                 ->join('lu_entity_type', 'lu_entity_type.id', '=', $this->base_table.'.entity_type_id')
@@ -78,7 +78,7 @@ class StyleRequestsController extends Controller
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->select($this->base_table.'.id as request_id', 'userdetails.user_id', 'userdetails.username',
-                    'stylists.stylish_id', 'stylists.name as stylist_name', 'userdetails.age', 'userdetails.bodytype',
+                    'stylists.id as stylist_id', 'stylists.name as stylist_name', 'userdetails.age', 'userdetails.bodytype',
                     'userdetails.user_id', 'lu_budget.name as budget', 'lu_occasion.name as occasion',
                     $this->base_table.'.created_at', $this->base_table.'.description', 'lu_entity_type.name as request_type'
                 )

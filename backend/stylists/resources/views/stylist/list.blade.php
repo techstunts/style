@@ -9,12 +9,11 @@
             {!! $stylists->render() !!}
 
             <div class="clear"></div>
-
             <ol class="selectable" >
             @foreach($stylists as $stylist)
-                <li class="ui-state-default" stylist_id="{{$stylist->stylish_id}}">
+                <li class="ui-state-default" stylist_id="{{$stylist->id}}">
                     <div class="items">
-                        <div class="name text"><a href="{{url('stylist/view/' . $stylist->stylish_id)}}">{{$stylist->name}}</a></div>
+                        <div class="name text"><a href="{{url('stylist/view/' . $stylist->id)}}">{{$stylist->name}}</a></div>
                         <div class="image"><img src="{!! strpos($stylist->image, "stylish") === 0 ? asset('images/' . $stylist->image) : $stylist->image !!}" /></div>
                         <div class="extra text">
                             <span>{{$status_list[$stylist->status_id]->name}}</span>

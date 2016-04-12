@@ -23,7 +23,7 @@
                             <li><a href="/look/collage">Collage</a></li>
                         @endif
                         <li><a href="/collection/list">Collections</a></li>
-                        <li><a href="{!! url('stylist/view/' . Auth::user()->stylish_id) !!}">{{Auth::user()->name}}</a></li>
+                        <li><a href="{!! url('stylist/view/' . Auth::user()->id) !!}">{{Auth::user()->name}}</a></li>
                         <li><a href="{!! url('auth/logout') !!}">Logout</a></li>
                     @endif
                 </ul>

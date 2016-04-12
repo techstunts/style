@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
-    protected $filter_ids = ['stylish_id',];
+    protected $filter_ids = ['stylist_id',];
     protected $filters = ['stylists',];
     /**
      * Display a listing of the resource.
@@ -101,7 +101,7 @@ class ClientController extends Controller
     protected function authWhereClauses(){
         $where = "1=1";
         if(!Auth::user()->hasRole('admin')){
-            $where .= " AND stylish_id = " . Auth::user()->stylish_id;
+            $where .= " AND stylist_id = " . Auth::user()->id;
         }
         return $where;
     }

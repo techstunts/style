@@ -11,6 +11,7 @@
                     <div class="image">
                         <img src="{!! asset('images/' . $look->image) !!}" />
                     </div>
+
                     <table class="info">
                         <tr class="row">
                             <td class="title" colspan="2">{{$look->name}}
@@ -49,7 +50,7 @@
                         <tr class="row">
                             <td class="head">Stylist</td>
                             <td class="content">
-                                <a href="{{url('stylist/view/' . $stylist->stylish_id)}}" title="{{$stylist->name}}" target="stylist_win">
+                                <a href="{{url('stylist/view/' . $stylist->id)}}" title="{{$stylist->name}}" target="stylist_win">
                                     <img class="icon" src="{{asset('images/' . $stylist->image)}}"/>
                                     {{$stylist->name}}
                                 </a>

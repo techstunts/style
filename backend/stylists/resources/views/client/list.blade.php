@@ -34,7 +34,7 @@
                             <th class="font-size-table-header">Skin Type</th>
                             <th class="font-size-table-header">Height</th>
                             <th class="font-size-table-header">Price range</th>
-                            <th class="font-size-table-header">Stylish name</th>
+                            <th class="font-size-table-header">Stylist name</th>
                         </tr>
                         </thead>
                         <tbody>
