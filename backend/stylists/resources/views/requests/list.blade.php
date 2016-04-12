@@ -11,7 +11,6 @@
                         @include('common.occasion.select')
                         @include('common.budget.select')
                         @include('common.daterange')
-                        <input type="hidden" name="stylist_id" value="Filter"/>
                         <input type="submit" name="filter" value="Filter"/>
                         <a href="{{url('requests/list')}}" class="clearall">Clear All</a>
                     </form>
