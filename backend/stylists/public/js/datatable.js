@@ -149,7 +149,6 @@ $(document).ready(function () {
         $(this).parent('ul').children('li').removeClass('active');
         $(this).addClass('active');
         $('#filters form .clearall').trigger('click');
-        displayPopup(e);
     });
 
     $(".prev-page").on('click', function () {
@@ -163,14 +162,12 @@ $(document).ready(function () {
 
     });
 
-    $('#filters form .clearall').on('click', function () {
+    $('#filters form .clearall').on('click', function (e) {
         $('#filters form input[name="search"]').val('');
         $('#filters form input[name="min_price"]').val('');
         $('#filters form input[name="max_price"]').val('');
-        showFilters();
-        url = getEntityUrl(entity_type_id);
-        showEntities(url);
-
+        entity_url = getEntityUrl(entity_type_id);
+        displayPopup(e);
     })
 
     //----- OPEN
