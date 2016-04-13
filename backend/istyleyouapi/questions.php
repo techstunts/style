@@ -13,20 +13,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
     $denimprice = $_REQUEST['denimprice'];
     $footwearprice = $_REQUEST['footwearprice'];
     $pricerange = $clubprice + $ethicprice + $denimprice + $footwearprice;
+    $update_stylist_id = "";
 
     if (isset($_REQUEST['stylist_code']) && !empty($_REQUEST['stylist_code'])) {
         $stylist_code = $_REQUEST['stylist_code'];
-        $query = "SELECT stylish_id FROM stylists WHERE code='$stylist_code'";
+        $query = "SELECT stylist.id as stylist_id FROM stylists WHERE code='$stylist_code'";
         $res = mysql_query($query);
         $row = mysql_num_rows($res);
         if ($row == 1) {
             while ($data = mysql_fetch_array($res)) {
-                $stylish_id = $data['stylish_id'];
-                $update_stylist_id = ",stylish_id='{$stylish_id}'";
+                $stylist_id = $data['stylist_id'];
+                $update_stylist_id = ",stylist_id='{$stylist_id}'";
                 break;
             }
-        } else {
-            $update_stylist_id = "";
         }
     }
 
@@ -40,9 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
     $select = mysql_query($sql);
     $sql = "SELECT user_id, username, userimage, s.name as stylist_name, bodytype, bodyshape, height, u.age, skintype, styletype,
                         clubprice, ethicprice, denimprice, footwearprice,
-                        s.code as stylist_code, s.image as stylist_image, s.stylish_id
+                        s.code as stylist_code, s.image as stylist_image, s.id as stylist_id
                 FROM userdetails u
-                Join stylists s on s.stylish_id = u.stylish_id
+                Join stylists s on s.id = u.stylist_id
                 where u.user_id='$userid'";
 
     $select = mysql_query($sql);
@@ -67,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
         $result[13] = $data['footwearprice'];
         $result[14] = $data['stylist_code'];
         $result[15] = $data['stylist_image'];
-        $result[16] = $data['stylish_id'];
+        $result[16] = $data['stylist_id'];
 
     }
     $data = array(
@@ -92,7 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
             'styletype' => $result[9],
             'stylish_code' => $result[14],
             'stylish_image' => $result[15],
-            'stylish_id' => $result[16]
+            'stylish_id' => $result[16],
+            'stylist_id' => $result[16]
         )
     );
 
@@ -107,3 +107,4 @@ mysql_close($conn);
 header("Content-type: application/json");
 echo json_encode($data);
 ?>
+

@@ -6,10 +6,10 @@ include("Lookup.php");
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty($_GET['stylish_id']) && !empty($_GET['gender'])) {
     $userid = $_GET['stylish_id'];
     $gender = $_GET['gender'];
-    $sql = "SELECT stylish_id, s.name, description, image, code, d.name as designation, blog_url, facebook_id, twitter_id, pinterest_id, instagram_id
+    $sql = "SELECT s.id as stylist_id, s.name, description, image, code, d.name as designation, blog_url, facebook_id, twitter_id, pinterest_id, instagram_id
             FROM stylists s
             JOIN lu_designation d on s.designation_id = d.id
-            WHERE stylish_id='$userid'";
+            WHERE s.id='$userid'";
     $stylishinfo = array();
     $res = mysql_query($sql);
     $rows = mysql_num_rows($res);
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
     if ($rows == 1) {
         while ($data = mysql_fetch_assoc($res)) {
             $stylishimage = array();
-            $stylishid = $data['stylish_id'];
+            $stylishid = $data['stylist_id'];
             $stylishname = $data['name'];
             $description = mb_convert_encoding($data['description'], "UTF-8", "Windows-1252");
             $stylishimage[] = $data['image'];
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
         $looks = array();
         $sql = "Select l.id as look_id, l.description, l.image, l.price, l.name, o.name as occasion
               FROM looks l join lu_occasion o on l.occasion_id = o.id
-              where gender_id= '$gender_id' AND stylish_id='$userid'
+              where gender_id= '$gender_id' AND stylist_id='$userid'
               order by l.id ASC LIMIT 5";
 
         $res = mysql_query($sql);
@@ -126,13 +126,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
 
             }
 
-            $data = array('result' => 'success', 'Stylish Images' => $stylishimage, 'stylish_id' => $stylishid, 'stylish_name' => $stylishname, 'description' => $description, 'stylish_code' => $stylishcode,
+            $data = array('result' => 'success', 'Stylish Images' => $stylishimage, 'stylist_id' => $stylishid, 'stylish_id' => $stylishid, 'stylish_name' => $stylishname, 'description' => $description, 'stylish_code' => $stylishcode,
                 'designation' => $designation, 'blog_url' => $blog_url, 'facebook_url' => $facebook_url, 'twitter_url' => $twitter_url, 'pinterest_url' => $pinterest_url, 'instagram_url' => $instagram_url,
                 'Look Details' => $abc);
         } else {
             $abc = array();
 
-            $data = array('result' => 'success', 'Stylish Images' => $stylishimage, 'stylish_id' => $stylishid, 'stylish_name' => $stylishname, 'description' => $description, 'stylish_code' => $stylishcode,
+            $data = array('result' => 'success', 'Stylish Images' => $stylishimage, 'stylist_id' => $stylishid, 'stylish_id' => $stylishid, 'stylish_name' => $stylishname, 'description' => $description, 'stylish_code' => $stylishcode,
                 'designation' => $designation, 'blog_url' => $blog_url, 'facebook_url' => $facebook_url, 'twitter_url' => $twitter_url, 'pinterest_url' => $pinterest_url, 'instagram_url' => $instagram_url,
                 'Look Details' => $abc);
         }

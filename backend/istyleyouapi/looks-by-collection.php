@@ -44,13 +44,13 @@ if ($request_valid === true) {
 
         $looks_sql =
             "Select l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name, uf.fav_id,
-					sd.stylish_id as stylist_id, sd.name as stylist_name, sd.image as stylist_image
+					sd.id as stylist_id, sd.name as stylist_name, sd.image as stylist_image
         from collections cl
         join collection_entities ce ON cl.id = ce.collection_id
         join looks l on ce.entity_id = l.id and ce.entity_type_id = 2
         join lu_occasion o on l.occasion_id = o.id
         LEFT JOIN usersfav uf ON l.id = uf.look_id and uf.user_id = '$userid'
-        JOIN stylists sd on sd.stylish_id = l.stylish_id
+        JOIN stylists sd on sd.id = l.stylist_id
         where cl.id = '$collection_id'
             AND l.gender_id = '$gender_id'
             AND l.id NOT IN

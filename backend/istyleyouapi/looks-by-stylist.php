@@ -46,7 +46,7 @@ if ($request_valid === true) {
         from looks l
         join lu_occasion o on l.occasion_id = o.id
         LEFT JOIN usersfav uf ON l.id = uf.look_id and uf.user_id = '$userid'
-        where l.stylish_id = '$stylist_id'
+        where l.stylist_id = '$stylist_id'
             AND l.gender_id = '$gender_id'
             AND l.id NOT IN
                 (Select look_id

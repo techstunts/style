@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
     $sql = "SELECT user_id, username, userimage, s.name as stylist_name, bodytype, bodyshape, height, u.age, skintype,
                     clubprice, ethicprice, denimprice, footwearprice
             FROM userdetails u
-            Join stylists s on s.stylish_id = u.stylish_id
+            Join stylists s on s.id = u.stylist_id
             where u.user_id='$userid'";
 
     $select = mysql_query($sql);
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
         $result[13] = $data['footwearprice'];
 
     }
-    $data = array('result' => 'success', 'message' => 'Profile updated ', 'response body' => array("user_id" => $result[0], "username" => $result[1], "userimage" => $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9]));
+    $data = array('result' => 'success', 'message' => 'Profile updated ', 'response body' => array("user_id" => $result[0], "username" => $result[1], "userimage" => $result[2], "stylish_name" => $result[3], "stylist_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9]));
 } else {
     $data = array('result' => 'fail', 'message' => 'You have not added your complete details!');
 }

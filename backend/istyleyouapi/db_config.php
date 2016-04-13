@@ -1,7 +1,7 @@
 <?php
 $dbhost = 'localhost';
 $dbuser = 'root';
-$dbpass = 'mysqlpass';
+$dbpass = '';
 $dbname = 'istylrwd_istyleyou';
 $conn = mysql_connect($dbhost, $dbuser, $dbpass);
 if(! $conn )
@@ -13,7 +13,7 @@ else{
 }
 
 
-$debug = true;
+$debug = false;
 if($debug) {
     $base = substr(basename($_SERVER['REQUEST_URI']), 0, strpos(basename($_SERVER['REQUEST_URI']), ".php"));
     $log_file = "debug/" . $base . ".log";

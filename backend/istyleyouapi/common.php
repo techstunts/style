@@ -72,6 +72,7 @@ function getLooksDetails($looks, $userid){
         $stylist_details = array();
         if(isset($looks[$i]['stylist_id'])){
             $stylist_details['stylish_id'] = $looks[$i]['stylist_id'];
+            $stylist_details['stylist_id'] = $looks[$i]['stylist_id'];
             $stylist_details['stylish_name'] = $looks[$i]['stylist_name'];
             $stylist_details['stylish_image'] = $looks[$i]['stylist_image'];
         }
