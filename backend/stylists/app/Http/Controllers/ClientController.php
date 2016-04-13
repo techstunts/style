@@ -116,7 +116,7 @@ class ClientController extends Controller
         }
         $stylists = Stylist::whereIn('status_id',[StylistStatus::Active, StylistStatus::Inactive])
             ->orderBy('name')->get();
-        $stylist_id_to_chat = $request->input('stylist_id') ? $request->input('stylist_id') : Auth::user()->stylish_id;
+        $stylist_id_to_chat = $request->input('stylist_id') ? $request->input('stylist_id') : Auth::user()->id;
 
         $view_properties['stylist_id_to_chat'] = $stylist_id_to_chat;
         $view_properties['stylists'] = $stylists;
