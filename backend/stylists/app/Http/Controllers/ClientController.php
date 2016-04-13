@@ -6,7 +6,9 @@ use App\Client;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\RecommendationType;
+use App\Models\Enums\StylistStatus;
 use App\Models\Lookups\AppSections;
+use App\Stylist;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -108,10 +110,19 @@ class ClientController extends Controller
 
     public function getChat(Request $request)
     {
-        if(!Auth::user()->hasRole('admin')){
+        $is_admin = Auth::user()->hasRole('admin');
+        if(!$is_admin){
             return redirect('look/list')->withError('Chat access denied!');
         }
-        return view('client/chat');
+        $stylists = Stylist::whereIn('status_id',[StylistStatus::Active, StylistStatus::Inactive])
+            ->orderBy('name')->get();
+        $stylist_id_to_chat = $request->input('stylist_id') ? $request->input('stylist_id') : Auth::user()->stylish_id;
+
+        $view_properties['stylist_id_to_chat'] = $stylist_id_to_chat;
+        $view_properties['stylists'] = $stylists;
+        $view_properties['is_admin'] = $is_admin;
+
+        return view('client/chat', $view_properties);
     }
 
 }

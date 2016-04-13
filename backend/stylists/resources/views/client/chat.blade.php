@@ -6,7 +6,7 @@
     <div id="contentCntr">
         <div class="container">
 
-            <input type="hidden" id="stylish_id" value="{{Auth::user()->stylish_id}}"/>
+            <input type="hidden" id="stylish_id" value="{{$stylist_id_to_chat}}"/>
             <input type="hidden" id="api_origin" value="{{env('API_ORIGIN')}}"/>
 
             <!--
@@ -17,6 +17,17 @@
                 <img ng-src="@{{stylist.icon || photo}}">
                 <h1 ng-bind="stylist.stylish_name"></h1>
                 <h2 ng-bind="stylist.designation"></h2>
+                @if($is_admin)
+                    <form action="">
+                        <select name="stylist_id" onchange="this.form.submit()">
+                            <option>Switch stylist</option>
+                            @foreach($stylists as $stylist)
+                                <option value="{{$stylist->stylish_id}}">{{$stylist->name}}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                @endif
+
             </div>
 
 
