@@ -37,7 +37,7 @@ class ClientController extends Controller
     }
 
     public function getList(Request $request){
-        $this->base_table = 'userdetails';
+        $this->base_table = 'clients';
         $this->initWhereConditions($request);
         $this->initFilters();
 

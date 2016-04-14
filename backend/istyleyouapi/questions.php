@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
     }
 
 
-    $sql = "Update userdetails
+    $sql = "Update clients
             SET bodyshape='$bodyshape', bodytype='$bodytype', skintype='$skintype', styletype='$styletype',
                 age='$age', pricerange='$pricerange', clubprice='$clubprice', ethicprice='$ethicprice',
                 denimprice='$denimprice', footwearprice='$footwearprice', height='$height' {$update_stylist_id}
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
     $sql = "SELECT u.id as user_id, username, userimage, s.name as stylist_name, bodytype, bodyshape, height, u.age, skintype, styletype,
                         clubprice, ethicprice, denimprice, footwearprice,
                         s.code as stylist_code, s.image as stylist_image, s.id as stylist_id
-                FROM userdetails u
+                FROM clients u
                 Join stylists s on s.id = u.stylist_id
                 where u.id='$userid'";
 

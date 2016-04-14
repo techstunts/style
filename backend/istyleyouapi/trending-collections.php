@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
     $userid = mysql_real_escape_string($_REQUEST['userid']);
 
     $user_details_query = "SELECT id, gender, bodytype
-							FROM userdetails
+							FROM clients
 							WHERE id = $userid
 							LIMIT 0,1";
     $user_res = mysql_query($user_details_query);

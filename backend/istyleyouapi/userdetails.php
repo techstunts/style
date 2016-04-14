@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
             $res = mysql_query($sql);
             $data = mysql_fetch_array($res);
             $firstfemaleid = $data['id'];
-            $sql = "SELECT stylist_id from userdetails where gender='male' ORDER BY id DESC LIMIT 1";
+            $sql = "SELECT stylist_id from clients where gender='male' ORDER BY id DESC LIMIT 1";
             $res = mysql_query($sql);
             $data = mysql_fetch_array($res);
             $lastuserid = $data['stylist_id'];
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
             }
 
         } else {
-            $sql = "SELECT stylist_id FROM userdetails ORDER BY id DESC LIMIT 1 ";
+            $sql = "SELECT stylist_id FROM clients ORDER BY id DESC LIMIT 1 ";
             $res = mysql_query($sql);
             $data = mysql_fetch_array($res);
             $lastuserstylish = $data['stylist_id'];
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $linkedid = "";
     $username = "";
     $userimage = "";
-    $checkuser = "SELECT * from userdetails where user_email='$email'";
+    $checkuser = "SELECT * from clients where user_email='$email'";
     $result1 = mysql_query($checkuser);
 
     $rows = mysql_num_rows($result1);
@@ -99,14 +99,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
             $data = array('result' => 0, 'message' => 'User already registered with the given email');
             $data = login($email, $password, $gender);
         } else {
-            $sql = "INSERT INTO userdetails(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylist_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$user_signup_ip_address', '$current_date_time')";
+            $sql = "INSERT INTO clients(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylist_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$user_signup_ip_address', '$current_date_time')";
             $insert = mysql_query($sql);
             $lastid = mysql_insert_id();
 
 
             if ($lastid) {
                 if ($stylishid != 0) {
-                    $sql = "SELECT id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,userdetails.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails Join stylists on stylists.id=userdetails.stylist_id  where userdetails.id='$lastid'";
+                    $sql = "SELECT id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails Join stylists on stylists.id=userdetails.stylist_id  where userdetails.id='$lastid'";
                     $select = mysql_query($sql);
                     $result = array();
                     while ($data = mysql_fetch_assoc($select)) {
@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
 
                     $data = login($email, $password, $gender);
                 } else {
-                    $sql = "SELECT id,username,userimage,stylist_id,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails Where id='$lastid'";
+                    $sql = "SELECT id,username,userimage,stylist_id,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM clients Where id='$lastid'";
 
                     $select = mysql_query($sql);
                     $result = array();
@@ -192,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         $res = mysql_query($sql);
         $data = mysql_fetch_array($res);
         $firstfemaleid = $data['id'];
-        $sql = "SELECT stylist_id from userdetails where gender='male' ORDER BY id DESC LIMIT 1";
+        $sql = "SELECT stylist_id from clients where gender='male' ORDER BY id DESC LIMIT 1";
         $res = mysql_query($sql);
         $data = mysql_fetch_array($res);
         $lastuserid = $data['stylist_id'];
@@ -216,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         $res = mysql_query($sql);
         $data = mysql_fetch_array($res);
         $firstfemaleid = $data['id'];
-        $sql = "SELECT stylist_id from userdetails where gender='female' ORDER BY id DESC LIMIT 1";
+        $sql = "SELECT stylist_id from clients where gender='female' ORDER BY id DESC LIMIT 1";
         $res = mysql_query($sql);
         $data = mysql_fetch_array($res);
         $lastuserid = $data['stylist_id'];
@@ -234,32 +234,32 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $googleid = "";
     $linkedid = "";
 
-    $checkuser = "SELECT * from userdetails where user_email='$email'";
+    $checkuser = "SELECT * from clients where user_email='$email'";
     $result1 = mysql_query($checkuser);
     $rows = mysql_num_rows($result1);
-    $checkfb = "SELECT * from userdetails where facebook_id='$facebookid'";
+    $checkfb = "SELECT * from clients where facebook_id='$facebookid'";
     $result2 = mysql_query($checkfb);
 
     $rows1 = mysql_num_rows($result2);
     if ($rows != 0) {
         if ($rows1 == 0) {
-            $sql = "Update userdetails set facebook_id='$facebookid',gender='$gender'  where user_email='$email'";
+            $sql = "Update clients set facebook_id='$facebookid',gender='$gender'  where user_email='$email'";
             $res == mysql_query($sql);
         }
         //$data = array('result' => 0, 'message' => 'User already registered with the given email');
-        $sql = "Update userdetails set regId='$regId' where user_email='$email'";
+        $sql = "Update clients set regId='$regId' where user_email='$email'";
         $res == mysql_query($sql);
         $data = FacebookLogin($email, $facebookid, $gender, $username);
 
     } else {
-        $sql = "INSERT INTO userdetails(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylist_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,regId,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$regId','$user_signup_ip_address', '$current_date_time')";
+        $sql = "INSERT INTO clients(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylist_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,regId,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$regId','$user_signup_ip_address', '$current_date_time')";
         $insert = mysql_query($sql);
         $lastid = mysql_insert_id();
 
 
         if ($lastid) {
 
-            $sql = "SELECT id,username,userimage,stylist_id,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails where id='$lastid'";
+            $sql = "SELECT id,username,userimage,stylist_id,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM clients where id='$lastid'";
             $select = mysql_query($sql);
             $result = array();
             while ($data = mysql_fetch_assoc($select)) {
@@ -313,7 +313,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         $res = mysql_query($sql);
         $data = mysql_fetch_array($res);
         $firstfemaleid = $data['id'];
-        $sql = "SELECT stylist_id from userdetails where gender='male' ORDER BY id DESC LIMIT 1";
+        $sql = "SELECT stylist_id from clients where gender='male' ORDER BY id DESC LIMIT 1";
         $res = mysql_query($sql);
         $data = mysql_fetch_array($res);
         $lastuserid = $data['stylist_id'];
@@ -337,7 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         $res = mysql_query($sql);
         $data = mysql_fetch_array($res);
         $firstfemaleid = $data['id'];
-        $sql = "SELECT stylist_id from userdetails where gender='female' ORDER BY id DESC LIMIT 1";
+        $sql = "SELECT stylist_id from clients where gender='female' ORDER BY id DESC LIMIT 1";
         $res = mysql_query($sql);
         $data = mysql_fetch_array($res);
         $lastuserid = $data['stylist_id'];
@@ -355,31 +355,31 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $password = "";
     $linkedid = "";
     $userimage = $_REQUEST['userimage'];
-    $checkuser = "SELECT * from userdetails where user_email='$email'";
+    $checkuser = "SELECT * from clients where user_email='$email'";
     $result1 = mysql_query($checkuser);
 
     $rows = mysql_num_rows($result1);
-    $checkg = "SELECT * from userdetails where google_id='$googleid'";
+    $checkg = "SELECT * from clients where google_id='$googleid'";
     $result2 = mysql_query($checkg);
 
     $rows1 = mysql_num_rows($result2);
 
     if ($rows != 0) {
         if ($rows1 == 0) {
-            $sql = "Update userdetails set google_id='$googleid',gender='$gender' where user_email='$email'";
+            $sql = "Update clients set google_id='$googleid',gender='$gender' where user_email='$email'";
             $res == mysql_query($sql);
         }
         //$data = array('result' => 'fail', 'message' => 'User already registered with the given email');
-        $sql = "Update userdetails set regId='$regId' where user_email='$email'";
+        $sql = "Update clients set regId='$regId' where user_email='$email'";
         $res == mysql_query($sql);
         $data = GoogleLogin($email, $googleid, $gender, $username);
     } else {
-        $sql = "INSERT INTO userdetails(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylist_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,regId,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$regId','$user_signup_ip_address', '$current_date_time')";
+        $sql = "INSERT INTO clients(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylist_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,regId,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$regId','$user_signup_ip_address', '$current_date_time')";
         $insert = mysql_query($sql);
         $lastid = mysql_insert_id();
         if ($lastid) {
 
-            $sql = "SELECT id,username,userimage,stylist_id,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails where id='$lastid'";
+            $sql = "SELECT id,username,userimage,stylist_id,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM clients where id='$lastid'";
             $select = mysql_query($sql);
             $result = array();
             while ($data = mysql_fetch_assoc($select)) {
@@ -431,7 +431,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         $res = mysql_query($sql);
         $data = mysql_fetch_array($res);
         $firstfemaleid = $data['id'];
-        $sql = "SELECT stylist_id from userdetails where gender='male' ORDER BY id DESC LIMIT 1";
+        $sql = "SELECT stylist_id from clients where gender='male' ORDER BY id DESC LIMIT 1";
         $res = mysql_query($sql);
         $data = mysql_fetch_array($res);
         $lastuserid = $data['stylist_id'];
@@ -446,7 +446,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         }
 
     } else {
-        $sql = "SELECT stylist_id FROM userdetails ORDER BY id DESC LIMIT 1 ";
+        $sql = "SELECT stylist_id FROM clients ORDER BY id DESC LIMIT 1 ";
         $res = mysql_query($sql);
         $data = mysql_fetch_array($res);
         $lastuserstylish = $data['stylist_id'];
@@ -465,7 +465,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $googleid = "";
     $password = "";
     $userimage = "";
-    $checkuser = "SELECT * from userdetails where user_email='$email'";
+    $checkuser = "SELECT * from clients where user_email='$email'";
     $result1 = mysql_query($checkuser);
 
     $rows = mysql_num_rows($result1);
@@ -474,7 +474,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         //$data = array('result' => 'fail', 'message' => 'User already registered with the given email');
         $data = LinkedinLogin($email, $linkedid, $gender, $username);
     } else {
-        $sql = "INSERT INTO userdetails(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylist_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$user_signup_ip_address', '$current_date_time')";
+        $sql = "INSERT INTO clients(facebook_id,google_id,linked_id,user_email,user_pass,gender,stylist_id,username,userimage,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$stylishid','$username','$userimage','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$user_signup_ip_address', '$current_date_time')";
         $insert = mysql_query($sql);
         $lastid = mysql_insert_id();
 
@@ -482,7 +482,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         if ($lastid) {
 
 
-            $sql = "SELECT id,username,userimage,stylist_id,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM userdetails where id='$lastid'";
+            $sql = "SELECT id,username,userimage,stylist_id,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM clients where id='$lastid'";
             $select = mysql_query($sql);
             $result = array();
             while ($data = mysql_fetch_assoc($select)) {
@@ -526,7 +526,7 @@ if($signup_successful){
 function login($email, $password, $gender, $stylishid)
 {
 
-    $sql = "SELECT user_email,user_pass,gender from userdetails where user_email='$email'";
+    $sql = "SELECT user_email,user_pass,gender from clients where user_email='$email'";
     $res = mysql_query($sql);
     $login = array();
     $rows = mysql_num_rows($res);
@@ -545,16 +545,16 @@ function login($email, $password, $gender, $stylishid)
     }
     if ($login[0] == $email && $login[1] == $password && $login[2] == $gender) {
         if (isset($_POST['stylishcode']) && !empty($_POST['stylishcode'])) { //&& $row == 1) {
-            $sql = "SELECT id from userdetails where user_email='$email' AND user_pass='$password'";
+            $sql = "SELECT id from clients where user_email='$email' AND user_pass='$password'";
             $res = mysql_query($sql);
             $data = mysql_fetch_assoc($res);
             $userid = $data['id'];
-            $query = "UPDATE userdetails SET stylist_id='$stylishid' where id='$userid'";
+            $query = "UPDATE clients SET stylist_id='$stylishid' where id='$userid'";
             $res = mysql_query($query);
         }
 
 
-        $sql = "SELECT id,stylist_id from userdetails where user_email='$email' AND user_pass='$password'";
+        $sql = "SELECT id,stylist_id from clients where user_email='$email' AND user_pass='$password'";
         $result = array();
         $res = mysql_query($sql);
         while ($data = mysql_fetch_assoc($res)) {
@@ -567,7 +567,7 @@ function login($email, $password, $gender, $stylishid)
 
 
         if ($result[1] != 0) {
-            $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,userdetails.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylists.code as stylist_code, stylists.image as stylist_image FROM userdetails Join stylists on stylists.id=userdetails.stylist_id where userdetails.id='$userid'";
+            $sql = "SELECT user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylists.code as stylist_code, stylists.image as stylist_image FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
 
             $select = mysql_query($sql);
             $result = array();
@@ -615,7 +615,7 @@ function login($email, $password, $gender, $stylishid)
 
 function FacebookLogin($email, $facebookid, $gender, $username)
 {
-    $sql = "SELECT user_email,facebook_id,gender from userdetails where user_email='$email'";
+    $sql = "SELECT user_email,facebook_id,gender from clients where user_email='$email'";
     $res = mysql_query($sql);
     $login = array();
     $rows = mysql_num_rows($res);
@@ -633,7 +633,7 @@ function FacebookLogin($email, $facebookid, $gender, $username)
 
     }
     if ($login[0] == $email && $login[1] == $facebookid && $login[2] == $gender) {
-        $sql = "SELECT id,stylist_id from userdetails where user_email='$email' AND facebook_id='$facebookid'";
+        $sql = "SELECT id,stylist_id from clients where user_email='$email' AND facebook_id='$facebookid'";
         $result = array();
         $res = mysql_query($sql);
         while ($data = mysql_fetch_assoc($res)) {
@@ -646,7 +646,7 @@ function FacebookLogin($email, $facebookid, $gender, $username)
 
 
         if ($result[1] != 0) {
-            $sql = "SELECT userdetails.id as user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,userdetails.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.id as stylist_id FROM userdetails Join stylists on stylists.id=userdetails.stylist_id where userdetails.id='$userid'";
+            $sql = "SELECT clients.id as user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.id as stylist_id FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
 
             $select = mysql_query($sql);
             $result = array();
@@ -691,7 +691,7 @@ function FacebookLogin($email, $facebookid, $gender, $username)
 
 function GoogleLogin($email, $googleid, $gender, $username)
 {
-    $sql = "SELECT user_email,google_id,gender from userdetails where user_email='$email'";
+    $sql = "SELECT user_email,google_id,gender from clients where user_email='$email'";
     $res = mysql_query($sql);
     $login = array();
     $rows = mysql_num_rows($res);
@@ -709,7 +709,7 @@ function GoogleLogin($email, $googleid, $gender, $username)
 
     }
     if ($login[0] == $email && $login[1] == $googleid && $login[2] == $gender) {
-        $sql = "SELECT id,stylist_id from userdetails where user_email='$email' AND google_id='$googleid'";
+        $sql = "SELECT id,stylist_id from clients where user_email='$email' AND google_id='$googleid'";
         $result = array();
         $res = mysql_query($sql);
         while ($data = mysql_fetch_assoc($res)) {
@@ -722,7 +722,7 @@ function GoogleLogin($email, $googleid, $gender, $username)
 
 
         if ($result[1] != 0) {
-            $sql = "SELECT userdetails.id as user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,userdetails.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.id FROM userdetails Join stylists on stylists.id=userdetails.stylist_id where userdetails.id='$userid'";
+            $sql = "SELECT clients.id as user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.id FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
 
             $select = mysql_query($sql);
             $result = array();
@@ -766,7 +766,7 @@ function GoogleLogin($email, $googleid, $gender, $username)
 
 function LinkedinLogin($email, $linkedid, $gender, $username)
 {
-    $sql = "SELECT user_email,linked_id,gender from userdetails where user_email='$email'";
+    $sql = "SELECT user_email,linked_id,gender from clients where user_email='$email'";
     $res = mysql_query($sql);
     $login = array();
     $rows = mysql_num_rows($res);
@@ -784,7 +784,7 @@ function LinkedinLogin($email, $linkedid, $gender, $username)
 
     }
     if ($login[0] == $email && $login[1] == $linkedid && $login[2] == $gender) {
-        $sql = "SELECT id,stylist_id from userdetails where user_email='$email' AND linked_id='$linkedid'";
+        $sql = "SELECT id,stylist_id from clients where user_email='$email' AND linked_id='$linkedid'";
         $result = array();
         $res = mysql_query($sql);
         while ($data = mysql_fetch_assoc($res)) {
@@ -797,7 +797,7 @@ function LinkedinLogin($email, $linkedid, $gender, $username)
 
 
         if ($result[1] != 0) {
-            $sql = "SELECT userdetails.id as user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,userdetails.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image FROM userdetails Join stylists on stylists.id=userdetails.stylist_id where userdetails.id='$userid'";
+            $sql = "SELECT clients.id as user_id,username,userimage,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
 
             $select = mysql_query($sql);
             $result = array();
@@ -842,6 +842,6 @@ mysql_close($conn);
 /* JSON Response */
 header("Content-type: application/json");
 echo json_encode($data);
-//file_put_contents('userdetails-data', "\n" . var_export($data, true), FILE_APPEND);
+//file_put_contents('clients-data', "\n" . var_export($data, true), FILE_APPEND);
 
 ?>

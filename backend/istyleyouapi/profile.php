@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
 
     } else {
 
-        $sql = "Select userimage from userdetails where id='$userid'";
+        $sql = "Select userimage from clients where id='$userid'";
         $res = mysql_query($sql);
         while ($data = mysql_fetch_array($res)) {
             $userimage = $data['userimage'];
@@ -31,12 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
     $denimprice = $_REQUEST['denimprice'];
     $footwearprice = $_REQUEST['footwearprice'];
     $pricerange = $clubprice + $ethicprice + $denimprice + $footwearprice;
-    $sql = "Update userdetails SET username='$username',userimage='$userimage',bodyshape='$bodyshape',bodytype='$bodytype',skintype='$skintype',age='$age',pricerange='$pricerange',clubprice='$clubprice',ethicprice='$ethicprice',denimprice='$denimprice',footwearprice='$footwearprice',height='$height' where id='$userid'";
+    $sql = "Update clients SET username='$username',userimage='$userimage',bodyshape='$bodyshape',bodytype='$bodytype',skintype='$skintype',age='$age',pricerange='$pricerange',clubprice='$clubprice',ethicprice='$ethicprice',denimprice='$denimprice',footwearprice='$footwearprice',height='$height' where id='$userid'";
 
     $select = mysql_query($sql);
     $sql = "SELECT id, username, userimage, s.name as stylist_name, bodytype, bodyshape, height, u.age, skintype,
                     clubprice, ethicprice, denimprice, footwearprice
-            FROM userdetails u
+            FROM clients u
             Join stylists s on s.id = u.stylist_id
             where u.id='$userid'";
 

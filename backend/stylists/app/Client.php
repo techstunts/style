@@ -12,7 +12,7 @@ class Client extends Model
      *
      * @var string
      */
-    protected $table = 'userdetails';
+    protected $table = 'clients';
 
     protected $primaryKey = 'id';
 

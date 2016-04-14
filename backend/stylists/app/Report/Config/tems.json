@@ -27,11 +27,11 @@
     },
     "user": {
       "join_type": "left_join",
-      "table": "userdetails",
+      "table": "clients",
       "join_clause": {
         "left": "recommendations.user_id",
         "operator": "=",
-        "right": "userdetails.id"
+        "right": "clients.id"
       }
     }
   },

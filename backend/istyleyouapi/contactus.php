@@ -5,7 +5,7 @@ if($_SERVER['REQUEST_METHOD']=="POST" &&  isset($_REQUEST['userid']) && !empty($
 		$username=$_REQUEST['username'];
 		$email=$_REQUEST['email'];
 		$message=$_REQUEST['message'];	 
-		$query="SELECT * from userdetails where id='$userid' AND email='$email'";
+		$query="SELECT * from clients where id='$userid' AND email='$email'";
 		$res=mysql_query($query);
 		$row=mysql_num_rows($res);
 		if($row==1){
