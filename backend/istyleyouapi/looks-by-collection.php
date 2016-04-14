@@ -22,9 +22,9 @@ if ($request_valid === true) {
 
     $userid = mysql_real_escape_string($_REQUEST['userid']);
 
-    $user_details_query = "SELECT user_id, gender, bodytype
+    $user_details_query = "SELECT id, gender, bodytype
 							FROM userdetails
-							WHERE user_id = $userid
+							WHERE id = $userid
 							LIMIT 0,1";
     $user_res = mysql_query($user_details_query);
     $user_rows = mysql_num_rows($user_res);

@@ -34,15 +34,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
             SET bodyshape='$bodyshape', bodytype='$bodytype', skintype='$skintype', styletype='$styletype',
                 age='$age', pricerange='$pricerange', clubprice='$clubprice', ethicprice='$ethicprice',
                 denimprice='$denimprice', footwearprice='$footwearprice', height='$height' {$update_stylist_id}
-            where user_id='$userid'";
+            where id='$userid'";
 
     $select = mysql_query($sql);
-    $sql = "SELECT user_id, username, userimage, s.name as stylist_name, bodytype, bodyshape, height, u.age, skintype, styletype,
+    $sql = "SELECT id, username, userimage, s.name as stylist_name, bodytype, bodyshape, height, u.age, skintype, styletype,
                         clubprice, ethicprice, denimprice, footwearprice,
                         s.code as stylist_code, s.image as stylist_image, s.id as stylist_id
                 FROM userdetails u
                 Join stylists s on s.id = u.stylist_id
-                where u.user_id='$userid'";
+                where u.id='$userid'";
 
     $select = mysql_query($sql);
     $result = array();
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
 
     while ($data = mysql_fetch_assoc($select)) {
 
-        $result[0] = $data['user_id'];
+        $result[0] = $data['id'];
         $result[1] = $data['username'];
         $result[2] = $data['userimage'];
         $result[3] = $data['stylist_name'];
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
         'result' => 'success',
         'message' => 'questions updated ',
         'response body' => array(
-            "user_id" => $result[0],
+            "id" => $result[0],
             "username" => $result[1],
             "userimage" => $result[2],
             "stylish_name" => $result[3],
