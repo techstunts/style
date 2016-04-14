@@ -75,7 +75,7 @@ class RecommendationController extends Controller
             $client_data = StyleRequests::with('client')
                 ->whereIn('id', $style_request_ids)->get();
         }else{
-            $client_data = Client::whereIn('user_id', $client_ids)->get();
+            $client_data = Client::whereIn('id', $client_ids)->get();
         }
 
         if (empty($client_data)) {
@@ -108,7 +108,7 @@ class RecommendationController extends Controller
             $message_pushed = 0;
             for ($j = 0; $j < $entity_count; $j++) {
                 $recommends_arr[$query_count] = array(
-                    'user_id' => $client_data[$i]->user_id,
+                    'user_id' => $client_data[$i]->id,
                     'recommendation_type_id' => $recommendation_type_id,
                     'created_by' => $stylist_id,
                     'entity_type_id' => $entity_type_id,

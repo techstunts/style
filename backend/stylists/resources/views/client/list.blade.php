@@ -41,11 +41,11 @@
                         @foreach($clients as $client)
                             <tr>
 
-                                <td>{{$client->user_id}}</td>
+                                <td>{{$client->id}}</td>
                                 <td class="table-font-size"><a
-                                            href="{{url("client/view/".$client->user_id)}}"> {{$client->username}}</a>
+                                            href="{{url("client/view/".$client->id)}}"> {{$client->username}}</a>
                                 </td>
-                                <td class="image image-width"><a href="{{url("client/view/".$client->user_id)}}"><img
+                                <td class="image image-width"><a href="{{url("client/view/".$client->id)}}"><img
                                                 src="{{$client->userimage}}"/></a></td>
                                 <td class="table-font-size">{{$client->age}}</td>
                                 <td class="table-font-size">{{$client->gender}}</td>

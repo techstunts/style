@@ -31,7 +31,7 @@
       "join_clause": {
         "left": "recommendations.user_id",
         "operator": "=",
-        "right": "userdetails.user_id"
+        "right": "userdetails.id"
       }
     }
   },

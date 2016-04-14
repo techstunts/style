@@ -14,7 +14,7 @@ class Client extends Model
      */
     protected $table = 'userdetails';
 
-    protected $primaryKey = 'user_id';
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.

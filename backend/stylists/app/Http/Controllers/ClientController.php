@@ -68,7 +68,7 @@ class ClientController extends Controller
             Client::with('stylist')
                 ->where($this->where_conditions)
                 ->whereRaw($authWhereClauses)
-                ->orderBy('user_id', 'desc')
+                ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 

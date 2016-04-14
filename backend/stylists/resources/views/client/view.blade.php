@@ -6,7 +6,7 @@
 <div id="contentCntr">
     <div class="container">
         <ol class="selectable">
-            <li class="ui-state-default" id="{{$client->user_id}}">
+            <li class="ui-state-default" id="{{$client->id}}">
                 <div class="resource_view">
                     <div class="image">
                         <img src="{{$client->userimage}}" />

@@ -69,7 +69,7 @@ class StyleRequestsController extends Controller
         $this->where_raw = $this->where_raw. " AND recommendations.style_request_id is NULL";
 
         $requests  = DB::table($this->base_table)
-                ->join('userdetails', $this->base_table . '.user_id', '=', 'userdetails.user_id')
+                ->join('userdetails', $this->base_table . '.user_id', '=', 'userdetails.id')
                 ->join('stylists', 'userdetails.stylist_id', '=', 'stylists.id')
                 ->join('lu_budget', 'lu_budget.id', '=', $this->base_table.'.budget_id')
                 ->join('lu_occasion', 'lu_occasion.id', '=', $this->base_table.'.occasion_id')
@@ -77,9 +77,9 @@ class StyleRequestsController extends Controller
                 ->leftJoin('recommendations', $this->base_table.'.id', '=', 'recommendations.style_request_id')
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
-                ->select($this->base_table.'.id as request_id', 'userdetails.user_id', 'userdetails.username',
+                ->select($this->base_table.'.id as request_id', 'userdetails.id as user_id', 'userdetails.username',
                     'stylists.id as stylist_id', 'stylists.name as stylist_name', 'userdetails.age', 'userdetails.bodytype',
-                    'userdetails.user_id', 'lu_budget.name as budget', 'lu_occasion.name as occasion',
+                    'lu_budget.name as budget', 'lu_occasion.name as occasion',
                     $this->base_table.'.created_at', $this->base_table.'.description', 'lu_entity_type.name as request_type'
                 )
                 ->orderBy($this->base_table.'.id', 'desc')

@@ -393,8 +393,8 @@ function showEntities(entity_url) {
                             "<img src='" + item.data[i].userimage + "' />";
                         newstr = str;
 
-                        newstr = newstr.replace("{{item_id}}", item.data[i].user_id)
-                            .replace("/{{item_id}}", item.data[i].user_id)
+                        newstr = newstr.replace("{{item_id}}", item.data[i].id)
+                            .replace("/{{item_id}}", item.data[i].id)
                             .replace("{{item_name}}", item.data[i].username)
                             .replace("{{item_popover}}", popover_data)
                             .replace("{{item_image}}", item.data[i].userimage);
