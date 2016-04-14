@@ -43,10 +43,10 @@
 
                                 <td>{{$client->id}}</td>
                                 <td class="table-font-size"><a
-                                            href="{{url("client/view/".$client->id)}}"> {{$client->username}}</a>
+                                            href="{{url("client/view/".$client->id)}}"> {{$client->name}}</a>
                                 </td>
                                 <td class="image image-width"><a href="{{url("client/view/".$client->id)}}"><img
-                                                src="{{$client->userimage}}"/></a></td>
+                                                src="{{$client->image}}"/></a></td>
                                 <td class="table-font-size">{{$client->age}}</td>
                                 <td class="table-font-size">{{$client->gender}}</td>
                                 <td class="table-font-size">{{$client->bodytype}}</td>

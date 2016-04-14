@@ -389,15 +389,15 @@ function showEntities(entity_url) {
                             .replace("{{item_image}}", item.data[i].image);
                     }
                     else {
-                        var popover_data = "Name: " + item.data[i].username + "<br >" +
-                            "<img src='" + item.data[i].userimage + "' />";
+                        var popover_data = "Name: " + item.data[i].name + "<br >" +
+                            "<img src='" + item.data[i].image + "' />";
                         newstr = str;
 
                         newstr = newstr.replace("{{item_id}}", item.data[i].id)
                             .replace("/{{item_id}}", item.data[i].id)
-                            .replace("{{item_name}}", item.data[i].username)
+                            .replace("{{item_name}}", item.data[i].name)
                             .replace("{{item_popover}}", popover_data)
-                            .replace("{{item_image}}", item.data[i].userimage);
+                            .replace("{{item_image}}", item.data[i].image);
                     }
                     $(".popup-inner").append(newstr);
                 }

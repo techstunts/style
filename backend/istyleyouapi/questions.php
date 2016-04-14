@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
             where id='$userid'";
 
     $select = mysql_query($sql);
-    $sql = "SELECT u.id as user_id, username, userimage, s.name as stylist_name, bodytype, bodyshape, height, u.age, skintype, styletype,
+    $sql = "SELECT u.id as user_id, u.name, image, s.name as stylist_name, bodytype, bodyshape, height, u.age, skintype, styletype,
                         clubprice, ethicprice, denimprice, footwearprice,
                         s.code as stylist_code, s.image as stylist_image, s.id as stylist_id
                 FROM clients u
@@ -51,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
     while ($data = mysql_fetch_assoc($select)) {
 
         $result[0] = $data['user_id'];
-        $result[1] = $data['username'];
-        $result[2] = $data['userimage'];
+        $result[1] = $data['name'];
+        $result[2] = $data['image'];
         $result[3] = $data['stylist_name'];
         $result[4] = $data['bodytype'];
         $result[5] = $data['bodyshape'];
@@ -75,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
         'response body' => array(
             "id" => $result[0],
             "user_id" => $result[0],
-            "username" => $result[1],
-            "userimage" => $result[2],
+            "name" => $result[1],
+            "image" => $result[2],
             "stylish_name" => $result[3],
             "body_type" => $result[4],
             "body_shape" => $result[5],

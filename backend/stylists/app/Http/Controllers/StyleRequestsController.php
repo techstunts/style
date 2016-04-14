@@ -77,7 +77,7 @@ class StyleRequestsController extends Controller
                 ->leftJoin('recommendations', $this->base_table.'.id', '=', 'recommendations.style_request_id')
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
-                ->select($this->base_table.'.id as request_id', 'clients.id as user_id', 'clients.username',
+                ->select($this->base_table.'.id as request_id', 'clients.id as user_id', 'clients.name',
                     'stylists.id as stylist_id', 'stylists.name as stylist_name', 'clients.age', 'clients.bodytype',
                     'lu_budget.name as budget', 'lu_occasion.name as occasion',
                     $this->base_table.'.created_at', $this->base_table.'.description', 'lu_entity_type.name as request_type'

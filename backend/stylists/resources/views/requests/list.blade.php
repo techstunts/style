@@ -45,7 +45,7 @@
                             <tr>
                                 <td>{{$request->user_id}}</td>
                                 <td class="table-font-size"> {{$request->request_id}} </td>
-                                <td class="table-font-size">{{$request->username}}</td>
+                                <td class="table-font-size">{{$request->name}}</td>
                                 <td class="table-font-size">{{$request->age}}</td>
                                 <td class="table-font-size"> {{$request->bodytype}} </td>
                                 <td class="table-font-size"> {{$request->occasion}} </td>

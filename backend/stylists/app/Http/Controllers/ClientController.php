@@ -110,13 +110,20 @@ class ClientController extends Controller
 
     public function getChat(Request $request)
     {
+        $authorised_stylists_for_chat = [36, 49, 66];
+        $stylists=[];
+        $stylist_id_to_chat = Auth::user()->id;
+
         $is_admin = Auth::user()->hasRole('admin');
-        if(!$is_admin){
+        if(!$is_admin && !in_array($stylist_id_to_chat, $authorised_stylists_for_chat)){
             return redirect('look/list')->withError('Chat access denied!');
         }
-        $stylists = Stylist::whereIn('status_id',[StylistStatus::Active, StylistStatus::Inactive])
-            ->orderBy('name')->get();
-        $stylist_id_to_chat = $request->input('stylist_id') ? $request->input('stylist_id') : Auth::user()->id;
+
+        if($is_admin){
+            $stylists = Stylist::whereIn('status_id',[StylistStatus::Active, StylistStatus::Inactive])
+                ->orderBy('name')->get();
+            $stylist_id_to_chat = $request->input('stylist_id') ? $request->input('stylist_id') : $stylist_id_to_chat;
+        }
 
         $view_properties['stylist_id_to_chat'] = $stylist_id_to_chat;
         $view_properties['stylists'] = $stylists;
