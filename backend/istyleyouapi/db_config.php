@@ -13,7 +13,7 @@ else{
 }
 
 
-$debug = false;
+$debug = true;
 if($debug) {
     $base = substr(basename($_SERVER['REQUEST_URI']), 0, strpos(basename($_SERVER['REQUEST_URI']), ".php"));
     $log_file = "debug/" . $base . ".log";

@@ -1,8 +1,8 @@
 <?php
 include("db_config.php");
-if($_SERVER['REQUEST_METHOD']=="POST" &&  isset($_REQUEST['userid']) && !empty($_REQUEST['userid']) && isset($_REQUEST['name']) && !empty($_REQUEST['name']) && !empty($_REQUEST['email']) && isset($_REQUEST['email']) && isset($_REQUEST['message']) && !empty($_REQUEST['message'])){
+if($_SERVER['REQUEST_METHOD']=="POST" &&  isset($_REQUEST['userid']) && !empty($_REQUEST['userid']) && isset($_REQUEST['username']) && !empty($_REQUEST['username']) && !empty($_REQUEST['email']) && isset($_REQUEST['email']) && isset($_REQUEST['message']) && !empty($_REQUEST['message'])){
 		$userid=$_REQUEST['userid'];
-		$name=$_REQUEST['name'];
+		$name=$_REQUEST['username'];
 		$email=$_REQUEST['email'];
 		$message=$_REQUEST['message'];	 
 		$query="SELECT * from clients where id='$userid' AND email='$email'";
