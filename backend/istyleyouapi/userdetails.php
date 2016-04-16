@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $valid = true;
     if (isset($_REQUEST['stylishcode']) && !empty($_REQUEST['stylishcode'])) {
         $stylishcode = $_REQUEST['stylishcode'];
-        $query = "Select id from stylists where code='$stylishcode'";
+        $query = "Select id from stylists where code='$stylishcode' and status_id='1'";
         $res = mysql_query($query);
         $row = mysql_num_rows($res);
         if ($row == 1) {
