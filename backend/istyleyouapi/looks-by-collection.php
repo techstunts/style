@@ -22,9 +22,9 @@ if ($request_valid === true) {
 
     $userid = mysql_real_escape_string($_REQUEST['userid']);
 
-    $user_details_query = "SELECT user_id, gender, bodytype
-							FROM userdetails
-							WHERE user_id = $userid
+    $user_details_query = "SELECT id, gender, bodytype, gender_id
+							FROM clients
+							WHERE id = $userid
 							LIMIT 0,1";
     $user_res = mysql_query($user_details_query);
     $user_rows = mysql_num_rows($user_res);
@@ -33,6 +33,8 @@ if ($request_valid === true) {
         $user_data = mysql_fetch_array($user_res);
         $gender = $user_data[1];
 
+        $gender_id = !empty($user_data[3]) ? $user_data[3] : Lookup::getId('gender', $gender);
+
         $looks = array();
 
         $page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
@@ -40,17 +42,15 @@ if ($request_valid === true) {
         $record_start = intval($page * 10);
         $records_count = 10;
 
-        $gender_id = Lookup::getId('gender', $gender);
-
         $looks_sql =
             "Select l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name, uf.fav_id,
-					sd.stylish_id as stylist_id, sd.name as stylist_name, sd.image as stylist_image
+					sd.id as stylist_id, sd.name as stylist_name, sd.image as stylist_image
         from collections cl
         join collection_entities ce ON cl.id = ce.collection_id
         join looks l on ce.entity_id = l.id and ce.entity_type_id = 2
         join lu_occasion o on l.occasion_id = o.id
         LEFT JOIN usersfav uf ON l.id = uf.look_id and uf.user_id = '$userid'
-        JOIN stylists sd on sd.stylish_id = l.stylish_id
+        JOIN stylists sd on sd.id = l.stylist_id
         where cl.id = '$collection_id'
             AND l.gender_id = '$gender_id'
             AND l.id NOT IN

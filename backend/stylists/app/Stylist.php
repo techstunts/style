@@ -27,7 +27,7 @@ class Stylist extends Model implements AuthenticatableContract,
      */
     protected $table = 'stylists';
 
-    protected $primaryKey = 'stylish_id';
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -35,7 +35,7 @@ class Stylist extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $fillable = ['name', 'email', 'password', 'image',  'profile',
-        'code', 'expertise', 'age', 'stylish_gender', 'description', 'status_id'];
+        'code', 'expertise', 'age', 'gender_id', 'description', 'status_id'];
 
     public $timestamps = true;
 
@@ -47,7 +47,7 @@ class Stylist extends Model implements AuthenticatableContract,
     protected $hidden = ['password', 'remember_token'];
 
     public function looks(){
-        return $this->hasMany('App\Look', 'stylish_id');
+        return $this->hasMany('App\Look', 'stylist_id');
     }
 
     public function gender(){

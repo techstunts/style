@@ -9,11 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
     $record_start = intval($page * $records_count);
 
     $sql = "Select distinct l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name,
-                    s.stylish_id, s.name as stylish_name, s.image as stylish_image
+                    s.id as stylist_id, s.name as stylish_name, s.image as stylish_image
 				  from recommendations r
 				  join looks l on r.entity_id=l.id and r.entity_type_id = 2
 				  join lu_occasion o on l.occasion_id = o.id
-                  join stylists s on s.stylish_id = l.stylish_id
+                  join stylists s on s.id = l.stylist_id
 				  where r.user_id='$userid'
                 
 				  ORDER BY r.id DESC
@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
             $id = $ids[$i][0];
             $stylish_details = array(
                 'stylish_id' => $ids[$i][6],
+                'stylist_id' => $ids[$i][6],
                 'stylish_name' => $ids[$i][7],
                 'stylish_image' => $ids[$i][8],
             );
@@ -110,10 +111,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
     }
     //fav
     $sql = "Select l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name,
-                    s.stylish_id, s.name as stylish_name, s.image as stylish_image
+                    s.id as stylist_id, s.name as stylish_name, s.image as stylish_image
 					  from looks l
 					  join lu_occasion o on l.occasion_id = o.id
-                      join stylists s on s.stylish_id = l.stylish_id
+                      join stylists s on s.id = l.stylist_id
 					  where l.id NOT IN (Select look_id from users_unlike where user_id='$userid')
 					  AND l.id IN (Select look_id from usersfav where user_id='$userid')
                       
@@ -132,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
         $id = $ids[$i][0];
         $stylish_details = array(
             'stylish_id' => $ids[$i][6],
+            'stylist_id' => $ids[$i][6],
             'stylish_name' => $ids[$i][7],
             'stylish_image' => $ids[$i][8],
         );

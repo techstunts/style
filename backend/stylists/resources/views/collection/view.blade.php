@@ -46,14 +46,14 @@
                                     foreach($combined as $gender => $entities){
                                         echo "<br/>" . $gender . "<br />";
                                         foreach($entities as $entity){
-                                            if($entity[0] == \App\Models\Enums\EntityType::Product){
+                                            if($entity[0] == \App\Models\Enums\EntityType::PRODUCT){
                                                 echo sprintf($href_tag,
                                                         url('product/view/' . $entity[1]->id),
                                                         $entity[1]->name,
                                                         strpos($entity[1]->upload_image, "http") !== false ? $entity[1]->upload_image : asset('images/' . $entity[1]->upload_image)
                                                 );
                                             }
-                                            else if($entity[0] == \App\Models\Enums\EntityType::Look){
+                                            else if($entity[0] == \App\Models\Enums\EntityType::LOOK){
                                                 echo sprintf($href_tag,
                                                         url('look/view/' . $entity[1]->id),
                                                         $entity[1]->name,

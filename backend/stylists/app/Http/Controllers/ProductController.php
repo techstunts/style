@@ -25,7 +25,7 @@ use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['stylish_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id','primary_color_id'];
+    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id','primary_color_id'];
     protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders','colors'];
 
     /**
@@ -100,7 +100,7 @@ class ProductController extends Controller
 
         $view_properties['products'] = $products;
         $view_properties['genders_list'] = $genders_list;
-        $view_properties['logged_in_stylish_id'] = Auth::user()->stylish_id;
+        $view_properties['logged_in_stylist_id'] = Auth::user()->id;
         $view_properties['app_sections'] = AppSections::all();
         $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         $view_properties['entity_type_to_send'] = EntityType::PRODUCT;
@@ -326,7 +326,7 @@ class ProductController extends Controller
 
         $valdation_clauses = [
             'merchant_id' => 'integer',
-            'stylish_id' => 'integer',
+            'stylist_id' => 'integer',
             'brand_id' => 'integer',
             'gender_id' => 'integer',
             'primary_color_id' => 'integer',

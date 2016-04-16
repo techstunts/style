@@ -21,7 +21,7 @@ use Validator;
 
 class LookController extends Controller
 {
-    protected $filter_ids = ['stylish_id', 'status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id'];
+    protected $filter_ids = ['stylist_id', 'status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id'];
     protected $filters = ['stylists', 'statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups'];
 
     protected $status_rules;
@@ -104,7 +104,6 @@ class LookController extends Controller
             $view_properties['user_role'] = 'stylist';
         }
 
-
         $remove_deleted_looks = '1=1';
         if(!$request->has('status_id') || $request->input('status_id') != LookupStatus::Deleted){
             $remove_deleted_looks = 'looks.status_id != ' . LookupStatus::Deleted;
@@ -122,7 +121,7 @@ class LookController extends Controller
         $view_properties['looks'] = $looks;
         $view_properties['status_rules'] = $this->status_rules;
         $view_properties['app_sections'] = AppSections::all();
-        $view_properties['logged_in_stylish_id'] = $user_data->stylish_id;
+        $view_properties['logged_in_stylist_id'] = $user_data->id;
         $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         $view_properties['entity_type_to_send'] = EntityType::LOOK;
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
@@ -251,12 +250,11 @@ class LookController extends Controller
             $status = Status::find($look->status_id);
             $view_properties = array('look' => $look, 'products' => $products, 'stylist' => $look->stylist,
                 'status' => $status);
-            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $look->stylish_id == Auth::user()->stylish_id;
+            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $look->stylist_id == Auth::user()->id;
         }
         else{
             return view('404', array('title' => 'Look not found'));
         }
-
         return view('look.view', $view_properties);
     }
 

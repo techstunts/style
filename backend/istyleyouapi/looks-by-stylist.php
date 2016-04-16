@@ -22,9 +22,9 @@ if ($request_valid === true) {
 
     $userid = mysql_real_escape_string($_REQUEST['userid']);
 
-    $user_details_query = "SELECT user_id, gender, bodytype
-							FROM userdetails
-							WHERE user_id = $userid
+    $user_details_query = "SELECT id, gender, bodytype, gender_id
+							FROM clients
+							WHERE id = $userid
 							LIMIT 0,1";
     $user_res = mysql_query($user_details_query);
     $user_rows = mysql_num_rows($user_res);
@@ -32,7 +32,8 @@ if ($request_valid === true) {
     if ($user_rows > 0) {
         $user_data = mysql_fetch_array($user_res);
         $gender = $user_data[1];
-        $gender_id = Lookup::getId('gender', $gender);
+
+        $gender_id = !empty($user_data[3]) ? $user_data[3] : Lookup::getId('gender', $gender);
 
         $looks = array();
 
@@ -46,7 +47,7 @@ if ($request_valid === true) {
         from looks l
         join lu_occasion o on l.occasion_id = o.id
         LEFT JOIN usersfav uf ON l.id = uf.look_id and uf.user_id = '$userid'
-        where l.stylish_id = '$stylist_id'
+        where l.stylist_id = '$stylist_id'
             AND l.gender_id = '$gender_id'
             AND l.id NOT IN
                 (Select look_id

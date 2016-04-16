@@ -64,11 +64,11 @@ class CollectionController extends Controller
                 ->get();
             foreach($entity_ids as $data){
                 $entity = '';
-                if($data->entity_type_id == EntityType::Look){
-                    $entity = array(EntityType::Look, Look::find($data->entity_id));
+                if($data->entity_type_id == EntityType::LOOK){
+                    $entity = array(EntityType::LOOK, Look::find($data->entity_id));
                 }
-                else if($data->entity_type_id == EntityType::Product){
-                    $entity = array(EntityType::Product, Product::find($data->entity_id));
+                else if($data->entity_type_id == EntityType::PRODUCT){
+                    $entity = array(EntityType::PRODUCT, Product::find($data->entity_id));
                 }
                 else{
                     continue;

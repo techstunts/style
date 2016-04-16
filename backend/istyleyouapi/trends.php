@@ -6,9 +6,9 @@ include("Lookup.php");
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])){
 	$userid = mysql_real_escape_string($_REQUEST['userid']);
 
-	$user_details_query = "SELECT user_id, gender, bodytype
-							FROM userdetails
-							WHERE user_id = $userid
+	$user_details_query = "SELECT id, gender, bodytype, gender_id
+							FROM clients
+							WHERE id = $userid
 							LIMIT 0,1";
 	$user_res=mysql_query($user_details_query);
 	$user_rows=mysql_num_rows($user_res);
@@ -16,7 +16,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 	if($user_rows > 0){
 		$user_data = mysql_fetch_array($user_res);
 		$gender = $user_data[1];
-		$gender_id = Lookup::getId('gender', $gender);
+		$gender_id = !empty($user_data[3]) ? $user_data[3] : Lookup::getId('gender', $gender);
 
 		$looks = array();
 
@@ -27,12 +27,12 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 		$looks_sql =
 			"SELECT cl.id as look_id, cl.description as look_description, cl.image as look_image,
 					cl.price as lookprice, o.name as occasion, cl.name as look_name, uf.fav_id,
-					sd.stylish_id as stylist_id, sd.name as stylist_name, sd.image as stylist_image
+					sd.id as stylist_id, sd.name as stylist_name, sd.image as stylist_image
 			FROM collection_entities ce
 				JOIN looks cl ON ce.entity_id = cl.id AND ce.entity_type_id = 2
 				JOIN lu_occasion o on cl.occasion_id = o.id
         		LEFT JOIN usersfav uf ON cl.id = uf.look_id and uf.user_id = '$userid'
-				JOIN stylists sd on sd.stylish_id = cl.stylish_id
+				JOIN stylists sd on sd.id = cl.stylist_id
 			WHERE ce.collection_id = 1
 				AND cl.gender_id = '$gender_id'
 				AND cl.id NOT IN
@@ -118,6 +118,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 
 				$stylist_details = array();
 				$stylist_details['stylish_id'] = $looks[$i]['stylist_id'];
+				$stylist_details['stylist_id'] = $looks[$i]['stylist_id'];
 				$stylist_details['stylish_name'] = $looks[$i]['stylist_name'];
 				$stylist_details['stylish_image'] = $looks[$i]['stylist_image'];
 

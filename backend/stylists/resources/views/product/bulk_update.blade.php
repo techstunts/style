@@ -6,7 +6,7 @@
     <input type="submit" name="update" value="Bulk update" />
     <input type="submit" id="update_selected" name="update_selected" value="Update Selected" action_url="{!! url('/product/updateSelected') !!}" />
     <input type="hidden" name="merchant_id" value="{{$merchant_id}}"/>
-    <input type="hidden" name="stylish_id" value="{{$stylish_id}}"/>
+    <input type="hidden" name="stylist_id" value="{{$stylist_id}}"/>
     <input type="hidden" name="brand_id" value="{{$brand_id}}"/>
     <input type="hidden" name="old_category_id" value="{{$category_id}}"/>
     <input type="hidden" name="old_gender_id" value="{{$gender_id}}"/>

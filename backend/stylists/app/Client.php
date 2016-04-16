@@ -12,9 +12,9 @@ class Client extends Model
      *
      * @var string
      */
-    protected $table = 'userdetails';
+    protected $table = 'clients';
 
-    protected $primaryKey = 'user_id';
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -24,7 +24,10 @@ class Client extends Model
     public $timestamps = true;
 
     public function stylist(){
-        return $this->belongsTo('App\Stylist', 'stylish_id');
+        return $this->belongsTo('App\Stylist', 'stylist_id');
+    }
+    public function genders(){
+        return $this->belongsTo('App\Models\Lookups\Gender', 'gender_id');
     }
 
 }
