@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
             where id='$userid'";
 
     $select = mysql_query($sql);
-    $sql = "SELECT u.id as user_id, u.name, image, s.name as stylist_name, bodytype, bodyshape, height, u.age, skintype, styletype,
+    $sql = "SELECT u.id as user_id, u.name, u.image, s.name as stylist_name, bodytype, bodyshape, height, u.age, skintype, styletype,
                         clubprice, ethicprice, denimprice, footwearprice,
                         s.code as stylist_code, s.image as stylist_image, s.id as stylist_id
                 FROM clients u

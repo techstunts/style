@@ -6,7 +6,7 @@ include("Lookup.php");
 if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])){
 	$userid = mysql_real_escape_string($_REQUEST['userid']);
 
-	$user_details_query = "SELECT id, gender, bodytype
+	$user_details_query = "SELECT id, gender, bodytype, gender_id
 							FROM clients
 							WHERE id = $userid
 							LIMIT 0,1";
@@ -16,7 +16,7 @@ if($_SERVER['REQUEST_METHOD']=="GET" && isset($_REQUEST['userid']) && !empty($_R
 	if($user_rows > 0){
 		$user_data = mysql_fetch_array($user_res);
 		$gender = $user_data[1];
-		$gender_id = Lookup::getId('gender', $gender);
+		$gender_id = !empty($user_data[3]) ? $user_data[3] : Lookup::getId('gender', $gender);
 
 		$looks = array();
 

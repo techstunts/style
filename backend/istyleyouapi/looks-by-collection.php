@@ -22,7 +22,7 @@ if ($request_valid === true) {
 
     $userid = mysql_real_escape_string($_REQUEST['userid']);
 
-    $user_details_query = "SELECT id, gender, bodytype
+    $user_details_query = "SELECT id, gender, bodytype, gender_id
 							FROM clients
 							WHERE id = $userid
 							LIMIT 0,1";
@@ -33,14 +33,14 @@ if ($request_valid === true) {
         $user_data = mysql_fetch_array($user_res);
         $gender = $user_data[1];
 
+        $gender_id = !empty($user_data[3]) ? $user_data[3] : Lookup::getId('gender', $gender);
+
         $looks = array();
 
         $page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
 
         $record_start = intval($page * 10);
         $records_count = 10;
-
-        $gender_id = Lookup::getId('gender', $gender);
 
         $looks_sql =
             "Select l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name, uf.fav_id,
