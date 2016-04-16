@@ -189,7 +189,8 @@ $(document).ready(function(){
 
     $( "#update_selected" ).click(function(){
         var category_id = $(this).parent('form').children('#category_id').val();
-        var gender_id = $(this).parent('form').children('#gender_id').val();
+        var gender_id = $(this).parent('form').children('#' +
+            'gender_id').val();
         var primary_color_id = $(this).parent('form').children('#primary_color_id').val();
 
         var actionUrl = $(this).attr('action_url');

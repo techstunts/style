@@ -16,7 +16,7 @@
                             <td class="title" colspan="2">{{$client->name}}</td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Gender</td><td class="content">{{$client->gender}} </td>
+                            <td class="head">Gender</td><td class="content">{{$client->genders ? $client->genders->name : ''}} </td>
                         </tr>
                         <tr class="row">
                             <td class="head">Stylist</td><td class="content">{{$client->stylist ? $client->stylist->name : ''}} </td>

@@ -26,5 +26,8 @@ class Client extends Model
     public function stylist(){
         return $this->belongsTo('App\Stylist', 'stylist_id');
     }
+    public function genders(){
+        return $this->belongsTo('App\Models\Lookups\Gender', 'gender_id');
+    }
 
 }

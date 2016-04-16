@@ -65,7 +65,7 @@ class ClientController extends Controller
 
         $authWhereClauses = $this->authWhereClauses();
         $clients =
-            Client::with('stylist')
+            Client::with('stylist', 'genders')
                 ->where($this->where_conditions)
                 ->whereRaw($authWhereClauses)
                 ->orderBy('id', 'desc')
@@ -88,7 +88,8 @@ class ClientController extends Controller
     public function getView()
     {
         $authWhereClauses = $this->authWhereClauses();
-        $client = Client::whereRaw($authWhereClauses)
+        $client = Client::with('genders')
+                ->whereRaw($authWhereClauses)
                 ->find($this->resource_id);
         if($client){
             $view_properties = array('client' => $client);

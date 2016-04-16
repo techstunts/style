@@ -48,7 +48,7 @@
                                 <td class="image image-width"><a href="{{url("client/view/".$client->id)}}"><img
                                                 src="{{$client->image}}"/></a></td>
                                 <td class="table-font-size">{{$client->age}}</td>
-                                <td class="table-font-size">{{$client->gender}}</td>
+                                <td class="table-font-size">{{$client->genders ? $client->genders->name : ''}}</td>
                                 <td class="table-font-size">{{$client->bodytype}}</td>
                                 <td class="table-font-size"> {{$client->bodyshape}} </td>
                                 <td class="table-font-size"> {{$client->skintype}} </td>
