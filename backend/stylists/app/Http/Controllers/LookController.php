@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Look;
 use App\LookProduct;
+use App\Models\Enums\EntityType;
+use App\Models\Enums\EntityTypeName;
+use App\Models\Enums\RecommendationType;
 use App\Models\Enums\Status as LookupStatus;
 use App\Models\Lookups\Lookup;
 use App\Product;
 use App\Models\Lookups\Status;
+use App\Models\Lookups\AppSections;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -51,8 +55,6 @@ class LookController extends Controller
         foreach($status_rules['statuses']['status'] as $status){
             $this->status_rules[$status['id']] = $status;
         }
-
-
     }
 
     public function getList(Request $request){
@@ -70,6 +72,15 @@ class LookController extends Controller
             'age_groups' => $this->age_groups
         );
 
+        $entity_nav_tabs = array(
+            EntityType::CLIENT
+        );
+
+        $view_properties['entity_type_names']= array(
+            EntityTypeName::CLIENT
+        );
+        $view_properties['nav_tab_index'] = '0';
+
         foreach($this->filter_ids as $filter){
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
@@ -85,10 +96,11 @@ class LookController extends Controller
         unset($paginate_qs['page']);
         $this->initStatusRules();
 
-        if(Auth::user()->hasRole('admin')){
+        $user_data = Auth::user();
+        if($user_data->hasRole('admin')){
             $view_properties['user_role'] = 'admin';
         }
-        else if(Auth::user()->hasRole('stylist')){
+        else if($user_data->hasRole('stylist')){
             $view_properties['user_role'] = 'stylist';
         }
 
@@ -109,6 +121,12 @@ class LookController extends Controller
 
         $view_properties['looks'] = $looks;
         $view_properties['status_rules'] = $this->status_rules;
+        $view_properties['app_sections'] = AppSections::all();
+        $view_properties['logged_in_stylish_id'] = $user_data->stylish_id;
+        $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
+        $view_properties['entity_type_to_send'] = EntityType::LOOK;
+        $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
+        $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
         return view('look.list', $view_properties);
     }
 
@@ -233,7 +251,7 @@ class LookController extends Controller
             $status = Status::find($look->status_id);
             $view_properties = array('look' => $look, 'products' => $products, 'stylist' => $look->stylist,
                 'status' => $status);
-            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $look->id == Auth::user()->stylish_id;
+            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $look->stylish_id == Auth::user()->stylish_id;
         }
         else{
             return view('404', array('title' => 'Look not found'));
@@ -318,6 +336,14 @@ class LookController extends Controller
         $look->save();
 
         return redirect('look/view/' . $this->resource_id);
+    }
+
+    public function getCollage(Request $request)
+    {
+        if(!Auth::user()->hasRole('admin')){
+            return redirect('look/list')->withError('Collage access denied!');
+        }
+        return view('look/collage');
     }
 
     /**

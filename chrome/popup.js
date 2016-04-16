@@ -89,7 +89,17 @@ document.addEventListener('DOMContentLoaded', function() {
 								gender = gender_text;\
 							}\
 						}\
-						img_links.push(document.getElementById(\'landingImage\').src)\
+						img_links.push(document.getElementById(\'landingImage\').src);\
+					}\
+					else if(merchant == \'darveys\'){\
+						prod_name = document.querySelectorAll(\'h2[itemprop=\"name\"]\')[0].innerText;\
+						prod_price = document.getElementsByClassName(\'product-shop-info\')[0].getElementsByClassName(\'special-price\')[0].innerText.replace(\'Now \',\'\');\
+						prod_desc = document.querySelectorAll(\'meta[name=\"description\"]\')[0].getAttribute(\'content\');\
+						breadcrumbs = document.getElementsByClassName(\'breadcrumbs\')[0].getElementsByTagName(\'li\');\
+						category = breadcrumbs[breadcrumbs.length - 2].getElementsByTagName(\'a\')[0].innerText;\
+						brand = document.querySelectorAll(\'h1[itemprop=\"brand\"]\')[0].innerText.match(/^.*$/m)[0];\
+						gender = breadcrumbs[1].getElementsByTagName(\'a\')[0].innerText.trim();\
+						img_links.push(document.getElementById(\'cloudzoom\').src);\
 					}\
 					else if(merchant == \'jabong\'){\
 						prod_name = document.getElementsByClassName(\'product-title\')[0].innerHTML.trim();\
@@ -126,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					document.getElementById('images').innerHTML = results[0][3];
 					document.getElementById('url').value = tab.url;
 					document.getElementById('merchant').value = results[0][4];
-					document.getElementById('category').value = results[0][5].capitalizeFirstLetter();
+					document.getElementById('category').value = results[0][5].trim().capitalizeFirstLetter();
 					document.getElementById('brand').value = results[0][6].capitalizeFirstLetter();
 					document.getElementById('gender').value = results[0][7];
 					

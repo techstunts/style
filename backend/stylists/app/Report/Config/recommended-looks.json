@@ -1,0 +1,116 @@
+{
+  "display_name": "Recommended Report",
+  "table_name": "recommendations",
+  "related_report_links" : {
+    "looks" : {
+      "link" : "/report/looks",
+      "display_name" : "Looks"
+    },
+    "user-request-look" : {
+      "link" : "/report/user-requested-looks",
+      "display_name" : "Looks requests by users"
+    },
+    "favorite-look" : {
+      "link" : "/report/favorite-looks",
+      "display_name" : "Favorite Looks"
+    }
+  },
+  "relationships": {
+    "look": {
+      "join_type": "left_join",
+      "table": "looks",
+      "join_clause": {
+        "left": "recommendations.entity_id",
+        "operator": "=",
+        "right": "looks.id"
+      }
+    }
+  },
+  "conditions": {
+    "status_id": {
+      "column": "entity_type_id",
+      "value": "2",
+      "operator": "="
+    }
+  },
+  "attributes": {
+    "budget": {
+      "type": "ref",
+      "filter_type": "multi_select",
+      "show_in_report": true,
+      "display_name": "Budget",
+      "id_column": "id",
+      "name_column": "name",
+      "table_name": "lu_budget",
+      "parent_table_id_column": "looks.budget_id"
+    },
+    "occasion": {
+      "type": "ref",
+      "filter_type": "multi_select",
+      "show_in_report": true,
+      "display_name": "Occasion",
+      "id_column": "id",
+      "name_column": "name",
+      "table_name": "lu_occasion",
+      "parent_table_id_column": "looks.occasion_id"
+    },
+    "body_type": {
+      "type": "ref",
+      "filter_type": "multi_select",
+      "show_in_report": true,
+      "display_name": "Body Type",
+      "id_column": "id",
+      "name_column": "name",
+      "table_name": "lu_body_type",
+      "parent_table_id_column": "looks.body_type_id"
+    },
+    "gender": {
+      "type": "ref",
+      "filter_type": "multi_select",
+      "show_in_report": true,
+      "display_name": "Gender",
+      "id_column": "id",
+      "name_column": "name",
+      "table_name": "lu_gender",
+      "parent_table_id_column": "looks.gender_id"
+    },
+    "stylist": {
+      "type": "ref",
+      "filter_type": "multi_select",
+      "show_in_report": true,
+      "display_name": "Stylist",
+      "id_column": "stylish_id",
+      "name_column": "name",
+      "table_name": "stylists",
+      "parent_table_id_column": "looks.stylish_id"
+    },
+    "age_group": {
+      "type": "ref",
+      "filter_type": "multi_select",
+      "show_in_report": true,
+      "display_name": "Age Group",
+      "id_column": "id",
+      "name_column": "name",
+      "table_name": "lu_age_group",
+      "parent_table_id_column": "looks.age_group_id"
+    },
+    "status": {
+      "type": "ref",
+      "filter_type": "multi_select",
+      "show_in_report": true,
+      "display_name": "Status",
+      "id_column": "id",
+      "name_column": "name",
+      "table_name": "lu_status",
+      "parent_table_id_column": "looks.status_id"
+    },
+    "created_at": {
+      "type": "non_ref",
+      "filter_type": "date_range",
+      "show_in_report": false,
+      "display_name": "Date Range",
+      "id_column": "recommendations.created_at"
+    }
+
+  }
+}

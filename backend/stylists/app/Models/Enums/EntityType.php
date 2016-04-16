@@ -1,10 +1,11 @@
 <?php
 namespace App\Models\Enums;
 class EntityType{
-    const Product = "1";
-    const Look = "2";
-    const Stylist = "3";
-    const Tip = "4";
-    const Collection = "5";
+    const PRODUCT = "1";
+    const LOOK = "2";
+    const STYLIST = "3";
+    const TIP = "4";
+    const COLLECTION = "5";
+    const CLIENT = "6";
 }
 

@@ -4,6 +4,7 @@
     @include('common.gender.select', array('genders' => $gender_list))
     @include('common.color.select', array('colors' => $color_list))
     <input type="submit" name="update" value="Bulk update" />
+    <input type="submit" id="update_selected" name="update_selected" value="Update Selected" action_url="{!! url('/product/updateSelected') !!}" />
     <input type="hidden" name="merchant_id" value="{{$merchant_id}}"/>
     <input type="hidden" name="stylish_id" value="{{$stylish_id}}"/>
     <input type="hidden" name="brand_id" value="{{$brand_id}}"/>

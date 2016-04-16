@@ -146,6 +146,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 		'Zizaco\Entrust\EntrustServiceProvider',
         Barryvdh\Debugbar\ServiceProvider::class,
+        App\Report\ReportServiceProvider::class,
+        App\Providers\ValidatorServiceProvider::class
 
 
     ],

@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="{!! asset('css/style.css') !!}" />
     <link rel="stylesheet" href="{!! asset('css/bootstrap.css') !!}" />
+    <link rel="stylesheet" href="{!! asset('css/report.css') !!}" />
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -15,6 +16,8 @@
 
     <script src="{!! asset('js/lightbox.js') !!}"></script>
     <script src="{!! asset('js/jquery.cookie.js') !!}"></script>
+
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
     <title>@yield('title')</title>
 

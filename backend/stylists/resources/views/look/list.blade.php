@@ -25,6 +25,7 @@
                 {!! $looks->render() !!}
             </div>
 
+            @include('common.sendrecommendations')
             <div class="clear"></div>
 
             <ol class="selectable" >
@@ -35,7 +36,10 @@
             @foreach($looks as $look)
                 <li class="ui-state-default" look_id="{{$look->id}}">
                     <div class="items">
-                        <div class="name text"><a href="{{url('look/view/' . $look->id)}}">{{$look->name == "" ? "Error! Look name empty" : $look->name }}</a></div>
+                        <div class="name text " id="popup-item">
+                            <a href="{{url('look/view/' . $look->id)}}">{{$look->name == "" ? "Error! Look name empty" : $look->name }}</a>
+                            <input class="entity_ids pull-right"  value="{{$look->id}}" type="checkbox">
+                        </div>
                         <div class="image"><img src="{!! asset('images/' . $look->image) !!}" /></div>
                         <div class="extra text">
                             <?php
@@ -73,11 +77,11 @@
             </ol>
 
             <div class="clear"></div>
-
             {!! $looks->render() !!}
         </div>
 
         @include('look.create')
+        @include('push.popup')
     </div>
 </div>
 @endsection
