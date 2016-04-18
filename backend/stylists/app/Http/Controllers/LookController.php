@@ -191,7 +191,7 @@ class LookController extends Controller
         $look->age_group_id = isset($request->age_group_id) && $request->age_group_id != '' ? $request->age_group_id : '';
         $look->occasion_id = isset($request->occasion_id) && $request->occasion_id != '' ? $request->occasion_id : '';
         $look->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
-        $look->stylish_id = $request->user()->stylish_id != '' ? $request->user()->stylish_id : '';
+        $look->stylist_id = $request->user()->id != '' ? $request->user()->id : '';
         $look->created_at = date('Y-m-d H:i:s');
         $look->status_id = LookupStatus::Submitted;
 
