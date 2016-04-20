@@ -613,7 +613,7 @@ function login($email, $password, $gender,$gender_id, $stylishid)
         if ($login[0] == $email && $login[1] != $password && (($login[2] == $gender) || ($login[3] == $gender_id)))   {
             $data = array('result' => 'fail', 'message' => 'Incorrect Password');
 
-        } elseif ($login[0] == $email && $login[1] == $password && (($login[2] == $gender) || ($login[3] == $gender_id)))   {
+        } elseif ($login[0] == $email && $login[1] == $password && (($login[2] != $gender) || ($login[3] != $gender_id)))   {
             $data = array('result' => 'fail', 'message' => 'Incorrect gender for the registered email');
         } else {
             $data = array('result' => 'fail', 'message' => 'The given Email is not registered yet ');
@@ -689,7 +689,7 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id, $name)
     } else {
         if ($login[0] == $email && $login[1] != $facebookid && (($login[2] == $gender) || ($login[3] == $gender_id)))   {
             $data = array('result' => 'fail', 'message' => 'Incorrect facebook id');
-        } elseif ($login[0] == $email && $login[1] == $facebookid && (($login[2] == $gender) || ($login[3] == $gender_id)))   {
+        } elseif ($login[0] == $email && $login[1] == $facebookid && (($login[2] != $gender) || ($login[3] != $gender_id)))   {
             $data = array('result' => 'fail', 'message' => 'Incorrect gender for the registered email');
         } else {
             $data = array('result' => 'fail', 'message' => 'The given Email is not registered yet ');
@@ -765,7 +765,7 @@ function GoogleLogin($email, $googleid, $gender, $gender_id, $name)
     } else {
         if ($login[0] == $email && $login[1] != $googleid && (($login[2] == $gender) || ($login[3] == $gender_id)))   {
             $data = array('result' => 'fail', 'message' => 'Incorrect google id');
-        } elseif ($login[0] == $email && $login[1] == $googleid && (($login[2] == $gender) || ($login[3] == $gender_id)))   {
+        } elseif ($login[0] == $email && $login[1] == $googleid && (($login[2] != $gender) || ($login[3] != $gender_id)))   {
             $data = array('result' => 'fail', 'message' => 'Incorrect gender for the registered email');
         } else {
             $data = array('result' => 'fail', 'message' => 'The given Email is not registered yet ');
@@ -774,81 +774,6 @@ function GoogleLogin($email, $googleid, $gender, $gender_id, $name)
     return $data;
 }
 
-function LinkedinLogin($email, $linkedid, $gender, $gender_id, $name)
-{
-    $sql = "SELECT email,linked_id,gender,gender_id from clients where email='$email'";
-    $res = mysql_query($sql);
-    $login = array();
-    $rows = mysql_num_rows($res);
-    if ($rows == 1) {
-        while ($data = mysql_fetch_array($res)) {
-            $login[0] = $data['email'];
-            $login[1] = $data['linked_id'];
-            $login[2] = $data['gender'];
-            $login[3] = $data['gender_id'];
-        }
-    } else {
-
-        $login[0] = "";
-        $login[1] = "";
-        $login[2] = "";
-        $login[3] = "";
-
-    }
-    if ($login[0] == $email && $login[1] == $linkedid && (($login[2] == $gender) || ($login[3] == $gender_id)))   {
-        $sql = "SELECT id,stylist_id from clients where email='$email' AND linked_id='$linkedid'";
-        $result = array();
-        $res = mysql_query($sql);
-        while ($data = mysql_fetch_assoc($res)) {
-
-
-            $userid = $data['id'];
-            $result[1] = $data['stylist_id'];
-
-        }
-
-
-        if ($result[1] != 0) {
-            $sql = "SELECT clients.id as user_id,clients.name,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
-
-            $select = mysql_query($sql);
-            $result = array();
-
-
-            while ($data = mysql_fetch_assoc($select)) {
-
-                $result[0] = $data['user_id'];
-                $result[1] = $data['name'];
-                $result[2] = $data['image'];
-                $result[3] = $data['stylist_name'];
-                $result[4] = $data['bodytype'];
-                $result[5] = $data['bodyshape'];
-                $result[6] = $data['height'];
-                $result[7] = $data['age'];
-                $result[8] = $data['skintype'];
-                $result[9] = $data['styletype'];
-                $result[10] = $data['clubprice'];
-                $result[11] = $data['ethicprice'];
-                $result[12] = $data['denimprice'];
-                $result[13] = $data['footwearprice'];
-                $result[14] = $data['stylist_code'];
-                $result[15] = $data['stylist_image'];
-            }
-            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => "http://istyleyou.in/istyleyouapi/profileimage/" . $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15]));
-        } else {
-            $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
-        }
-    } else {
-        if ($login[0] == $email && $login[1] != $linkedid && (($login[2] == $gender) || ($login[3] == $gender_id)))   {
-            $data = array('result' => 'fail', 'message' => 'Incorrect Linked id');
-        } elseif ($login[0] == $email && $login[1] == $linkedid && (($login[2] == $gender) || ($login[3] == $gender_id)))   {
-            $data = array('result' => 'fail', 'message' => 'Incorrect gender for the registered email');
-        } else {
-            $data = array('result' => 'fail', 'message' => 'The given Email is not registered yet ');
-        }
-    }
-    return $data;
-}
 
 mysql_close($conn);
 /* JSON Response */
