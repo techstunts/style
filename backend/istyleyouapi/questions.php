@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
 
     if (isset($_REQUEST['stylist_code']) && !empty($_REQUEST['stylist_code'])) {
         $stylist_code = $_REQUEST['stylist_code'];
-        $query = "SELECT id as stylist_id FROM stylists WHERE code='$stylist_code'";
+        $query = "SELECT id as stylist_id FROM stylists WHERE code='$stylist_code' and status_id='1'";
         $res = mysql_query($query);
         $row = mysql_num_rows($res);
         if ($row == 1) {
