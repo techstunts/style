@@ -108,23 +108,23 @@ class RecommendationController extends Controller
             $message_pushed = 0;
             for ($j = 0; $j < $entity_count; $j++) {
                 $recommends_arr[$query_count] = array(
-                    'user_id' => $client_data[$i]->id,
+                    'user_id' => $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->id : $client_data[$i]->id,
                     'recommendation_type_id' => $recommendation_type_id,
                     'created_by' => $stylist_id,
                     'entity_type_id' => $entity_type_id,
                     'entity_id' => $entity_data[$j]->id,
-                    'style_request_id' => $client_data[$i]->id ? $client_data[$i]->id : 0,
+                    'style_request_id' => $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->id : 0,
                     'created_at' => date("Y-m-d H:i:s")
                 );
                 $query_count++;
                 if ($message_pushed == 0) {
                     $params = array(
                         "pushtype" => "android",
-                        "registration_id" => $client_data[$i]->regId,
+                        "registration_id" => $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->regId : $client_data[$i]->regId,
                         "message" => $stylish_data->name . " has sent you " . $entity_type_data->name,
                         "message_summery" => $stylish_data->name . " has sent you " . $entity_type_data->name,
-                        "look_url" => env('IMAGE_BASE_URL') . $entity_data[$j]->image,
-                        "url" => env('IMAGE_BASE_URL') . $entity_data[$j]->image,
+                        "look_url" => $entity_type_id == EntityTypeId::PRODUCT ? $entity_data[$j]->image : env('IMAGE_BASE_URL') . $entity_data[$j]->image,
+                        "url" => $entity_type_id == EntityTypeId::PRODUCT ? $entity_data[$j]->image : env('IMAGE_BASE_URL') . $entity_data[$j]->image,
                         'app_section' => $app_section,
                     );
                     $push->sendMessage($params);
