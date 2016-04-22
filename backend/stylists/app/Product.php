@@ -47,7 +47,7 @@ class Product extends Model
     }
 
     public function stylist(){
-        return $this->belongsTo('App\Stylist', 'stylish_id');
+        return $this->belongsTo('App\Stylist', 'stylist_id');
     }
 
 }

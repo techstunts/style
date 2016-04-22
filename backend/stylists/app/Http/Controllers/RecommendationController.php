@@ -60,15 +60,15 @@ class RecommendationController extends Controller
         }
 
 
-        $stylish_data = Auth::user();
-        if (empty($stylish_data)) {
+        $stylist_data = Auth::user();
+        if (empty($stylist_data)) {
             return response()->json(
                 array(
                     'error_message' => 'Invalid stylist'
                 ), 200
             );
         }
-        $stylist_id = $stylish_data->id;
+        $stylist_id = $stylist_data->id;
 
         $client_data = '';
         if ($recommendation_type_id == RecommendationType::STYLE_REQUEST) {
@@ -121,8 +121,8 @@ class RecommendationController extends Controller
                     $params = array(
                         "pushtype" => "android",
                         "registration_id" => $client_data[$i]->regId,
-                        "message" => $stylish_data->name . " has sent you " . $entity_type_data->name,
-                        "message_summery" => $stylish_data->name . " has sent you " . $entity_type_data->name,
+                        "message" => $stylist_data->name . " has sent you " . $entity_type_data->name,
+                        "message_summery" => $stylist_data->name . " has sent you " . $entity_type_data->name,
                         "look_url" => env('IMAGE_BASE_URL') . $entity_data[$j]->image,
                         "url" => env('IMAGE_BASE_URL') . $entity_data[$j]->image,
                         'app_section' => $app_section,

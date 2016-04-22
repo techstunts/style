@@ -181,7 +181,7 @@ class ProductController extends Controller
             //$product->primary_color_id = $primary_color ? $primary_color->id : "";
             $product->primary_color_id = $primary_color->id;
             $product->secondary_color_id = $secondary_color ? $secondary_color->id : "";
-            $product->stylish_id = $request->user()->stylish_id != '' ? $request->user()->stylish_id : '';
+            $product->stylist_id = $request->user()->id != '' ? $request->user()->id : '';
 
             if ($product->save()) {
                 $product_url = url('product/view/' . $product->id);

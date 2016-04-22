@@ -524,7 +524,7 @@ div.resource_view tr.row a.product_link {
     pointer-events: none;
     cursor: default;
 }
-.loader{
+img.loader{
     display:none;
     width: 30px;
 }

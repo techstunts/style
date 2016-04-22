@@ -74,12 +74,12 @@
                                         </a>
                                     @endforeach
                                     <br />
-                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->id)}}">View all</a>
-                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->id.'&status_id=1')}}">Active</a>
-                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->id.'&status_id=6')}}">Approved</a>
-                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->id.'&status_id=5')}}">Submitted</a>
-                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->id.'&status_id=4')}}">In Progress</a>
-                                    <a class="product_link" href="{{url('look/list?stylish_id=' . $stylist->id.'&status_id=7')}}">Rejected</a>
+                                    <a class="product_link" href="{{url('look/list?stylist_id=' . $stylist->id)}}">View all</a>
+                                    <a class="product_link" href="{{url('look/list?stylist_id=' . $stylist->id.'&status_id=1')}}">Active</a>
+                                    <a class="product_link" href="{{url('look/list?stylist_id=' . $stylist->id.'&status_id=6')}}">Approved</a>
+                                    <a class="product_link" href="{{url('look/list?stylist_id=' . $stylist->id.'&status_id=5')}}">Submitted</a>
+                                    <a class="product_link" href="{{url('look/list?stylist_id=' . $stylist->id.'&status_id=4')}}">In Progress</a>
+                                    <a class="product_link" href="{{url('look/list?stylist_id=' . $stylist->id.'&status_id=7')}}">Rejected</a>
                                 @else
                                     None
                                 @endif

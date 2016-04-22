@@ -13,9 +13,11 @@
     </span>
 </div>
 
-<div class="trigger_lightbox">
-    Create Look
-</div>
+@if(env('LOOK_CREATION_ENABLED'))
+    <div class="trigger_lightbox">
+        Create Look
+    </div>
+@endif
 
 <div id="lightbox">
     <p id="close">Close</p>
