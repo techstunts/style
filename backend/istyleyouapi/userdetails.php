@@ -208,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         //$data = array('result' => 0, 'message' => 'User already registered with the given email');
         $sql = "Update clients set regId='$regId' where email='$email'";
         mysql_query($sql);
-        $data = FacebookLogin($email, $facebookid, $gender, $gender_id, $name);
+        $data = FacebookLogin($email, $facebookid, $gender, $gender_id);
     } else {
         $stylishid = getStylistId();
         $sql = "INSERT INTO clients(facebook_id,google_id,linked_id,email,password,gender,gender_id,stylist_id,name,image,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,regId,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$gender_id','$stylishid','$name','$image','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$regId','$user_signup_ip_address', '$current_date_time')";
@@ -240,7 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
                 $result[13] = $data['footwearprice'];
 
             }
-            $data = FacebookLogin($email, $facebookid, $gender, $gender_id, $name);
+            $data = FacebookLogin($email, $facebookid, $gender, $gender_id);
             $signup_successful = true;
         } else {
             $data = array('result' => 'fail', 'message' => 'Error in adding user');
@@ -287,7 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         //$data = array('result' => 'fail', 'message' => 'User already registered with the given email');
         $sql = "Update clients set regId='$regId' where email='$email'";
         mysql_query($sql);
-        $data = GoogleLogin($email, $googleid, $gender, $gender_id, $name);
+        $data = GoogleLogin($email, $googleid, $gender, $gender_id);
     } else {
         $stylishid = getStylistId();
         $sql = "INSERT INTO clients(facebook_id,google_id,linked_id,email,password,gender,gender_id,stylist_id,name,image,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,regId,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$gender_id','$stylishid','$name','$image','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$regId','$user_signup_ip_address', '$current_date_time')";
@@ -316,7 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
                 $result[13] = $data['footwearprice'];
 
             }
-            $data = GoogleLogin($email, $googleid, $gender, $name);
+            $data = GoogleLogin($email, $googleid, $gender, $gender_id);
             $signup_successful = true;
         } else {
             $data = array('result' => 'fail', 'message' => 'Error in adding user');
@@ -428,7 +428,7 @@ function login($email, $password, $gender, $gender_id, $stylishid)
     return $data;
 }
 
-function FacebookLogin($email, $facebookid, $gender, $gender_id, $name)
+function FacebookLogin($email, $facebookid, $gender, $gender_id)
 {
     $sql = "SELECT email,facebook_id,gender,gender_id from clients where email='$email'";
     $res = mysql_query($sql);
@@ -500,7 +500,7 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id, $name)
     return $data;
 }
 
-function GoogleLogin($email, $googleid, $gender, $gender_id, $name)
+function GoogleLogin($email, $googleid, $gender, $gender_id)
 {
     $sql = "SELECT email,google_id,gender,gender_id from clients where email='$email'";
     $res = mysql_query($sql);
