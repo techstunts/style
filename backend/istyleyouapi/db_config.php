@@ -1,7 +1,7 @@
 <?php
 $dbhost = 'localhost';
 $dbuser = 'root';
-$dbpass = '';
+$dbpass = 'mysqlpass';
 $dbname = 'istylrwd_istyleyou';
 $conn = mysql_connect($dbhost, $dbuser, $dbpass);
 if(! $conn )

@@ -25,6 +25,7 @@
                         <thead>
                         <tr>
                             <th><input name="select_all" value="1" type="checkbox"></th>
+                            <th class="font-size-table-header">Id</th>
                             <th class="font-size-table-header">Name</th>
                             <th class="font-size-table-header">Profile Image</th>
                             <th class="font-size-table-header">Age</th>
@@ -41,6 +42,7 @@
                         @foreach($clients as $client)
                             <tr>
 
+                                <td>{{$client->id}}</td>
                                 <td>{{$client->id}}</td>
                                 <td class="table-font-size"><a
                                             href="{{url("client/view/".$client->id)}}"> {{$client->name}}</a>
