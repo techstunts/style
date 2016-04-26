@@ -118,6 +118,15 @@ document.addEventListener('DOMContentLoaded', function() {
 							}\
 						}\
 					}\
+					else if(merchant == \'stalkbuylove\'){\
+						prod_name = document.querySelectorAll(\'h1[itemprop=\"name\"]\')[0].innerText;\
+						prod_price = document.getElementsByClassName(\'regular-price\')[0].getElementsByClassName(\'price\')[0].innerText.slice(1).replace(\',\', \'\');\
+						prod_desc = document.getElementsByClassName(\'info_block_content\')[0].innerText;\
+						category = document.getElementsByClassName(\'breadcrumbs\')[0].getElementsByTagName(\'ul\')[0].getElementsByTagName(\'li\')[2].querySelectorAll(\'span[itemprop=\"title\"]\')[0].innerText;\
+						brand = "Stalk Buy Love";\
+						gender = "Women";\
+						img_links.push(document.getElementsByClassName(\'slick-active\')[0].getElementsByClassName(\'my_image_box\')[0].src)\
+					}\
 					if(gender == "Women" || gender == "Girls"){\
 						gender = "Female";\
 					}\
