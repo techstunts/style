@@ -88,8 +88,8 @@ class ProductController extends Controller
             $product = new Product();
             $product->agency_id	= $m_product->agency_id;
             $product->merchant_id	= $m_product->merchant_id;
-            $product->product_name	= $m_product->m_product_name;
-            $product->product_price	= $m_product->m_product_price;
+            $product->name	= $m_product->m_product_name;
+            $product->price	= $m_product->m_product_price;
             $product->product_link	= $m_product->m_product_url;
             $product->upload_image	= $m_product->product_image_url;
             $product->image_name	= $m_product->product_image_url;
