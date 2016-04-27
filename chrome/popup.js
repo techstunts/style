@@ -138,6 +138,15 @@ document.addEventListener('DOMContentLoaded', function() {
 						img_links.push(document.getElementsByClassName(\'zoomWindow\')[0].style.backgroundImage.slice(5).replace(\'")\', \'\'));\
 						sku_id = document.getElementsByClassName(\'sku_wrapper\')[0].getElementsByTagName(\'span\')[0].innerText;\
 					}\
+					else if(merchant == \'fabindia\'){\
+						prod_name = document.getElementsByTagName(\'h1\')[0].innerText;\
+						prod_price = document.getElementsByClassName(\'price\')[0].innerText.slice(4, -3).replace(\',\', \'\');\
+						prod_desc = document.getElementsByClassName(\'product-view\')[0].getElementsByTagName(\'p\')[4].innerText;\
+						colors.push(document.getElementsByClassName(\'super-attribute-select\')[0].getElementsByTagName(\'option\')[1].innerText);\
+						brand = "Fabindia";\
+						img_links.push(document.getElementsByClassName(\'MagicZoomPlus\')[0].getElementsByTagName(\'img\')[0].src);\
+						sku_id = document.getElementsByClassName(\'product-view\')[0].getElementsByTagName(\'p\')[0].innerText.slice(5);\
+					}\
 					if(gender == "Women" || gender == "Girls"){\
 						gender = "Female";\
 					}\
