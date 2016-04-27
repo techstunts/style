@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				{
 					code: '\
 					var merchant = window.location.hostname.split(\'.\')[1];\
-					var prod_name = \'\', prod_price = \'\', prod_desc = \'\', a_tags = \'\', category = \'\', brand = \'\', gender = \'\', img_links = [], colors = [];\
+					var prod_name = \'\', prod_price = \'\', prod_desc = \'\', a_tags = \'\', category = \'\', brand = \'\', gender = \'\', img_links = [], colors = [], sku_id = \'\';\
 					\
 					if(merchant == \'koovs\'){\
 						prod_name = document.getElementById(\'prod_name_hide\').value;\
@@ -127,13 +127,24 @@ document.addEventListener('DOMContentLoaded', function() {
 						gender = "Women";\
 						img_links.push(document.getElementsByClassName(\'slick-active\')[0].getElementsByClassName(\'my_image_box\')[0].src)\
 					}\
+					else if(merchant == \'violetstreet\'){\
+						prod_name = document.querySelectorAll(\'h1[itemprop=\"name\"]\')[0].innerText;\
+						prod_price = document.getElementsByClassName(\'price\')[0].getElementsByTagName(\'span\')[0].innerText.slice(1).replace(\',\', \'\');\
+						prod_desc = document.getElementById(\'tab-description\').innerText;\
+						category = document.getElementsByClassName(\'woocommerce-breadcrumb\')[0].getElementsByTagName(\'a\')[2].innerText;\
+						colors.push(document.getElementsByClassName(\'shop_attributes\')[0].getElementsByTagName(\'tr\')[0].getElementsByTagName(\'p\')[0].innerText);\
+						brand = "Voilet Street";\
+						gender = "Women";\
+						img_links.push(document.getElementsByClassName(\'zoomWindow\')[0].style.backgroundImage.slice(5).replace(\'")\', \'\'));\
+						sku_id = document.getElementsByClassName(\'sku_wrapper\')[0].getElementsByTagName(\'span\')[0].innerText;\
+					}\
 					if(gender == "Women" || gender == "Girls"){\
 						gender = "Female";\
 					}\
 					else if(gender == "Men" || gender == "Boys"){\
 						gender = "Male";\
 					}\
-					var r = [prod_name, prod_price, prod_desc, img_links, merchant, category, brand, gender, colors];\
+					var r = [prod_name, prod_price, prod_desc, img_links, merchant, category, brand, gender, colors, sku_id];\
 					r;\
 					'
 				},
@@ -148,7 +159,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					document.getElementById('category').value = results[0][5].trim().capitalizeFirstLetter();
 					document.getElementById('brand').value = results[0][6].capitalizeFirstLetter();
 					document.getElementById('gender').value = results[0][7];
-					
+					document.getElementById('sku_id').value = results[0][9];
+
 					for(cnt in results[0][8]){
 						var input = document.getElementById('color' + (parseInt(cnt) + 1));
 						if(input != null){
