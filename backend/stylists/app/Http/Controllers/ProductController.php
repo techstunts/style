@@ -25,8 +25,8 @@ use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id','primary_color_id'];
-    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders','colors'];
+    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id'];
+    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders', 'colors'];
 
     /**
      * Display a listing of the resource.
@@ -82,7 +82,7 @@ class ProductController extends Controller
             EntityType::CLIENT
         );
 
-        $view_properties['entity_type_names']= array(
+        $view_properties['entity_type_names'] = array(
             EntityTypeName::CLIENT
         );
         $view_properties['nav_tab_index'] = '0';
@@ -91,7 +91,7 @@ class ProductController extends Controller
         $genders_list[0] = new Gender();
 
         $products =
-            Product::with('category','primary_color','secondary_color')
+            Product::with('category', 'primary_color', 'secondary_color')
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->orderBy('id', 'desc')
@@ -136,9 +136,9 @@ class ProductController extends Controller
         ]);
 
         $error_messages = "";
-        if($validator->fails()){
-            foreach($validator->errors()->getMessages() as $v){
-                $error_messages .=  $v[0] . "<br/>";
+        if ($validator->fails()) {
+            foreach ($validator->errors()->getMessages() as $v) {
+                $error_messages .= $v[0] . "<br/>";
             }
             echo json_encode([false, $error_messages]);
             return;
@@ -153,19 +153,24 @@ class ProductController extends Controller
 
         $required_values = array('merchant', 'category', 'gender', 'primary_color');
         $error_messages = "";
-        foreach($required_values as $v){
-            if(!isset($$v) || !$$v->id) {
-                $error_messages .=  strtoupper(substr($v, 0, 1)) . substr($v, 1) . " not found. Please contact admin.<br/>";
+        foreach ($required_values as $v) {
+            if (!isset($$v) || !$$v->id) {
+                $error_messages .= strtoupper(substr($v, 0, 1)) . substr($v, 1) . " not found. Please contact admin.<br/>";
             }
         }
-        if($error_messages != ""){
+        if ($error_messages != "") {
             echo json_encode([false, $error_messages]);
             return;
         }
 
+        $sku_id = $request->input('sku_id');
+
         if ($merchant && $request->input('name') && $category && $gender && $primary_color) {
-            $product = new Product();
+            $product = !empty($sku_id) ? Product::firstOrCreate(['sku_id' => $sku_id]) : new Product();
+
+
             $product->merchant_id = $merchant->id;
+            $product->sku_id = $sku_id;
             $product->name = htmlentities($request->input('name'));
             $product->description = htmlentities($request->input('desc'));
             $product->price = str_replace(array(",", " "), "", $request->input('price'));
@@ -189,8 +194,7 @@ class ProductController extends Controller
             } else {
                 echo json_encode([false, "Product save failed. Please contact admin."]);
             }
-        }
-        else{
+        } else {
             echo json_encode([false, "Product required info missing. Please contact admin."]);
         }
     }
@@ -237,14 +241,14 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function getEdit($id)
     {
         $product = Product::find($this->resource_id);
         $view_properties = null;
-        if($product){
+        if ($product) {
             $lookup = new Lookup();
             $category_obj = new Category();
 
@@ -256,8 +260,7 @@ class ProductController extends Controller
             $view_properties['primary_color_id'] = intval($product->primary_color_id);
             $view_properties['colors'] = $lookup->type('color')->get();
             $view_properties['price'] = $product->price;
-        }
-        else{
+        } else {
             return view('404', array('title' => 'Product not found'));
         }
 
@@ -279,14 +282,14 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function postUpdate(Request $request)
     {
         $validator = $this->validator($request->all());
-        if($validator->fails()){
+        if ($validator->fails()) {
             return redirect('product/edit/' . $this->resource_id)
                 ->withErrors($validator)
                 ->withInput();
@@ -307,15 +310,15 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function postBulkUpdate(Request $request)
     {
-        $bulk_update_fields = ['category_id','gender_id','primary_color_id'];
+        $bulk_update_fields = ['category_id', 'gender_id', 'primary_color_id'];
 
-        if(!Auth::user()->hasRole('admin')){
+        if (!Auth::user()->hasRole('admin')) {
             return Redirect::back()
                 ->withErrors(['You do not have permission to do bulk update'])
                 ->withInput();
@@ -336,8 +339,8 @@ class ProductController extends Controller
 
         $update_clauses = [];
 
-        foreach($bulk_update_fields as $filter){
-            if($request->input($filter) != ""){
+        foreach ($bulk_update_fields as $filter) {
+            if ($request->input($filter) != "") {
                 $valdation_clauses['old_' . $filter] = 'required|integer';
                 $valdation_clauses[$filter] = 'required|integer|min:1';
 
@@ -350,12 +353,12 @@ class ProductController extends Controller
                 unset($this->where_conditions['products.' . $filter]);
             }*/
 
-            if($request->input('old_' .  $filter) != ""){
+            if ($request->input('old_' . $filter) != "") {
                 $this->where_conditions['products.' . $filter] = $request->input('old_' . $filter);
             }
         }
 
-        if(count($update_clauses) == 0){
+        if (count($update_clauses) == 0) {
             return Redirect::back()
                 ->withErrors(['Please specify at least 1 field to bulk update'])
                 ->withInput();
@@ -363,8 +366,8 @@ class ProductController extends Controller
 
         $validator = Validator::make($request->all(), $valdation_clauses);
 
-        if($validator->fails()){
-            foreach($validator->errors()->getMessages() as $k  => $v){
+        if ($validator->fails()) {
+            foreach ($validator->errors()->getMessages() as $k => $v) {
                 echo $v[0] . "<br/>";
             }
 
@@ -387,13 +390,13 @@ class ProductController extends Controller
 
     public function getUpdateSelected(Request $request)
     {
-        $bulk_update_fields = ['category_id','gender_id','primary_color_id'];
-        if(!Auth::user()->hasRole('admin')){
+        $bulk_update_fields = ['category_id', 'gender_id', 'primary_color_id'];
+        if (!Auth::user()->hasRole('admin')) {
             return Redirect::back()
                 ->withErrors(['You do not have permission to do bulk update'])
                 ->withInput();
         }
-        if(is_null($request->product_id)){
+        if (is_null($request->product_id)) {
             return Redirect::back()
                 ->withErrors(['Please select at least one item to be updated'])
                 ->withInput();
@@ -403,8 +406,8 @@ class ProductController extends Controller
 
         $update_clauses = [];
 
-        foreach($bulk_update_fields as $filter){
-            if($request->input($filter) != ""){
+        foreach ($bulk_update_fields as $filter) {
+            if ($request->input($filter) != "") {
                 $valdation_clauses[$filter] = 'required|integer|min:1';
 
                 unset($this->where_conditions['products.' . $filter]);
@@ -412,7 +415,7 @@ class ProductController extends Controller
                 $update_clauses[$filter] = $request->input($filter);
             }
         }
-        if(count($update_clauses) == 0){
+        if (count($update_clauses) == 0) {
             return Redirect::back()
                 ->withErrors(['Please specify at least one field to selected update'])
                 ->withInput();
@@ -420,8 +423,8 @@ class ProductController extends Controller
 
         $validator = Validator::make($request->all(), $valdation_clauses);
 
-        if($validator->fails()){
-            foreach($validator->errors()->getMessages() as $k  => $v){
+        if ($validator->fails()) {
+            foreach ($validator->errors()->getMessages() as $k => $v) {
                 echo $v[0] . "<br/>";
             }
 
