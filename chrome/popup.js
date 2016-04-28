@@ -138,6 +138,17 @@ document.addEventListener('DOMContentLoaded', function() {
 						img_links.push(document.getElementsByClassName(\'zoomWindow\')[0].style.backgroundImage.slice(5).replace(\'")\', \'\'));\
 						sku_id = document.getElementsByClassName(\'sku_wrapper\')[0].getElementsByTagName(\'span\')[0].innerText;\
 					}\
+					else if(merchant == \'trendin\'){\
+						prod_name = document.querySelectorAll(\'h2[itemprop=\"name\"]\')[0].innerText;\
+						prod_price = document.getElementsByClassName(\'price_block\')[0].getElementsByTagName(\'h1\')[0].innerText.replace(\',\', \'\');\
+						prod_desc = document.querySelectorAll(\'div[itemprop=\"description\"]\')[0].getElementsByTagName(\'p\')[0].innerText;\
+						gender = document.getElementsByClassName(\'breadcrumb\')[0].getElementsByTagName(\'a\')[1].title;\
+						category = document.getElementsByClassName(\'breadcrumb\')[0].getElementsByTagName(\'a\')[2].title;\
+						colors.push(document.getElementById(\'prod_feature\').innerText.match(/Color\\s*:\\s*(.*)/)[1]);\
+						brand = document.getElementById(\'prod_feature\').innerText.match(/Brand\\s*:\\s*(.*)/)[1];\
+						img_links.push(document.getElementById(\'product_image\').getElementsByTagName(\'img\')[0].src);\
+						sku_id = document.getElementById(\'sleProductID\').value;\
+					}\
 					else if(merchant == \'fabindia\'){\
 						prod_name = document.getElementsByTagName(\'h1\')[0].innerText;\
 						prod_price = document.getElementsByClassName(\'price\')[0].innerText.slice(4, -3).replace(\',\', \'\');\
