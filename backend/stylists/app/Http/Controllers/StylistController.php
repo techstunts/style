@@ -145,7 +145,7 @@ class StylistController extends Controller
 
             if ($request->file('image')->isValid()) {
                 $destinationPath = public_path() . '/' . env('STYLIST_IMAGE_PATH');
-                $filename = $request->file('image')->getClientOriginalName();
+                $filename = preg_replace('/[^a-zA-Z0-9_.]/', '_', $request->file('image')->getClientOriginalName());
                 $request->file('image')->move($destinationPath, $filename);
                 $stylist->image = 'stylish/' . $filename;
                 $stylist->save();
