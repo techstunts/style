@@ -8,6 +8,7 @@ use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\RecommendationType;
 use App\Models\Enums\Status as LookupStatus;
+use App\Models\Enums\StylistStatus;
 use App\Models\Lookups\Lookup;
 use App\Product;
 use App\Models\Lookups\Status;
@@ -338,7 +339,8 @@ class LookController extends Controller
 
     public function getCollage(Request $request)
     {
-        if(!Auth::user()->hasRole('admin')){
+        if(!Auth::user()->hasRole('admin') &&
+            !in_array(Auth::user()->status_id, [StylistStatus::Active, StylistStatus::Inactive])){
             return redirect('look/list')->withError('Collage access denied!');
         }
         return view('look/collage');

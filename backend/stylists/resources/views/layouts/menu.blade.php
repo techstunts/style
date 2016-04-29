@@ -19,7 +19,8 @@
                         @endif
                         <li><a href="/product/list">Products</a></li>
                         <li><a href="/look/list">Looks</a></li>
-                        @if(Auth::user()->hasRole('admin'))
+                        @if(Auth::user()->hasRole('admin') ||
+                            in_array(Auth::user()->status_id, [\App\Models\Enums\StylistStatus::Active, \App\Models\Enums\StylistStatus::Inactive]))
                             <li><a href="/look/collage">Collage</a></li>
                         @endif
                         <li><a href="/collection/list">Collections</a></li>
