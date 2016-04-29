@@ -129,8 +129,8 @@ class ProductController extends Controller
             'desc' => 'required|min:5',
             'merchant' => 'required|min:4',
             'brand' => 'required|min:2',
-            'category' => 'required|min:2',
-            'gender' => 'required|min:4',
+            'category' => 'min:2',
+            'gender' => 'min:4',
             'color1' => 'required|min:3',
             'color2' => 'min:3',
         ]);
@@ -144,14 +144,14 @@ class ProductController extends Controller
             return;
         }
 
-        $merchant = Merchant::where('name', $request->input('merchant'))->first();
-        $brand = Brand::where(['name' => $request->input('brand')])->first();
+        $merchant = Merchant::firstOrCreate(['name' => $request->input('merchant')]);
+        $brand = Brand::firstOrCreate(['name' => $request->input('brand')]);
         $category = Category::where(['name' => $request->input('category')])->first();
         $gender = Gender::where(['name' => $request->input('gender')])->first();
         $primary_color = Color::where(['name' => $request->input('color1')])->first();
         $secondary_color = Color::where(['name' => $request->input('color2')])->first();
 
-        $required_values = array('merchant', 'category', 'gender', 'primary_color');
+        $required_values = array('merchant');
         $error_messages = "";
         foreach ($required_values as $v) {
             if (!isset($$v) || !$$v->id) {
@@ -165,26 +165,22 @@ class ProductController extends Controller
 
         $sku_id = $request->input('sku_id');
 
-        if ($merchant && $request->input('name') && $category && $gender && $primary_color) {
+        if ($merchant && $request->input('name')) {
             $product = !empty($sku_id) ? Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant->id]) : new Product();
 
 
             $product->merchant_id = $merchant->id;
-            $product->sku_id = $sku_id;
+            $product->sku_id = !empty($sku_id) ? $sku_id : 'isy_'.time();;
             $product->name = htmlentities($request->input('name'));
             $product->description = htmlentities($request->input('desc'));
             $product->price = str_replace(array(",", " "), "", $request->input('price'));
             $product->product_link = $request->input('url');
             $product->upload_image = $request->input('image0');
             $product->image_name = $request->input('image0');
-            $product->brand_id = isset($brand) && $brand->id ? $brand->id : BrandEnum::Others;
-            //$product->brand_id = $brand->id;
-            //$product->category_id = $category ? $category->id : CategoryEnum::Others;
-            $product->category_id = $category->id;
-            //$product->gender_id = $gender ? $gender->id : "";
-            $product->gender_id = $gender->id;
-            //$product->primary_color_id = $primary_color ? $primary_color->id : "";
-            $product->primary_color_id = $primary_color->id;
+            $product->brand_id = $brand->id;
+            $product->category_id = $category ? $category->id : CategoryEnum::Others;
+            $product->gender_id = $request->input('gender') ? $gender->id : GenderEnum::NA;
+            $product->primary_color_id = $primary_color ? $primary_color->id : ColorEnum::Multi;
             $product->secondary_color_id = $secondary_color ? $secondary_color->id : "";
             $product->stylist_id = $request->user()->id != '' ? $request->user()->id : '';
 
