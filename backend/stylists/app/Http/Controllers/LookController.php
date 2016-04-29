@@ -8,6 +8,7 @@ use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\RecommendationType;
 use App\Models\Enums\Status as LookupStatus;
+use App\Models\Enums\StylistStatus;
 use App\Models\Lookups\Lookup;
 use App\Product;
 use App\Models\Lookups\Status;
@@ -21,7 +22,7 @@ use Validator;
 
 class LookController extends Controller
 {
-    protected $filter_ids = ['stylish_id', 'status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id'];
+    protected $filter_ids = ['stylist_id', 'status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id'];
     protected $filters = ['stylists', 'statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups'];
 
     protected $status_rules;
@@ -96,13 +97,13 @@ class LookController extends Controller
         unset($paginate_qs['page']);
         $this->initStatusRules();
 
-        if(Auth::user()->hasRole('admin')){
+        $user_data = Auth::user();
+        if($user_data->hasRole('admin')){
             $view_properties['user_role'] = 'admin';
         }
-        else if(Auth::user()->hasRole('stylist')){
+        else if($user_data->hasRole('stylist')){
             $view_properties['user_role'] = 'stylist';
         }
-
 
         $remove_deleted_looks = '1=1';
         if(!$request->has('status_id') || $request->input('status_id') != LookupStatus::Deleted){
@@ -121,10 +122,11 @@ class LookController extends Controller
         $view_properties['looks'] = $looks;
         $view_properties['status_rules'] = $this->status_rules;
         $view_properties['app_sections'] = AppSections::all();
-        $view_properties['stylish_id'] = Auth::user()->stylish_id;
+        $view_properties['logged_in_stylist_id'] = $user_data->id;
         $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         $view_properties['entity_type_to_send'] = EntityType::LOOK;
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
+        $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
         return view('look.list', $view_properties);
     }
 
@@ -190,7 +192,7 @@ class LookController extends Controller
         $look->age_group_id = isset($request->age_group_id) && $request->age_group_id != '' ? $request->age_group_id : '';
         $look->occasion_id = isset($request->occasion_id) && $request->occasion_id != '' ? $request->occasion_id : '';
         $look->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
-        $look->stylish_id = $request->user()->stylish_id != '' ? $request->user()->stylish_id : '';
+        $look->stylist_id = $request->user()->id != '' ? $request->user()->id : '';
         $look->created_at = date('Y-m-d H:i:s');
         $look->status_id = LookupStatus::Submitted;
 
@@ -249,12 +251,11 @@ class LookController extends Controller
             $status = Status::find($look->status_id);
             $view_properties = array('look' => $look, 'products' => $products, 'stylist' => $look->stylist,
                 'status' => $status);
-            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $look->stylish_id == Auth::user()->stylish_id;
+            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $look->stylist_id == Auth::user()->id;
         }
         else{
             return view('404', array('title' => 'Look not found'));
         }
-
         return view('look.view', $view_properties);
     }
 
@@ -338,7 +339,8 @@ class LookController extends Controller
 
     public function getCollage(Request $request)
     {
-        if(!Auth::user()->hasRole('admin')){
+        if(!Auth::user()->hasRole('admin') &&
+            !in_array(Auth::user()->status_id, [StylistStatus::Active, StylistStatus::Inactive])){
             return redirect('look/list')->withError('Collage access denied!');
         }
         return view('look/collage');

@@ -3,18 +3,25 @@
 @section('title', 'Stylist list')
 
 @section('content')
-    <div id="contentCntr">
-        <div class="section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-2">
-                        <form action="/stylist/list" method="get">
-                            <select onchange="this.form.submit()" name="designation_id" id="designation">
-                                <option value="" disabled>Select Designations</option>
-                                <option value="1">Stylist</option>
-                                <option value="3">Team</option>
-                            </select>
-                        </form>
+<div id="contentCntr">
+    <div class="section">
+        <div class="container">
+            {!! $stylists->render() !!}
+
+            <div class="clear"></div>
+            <ol class="selectable" >
+            @foreach($stylists as $stylist)
+                <li class="ui-state-default" stylist_id="{{$stylist->id}}">
+                    <div class="items">
+                        <div class="name text"><a href="{{url('stylist/view/' . $stylist->id)}}">{{$stylist->name}}</a></div>
+                        <div class="image"><img src="{!! strpos($stylist->image, "stylish") === 0 ? asset('images/' . $stylist->image) : $stylist->image !!}" /></div>
+                        <div class="extra text">
+                            <span>{{$status_list[$stylist->status_id]->name}}</span>
+                            <span>{{$stylist->expertise->name}}</span>
+                            <span>{{$stylist->age}}</span>
+                            <span>{{$stylist->gender->name}}</span>
+                        </div>
+                        <div class="name text">{{$stylist->description}}</div>
                     </div>
 
                     <div class="col-md-2">

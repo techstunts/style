@@ -6,7 +6,7 @@
     <div id="contentCntr">
         <div class="container">
 
-            <input type="hidden" id="stylish_id" value="{{Auth::user()->stylish_id}}"/>
+            <input type="hidden" id="stylist_id" value="{{$stylist_id_to_chat}}"/>
             <input type="hidden" id="api_origin" value="{{env('API_ORIGIN')}}"/>
 
             <!--
@@ -15,8 +15,19 @@
 
             <div id="profile" ng-controller="Profile" ng-class="{'loading': loading}">
                 <img ng-src="@{{stylist.icon || photo}}">
-                <h1 ng-bind="stylist.stylish_name"></h1>
+                <h1 ng-bind="stylist.name"></h1>
                 <h2 ng-bind="stylist.designation"></h2>
+                @if($is_admin)
+                    <form action="">
+                        <select name="stylist_id" onchange="this.form.submit()">
+                            <option>Switch stylist</option>
+                            @foreach($stylists as $stylist)
+                                <option value="{{$stylist->id}}">{{$stylist->name}}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                @endif
+
             </div>
 
 
@@ -43,8 +54,8 @@
 
                 <div class="list">
                     <div class="contact" ng-repeat="contact in current" ng-click="open($index)" ng-class="{'active': contact.active, 'online': contact.online, 'unread': contact.unread.length}">
-                        <img ng-src="@{{contact.userimage}}">
-                        <a ng-bind="contact.username"></a>
+                        <img ng-src="@{{contact.image}}">
+                        <a ng-bind="contact.name"></a>
                         <span class="on">online</span>
                         <span class="off">offline</span>
                         <b ng-bind="contact.unread.length"></b>
@@ -71,8 +82,8 @@
             <div id="chat" ng-controller="Chat" ng-class="{'loading': loading}">
 
                 <div class="contact" ng-class="{'online': client.online}">
-                    <img ng-src="@{{client.userimage || photo}}">
-                    <a ng-bind="client.username"></a>
+                    <img ng-src="@{{client.image || photo}}">
+                    <a ng-bind="client.name"></a>
                     <span class="on">online</span>
                     <span class="off">offline</span>
                 </div>

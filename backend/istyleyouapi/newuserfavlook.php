@@ -28,9 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
         }
         for ($i = 0; $i < $row; $i++) {
             $id = $ids[$i][0];
-            $stylish = "select s.stylish_id, s.name as stylish_name, s.image as stylish_image
+            $stylish = "select s.id as stylist_id, s.name as stylish_name, s.image as stylish_image
                         from stylists s
-                        join looks l on s.stylish_id = l.stylish_id
+                        join looks l on s.id = l.stylist_id
                         where l.id='$id'
 				        and l.status_id = 1
                         ";

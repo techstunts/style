@@ -64,22 +64,22 @@ class StyleRequestsController extends Controller
         unset($paginate_qs['page']);
 
         if(Auth::user()->hasRole('stylist')){
-                $this->where_raw = $this->where_raw. " AND (stylists.stylish_id = ".Auth::user()->stylish_id.")";
+                $this->where_raw = $this->where_raw. " AND (stylists.id = ".Auth::user()->id.")";
         }
         $this->where_raw = $this->where_raw. " AND recommendations.style_request_id is NULL";
 
         $requests  = DB::table($this->base_table)
-                ->join('userdetails', $this->base_table . '.user_id', '=', 'userdetails.user_id')
-                ->join('stylists', 'userdetails.stylish_id', '=', 'stylists.stylish_id')
+                ->join('clients', $this->base_table . '.user_id', '=', 'clients.id')
+                ->join('stylists', 'clients.stylist_id', '=', 'stylists.id')
                 ->join('lu_budget', 'lu_budget.id', '=', $this->base_table.'.budget_id')
                 ->join('lu_occasion', 'lu_occasion.id', '=', $this->base_table.'.occasion_id')
                 ->join('lu_entity_type', 'lu_entity_type.id', '=', $this->base_table.'.entity_type_id')
                 ->leftJoin('recommendations', $this->base_table.'.id', '=', 'recommendations.style_request_id')
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
-                ->select($this->base_table.'.id as request_id', 'userdetails.user_id', 'userdetails.username',
-                    'stylists.stylish_id', 'stylists.name as stylist_name', 'userdetails.age', 'userdetails.bodytype',
-                    'userdetails.user_id', 'lu_budget.name as budget', 'lu_occasion.name as occasion',
+                ->select($this->base_table.'.id as request_id', 'clients.id as user_id', 'clients.name',
+                    'stylists.id as stylist_id', 'stylists.name as stylist_name', 'clients.age', 'clients.bodytype',
+                    'lu_budget.name as budget', 'lu_occasion.name as occasion',
                     $this->base_table.'.created_at', $this->base_table.'.description', 'lu_entity_type.name as request_type'
                 )
                 ->orderBy($this->base_table.'.id', 'desc')
@@ -89,6 +89,7 @@ class StyleRequestsController extends Controller
         $view_properties['app_sections'] = AppSections::all();
         $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         $view_properties['recommendation_type_id'] = RecommendationType::STYLE_REQUEST;
+        $view_properties['show_price_filters'] = 'YES';
 
         return view('requests.list', $view_properties);
     }

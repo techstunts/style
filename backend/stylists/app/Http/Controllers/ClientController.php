@@ -6,7 +6,9 @@ use App\Client;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\RecommendationType;
+use App\Models\Enums\StylistStatus;
 use App\Models\Lookups\AppSections;
+use App\Stylist;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -14,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
-    protected $filter_ids = ['stylish_id',];
+    protected $filter_ids = ['stylist_id',];
     protected $filters = ['stylists',];
     /**
      * Display a listing of the resource.
@@ -35,7 +37,7 @@ class ClientController extends Controller
     }
 
     public function getList(Request $request){
-        $this->base_table = 'userdetails';
+        $this->base_table = 'clients';
         $this->initWhereConditions($request);
         $this->initFilters();
 
@@ -63,16 +65,17 @@ class ClientController extends Controller
 
         $authWhereClauses = $this->authWhereClauses();
         $clients =
-            Client::with('stylist')
+            Client::with('stylist', 'genders')
                 ->where($this->where_conditions)
                 ->whereRaw($authWhereClauses)
-                ->orderBy('user_id', 'desc')
+                ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
         $view_properties['clients'] = $clients;
         $view_properties['app_sections'] = AppSections::all();
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
+        $view_properties['show_price_filters'] = 'YES';
         return view('client.list', $view_properties);
     }
 
@@ -85,7 +88,8 @@ class ClientController extends Controller
     public function getView()
     {
         $authWhereClauses = $this->authWhereClauses();
-        $client = Client::whereRaw($authWhereClauses)
+        $client = Client::with('genders')
+                ->whereRaw($authWhereClauses)
                 ->find($this->resource_id);
         if($client){
             $view_properties = array('client' => $client);
@@ -100,17 +104,33 @@ class ClientController extends Controller
     protected function authWhereClauses(){
         $where = "1=1";
         if(!Auth::user()->hasRole('admin')){
-            $where .= " AND stylish_id = " . Auth::user()->stylish_id;
+            $where .= " AND stylist_id = " . Auth::user()->id;
         }
         return $where;
     }
 
     public function getChat(Request $request)
     {
-        if(!Auth::user()->hasRole('admin')){
+        $authorised_stylists_for_chat = [36, 49, 66];
+        $stylists=[];
+        $stylist_id_to_chat = Auth::user()->id;
+
+        $is_admin = Auth::user()->hasRole('admin');
+        if(!$is_admin && !in_array($stylist_id_to_chat, $authorised_stylists_for_chat)){
             return redirect('look/list')->withError('Chat access denied!');
         }
-        return view('client/chat');
+
+        if($is_admin){
+            $stylists = Stylist::whereIn('status_id',[StylistStatus::Active, StylistStatus::Inactive])
+                ->orderBy('name')->get();
+            $stylist_id_to_chat = $request->input('stylist_id') ? $request->input('stylist_id') : $stylist_id_to_chat;
+        }
+
+        $view_properties['stylist_id_to_chat'] = $stylist_id_to_chat;
+        $view_properties['stylists'] = $stylists;
+        $view_properties['is_admin'] = $is_admin;
+
+        return view('client/chat', $view_properties);
     }
 
 }

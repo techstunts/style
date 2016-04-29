@@ -81,7 +81,6 @@
         </div>
 
         @include('look.create')
-        <input type="hidden" value="{{$stylish_id}}" id="stylish_id">
         @include('push.popup')
     </div>
 </div>

@@ -11,7 +11,6 @@
                         @include('common.occasion.select')
                         @include('common.budget.select')
                         @include('common.daterange')
-                        <input type="hidden" name="stylist_id" value="Filter"/>
                         <input type="submit" name="filter" value="Filter"/>
                         <a href="{{url('requests/list')}}" class="clearall">Clear All</a>
                     </form>
@@ -46,7 +45,7 @@
                             <tr>
                                 <td>{{$request->user_id}}</td>
                                 <td class="table-font-size"> {{$request->request_id}} </td>
-                                <td class="table-font-size">{{$request->username}}</td>
+                                <td class="table-font-size">{{$request->name}}</td>
                                 <td class="table-font-size">{{$request->age}}</td>
                                 <td class="table-font-size"> {{$request->bodytype}} </td>
                                 <td class="table-font-size"> {{$request->occasion}} </td>

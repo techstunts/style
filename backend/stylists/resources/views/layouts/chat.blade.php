@@ -23,7 +23,7 @@
 
 </head>
 
-<body ng-controller="Main" ng-init="init({{Auth::user()->stylish_id}})" notifications>
+<body ng-controller="Main" ng-init="init({{$stylist_id_to_chat}})" notifications>
 
     <header>
         @include('layouts.menu')

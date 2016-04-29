@@ -7,10 +7,10 @@
         <div class="container">
 
             <link rel="stylesheet" href="{{asset("collage/styles/app.css")}}">
-            <script src="{{asset("collage/vendor/jquery-1.10.2.js")}}"></script>
             <script src="{{asset("collage/scripts/stylize.js")}}"></script>
             <script src="{{asset("collage/scripts/preload.js")}}"></script>
             <script src="{{asset("collage/scripts/template.js")}}"></script>
+            <script src="{{asset("collage/scripts/notification.js")}}"></script>
             <script src="{{asset("collage/scripts/history.js")}}"></script>
             <script src="{{asset("collage/scripts/publish.js")}}"></script>
             <script src="{{asset("collage/scripts/filters.js")}}"></script>
@@ -21,18 +21,19 @@
             <script src="{{asset("collage/scripts/drag.js")}}"></script>
 
             <div class="collage">
-                <input type="hidden" id="stylish_id" value="{{Auth::user()->stylish_id}}"/>
+                <input type="hidden" id="stylist_id" value="{{Auth::user()->id}}"/>
                 <input type="hidden" id="api_origin" value="{{env('API_ORIGIN')}}"/>
                 <!--
                     Tools
                 -->
 
                 <div id="tools">
-                    <a class="icon publish">Publish</a>
+                    <a class="icon publish disabled">Publish</a>
                     <menu class="card">
                         <b>Template</b>
                         <a class="icon open">Open</a>
                         <a class="icon new">New</a>
+                        <a class="icon clear disabled">Clear</a>
                     </menu>
                     <menu class="card history">
                         <b>History</b>
@@ -54,24 +55,43 @@
                 </div>
 
 
-
                 <!--
                     Section
                 -->
-
                 <div id="section">
-                    <div id="dialog">
+
+                    <!-- Loader -->
+
+                    <div id="loader" class="dialog">
                         <div class="title"></div>
                         <i class="icon close"></i>
-                        <ul></ul>
+                        <ul class="content"></ul>
                         <div class="pager">
                             <a class="icon prev disabled"></a>
                             <a class="current">1</a>
                             <a class="icon next disabled"></a>
                         </div>
                     </div>
+
+                    <!-- Publish -->
+
+                    <div id="publish" class="dialog">
+                        <div class="title">Publish</div>
+                        <i class="icon close"></i>
+                        <form class="content">
+                            <input type="text" name="name" placeholder="Name">
+                            <input type="text" name="price" disabled value="2595$">
+                            <textarea name="description" placeholder="Description"></textarea>
+                            <input type="submit" value="Publish">
+                            <span class="error"></span>
+                        </form>
+                    </div>
+
+                    <!-- Canvas -->
+
                     <canvas id="canvas"></canvas>
                 </div>
+
 
 
 
@@ -105,7 +125,10 @@
 
                     <!-- Result -->
 
-                    <div id="result"></div>
+                    <div id="result">
+                        <menu></menu>
+                        <article></article>
+                    </div>
 
 
 
@@ -124,18 +147,17 @@
                 <!--
                     Info
                 -->
-
                 <div id="info">
-                    <div class="image"></div>
+                    <div class="image"><img></div>
                     <div class="text">
-                        <p>Boohoo Textured Roll Neck Crop Top</p>
-                        <span>Brand</span>
-                        <b>18$</b><i>Merchant</i>
+                        <p></p>
+                        <span></span>
+                        <b></b><i></i>
                         <a target="_blank">View details</a>
+                        <p class="description"></p>
                     </div>
                     <div class="icon close"></div>
                 </div>
-
 
 
                 <!--
@@ -143,6 +165,12 @@
                 -->
 
                 <div id="drag"></div>
+
+                <!--
+                    Notification
+                -->
+
+                <div id="notification"></div>
 
             </div>
 

@@ -45,8 +45,8 @@
                         <tr class="row">
                             <td class="head">Stylist</td>
                             <td class="content">
-                                @if(isset($stylist) && isset($stylist->stylish_id))
-                                    <a href="{{url('stylist/view/' . $stylist->stylish_id)}}" title="{{$stylist->name}}" target="stylist_win">
+                                @if(isset($stylist) && isset($stylist->id))
+                                    <a href="{{url('stylist/view/' . $stylist->id)}}" title="{{$stylist->name}}" target="stylist_win">
                                         <img class="icon" src="{{asset('images/' . $stylist->image)}}"/>
                                         {{$stylist->name}}
                                     </a>
