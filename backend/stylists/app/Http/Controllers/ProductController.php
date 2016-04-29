@@ -166,7 +166,7 @@ class ProductController extends Controller
         $sku_id = $request->input('sku_id');
 
         if ($merchant && $request->input('name') && $category && $gender && $primary_color) {
-            $product = !empty($sku_id) ? Product::firstOrCreate(['sku_id' => $sku_id]) : new Product();
+            $product = !empty($sku_id) ? Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant->id]) : new Product();
 
 
             $product->merchant_id = $merchant->id;
