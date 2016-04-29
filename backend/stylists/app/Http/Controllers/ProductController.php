@@ -131,7 +131,7 @@ class ProductController extends Controller
             'brand' => 'required|min:2',
             'category' => 'min:2',
             'gender' => 'min:4',
-            'color1' => 'required|min:3',
+            'color1' => 'min:3',
             'color2' => 'min:3',
         ]);
 
