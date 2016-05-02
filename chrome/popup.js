@@ -130,7 +130,9 @@ document.addEventListener('DOMContentLoaded', function() {
 					else if(merchant == \'violetstreet\'){\
 						prod_name = document.querySelectorAll(\'h1[itemprop=\"name\"]\')[0].innerText;\
 						prod_price = document.getElementsByClassName(\'price\')[0].getElementsByTagName(\'span\')[0].innerText.slice(1).replace(\',\', \'\');\
-						prod_desc = document.getElementById(\'tab-description\').innerText;\
+						if(document.getElementById(\'tab-description\')){\
+							prod_desc = document.getElementById(\'tab-description\').innerText;\
+						}\
 						category = document.getElementsByClassName(\'woocommerce-breadcrumb\')[0].getElementsByTagName(\'a\')[2].innerText;\
 						colors.push(document.getElementsByClassName(\'shop_attributes\')[0].getElementsByTagName(\'tr\')[0].getElementsByTagName(\'p\')[0].innerText);\
 						brand = "Voilet Street";\
@@ -246,7 +248,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				 var e = textarea_elements[i];
 				 kvpairs.push(encodeURIComponent(e.name) + "=" + encodeURIComponent(e.value));
 			}
-
 			var queryString = kvpairs.join("&");
 
 		  	var url = "http://stylist.istyleyou.in/product/create";

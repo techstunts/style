@@ -11,6 +11,7 @@ use App\Models\Enums\Brand as BrandEnum;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\RecommendationType;
+use App\Models\Enums\Stylist;
 use App\Models\Lookups\AppSections;
 use App\Merchant;
 use App\Models\Lookups\Lookup;
@@ -145,7 +146,7 @@ class ProductController extends Controller
         }
 
         $merchant = Merchant::where('name', $request->input('merchant'))->first();
-        $brand = Brand::where(['name' => $request->input('brand')])->first();
+        $brand = Brand::firstOrCreate(['name' => $request->input('brand')]);
         $category = Category::where(['name' => $request->input('category')])->first();
         $gender = Gender::where(['name' => $request->input('gender')])->first();
         $primary_color = Color::where(['name' => $request->input('color1')])->first();
@@ -163,11 +164,9 @@ class ProductController extends Controller
             return;
         }
 
-        $sku_id = $request->input('sku_id');
-
         if ($merchant && $request->input('name') && $category && $gender && $primary_color) {
-            $product = !empty($sku_id) ? Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant->id]) : new Product();
-
+            $sku_id = !empty($request->input('sku_id')) ? $request->input('sku_id') : 'isy_' . (intval(time()) + rand(0, 10000));
+            $product = Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant->id]);
 
             $product->merchant_id = $merchant->id;
             $product->sku_id = $sku_id;
@@ -177,16 +176,12 @@ class ProductController extends Controller
             $product->product_link = $request->input('url');
             $product->upload_image = $request->input('image0');
             $product->image_name = $request->input('image0');
-            $product->brand_id = isset($brand) && $brand->id ? $brand->id : BrandEnum::Others;
-            //$product->brand_id = $brand->id;
-            //$product->category_id = $category ? $category->id : CategoryEnum::Others;
+            $product->brand_id = $brand->id;
             $product->category_id = $category->id;
-            //$product->gender_id = $gender ? $gender->id : "";
             $product->gender_id = $gender->id;
-            //$product->primary_color_id = $primary_color ? $primary_color->id : "";
-            $product->primary_color_id = $primary_color->id;
+            $product->primary_color_id = $gender->id;
             $product->secondary_color_id = $secondary_color ? $secondary_color->id : "";
-            $product->stylist_id = $request->user()->id != '' ? $request->user()->id : '';
+            $product->stylist_id = $request->user()->id;
 
             if ($product->save()) {
                 $product_url = url('product/view/' . $product->id);
