@@ -252,7 +252,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		  	var url = "http://stylist.istyleyou.in/product/create";
 	  		//var url = "http://stylist.istyleyou.loc/product/create";
-	  		//var url = "http://api.istyleyou.loc/product/create";
 			url = url + "?" + queryString;
 			//alert(url);
 			console.log(url);

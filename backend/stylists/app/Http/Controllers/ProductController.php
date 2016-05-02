@@ -165,9 +165,8 @@ class ProductController extends Controller
         }
 
         if ($merchant && $request->input('name') && $category && $gender && $primary_color) {
-            $sku_id = !empty($request->input('sku_id')) ? $request->input('sku_id') : 'isy_'.(intval(time()) + rand(0,10000));
-            $product = !empty($sku_id) ? Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant->id]) : new Product();
-
+            $sku_id = !empty($request->input('sku_id')) ? $request->input('sku_id') : 'isy_' . (intval(time()) + rand(0, 10000));
+            $product = Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant->id]);
 
             $product->merchant_id = $merchant->id;
             $product->sku_id = $sku_id;
@@ -178,11 +177,11 @@ class ProductController extends Controller
             $product->upload_image = $request->input('image0');
             $product->image_name = $request->input('image0');
             $product->brand_id = $brand->id;
-            $product->category_id = $category ? $category->id : CategoryEnum::Others;
-            $product->gender_id = $request->input('gender') ? $gender->id : GenderEnum::NA;
-            $product->primary_color_id = $primary_color ? $primary_color->id : ColorEnum::Multi;
+            $product->category_id = $category->id;
+            $product->gender_id = $gender->id;
+            $product->primary_color_id = $gender->id;
             $product->secondary_color_id = $secondary_color ? $secondary_color->id : "";
-            $product->stylist_id = $request->user()->id != '' ? $request->user()->id : Stylist::Scraper;
+            $product->stylist_id = $request->user()->id;
 
             if ($product->save()) {
                 $product_url = url('product/view/' . $product->id);
