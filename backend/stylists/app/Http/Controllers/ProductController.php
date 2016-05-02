@@ -179,7 +179,7 @@ class ProductController extends Controller
             $product->brand_id = $brand->id;
             $product->category_id = $category->id;
             $product->gender_id = $gender->id;
-            $product->primary_color_id = $gender->id;
+            $product->primary_color_id = $primary_color->id;
             $product->secondary_color_id = $secondary_color ? $secondary_color->id : "";
             $product->stylist_id = $request->user()->id;
 
