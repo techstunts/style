@@ -158,10 +158,11 @@ document.addEventListener('DOMContentLoaded', function() {
 						img_links.push(document.getElementsByClassName(\'MagicZoomPlus\')[0].getElementsByTagName(\'img\')[0].src);\
 						sku_id = document.getElementsByClassName(\'product-view\')[0].getElementsByTagName(\'p\')[0].innerText.slice(5);\
 					}\
-					if(gender == "Women" || gender == "Girls"){\
+					gender = gender.toLowerCase();\
+					if(gender == "women" || gender == "girls"){\
 						gender = "Female";\
 					}\
-					else if(gender == "Men" || gender == "Boys"){\
+					else if(gender == "men" || gender == "boys"){\
 						gender = "Male";\
 					}\
 					var r = [prod_name, prod_price, prod_desc, img_links, merchant, category, brand, gender, colors, sku_id];\
