@@ -152,7 +152,7 @@ class ProductController extends Controller
         $primary_color = Color::where(['name' => $request->input('color1')])->first();
         $secondary_color = Color::where(['name' => $request->input('color2')])->first();
 
-        $required_values = array('merchant');
+        $required_values = array('merchant', 'category', 'gender', 'primary_color');
         $error_messages = "";
         foreach ($required_values as $v) {
             if (!isset($$v) || !$$v->id) {
@@ -164,7 +164,7 @@ class ProductController extends Controller
             return;
         }
 
-        if ($merchant && $request->input('name')) {
+        if ($merchant && $request->input('name') && $category && $gender && $primary_color) {
             $sku_id = !empty($request->input('sku_id')) ? $request->input('sku_id') : 'isy_'.(intval(time()) + rand(0,10000));
             $product = !empty($sku_id) ? Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant->id]) : new Product();
 
