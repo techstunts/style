@@ -98,12 +98,16 @@ class RecommendationController extends Controller
         for ($i = 0; $i < $clients_count; $i++) {
             if($recommendation_type_id == RecommendationType::STYLE_REQUEST ){
                 if(!isset($stylists[$client_data[$i]->client->stylist_id])){
-                    $stylists[$client_data[$i]->client->stylist_id] = Stylist::find($client_data[$i]->client->stylist_id)->first();
+                    $stylists[$client_data[$i]->client->stylist_id] = Stylist::find($client_data[$i]->client->stylist_id);
                 }
                 $stylist_data = $stylists[$client_data[$i]->client->stylist_id];
             }
             else{
                 $stylist_data = $client_data[$i]->stylist;
+            }
+            
+            if(!$stylist_data){
+                $stylist_data = Auth::user();
             }
 
             $message_pushed = 0;
