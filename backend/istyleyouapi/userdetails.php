@@ -269,7 +269,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $facebookid = "";
     $password = "";
     $linkedid = "";
-    $image = $_REQUEST['image'];
+    $image = $_REQUEST['userimage'];
     $checkuser = "SELECT * from clients where email='$email'";
     $result1 = mysql_query($checkuser);
 
