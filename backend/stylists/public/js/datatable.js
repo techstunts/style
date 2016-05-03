@@ -78,7 +78,7 @@ $(document).ready(function () {
     $('.dataTables_length').hide();
     $('.dataTables_paginate').hide();
     $('.dataTables_info').hide();
-    $('#frm-datatable #datatable_wrapper .dataTables_length select option').val('25').trigger('change');
+    $('#frm-datatable #datatable_wrapper .dataTables_length select option').val('100').trigger('change');
     // Handle click on checkbox
     $('#datatable tbody').on('click', 'input[type="checkbox"]', function (e) {
         var $row = $(this).closest('tr');

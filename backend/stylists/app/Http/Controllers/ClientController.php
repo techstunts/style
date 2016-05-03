@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
+    protected $records_per_page=100;
     protected $filter_ids = ['stylist_id',];
     protected $filters = ['stylists',];
     /**
@@ -56,6 +57,12 @@ class ClientController extends Controller
         );
         $view_properties['nav_tab_index'] = '0';
 
+        $view_properties['search'] = $request->input('search');
+        $view_properties['exact_word'] = $request->input('exact_word');
+
+        $view_properties['from_date'] = $request->input('from_date');
+        $view_properties['to_date'] = $request->input('to_date');
+
         foreach($this->filter_ids as $filter){
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
@@ -67,6 +74,7 @@ class ClientController extends Controller
         $clients =
             Client::with('stylist', 'genders')
                 ->where($this->where_conditions)
+                ->whereRaw($this->where_raw)
                 ->whereRaw($authWhereClauses)
                 ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
