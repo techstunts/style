@@ -60,11 +60,11 @@ abstract class Controller extends BaseController
         }
 
         if($request->input('from_date') != ""){
-            $where_raw[] = "({$this->base_table}.created_at >= '" . date("Y-m-d",strtotime($request->input('from_date'))) . "')";
+            $where_raw[] = "({$this->base_table}.created_at >= '" . date("Y-m-d 00:00:00",strtotime($request->input('from_date'))) . "')";
         }
 
         if($request->input('to_date') != ""){
-            $where_raw[] = "({$this->base_table}.created_at <= '" . date("Y-m-d",strtotime($request->input('to_date'))) . "')";
+            $where_raw[] = "({$this->base_table}.created_at <= '" . date("Y-m-d 23:59:59",strtotime($request->input('to_date'))) . "')";
         }
 
         if($request->input('min_price') != ""){
