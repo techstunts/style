@@ -15,6 +15,7 @@
                     <input type="submit" name="filter" value="Filter"/>
                 </form>
                 <form method="post" action="" class="approve">
+                    <input type="hidden" name="product_ids" value=""/>
                     <input type="submit" name="approve_all" value="Approve All"/>
                     <input type="submit" name="reject_all" value="Reject All"/>
                     {!! csrf_field() !!}
@@ -50,3 +51,5 @@
 </div>
 
 @endsection
+
+<script src="/js/merchantProducts.js"></script>
