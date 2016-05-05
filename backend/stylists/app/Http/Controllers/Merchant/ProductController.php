@@ -11,6 +11,7 @@ use App\Error;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class ProductController extends Controller
@@ -42,13 +43,13 @@ class ProductController extends Controller
         $selected_products = !empty($request->input('product_ids')) ? explode(',', $request->input('product_ids')) : '';
         $errorObj = new Error();
 
-        if(!empty($selected_products)) {
+        if (!empty($selected_products)) {
             if ($request->input('approve_all')) {
                 $response = $this->approveAllProducts($selected_products);
             } elseif ($request->input('reject_all')) {
                 $response = $this->rejectAllProducts($selected_products);
             }
-        }else{
+        } else {
             $response = $errorObj->error(405);
         }
 
@@ -120,11 +121,11 @@ class ProductController extends Controller
                 $productObj->discounted_price = $m_product->m_discounted_price;
 
                 if (!$productObj->save()) {
-                    $error_message = $error_message. "Error updating product {$m_product->m_product_name}". PHP_EOL;
-                }else{
+                    $error_message = $error_message . "Error updating product {$m_product->m_product_name}" . PHP_EOL;
+                } else {
                     array_push($merchant_product_ids, $m_product->id);
                 }
-            } else{
+            } else {
                 array_push($merchant_product_ids, $m_product->id);
                 $items_to_be_inserted[$m_product->m_product_sku] = $this->createProductArray($m_product);
             }
@@ -136,15 +137,16 @@ class ProductController extends Controller
             }
         }
 
-        if(!MerchantProduct::whereIn('id', $merchant_product_ids)->delete()){
-            $error_message = $error_message. "Error removing product(s) from merchant_products";
+        if (!MerchantProduct::whereIn('id', $merchant_product_ids)->delete()) {
+            $error_message = $error_message . "Error removing product(s) from merchant_products";
         }
-        if(!empty($error_message)){
+        if (!empty($error_message)) {
             return $errorObj->error(402, true, $error_message);
         }
         return $errorObj->error(403);
 
     }
+
     public function createProductArray($m_product)
     {
         $array = array(
@@ -171,22 +173,32 @@ class ProductController extends Controller
 
     public function rejectAllProducts($selected_products)
     {
-        $merchant_products =
-            MerchantProduct::
-            where($this->where_conditions)
-                ->simplePaginate($this->records_per_page);
+        $errorObj = new Error();
+        $merchant_products = MerchantProduct::whereIn('id', $selected_products)->get();
+        if (empty($merchant_products)) {
+            return $errorObj->error(401);
+        }
+        $reject_product = array();
+        $count = 0;
 
         foreach ($merchant_products as $m_product) {
-            $rejected_product = new MerchantProductRejected();
-            $rejected_product->agency_id = $m_product->agency_id;
-            $rejected_product->merchant_id = $m_product->merchant_id;
-            $rejected_product->m_product_id = $m_product->m_product_id;
-            $rejected_product->m_product_sku = $m_product->m_product_sku;
-            if ($rejected_product->save()) {
-                $m_product->is_moderated = true;
-                $m_product->save();
-            }
+            $reject_product[$count++] = array(
+                'merchant_id' => $m_product->merchant_id,
+                'm_product_sku' => $m_product->m_product_sku,
+                'stylist_id' => Auth::user()->id,
+                'created_at' => date("Y-m-d H:i:s"),
+            );
         }
+
+        if (!MerchantProductRejected::insert($reject_product)) {
+            return $errorObj->error(406);
+        }
+
+        if (!MerchantProduct::whereIn('id', $selected_products)->delete()) {
+            return $errorObj->error(407);
+        }
+
+        return $errorObj->error(408);
     }
 
 }

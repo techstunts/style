@@ -26,6 +26,15 @@ class Error
             case 405:
                 $message = 'No product selected';
                 break;
+            case 406:
+                $message = 'Error in creating data in rejected products table';
+                break;
+            case 407:
+                $message = 'Error deleting data from Merchant Products';
+                break;
+            case 408:
+                $message = 'Products rejected';
+                break;
 
         }
 
