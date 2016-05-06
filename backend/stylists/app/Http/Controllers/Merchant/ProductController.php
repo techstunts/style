@@ -8,7 +8,9 @@ use App\MerchantProductRejected;
 use App\Product;
 use App\Models\Enums\Stylist;
 use App\Error;
+use App\Success;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -41,19 +43,33 @@ class ProductController extends Controller
         $this->initWhereConditions($request);
 
         $selected_products = !empty($request->input('product_ids')) ? explode(',', $request->input('product_ids')) : '';
-        $errorObj = new Error();
+        $redirect = Redirect::to($request->fullUrl());
 
-        if (!empty($selected_products)) {
-            if ($request->input('approve_all')) {
-                $response = $this->approveAllProducts($selected_products);
-            } elseif ($request->input('reject_all')) {
-                $response = $this->rejectAllProducts($selected_products);
+        DB::beginTransaction();
+        try {
+            if (!empty($selected_products)) {
+                if ($request->input('approve_all')) {
+                    $response = $this->approveAllProducts($selected_products);
+                } elseif ($request->input('reject_all')) {
+                    $response = $this->rejectAllProducts($selected_products);
+                }
             }
-        } else {
-            $response = $errorObj->error(405);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $redirect->with('errorMsg', 'Some error(s) found, please contact admin');
         }
 
-        return Redirect::to($request->fullUrl())->with('message', $response);
+        if (!empty($response['success'])) {
+            DB::commit();
+            return $redirect->with('successMsg', $response['success']['message']);
+        }
+        elseif (!empty($response['error'])) {
+            DB::rollback();
+            return $redirect->with('errorMsg', $response['error']['message']);
+        }
+        else {
+            return $redirect;
+        }
     }
 
     public function getList(Request $request)
@@ -133,7 +149,7 @@ class ProductController extends Controller
 
         if (!empty($items_to_be_inserted)) {
             if (!Product::insert(array_values($items_to_be_inserted))) {
-                return $errorObj->error(404, true, $error_message);
+                return $errorObj->error(404, false, $error_message);
             }
         }
 
@@ -141,9 +157,10 @@ class ProductController extends Controller
             $error_message = $error_message . "Error removing product(s) from merchant_products";
         }
         if (!empty($error_message)) {
-            return $errorObj->error(402, true, $error_message);
+            return $errorObj->error(402, false, $error_message);
         }
-        return $errorObj->error(403);
+        $successObj = new Success();
+        return $successObj->success(400, false);
 
     }
 
@@ -157,8 +174,8 @@ class ProductController extends Controller
             'price' => $m_product->m_product_price,
             'discounted_price' => $m_product->m_discounted_price,
             'product_link' => $m_product->m_product_url,
-            'upload_image' => $m_product->m_product_image_small_url,
-            'image_name' => $m_product->m_product_image_small_url,
+            'upload_image' => $m_product->m_product_image_large_url,
+            'image_name' => $m_product->m_product_image_large_url,
             'style_tip' => $m_product->m_style_tip,
             'care_information' => $m_product->m_care_information,
             'brand_id' => $m_product->brand_id,
@@ -167,6 +184,7 @@ class ProductController extends Controller
             'primary_color_id' => $m_product->m_color,
             'sold_out' => $m_product->m_sold_out,
             'stylist_id' => Stylist::Scraper,
+            'approved_by' => Auth::user()->id,
         );
         return $array;
     }
@@ -176,7 +194,7 @@ class ProductController extends Controller
         $errorObj = new Error();
         $merchant_products = MerchantProduct::whereIn('id', $selected_products)->get();
         if (empty($merchant_products)) {
-            return $errorObj->error(401);
+            return $errorObj->error(401, false);
         }
         $reject_product = array();
         $count = 0;
@@ -191,14 +209,15 @@ class ProductController extends Controller
         }
 
         if (!MerchantProductRejected::insert($reject_product)) {
-            return $errorObj->error(406);
+            return $errorObj->error(406, false);
         }
 
         if (!MerchantProduct::whereIn('id', $selected_products)->delete()) {
-            return $errorObj->error(407);
+            return $errorObj->error(407, false);
         }
 
-        return $errorObj->error(408);
+        $successObj = new Success();
+        return $successObj->success(400, false);
     }
 
 }

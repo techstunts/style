@@ -1,23 +1,33 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-    var approveAll = document.getElementsByClassName('approve')[0].getElementsByTagName('input')[1];
-    var rejectAll = document.getElementsByClassName('approve')[0].getElementsByTagName('input')[2];
+    var approveAll = document.getElementsByClassName('approve')[0].querySelectorAll('input[name="approve_all"]')[0];
+    var rejectAll = document.getElementsByClassName('approve')[0].querySelectorAll('input[name="reject_all"]')[0];
     var selectedIds = [];
-    approveAll.addEventListener('click', function(e) {
+    approveAll.addEventListener('click', setSelectedProductIds);
+    rejectAll.addEventListener('click',  setSelectedProductIds);
+
+    function setSelectedProductIds(e){
         selectedIds = getSelectedProductIds();
-        if (selectedIds.length <= 0){
-            alert('Select items to approve');
-            e.preventDefault(e);
+        if (selectedIds.length == 0){
+            if(confirm("Do you want to " + this.getAttribute('title') +" all listed items ")){
+                selectedIds = getAllProductIds();
+            }else{
+                e.preventDefault();
+            }
         }
-        document.getElementsByClassName('approve')[0].getElementsByTagName('input')[0].value = selectedIds;
-    });
-    rejectAll.addEventListener('click', function(e) {
-        selectedIds = getSelectedProductIds();
-        if (selectedIds.length <= 0){
-            alert('Select items to reject');
-            e.preventDefault(e);
+        document.getElementsByClassName('approve')[0].querySelectorAll('input[name="product_ids"]')[0].value = selectedIds;
+    }
+
+    function getAllProductIds(){
+        var allItems = document.getElementById('selectable').getElementsByTagName('li');
+        var length = allItems.length;
+        var allProductIds = '';
+        var i = 0;
+        var result = [];
+        for (i = 0; i < length; i++){
+            result[i] = allItems[i].getAttribute('product_id');
         }
-        document.getElementsByClassName('approve')[0].getElementsByTagName('input')[0].value = selectedIds;
-    });
+        return result;
+    }
 
     function getSelectedProductIds(){
         var allItems = document.getElementById('selectable').getElementsByTagName('li');
