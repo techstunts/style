@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 selectedIds = getAllProductIds();
             }else{
                 e.preventDefault();
+                return false;
             }
         }
         document.getElementsByClassName('approve')[0].querySelectorAll('input[name="product_ids"]')[0].value = selectedIds;

@@ -56,7 +56,7 @@ class ProductController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollback();
-            return $redirect->with('errorMsg', 'Some error(s) found, please contact admin');
+            return $redirect->with('errorMsg', 'Some exception(s) found, please contact admin');
         }
 
         if (!empty($response['success'])) {
@@ -68,7 +68,7 @@ class ProductController extends Controller
             return $redirect->with('errorMsg', $response['error']['message']);
         }
         else {
-            return $redirect;
+            return $redirect->with('errorMsg', 'Some error(s) found, please contact admin');
         }
     }
 
@@ -112,10 +112,10 @@ class ProductController extends Controller
         $merchant_products = MerchantProduct::whereIn('id', $selected_products)->get();
         $query = '';
         foreach ($merchant_products as $merchant_product) {
-            $query = $query . " OR (sku_id = {$merchant_product->m_product_sku} AND merchant_id = {$merchant_product->merchant_id})";
+            $query = $query . " OR (sku_id = '{$merchant_product->m_product_sku}' AND merchant_id = '{$merchant_product->merchant_id}')";
         }
         $product = Product::whereRaw(substr($query, 4))
-            ->select('id', 'merchant_id', 'sku_id', 'price', 'discounted_price', 'sold_out')
+            ->select('id', 'merchant_id', 'sku_id', 'price', 'discounted_price', 'in_stock')
             ->get();
 
         $product_sku_ids = array();
@@ -133,7 +133,7 @@ class ProductController extends Controller
                 $productObj = $product_sku_ids[$m_product->m_product_sku];
 
                 $productObj->price = $m_product->m_product_price;
-                $productObj->sold_out = $m_product->m_sold_out;
+                $productObj->in_stock = $m_product->m_in_stock;
                 $productObj->discounted_price = $m_product->m_discounted_price;
 
                 if (!$productObj->save()) {
@@ -182,7 +182,7 @@ class ProductController extends Controller
             'category_id' => $m_product->category_id,
             'gender_id' => $m_product->gender_id,
             'primary_color_id' => $m_product->m_color,
-            'sold_out' => $m_product->m_sold_out,
+            'in_stock' => $m_product->m_in_stock,
             'stylist_id' => Stylist::Scraper,
             'approved_by' => Auth::user()->id,
         );
