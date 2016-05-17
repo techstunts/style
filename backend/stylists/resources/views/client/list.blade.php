@@ -10,6 +10,8 @@
                     @if(Auth::user()->hasRole('admin'))
                         <form method="get" action="">
                             @include('stylist.select')
+                            @include('common.search')
+                            @include('common.daterange')
                             <input type="submit" name="filter" value="Filter"/>
                             <a href="{{url('client/list')}}" class="clearall">Clear All</a>
                         </form>
