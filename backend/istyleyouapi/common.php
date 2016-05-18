@@ -75,8 +75,8 @@ function getLooksDetails($looks, $userid){
             $stylist_details['stylist_id'] = $looks[$i]['stylist_id'];
             $stylist_details['stylish_name'] = $looks[$i]['stylist_name'];
             $stylist_details['stylist_name'] = $looks[$i]['stylist_name'];
-            $stylist_details['stylish_image'] = 'http://istyleyou.in/backend/'.$looks[$i]['stylist_image'];
-            $stylist_details['stylist_image'] = 'http://istyleyou.in/backend/'.$looks[$i]['stylist_image'];
+            $stylist_details['stylish_image'] = $looks[$i]['stylist_image'];
+            $stylist_details['stylist_image'] = $looks[$i]['stylist_image'];
         }
 
         $current_look_details =
