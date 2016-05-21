@@ -1,14 +1,11 @@
 <?php
 
 namespace App\Models\Scraper;
-
-
 use Illuminate\Database\Eloquent\Model;
 
-class Products extends Model
+class ErroneousProducts extends Model
 {
-    protected $table = 'products';
-    protected $primaryKey = 'id';
+    protected $table = 'erroneous_products';
     protected $connection = 'mysqlScraper';
     public $timestamps = false;
 }
