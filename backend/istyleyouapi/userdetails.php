@@ -171,12 +171,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
 } elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && isset($_REQUEST['facebook_id']) && !empty($_REQUEST['facebook_id']) && isset($_REQUEST['username']) && !empty($_REQUEST['username'])) {
     $email = $_REQUEST['email'];
     $facebookid = $_REQUEST['facebook_id'];
-    $gender = strtolower($_REQUEST['gender']);
-    $gender_id = '';
-    if (!empty($gender)) {
+    $gender = "";
+    $gender_id = 3;
+    if (!empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
+        $gender = strtolower($_REQUEST['gender']);
         $gender_id = $gender == 'male' ? 2 : 1;
-    }else{
-        $gender_id = 3;
     }
     $name = $_REQUEST['username'];
     $regId = $_REQUEST['regid'];
@@ -256,11 +255,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $email = $_REQUEST['email'];
     $googleid = $_REQUEST['google_id'];
     $gender = strtolower($_REQUEST['gender']);
-    $gender_id = '';
-    if (!empty($gender)) {
+    $gender = "";
+    $gender_id = 3;
+    if (!empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
+        $gender = strtolower($_REQUEST['gender']);
         $gender_id = $gender == 'male' ? 2 : 1;
-    }else{
-        $gender_id = 3;
     }
     $name = $_REQUEST['username'];
     $bodytype = "";
@@ -493,10 +492,8 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id)
                 $result[14] = $data['stylist_code'];
                 $result[15] = $data['stylist_image'];
                 $result[16] = $data['stylist_id'];
-                $result[17] = $data['gender'];
-                $result[18] = $data['gender_id'];
             }
-            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "gender" => $result[17], "gender_id" => $result[18], "username" => $result[1], "image" => $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16]));
+            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16]));
         } else {
             $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
         }
@@ -570,10 +567,8 @@ function GoogleLogin($email, $googleid, $gender, $gender_id)
                 $result[14] = $data['stylist_code'];
                 $result[15] = $data['stylist_image'];
                 $result[16] = $data['stylist_id'];
-                $result[17] = $data['gender'];
-                $result[18] = $data['gender_id'];
             }
-            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "gender" => $result[17], "gender_id" => $result[18], "username" => $result[1], "image" => "http://istyleyou.in/istyleyouapi/profileimage/" . $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16]));
+            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => "http://istyleyou.in/istyleyouapi/profileimage/" . $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16]));
         } else {
             $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
         }

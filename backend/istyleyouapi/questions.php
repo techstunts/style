@@ -11,10 +11,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
 
     if ($client_data) {
         $db_gender = in_array($client_data['gender_id'], $gender_ids);
-        $request_gender = !empty($_REQUEST['gender_id']) && in_array($_REQUEST['gender_id'], $gender_ids);
+        $gender = "";
+        $req_gender_id = 3;
+        if (!empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
+            $gender = strtolower($_REQUEST['gender']);
+            $req_gender_id = $gender == 'male' ? 2 : 1;
+        }
+        $request_gender = in_array($req_gender_id, $gender_ids);
         if ($db_gender || $request_gender) {
 
-            $gender_id = $db_gender ? $client_data['gender_id'] : $_REQUEST['gender_id'];
+            $gender_id = $db_gender ? $client_data['gender_id'] : $req_gender_id;
             $bodytype = $_REQUEST['bodytype'];
             $bodyshape = $_REQUEST['bodyshape'];
             $height = $_REQUEST['height'];
