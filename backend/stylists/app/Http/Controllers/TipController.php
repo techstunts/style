@@ -10,7 +10,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\RecommendationType;
+use App\Models\Lookups\Lookup;
 use App\Models\Lookups\AppSections;
+use App\Models\Lookups\Status;
 use App\Tip;
 
 use Illuminate\Support\Facades\Auth;
@@ -102,6 +104,97 @@ class TipController extends Controller
         return view('tip.list', $view_properties);
 
     }
+  
+    public function getView()
+    {
+        $tip                = Tip::find($this->resource_id);
+        $view_properties    = [];
+        
+        if ($tip) {
+            
+            $products           = $tip->products;
+            $status             = Status::find($tip->status_id);
+            
+            $view_properties    = array('tip' => $tip, 'products' => $products, 'stylist' => $tip->stylist, 'status' => $status);
+            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $tip->stylist_id == Auth::user()->id;
+            
+            
+        } else {
+            
+            return view('404', array('title' => 'Tip not found'));
+        }
+        
+        return view('tip.view', $view_properties);
+    }
     
+    public function getEdit($id)
+    {
+        $tip = Tip::find($this->resource_id);
+        $view_properties = null;
+        
+        if ($tip) {
+            
+            $lookup = new Lookup();
+            
+            $view_properties['tip']             = $tip;
+            $view_properties['gender_id']       = intval($tip->gender_id);
+            $view_properties['genders']         = $lookup->type('gender')->get();
+            $view_properties['status_id']       = intval($tip->status_id);
+            $view_properties['statuses']        = $lookup->type('status')->get();
+            $view_properties['occasion_id']     = intval($tip->occasion_id);
+            $view_properties['occasions']       = $lookup->type('occasion')->get();
+            $view_properties['age_group_id']    = intval($tip->age_group_id);
+            $view_properties['age_groups']      = $lookup->type('age_group')->get();
+            $view_properties['budget_id']       = intval($tip->budget_id);
+            $view_properties['budgets']         = $lookup->type('budget')->get();
+            $view_properties['body_type_id']    = intval($tip->body_type_id);
+            $view_properties['body_types']      = $lookup->type('body_type')->get();
+            
+        } else {
+            
+            return view('404', array('title' => 'Tip not found'));
+        }
+        
+        return view('tip.edit', $view_properties);
+    }
     
+    public function postUpdate(Request $request)
+    {
+        $validator = $this->validator($request->all());
+        
+        if($validator->fails()) {
+            
+            return redirect('tip/edit/' . $this->resource_id)
+                   ->withErrors($validator)
+                   ->withInput();
+        }
+
+        $tip               = Tip::find($this->resource_id);
+        $tip->name         = isset($request->name) && $request->name != '' ? $request->name : '';
+        $tip->description  = isset($request->description) && $request->description != '' ? $request->description : '';
+        $tip->age_group_id = isset($request->age_group_id) && $request->age_group_id != '' ? $request->age_group_id : '';
+        $tip->body_type_id = isset($request->body_type_id) && $request->body_type_id != '' ? $request->body_type_id : '';
+        $tip->budget_id    = isset($request->budget_id) && $request->budget_id != '' ? $request->budget_id : '';
+        $tip->gender_id    = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
+        $tip->occasion_id  = isset($request->occasion_id) && $request->occasion_id != '' ? $request->occasion_id : '';
+        $tip->image_url    = isset($request->image_url) && $request->image_url != '' ? $request->image_url : '';
+        $tip->video_url    = isset($request->video_url) && $request->video_url != '' ? $request->video_url : '';
+
+        $tip->save();
+
+        return redirect('tip/view/' . $this->resource_id);
+    }
+    
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|max:256|min:5',
+            'description' => 'required|min:25',
+            'body_type_id' => 'required',
+            'budget_id' => 'required',
+            'age_group_id' => 'required',
+            'occasion_id' => 'required',
+            'gender_id' => 'required',
+        ]);
+    }
 }

@@ -30,14 +30,14 @@
 
             <ol class="selectable" >
             @if(count($tips) == 0)
-                No Looks found
+                No Tips found
             @endif
             
             @foreach($tips as $tip)
                 <li class="ui-state-default" tip_id="{{$tip->id}}">
                     <div class="items">
                         <div class="name text " id="popup-item">
-                            <a href="{{url('tip/view/' . $tip->id)}}">{{$tip->name == "" ? "Error! Look name empty" : $tip->name }}</a>
+                            <a href="{{url('tip/view/' . $tip->id)}}">{{$tip->name == "" ? "Error! Tip name empty" : $tip->name }}</a>
                             <input class="entity_ids pull-right"  value="{{$tip->id}}" type="checkbox">
                         </div>
                         <div class="image"><img src="{!! asset('images/' . $tip->image) !!}" /></div>
