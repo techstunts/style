@@ -18,7 +18,7 @@ class ScraperMapper
     protected $with_array = ['merchant', 'project'];
     protected $process_data_count = 10;
     protected $start = 0;
-    protected $var = 0;
+    protected $none = 0;
 
     public function getContent($url, $file_name = '')
     {
@@ -115,13 +115,14 @@ class ScraperMapper
         }
     }
 
-    public function fetchAndSaveProducts($job, $import)
+    public function fetchAndSaveProducts($job, $import, $fileObj)
     {
         $file_name = $job->items_file_path . $job->items_file_name;
         $merchant_id = $job->spider->merchant_id;
         $record_start = $import->count;
 
         if (!$file = fopen($file_name, 'r')) {
+            fwrite($fileObj, date("Y-m-d H:i:s"). ' ' .'Error opening file '. $file_name.PHP_EOL);
             return false;
         }
 
@@ -148,7 +149,7 @@ class ScraperMapper
                 if ($saved_products = $this->saveProductInLocal($product_array, $merchant_id)) {
 
                     $response = json_decode($this->importMerchantProducts($saved_products));
-                    if ($response->success == false) {
+                    if (!empty($response) && $response->success == false) {
                         $this->updateProductsHavingError($response);
                     }
 
@@ -167,7 +168,7 @@ class ScraperMapper
         if (($count > $this->start + 1) && ($count < $this->process_data_count) && (count($product_array) > 1)) {
             if ($saved_products = $this->saveProductInLocal($product_array, $merchant_id)) {
                 $response = json_decode($this->importMerchantProducts($saved_products));
-                if ($response->success == false) {
+                if (!empty($response) && $response->success == false) {
                     $this->updateProductsHavingError($response);
                 }
 
@@ -191,16 +192,18 @@ class ScraperMapper
         $index = $this->start;
         $query = '';
         $products = array();
+
         foreach ($product_array as $item) {
             if (!is_integer($item))
                 $query = $query . " OR (sku = '{$item->sku}' AND merchant_id = '{$merchant_id}')";
         }
-        $query = '';
         if (!empty($query)) {
             $query = substr($query, 4);
             $existing_products = Products::whereRaw($query)->select('merchant_id', 'sku', 'mrp', 'discounted_price')->get();
+            $erroneous_products = ErroneousProducts::whereRaw($query)->get();
         } else {
             $existing_products = array();
+            $erroneous_products = array();
         }
 
         $existing_product_sku = array();
@@ -208,14 +211,24 @@ class ScraperMapper
             $existing_product_sku[$item->sku] = $item;
         }
 
+        $erroneous_products_sku = array();
+        foreach ($erroneous_products as $item) {
+            array_push($erroneous_products_sku, $item->sku);
+        }
+
         for (; $count < $this->process_data_count; $count++) {
 
             if (empty($product_array[$count]) || empty($product_array[$count]->sku)) {
                 continue;
             }
+
+            if(in_array($product_array[$count]->sku, array_values($erroneous_products_sku))) {
+                continue;
+            }
+
             if (in_array($product_array[$count]->sku, array_keys($existing_product_sku))) {
                 $productObj = $existing_product_sku[$product_array[$count]->sku];
-                $discounted_price = !empty($product_array[$count]->discounted_price) ? $product_array[$count]->discounted_price : 0;
+                $discounted_price = !empty($product_array[$count]->discounted_price) ? $product_array[$count]->discounted_price : $this->none;
                 if ($productObj->mrp != $product_array[$count]->mrp ||
                     ($productObj->discounted_price != $discounted_price)
                 ) {
@@ -247,8 +260,9 @@ class ScraperMapper
                 DB::rollback();
                 return false;
             }
+        }else {
+            return array();
         }
-        return true;
     }
 
     public function createArray($product, $merchant_id)
@@ -257,7 +271,7 @@ class ScraperMapper
             'merchant_id' => $merchant_id,
             'sku' => $product->sku,
             'mrp' => $product->mrp,
-            'discounted_price' => !empty($product->discounted_price) ? $product->discounted_price : 0,
+            'discounted_price' => !empty($product->discounted_price) ? $product->discounted_price : $this->none,
             'in_stock' => !empty($product->sold_out) ? $this->getInStockId($product->sold_out) : true,
         );
     }
@@ -325,7 +339,7 @@ class ScraperMapper
             'category' => $category,
             'color_id' => $product->colors,
             'gender_id' => $this->getGenderId($product->gender),
-            'discounted_price' => !empty($product->discounted_price) ? $product->discounted_price : 0,
+            'discounted_price' => !empty($product->discounted_price) ? $product->discounted_price : $this->none,
             'in_stock' => !empty($product->sold_out) ? $this->getInStockId($product->sold_out) : true,
             'status' => $status,
             'desc' => $product->product_detail,
