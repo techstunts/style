@@ -54,6 +54,7 @@ class ScraperController extends Controller
                 $write_json_lines = $scraperMapperObj->getContent($new_url, $file_name);
 
                 if ($write_json_lines['status'] == false) {
+                    fwrite($fileObj, date("Y-m-d H:i:s"). ' ' .'Error fetching data for '. $spider->name.PHP_EOL);
                     continue;
                 }
 
@@ -68,6 +69,7 @@ class ScraperController extends Controller
                 );
                 $result = $scraperMapperObj->updateJob($data);
                 if ($result == false) {
+                    fwrite($fileObj, date("Y-m-d H:i:s"). ' ' .'Error updating job '. $job_id.' of '.$spider->name.PHP_EOL);
                     continue;
                 }
             }
