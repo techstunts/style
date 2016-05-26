@@ -12,6 +12,7 @@ use App\Push;
 use App\Client;
 use App\Stylist;
 use App\Look;
+use App\Tip;
 use App\Product;
 use App\StyleRequests;
 use App\Models\Lookups\EntityType;
@@ -80,6 +81,8 @@ class RecommendationController extends Controller
             $entity_data = Product::whereIn('id', $entity_ids)->get();
         } elseif ($entity_type_id == EntityTypeId::LOOK) {
             $entity_data = Look::whereIn('id', $entity_ids)->get();
+        } elseif ($entity_type_id == EntityTypeId::TIP) {
+            $entity_data = Tip::whereIn('id', $entity_ids)->get();
         }
         if (empty($entity_data)) {
             return response()->json(

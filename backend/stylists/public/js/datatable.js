@@ -181,7 +181,7 @@ $(document).ready(function () {
 
     $("#send").on('click', function (e) {
         var entity_ids = [];
-        if (entity_type_id == EntityType.CLIENT) {
+        if (entity_type_id == EntityType.CLIENT || entity_type_id == EntityType.TIP) {
             $('.items #popup-item :checked').each(function () {
                 entity_ids.push($(this).val());
             });
@@ -233,7 +233,7 @@ $(document).ready(function () {
                     $(".mobile-app-send .btn").removeClass('active');
                     $(".mobile-app-send .btn").addClass('disabled');
                     entity_ids = [];
-                    if (entity_type_id == EntityType.CLIENT) {
+                    if (entity_type_id == EntityType.CLIENT || entity_type_id == EntityType.TIP) {
                         rows_selected = [];
                     }
                     entity_sent_once = EntitySent.YES;
@@ -319,7 +319,7 @@ function showFilters() {
 }
 
 function getEntityUrl(entity_type_id) {
-    if (entity_type_id == EntityType.CLIENT) {
+    if (entity_type_id == EntityType.CLIENT || entity_type_id == EntityType.TIP) {
         if (role_admin) {
             entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylist_id=&";
         } else {
@@ -342,7 +342,7 @@ function displayPopup(e) {
     entity_url = getEntityUrl(entity_type_id);
 
     $('#filters form').attr('action', entity_url);
-    if (entity_type_id != EntityType.CLIENT) {
+    if (entity_type_id != EntityType.CLIENT || entity_type_id != EntityType.TIP) {
         initializeFilters();
     }
 
@@ -376,7 +376,7 @@ function showEntities(entity_url) {
                     '</div>';
 
                 for (var i = 0; i < item.data.length; i++) {
-                    if (entity_type_id != EntityType.CLIENT) {
+                    if (entity_type_id != EntityType.CLIENT || entity_type_id != EntityType.TIP) {
                         var popover_data = "Price: " + item.data[i].price + "/- <br >" +
                             "Description: " + item.data[i].description + "<br >" +
                             "<img src='" + item.data[i].image + "' />";
