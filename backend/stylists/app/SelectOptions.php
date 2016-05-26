@@ -119,17 +119,27 @@ class SelectOptions{
 
     //To be cached
     public function stylists(){
-        $whereClauses = $this->whereClauses;
-        unset($whereClauses['stylist_id']);
+       
+        return $this->getStylistsList('stylist_id');
+    }
+    
+    public function createdBy(){
+       
+        return $this->getStylistsList('created_by');
+    }
+    
+    public function getStylistsList($columnName) {
+         $whereClauses = $this->whereClauses;
+        unset($whereClauses[$columnName]);
         $stylists = DB::table($this->table)
-            ->join('stylists', $this->table . '.stylist_id', '=', 'stylists.id')
+            ->join('stylists', $this->table . '.'.$columnName, '=', 'stylists.id')
             ->where($whereClauses)
             ->whereRaw($this->whereRawClauses)
-            ->select('stylists.id', 'stylists.name', DB::raw('COUNT(' . $this->table . '.stylist_id) as product_count'))
+            ->select('stylists.id', 'stylists.name', DB::raw('COUNT(' . $this->table . '.'.$columnName.') as product_count'))
             ->groupBy('stylists.id', 'stylists.name')
             ->orderBy('stylists.name')
             ->get();
-        return $stylists;
+        return $stylists;        
     }
 
 }

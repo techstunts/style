@@ -22,8 +22,8 @@ use Validator;
 class TipController extends Controller
 {
     
-    protected $filter_ids = [];
-    protected $filters    = [];
+    protected $filter_ids   = ['age_group_id', 'gender_id','created_by', 'body_type_id', 'budget_id', 'occasion_id', 'status_id'];
+    protected $filters      = ['age_groups', 'genders','createdBy', 'body_types', 'budgets', 'occasions', 'statuses'];
 
     
     public function index(Request $request, $action, $id = null, $action_id = null)
@@ -53,14 +53,19 @@ class TipController extends Controller
         $this->initFilters();
         
         $view_properties = array(
-            'stylists' => $this->stylists,
+            'stylists' => $this->createdBy,
             'statuses' => $this->statuses,
             'genders' => $this->genders,
             'occasions' => $this->occasions,
             'body_types' => $this->body_types,
             'budgets' => $this->budgets,
-            'age_groups' => $this->age_groups
+           'age_groups' => $this->age_groups
         );
+        
+        foreach ($this->filter_ids as $filter) {
+            $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
+        }
+        $view_properties['stylist_id'] = $request->has('stylist_id') && $request->input('stylist_id') !== "" ? intval($request->input('stylist_id')) : "";
         
         $entity_nav_tabs = array(
             EntityType::CLIENT
@@ -100,6 +105,7 @@ class TipController extends Controller
         $view_properties['entity_type_to_send'] = EntityType::LOOK;
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
         $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
+        
         
         return view('tip.list', $view_properties);
 

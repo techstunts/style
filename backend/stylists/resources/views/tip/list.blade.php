@@ -13,12 +13,10 @@
                     @include('common.occasion.select')
                     @include('common.status.select')
                     @include('common.gender.select')
+                    @include('common.age_group.select')
                     @include('common.body_type.select')
                     @include('common.budget.select')
-                    @include('common.age_group.select')
                     @include('common.search')
-                    @include('common.daterange')
-                    @include('common.pricerange')
                     <input type="submit" name="filter" value="Filter"/>
                     <a href="{{url('tip/list')}}" class="clearall">Clear All</a>
                 </form>
