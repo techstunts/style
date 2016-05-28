@@ -45,6 +45,37 @@ class TipController extends Controller
         return $this->$method($request);
     }
 
+    public function getCreate(Request $request)
+    {
+            
+            return view('tip.create');
+    }
+    
+    public function postCreate(Request $request)
+    {
+
+        $tip = new Tip();
+        
+        $tip->name          = isset($request->name) && $request->name != '' ? $request->name : '';
+        $tip->description   = isset($request->description) && $request->description != '' ? $request->description : '';
+        $tip->image         = isset($request->image) && $request->image != '' ? $request->image : '';
+        $tip->image_url     = isset($request->image_url) && $request->image_url != '' ? $request->image_url : '';
+        $tip->video_url     = isset($request->video_url) && $request->video_url != '' ? $request->video_url : '';
+        $tip->external_url  = isset($request->external_url) && $request->external_url != '' ? $request->external_url : '';
+        $tip->budget_id     = isset($request->budget_id) && $request->budget_id != '' ? $request->budget_id : '';
+        $tip->age_group_id  = isset($request->age_group_id) && $request->age_group_id != '' ? $request->age_group_id : '';
+        $tip->body_type_id  = isset($request->body_type_id) && $request->body_type_id != '' ? $request->body_type_id : '';
+        $tip->occasion_id   = isset($request->occasion_id) && $request->occasion_id != '' ? $request->occasion_id : '';
+        $tip->gender_id     = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
+        $tip->created_by    = $request->user()->id != '' ? $request->user()->id : '';
+        
+        $tip->created_at    = date('Y-m-d H:i:s');
+        
+        $tip->save();
+
+        return redirect('tip/view/' . $tip->id);
+    }
+
     
     public function getList(Request $request)
     {
