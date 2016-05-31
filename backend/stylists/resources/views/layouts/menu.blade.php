@@ -24,6 +24,9 @@
                             <li><a href="/look/collage">Collage</a></li>
                         @endif
                         <li><a href="/collection/list">Collections</a></li>
+                        @if(Auth::user()->hasRole('admin'))
+                            <li><a href="/campaign/list">Campaign</a></li>
+                        @endif
                         <li><a href="{!! url('stylist/view/' . Auth::user()->id) !!}">{{Auth::user()->name}}</a></li>
                         <li><a href="{!! url('auth/logout') !!}">Logout</a></li>
                     @endif

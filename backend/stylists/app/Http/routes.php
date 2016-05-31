@@ -42,5 +42,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('report/{report_id}', 'ReportController@index');
 
     Route::get('report/{report_id}/query', 'ReportController@query');
+
+    Route::any('campaign/{action}/{id?}/', 'CampaignController@index');
 });
 

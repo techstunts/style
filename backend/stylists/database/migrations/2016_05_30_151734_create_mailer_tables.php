@@ -7,11 +7,11 @@ class CreateMailerTables extends Migration
 {
 
     CONST TABLE_MASTER_LIST = "mailer_master_list";
-    CONST TABLE_MAILER_TYPE = "mailer_type";
-    CONST TABLE_UNSUBCRIPTION = "unsubscription";
-    CONST TABLE_CAMPAIGN = "campaign";
+    CONST TABLE_MAILER_TYPE = "mailer_types";
+    CONST TABLE_UNSUBCRIPTION = "unsubscriptions";
+    CONST TABLE_CAMPAIGN = "campaigns";
     CONST TABLE_CAMPAIGN_MAILER_LIST = "campaign_mailer_list";
-    CONST TABLE_CAMPAIGN_MAILER_TRACKER = "campaign_mailer_tracker";
+    CONST TABLE_CAMPAIGN_MAILER_TRACKER = "campaign_mailer_trackers";
 
 
     /**
@@ -42,7 +42,7 @@ class CreateMailerTables extends Migration
             $table->string('email', 50);
             $table->bigInteger('mailer_type_id')->unsigned();
             $table->unique(array('email',  'mailer_type_id'));
-            $table->foreign('mailer_type_id')->references('id')->on('mailer_type');
+            $table->foreign('mailer_type_id')->references('id')->on(self::TABLE_MAILER_TYPE);
             $table->timestamps();
         });
 
@@ -52,9 +52,10 @@ class CreateMailerTables extends Migration
             $table->string('sender_email', 50);
             $table->string('sender_name', 50);
             $table->string('mail_subject', 512);
-            $table->text('non_prepare_message');
             $table->text('message');
+            $table->text('prepared_message');
             $table->dateTime('published_on');
+            $table->enum('status', array('CREATED', 'PUBLISHED', 'QUEUING', 'QUEUED'));
             $table->timestamps();
         });
 
@@ -63,7 +64,7 @@ class CreateMailerTables extends Migration
             $table->string('email', 50);
             $table->string('name', 50);
             $table->bigInteger('campaign_id')->unsigned();
-            $table->foreign('campaign_id')->references('id')->on('campaign');
+            $table->foreign('campaign_id')->references('id')->on(self::TABLE_CAMPAIGN);
             $table->boolean('is_sent')->default(false);
             $table->dateTime('sent_at');
             $table->boolean('is_open')->default(false);
@@ -78,7 +79,7 @@ class CreateMailerTables extends Migration
             $table->string('email', 50);
             $table->string('url', 512);
             $table->enum('event', array('OPENED', 'CLICKED'));
-            $table->foreign('campaign_id')->references('id')->on('campaign');
+            $table->foreign('campaign_id')->references('id')->on(self::TABLE_CAMPAIGN);
             $table->timestamp('created_at');
         });
 
