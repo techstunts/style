@@ -71,9 +71,15 @@ class TipController extends Controller
         
         $tip->created_at    = date('Y-m-d H:i:s');
         
-        $tip->save();
+        if ($tip->save()) {
+            
+            return redirect('tip/view/' . $tip->id);
+            
+        } else {
+            
+            Redirect::back()->withError('Error occur while creating a tip');
+        }
 
-        return redirect('tip/view/' . $tip->id);
     }
 
     
@@ -164,8 +170,13 @@ class TipController extends Controller
         return view('tip.view', $view_properties);
     }
     
-    public function getEdit($id)
+    public function getEdit()
     {
+        if ( empty($this->resource_id) ) {
+            
+            Redirect::back()->withError('Tip Not Found');
+        }
+        
         $tip = Tip::find($this->resource_id);
         $view_properties = null;
         
@@ -217,9 +228,15 @@ class TipController extends Controller
         $tip->image_url    = isset($request->image_url) && $request->image_url != '' ? $request->image_url : '';
         $tip->video_url    = isset($request->video_url) && $request->video_url != '' ? $request->video_url : '';
 
-        $tip->save();
+        if ($tip->save()) {
+            
+            return redirect('tip/view/' . $this->resource_id);
+            
+        } else {
+            
+            return Redirect::back()->withError('Error occur while updating the tip');
+        }
 
-        return redirect('tip/view/' . $this->resource_id);
     }
     
     protected function validator(array $data)
