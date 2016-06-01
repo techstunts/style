@@ -14,12 +14,22 @@ class Campaign extends Model
 
     protected $table = 'campaigns';
 
-    public function isEditable(){
+    public function isEditable()
+    {
         $editableState = [self::CREATED_STATE];
-        if(in_array($this->status, $editableState))
-            return true;
-        else
-            return false;
+        return (in_array($this->status, $editableState)) ? true : false;
     }
+
+    public function isPublishable()
+    {
+        return ($this->status === self::CREATED_STATE)? true: false;
+    }
+
+    public function isPublished()
+    {
+        $publishedState = [self::PUBLISHED_STATE, self::QUEUING_STATE, self::QUEUED_STATE];
+        return (in_array($this->status, $publishedState)) ? true : false;
+    }
+
 
 }

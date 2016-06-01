@@ -26,8 +26,15 @@
                                 <td class="table-font-size">{{$campaign->mail_subject}}</td>
                                 <td class="table-font-size">{{$campaign->status}}</td>
                                 <td class="table-font-size">
-                                    <a href="/campaign/edit/{{$campaign->id}}">Edit</a> |
-                                    <a href="/campaign/view/{{$campaign->id}}">View</a>
+				   @if($campaign->isPublishable())
+                                   	 <a href="/campaign/edit/{{$campaign->id}}">Edit</a> |
+				    @endif 
+
+                                     	<a href="/campaign/view/{{$campaign->id}}">View</a>
+
+                                    @if($campaign->isPublishable())
+                                        | <a href="/campaign/view/{{$campaign->id}}">Publish</a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

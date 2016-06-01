@@ -6,11 +6,15 @@
 <div id="contentCntr">
     <div class="container">
         <h3>View Campaign "{{$campaign->campaign_name}}"</h3>
-            <div class="resource_view">
+        @if($campaign->isPublishable())
+            @include('campaign.publish-form')
+        @endif
+
+        <div class="resource_view">
                     <table style="width: 100%; border: 1px solid #ccc;">
                         <tr class="row" style="height:30px;">
                             <td  class="head" style="width: 20%; font-weight: bold;">Mail Subject:</td>
-                            <td style="width: 80%">{{$campaign->mail_subject}} </td>
+                            <td style="width: 80%">{!! $campaign->mail_subject !!} </td>
                         </tr>
                         <tr class="row" style="height:30px;">
                             <td style="width: 20%; font-weight: bold;" class="head">Sender Name</td>
@@ -24,6 +28,14 @@
                             <td class="head" style="width: 20%; font-weight: bold;">Status</td>
                             <td class="content">{{$campaign->status}} </td>
                         </tr>
+
+                        @if($campaign->isPublished())
+                            <tr class="row" style="height:30px;">
+                                <td class="head" style="width: 20%; font-weight: bold;">Published On</td>
+                                <td class="content">{{ date("j-M-Y H:i:s", strtotime($campaign->published_on))}} </td>
+                            </tr>
+                        @endif
+
                         <tr class="row" style="height:30px;">
                             <td class="head" style="width: 20%; font-weight: bold;">Created At</td>
                             <td class="content">{{date('d-M-Y H:j:s ', strtotime($campaign->created_at))}} </td>
@@ -34,10 +46,12 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="description" colspan="2">{{$campaign->message}}</td>
+                            <td class="description" colspan="2">{!! $campaign->message !!}</td>
                         </tr>
 
                     </table>
+
+
             </div>
     </div>
 </div>

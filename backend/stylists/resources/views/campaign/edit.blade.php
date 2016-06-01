@@ -35,10 +35,9 @@
                         </td>
                     </tr>
 
-
                     <tr class="row">
-                        <td class="title" colspan="2">
-                            <input class="form-control" placeholder="Mail Subject" type="text" name="mail_subject" value="{{ old('mail_subject') != "" ? old('mail_subject') : $campaign->mail_subject }}">
+                        <td class="description" colspan="2">
+                            <textarea class="form-control"  placeholder="Mail Subject" type="text" name="mail_subject">{!! old('mail_subject') != "" ? old('mail_subject') :  $campaign->mail_subject !!}</textarea>
                             @if($mail_subject_error = $errors->first('mail_subject'))
                             <span class="errorMsg">{{$mail_subject_error}}</span>
                             @endif
@@ -47,7 +46,7 @@
 
                     <tr class="row">
                         <td class="description" colspan="2">
-                            <textarea class="form-control" rows="15" cols="80" style="width: auto" placeholder="Message" type="text" name="message">{{ old('message') != "" ? old('message') :  $campaign->message }}</textarea>
+                            <textarea class="form-control" rows="25" cols="120" style="width: auto" placeholder="Message" type="text" name="message">{!! old('message') != "" ? old('message') :  $campaign->message !!}</textarea>
                             @if($message_error = $errors->first('message'))
                             <span class="errorMsg">{{$message_error}}</span>
                             @endif
@@ -63,6 +62,7 @@
 
                 </table>
             </form>
+            <div class="clear"></div>
         </div>
     </div>
 

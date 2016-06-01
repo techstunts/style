@@ -9,11 +9,13 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Campaign;
-use Illuminate\Support\Facades\Input;
 use Validator;
+use Carbon\Carbon;
 
 class CampaignController extends Controller
 {
+    const USER_INPUT_DATE_FORMAT = "M-j-Y h:i a";
+    const DB_DATE_FORMAT = "Y-m-d H:i:s";
 
     public function index(Request $request, $action, $id = null, $actionId = null)
     {
@@ -59,7 +61,6 @@ class CampaignController extends Controller
 
     public function postSave(Request $request)
     {
-
         if(!empty($this->resource_id)){
             $campaign = Campaign::find($this->resource_id);
             if(!$campaign)
@@ -95,6 +96,27 @@ class CampaignController extends Controller
             return view('404', array('title' => 'Campaign not found.'));
     }
 
+    public function postPublish(Request $request){
+        $campaign = Campaign::find($this->resource_id);
+        if(!$campaign)
+            return view('404', array('title' => 'Campaign not found.'));
+        else if(!$campaign->isPublishable())
+            return view('404', array('title' => 'Campaign is not in publishable state.'));
+
+        $validator = $this->publishValidator($request->all());
+
+        if($validator->fails())
+            return redirect('campaign/view/'.$this->resource_id)
+                    ->withErrors($validator)
+                    ->withInput();
+
+        $campaign->status = Campaign::PUBLISHED_STATE;
+        $campaign->published_on =  Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT,
+                                            $request->publish_dt)->format(self::DB_DATE_FORMAT);
+        $campaign->save();
+        return redirect('campaign/view/'.$this->resource_id);
+    }
+
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -106,6 +128,19 @@ class CampaignController extends Controller
         ]);
     }
 
+    public function publishValidator(array $data){
+        $validator = Validator::make($data, [
+            'publish_dt' => 'required|date_format:'.self::USER_INPUT_DATE_FORMAT
 
+        ], [
+            'publish_dt' => 'Publish datetime is invalid.'
+        ]);
 
+        $validator->after(function($validator) use($data) {
+            $publishDate = strtotime($data['publish_dt']);
+            if($publishDate <= strtotime(date(self::USER_INPUT_DATE_FORMAT)))
+                $validator->getMessageBag()->add('publish_dt', 'Publish datetime must be future datetime.');
+        });
+        return $validator;
+    }
 } 
