@@ -16,7 +16,7 @@ $current_date_time = date("Y-m-d H:i:s");
 
 $signup_successful = false;
 
-if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && !empty($_REQUEST['password']) && isset($_REQUEST['password']) && !empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
+if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && !empty($_REQUEST['password']) && isset($_REQUEST['password'])) {
 
     $email = $_REQUEST['email'];
     $password = $_REQUEST['password'];
@@ -168,11 +168,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     } else {
         $data = array('result' => 'fail', 'message' => 'failed...You Entered Wrong Stylish Code');
     }
-} elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && isset($_REQUEST['facebook_id']) && !empty($_REQUEST['facebook_id']) && isset($_REQUEST['gender']) && !empty($_REQUEST['gender']) && isset($_REQUEST['username']) && !empty($_REQUEST['username'])) {
+} elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && isset($_REQUEST['facebook_id']) && !empty($_REQUEST['facebook_id']) && isset($_REQUEST['username']) && !empty($_REQUEST['username'])) {
     $email = $_REQUEST['email'];
     $facebookid = $_REQUEST['facebook_id'];
-    $gender = $_REQUEST['gender'];
-    $gender_id = $gender == 'male' ? 2 : 1;
+    $gender = "";
+    $gender_id = 3;
+    if (!empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
+        $gender = strtolower($_REQUEST['gender']);
+        $gender_id = $gender == 'male' ? 2 : 1;
+    }
     $name = $_REQUEST['username'];
     $regId = $_REQUEST['regid'];
     $image = 'http://graph.facebook.com/' . $facebookid . '/picture?type=square';
@@ -246,12 +250,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
             $data = array('result' => 'fail', 'message' => 'Error in adding user');
         }
     }
-} elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && isset($_REQUEST['google_id']) && !empty($_REQUEST['google_id']) && isset($_REQUEST['gender']) && !empty($_REQUEST['gender']) && isset($_REQUEST['username']) && !empty($_REQUEST['username'])) {
+} elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && isset($_REQUEST['google_id']) && !empty($_REQUEST['google_id']) && isset($_REQUEST['username']) && !empty($_REQUEST['username'])) {
 
     $email = $_REQUEST['email'];
     $googleid = $_REQUEST['google_id'];
-    $gender = $_REQUEST['gender'];
-    $gender_id = $gender == 'male' ? 2 : 1;
+    $gender = strtolower($_REQUEST['gender']);
+    $gender = "";
+    $gender_id = 3;
+    if (!empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
+        $gender = strtolower($_REQUEST['gender']);
+        $gender_id = $gender == 'male' ? 2 : 1;
+    }
     $name = $_REQUEST['username'];
     $bodytype = "";
     $bodyshape = "";
@@ -449,7 +458,7 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id)
         $login[3] = "";
 
     }
-    if ($login[0] == $email && $login[1] == $facebookid && (($login[2] == $gender) || ($login[3] == $gender_id))) {
+    if ($login[0] == $email && $login[1] == $facebookid) {
         $sql = "SELECT id,stylist_id from clients where email='$email' AND facebook_id='$facebookid'";
         $result = array();
         $res = mysql_query($sql);
@@ -459,7 +468,7 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id)
             $result[1] = $data['stylist_id'];
         }
         if ($result[1] != 0) {
-            $sql = "SELECT clients.id as user_id,clients.name,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.id as stylist_id FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
+            $sql = "SELECT clients.id as user_id,clients.name,clients.gender_id,clients.gender,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.id as stylist_id FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
 
             $select = mysql_query($sql);
             $result = array();
@@ -489,10 +498,8 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id)
             $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
         }
     } else {
-        if ($login[0] == $email && $login[1] != $facebookid && (($login[2] == $gender) || ($login[3] == $gender_id))) {
+        if ($login[0] == $email && $login[1] != $facebookid) {
             $data = array('result' => 'fail', 'message' => 'Incorrect facebook id');
-        } elseif ($login[0] == $email && $login[1] == $facebookid && (($login[2] != $gender) || ($login[3] != $gender_id))) {
-            $data = array('result' => 'fail', 'message' => 'Incorrect gender for the registered email');
         } else {
             $data = array('result' => 'fail', 'message' => 'The given Email is not registered yet ');
         }
@@ -521,7 +528,7 @@ function GoogleLogin($email, $googleid, $gender, $gender_id)
         $login[3] = "";
 
     }
-    if ($login[0] == $email && $login[1] == $googleid && (($login[2] == $gender) || ($login[3] == $gender_id))) {
+    if ($login[0] == $email && $login[1] == $googleid) {
         $sql = "SELECT id,stylist_id from clients where email='$email' AND google_id='$googleid'";
         $result = array();
         $res = mysql_query($sql);
@@ -534,7 +541,7 @@ function GoogleLogin($email, $googleid, $gender, $gender_id)
 
 
         if ($result[1] != 0) {
-            $sql = "SELECT clients.id as user_id,clients.name,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as  stylist_image, stylists.id as stylist_id FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
+            $sql = "SELECT clients.id as user_id,clients.name,clients.gender_id,clients.gender,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as  stylist_image, stylists.id as stylist_id FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
             $select = mysql_query($sql);
             $result = array();
 
@@ -564,10 +571,8 @@ function GoogleLogin($email, $googleid, $gender, $gender_id)
             $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
         }
     } else {
-        if ($login[0] == $email && $login[1] != $googleid && (($login[2] == $gender) || ($login[3] == $gender_id))) {
+        if ($login[0] == $email && $login[1] != $googleid) {
             $data = array('result' => 'fail', 'message' => 'Incorrect google id');
-        } elseif ($login[0] == $email && $login[1] == $googleid && (($login[2] != $gender) || ($login[3] != $gender_id))) {
-            $data = array('result' => 'fail', 'message' => 'Incorrect gender for the registered email');
         } else {
             $data = array('result' => 'fail', 'message' => 'The given Email is not registered yet ');
         }

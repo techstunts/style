@@ -15,15 +15,20 @@
                     <input type="submit" name="filter" value="Filter"/>
                 </form>
                 <form method="post" action="" class="approve">
-                    <input type="submit" name="approve_all" value="Approve All"/>
-                    <input type="submit" name="reject_all" value="Reject All"/>
+                    <input type="hidden" name="product_ids" value=""/>
+                    <input type="submit" name="approve_all" title="approve" value="Approve All"/>
+                    <input type="submit" name="reject_all" title="reject" value="Reject All"/>
                     {!! csrf_field() !!}
                 </form>
                 {!! $merchant_products->render() !!}
             </div>
 
             <div class="clear"></div>
-
+            @if(!empty(Session::get('successMsg')) || !empty(Session::get('errorMsg')))
+                <div class="message-position wysiwyg-color-green">{{Session::get('successMsg')}}</div>
+                <div class="message-position wysiwyg-color-red">{{Session::get('errorMsg')}}</div>
+                <div class="clear"></div>
+            @endif
             <ol class="selectable" id="selectable">
             @foreach($merchant_products as $product)
                 <li class="ui-state-default" product_id="{{$product->id}}">
@@ -50,3 +55,5 @@
 </div>
 
 @endsection
+
+<script src="/js/merchantProducts.js"></script>

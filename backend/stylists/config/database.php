@@ -64,6 +64,18 @@ return [
             'strict'    => false,
         ],
 
+        'mysqlScraper' => [
+            'driver'    => 'mysql',
+            'host'      => env('SCRAPING_DB_HOST', 'localhost'),
+            'database'  => env('SCRAPING_DB_DATABASE', 'forge'),
+            'username'  => env('SCRAPING_DB_USERNAME', 'forge'),
+            'password'  => env('SCRAPING_DB_PASSWORD', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
+
         'pgsql' => [
             'driver'   => 'pgsql',
             'host'     => env('DB_HOST', 'localhost'),
