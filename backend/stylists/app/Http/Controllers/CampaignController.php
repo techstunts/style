@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Campaign;
 use Validator;
 use Carbon\Carbon;
+use App\Campaign\Utils\CampaignUtils;
 
 class CampaignController extends Controller
 {
@@ -113,6 +114,7 @@ class CampaignController extends Controller
         $campaign->status = Campaign::PUBLISHED_STATE;
         $campaign->published_on =  Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT,
                                             $request->publish_dt)->format(self::DB_DATE_FORMAT);
+        $campaign->prepared_message = CampaignUtils::prepareMessage($campaign->message, $campaign->id);
         $campaign->save();
         return redirect('campaign/view/'.$this->resource_id);
     }

@@ -31,5 +31,4 @@ class Campaign extends Model
         return (in_array($this->status, $publishedState)) ? true : false;
     }
 
-
 }
