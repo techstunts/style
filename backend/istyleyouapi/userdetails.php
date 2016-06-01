@@ -458,7 +458,7 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id)
         $login[3] = "";
 
     }
-    if ($login[0] == $email && $login[1] == $facebookid && (($login[2] == $gender) || ($login[3] == $gender_id))) {
+    if ($login[0] == $email && $login[1] == $facebookid) {
         $sql = "SELECT id,stylist_id from clients where email='$email' AND facebook_id='$facebookid'";
         $result = array();
         $res = mysql_query($sql);
@@ -498,10 +498,8 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id)
             $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
         }
     } else {
-        if ($login[0] == $email && $login[1] != $facebookid && (($login[2] == $gender) || ($login[3] == $gender_id))) {
+        if ($login[0] == $email && $login[1] != $facebookid) {
             $data = array('result' => 'fail', 'message' => 'Incorrect facebook id');
-        } elseif ($login[0] == $email && $login[1] == $facebookid && (($login[2] != $gender) || ($login[3] != $gender_id))) {
-            $data = array('result' => 'fail', 'message' => 'Incorrect gender for the registered email');
         } else {
             $data = array('result' => 'fail', 'message' => 'The given Email is not registered yet ');
         }
@@ -530,7 +528,7 @@ function GoogleLogin($email, $googleid, $gender, $gender_id)
         $login[3] = "";
 
     }
-    if ($login[0] == $email && $login[1] == $googleid && (($login[2] == $gender) || ($login[3] == $gender_id))) {
+    if ($login[0] == $email && $login[1] == $googleid) {
         $sql = "SELECT id,stylist_id from clients where email='$email' AND google_id='$googleid'";
         $result = array();
         $res = mysql_query($sql);
@@ -573,10 +571,8 @@ function GoogleLogin($email, $googleid, $gender, $gender_id)
             $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
         }
     } else {
-        if ($login[0] == $email && $login[1] != $googleid && (($login[2] == $gender) || ($login[3] == $gender_id))) {
+        if ($login[0] == $email && $login[1] != $googleid) {
             $data = array('result' => 'fail', 'message' => 'Incorrect google id');
-        } elseif ($login[0] == $email && $login[1] == $googleid && (($login[2] != $gender) || ($login[3] != $gender_id))) {
-            $data = array('result' => 'fail', 'message' => 'Incorrect gender for the registered email');
         } else {
             $data = array('result' => 'fail', 'message' => 'The given Email is not registered yet ');
         }
