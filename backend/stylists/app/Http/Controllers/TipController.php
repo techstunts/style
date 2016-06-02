@@ -47,13 +47,31 @@ class TipController extends Controller
 
     public function getCreate(Request $request)
     {
-            
-            return view('tip.create');
+        $this->base_table = 'tips';
+        $this->initWhereConditions($request);
+        $this->initFilters();
+        
+        $view_properties = array(
+            'stylists' => $this->createdBy,
+            'statuses' => $this->statuses,
+            'genders' => $this->genders,
+            'occasions' => $this->occasions,
+            'body_types' => $this->body_types,
+            'budgets' => $this->budgets,
+           'age_groups' => $this->age_groups
+        );
+        
+        foreach ($this->filter_ids as $filter) {
+            $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
+        }
+        $view_properties['stylist_id'] = $request->has('stylist_id') && $request->input('stylist_id') !== "" ? intval($request->input('stylist_id')) : "";
+        
+        return view('tip.create', $view_properties);
     }
     
     public function postCreate(Request $request)
     {
-
+        
         $tip = new Tip();
         
         $tip->name          = isset($request->name) && $request->name != '' ? $request->name : '';

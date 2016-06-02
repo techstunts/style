@@ -29,77 +29,38 @@
                             </tr>
 
                             <tr class="row">
-                                {{-- <td class="title" colspan="2">
+                                <td class="title" colspan="2">
                                     @include('common.body_type.select')
                                     
-                                </td> --}}
-                                <select class="form-control mb15" name="body_type_id" placeholder="Body Type" validation="required">
-                                    <option value="">Body Types</option>
-                                    <option value="1">Apple</option>
-                                    <option value="2">Banana</option>
-                                    <option value="3">Hourglass</option>
-                                    <option value="4">Muscular</option>
-                                    <option value="5">Pear</option>
-                                    <option value="6">Regular</option>
-                                    <option value="7">Round</option>
-                                </select>
+                                </td>
                             </tr>
 
                             <tr class="row">
-                                {{-- <td class="title" colspan="2">
+                                <td class="title" colspan="2">
                                     @include('common.budget.select')
                                     
-                                </td> --}}
-                                <select class="form-control mb15" name="budget_id" placeholder="Budget" validation="required">
-                                    <option value="">Budgets</option>
-                                    <option value="1">&lt;2000</option>
-                                    <option value="2">2000-5000</option>
-                                    <option value="3">5000-10000</option>
-                                    <option value="4">&gt;10000</option>
-                                </select>
+                                </td>
                             </tr>
 
                             <tr class="row">
-                                {{-- <td class="title" colspan="2">
+                                <td class="title" colspan="2">
                                     @include('common.age_group.select')
                                     
-                                </td> --}}
-                                
-                                <select class="form-control mb15" name="age_group_id" placeholder="Age Group" validation="required">
-                                    <option value="">Age Groups</option>
-                                    <option value="2">Teenager</option>
-                                    <option value="4">Young(18-22)</option>
-                                    <option value="3">Young Medium (22-30)</option>
-                                    <option value="1">Medium (30-40)</option>
-                                    <option value="5">Old &gt; 40</option>
-                                </select>
+                                </td>
                             </tr>
 
                             <tr class="row">
-                                {{-- <td class="title" colspan="2">
+                                <td class="title" colspan="2">
                                     @include('common.occasion.select')
                                     
-                                </td> --}}
-                                <select class="form-control mb15" name="occasion_id" placeholder="Occasion" validation="required">
-                                    <option value="">Occasions</option>
-                                    <option value="1">Casuals</option>
-                                    <option value="3">Ethnic/Festive</option>
-                                    <option value="5">Wine &amp; Dine</option>
-                                    <option value="6">Work Wear</option>
-                                </select>
+                                </td>
                             </tr>
 
                             <tr class="row">
-                                {{-- <td class="title" colspan="2">
+                                <td class="title" colspan="2">
                                     @include('common.gender.select')
                                     
-                                </td> --}}
-                                <select class="form-control mb15" name="gender_id" placeholder="Gender" validation="required">
-                                    <option value="">Genders</option>
-                                    <option value="1">Female</option>
-                                    <option value="2">Male</option>
-                                    <option value="0">NA</option>
-                                </select>
+                                </td>
                             </tr>
 
                             <tr class="row">
