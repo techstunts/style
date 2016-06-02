@@ -10,7 +10,6 @@ class ScraperController extends Controller
 {
 
     protected $start = 0;
-    protected $base_file_path = 'C:\Scraper\\';
 
     public function index(Request $request, $action, $id = null)
     {
@@ -24,7 +23,7 @@ class ScraperController extends Controller
     public function getFetchLatest()
     {
 
-        if(!$fileObj = fopen($this->base_file_path.'scraper_log.txt', 'a')){
+        if(!$fileObj = fopen(env('LOG_FILE_BASE_PATH').'scraper_log.txt', 'a')){
             return false;
         }
         $scraperMapperObj = new ScraperMapper();
@@ -83,7 +82,7 @@ class ScraperController extends Controller
 
     public function getImport()
     {
-        if(!$fileObj = fopen($this->base_file_path.'import_log.txt', 'a')){
+        if(!$fileObj = fopen(env('LOG_FILE_BASE_PATH').'import_log.txt', 'a')){
             return false;
         }
         $scraperMapperObj = new ScraperMapper();

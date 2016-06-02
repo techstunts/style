@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\DB;
 class ScraperMapper
 {
     protected $api_key = 'ae67de7e514046eb9995ecd497181dd1:';
-    protected $base_file_path = 'C:\Scraper\\';
     protected $with_array = ['merchant', 'project'];
     protected $process_data_count = 10;
     protected $start = 0;
@@ -38,7 +37,7 @@ class ScraperMapper
         curl_setopt($ch, CURLOPT_VERBOSE, true);
 
         if (!empty($file_name)) {
-            $file_name_with_path = $this->base_file_path . $file_name;
+            $file_name_with_path = env('JSONLINE_FILE_BASE_PATH') . $file_name;
             $fp = fopen($file_name_with_path, "w");
             if ($fp == false) {
                 return array('status' => false);
@@ -52,7 +51,7 @@ class ScraperMapper
             curl_close($ch);
             fclose($fp);
 
-            return array('status' => true, 'file_path' => $this->base_file_path);
+            return array('status' => true, 'file_path' => env('JSONLINE_FILE_BASE_PATH'));
         }
 
         $result = curl_exec($ch);
