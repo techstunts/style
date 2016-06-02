@@ -60,7 +60,6 @@
                                     <a href="{!! url('campaign/list') !!}">Cancel</a>
                                 </td>
                             </tr>
-
                         </table>
                     </form>
                 </div>

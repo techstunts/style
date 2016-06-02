@@ -10,13 +10,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Campaign;
 use Validator;
-use Carbon\Carbon;
-use App\Campaign\Utils\CampaignUtils;
+use App\Jobs\CampaignMailPublisher;
 
 class CampaignController extends Controller
 {
     const USER_INPUT_DATE_FORMAT = "M-j-Y h:i a";
-    const DB_DATE_FORMAT = "Y-m-d H:i:s";
 
     public function index(Request $request, $action, $id = null, $actionId = null)
     {
@@ -74,18 +72,19 @@ class CampaignController extends Controller
 
         $validator = $this->validator($request->all());
         if($validator->fails())
-            return redirect(!empty($campaign)?'campaign/edit/'.$this->resource_id: 'campaign/create/')
+            return redirect(!empty($this->resource_id)?'campaign/edit/'.$this->resource_id: 'campaign/create/')
                                     ->withErrors($validator)
                                     ->withInput();
 
+
         $campaign->campaign_name = $request->campaign_name;
         $campaign->sender_email = $request->sender_email;
-        $campaign->sender_name =  $request->sender_name;
+        $campaign->sender_name = $request->sender_name;
         $campaign->mail_subject = $request->mail_subject;
         $campaign->message = $request->message;
         $campaign->status = Campaign::CREATED_STATE;
-
         $campaign->save();
+
         return redirect('/campaign/list');
     }
 
@@ -97,11 +96,19 @@ class CampaignController extends Controller
             return view('404', array('title' => 'Campaign not found.'));
     }
 
+    public function getMailTemplate(){
+        $campaign = Campaign::find($this->resource_id);
+        if($campaign)
+            return view('campaign.mail-template', ['campaign'=>$campaign]);
+        else
+            return view('404', array('title' => 'Campaign not found.'));
+    }
+
     public function postPublish(Request $request){
         $campaign = Campaign::find($this->resource_id);
         if(!$campaign)
             return view('404', array('title' => 'Campaign not found.'));
-        else if(!$campaign->isPublishable())
+            else if(!$campaign->isPublishable())
             return view('404', array('title' => 'Campaign is not in publishable state.'));
 
         $validator = $this->publishValidator($request->all());
@@ -111,11 +118,9 @@ class CampaignController extends Controller
                     ->withErrors($validator)
                     ->withInput();
 
-        $campaign->status = Campaign::PUBLISHED_STATE;
-        $campaign->published_on =  Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT,
-                                            $request->publish_dt)->format(self::DB_DATE_FORMAT);
-        $campaign->prepared_message = CampaignUtils::prepareMessage($campaign->message, $campaign->id);
-        $campaign->save();
+        $campaign->publish($request->publish_dt, self::USER_INPUT_DATE_FORMAT);
+        $this->pushToPublishQueue($campaign);
+
         return redirect('campaign/view/'.$this->resource_id);
     }
 
@@ -145,4 +150,11 @@ class CampaignController extends Controller
         });
         return $validator;
     }
+
+    private function pushToPublishQueue(Campaign $campaign){
+        $job = (new CampaignMailPublisher($campaign))->onQueue(CampaignMailPublisher::PUBLISH_QUEUE);
+        $this->dispatch($job);
+    }
+
+
 } 

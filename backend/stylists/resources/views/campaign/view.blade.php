@@ -46,7 +46,11 @@
                         </tr>
 
                         <tr class="row">
-                            <td class="description" colspan="2">{!! $campaign->message !!}</td>
+                            <td class="description" colspan="2">
+
+
+                                <iframe src="/campaign/mailTemplate/{{$campaign->id}}" width="1000" height="800" scrolling="yes"></iframe>
+                            </td>
                         </tr>
 
                     </table>

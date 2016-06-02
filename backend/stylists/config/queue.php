@@ -73,6 +73,15 @@ return [
             'expire'     => 60,
         ],
 
+
+        'campaign-publisher' => [
+            'driver' => 'database',
+            'table'  => 'jobs',
+            'queue'  => 'default',
+            'expire' => 60,
+        ],
+
+
     ],
 
     /*
