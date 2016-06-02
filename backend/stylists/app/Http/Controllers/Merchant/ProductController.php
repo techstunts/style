@@ -56,7 +56,7 @@ class ProductController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollback();
-            return $redirect->with('errorMsg', 'Some exception(s) found, please contact admin');
+            return $redirect->with('errorMsg', 'Some exception(s) found, please contact admin ' . $e->getMessage());
         }
 
         if (!empty($response['success'])) {

@@ -56,4 +56,4 @@
 
 @endsection
 
-<script src="/js/merchantProducts.js"></script>
+<script src="/js/MerchantProducts.js"></script>
