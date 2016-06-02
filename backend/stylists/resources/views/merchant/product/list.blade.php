@@ -13,7 +13,9 @@
                     @include('category.select')
                     @include('common.merchnatproductcolor')
                     @include('common.gender.select')
+                    @include('common.search')
                     <input type="submit" name="filter" value="Filter"/>
+                    <a href="{{url('merchant/product/list')}}" class="clearall">Clear All</a>
                 </form>
                 <form method="post" action="" class="approve">
                     <input type="hidden" name="product_ids" value=""/>

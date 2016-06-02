@@ -90,6 +90,9 @@ class ProductController extends Controller
             $view_properties[$filter] = $request->input($filter) ? $request->input($filter) : "";
         }
 
+        $view_properties['search'] = $request->input('search');
+        $view_properties['exact_word'] = $request->input('exact_word');
+
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
@@ -99,6 +102,7 @@ class ProductController extends Controller
         $merchant_products =
             MerchantProduct::with('brand', 'category', 'color')
                 ->where($this->where_conditions)
+                ->whereRaw($this->where_raw)
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
