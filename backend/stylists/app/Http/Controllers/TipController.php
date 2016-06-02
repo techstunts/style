@@ -31,15 +31,11 @@ class TipController extends Controller
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
         
         if($id) {
-            
             $this->resource_id = $id;
-            
         }
         
         if($action_id) {
-            
             $this->action_resource_id = $action_id;
-            
         }
 
         return $this->$method($request);
@@ -90,11 +86,8 @@ class TipController extends Controller
         $tip->created_at    = date('Y-m-d H:i:s');
         
         if ($tip->save()) {
-            
             return redirect('tip/view/' . $tip->id);
-            
         } else {
-            
             Redirect::back()->withError('Error occur while creating a tip');
         }
 
@@ -172,16 +165,14 @@ class TipController extends Controller
         $view_properties    = [];
         
         if ($tip) {
-            
             $products           = $tip->products;
             $status             = Status::find($tip->status_id);
             
             $view_properties    = array('tip' => $tip, 'products' => $products, 'stylist' => $tip->stylist, 'status' => $status);
             $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $tip->stylist_id == Auth::user()->id;
             
-            
-        } else {
-            
+        } 
+        else {
             return view('404', array('title' => 'Tip not found'));
         }
         
@@ -191,7 +182,6 @@ class TipController extends Controller
     public function getEdit()
     {
         if ( empty($this->resource_id) ) {
-            
             Redirect::back()->withError('Tip Not Found');
         }
         
@@ -199,7 +189,6 @@ class TipController extends Controller
         $view_properties = null;
         
         if ($tip) {
-            
             $lookup = new Lookup();
             
             $view_properties['tip']             = $tip;
@@ -215,9 +204,8 @@ class TipController extends Controller
             $view_properties['budgets']         = $lookup->type('budget')->get();
             $view_properties['body_type_id']    = intval($tip->body_type_id);
             $view_properties['body_types']      = $lookup->type('body_type')->get();
-            
-        } else {
-            
+        } 
+        else {
             return view('404', array('title' => 'Tip not found'));
         }
         
@@ -229,7 +217,6 @@ class TipController extends Controller
         $validator = $this->validator($request->all());
         
         if($validator->fails()) {
-            
             return redirect('tip/edit/' . $this->resource_id)
                    ->withErrors($validator)
                    ->withInput();
@@ -247,11 +234,9 @@ class TipController extends Controller
         $tip->video_url    = isset($request->video_url) && $request->video_url != '' ? $request->video_url : '';
 
         if ($tip->save()) {
-            
             return redirect('tip/view/' . $this->resource_id);
-            
-        } else {
-            
+        } 
+        else {
             return Redirect::back()->withError('Error occur while updating the tip');
         }
 
