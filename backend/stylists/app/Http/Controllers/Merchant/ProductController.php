@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Redirect;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id'];
-    protected $filters = ['merchants', 'brands', 'categories', 'genders'];
+    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id', 'm_color_id'];
+    protected $filters = ['merchants', 'brands', 'categories', 'genders', 'm_colors'];
 
     /**
      * Display a listing of the resource.
@@ -82,6 +82,7 @@ class ProductController extends Controller
             'merchants' => $this->merchants,
             'brands' => $this->brands,
             'categories' => $this->categories,
+            'm_colors' => $this->m_colors,
             'genders' => $this->genders
         );
 
@@ -96,8 +97,8 @@ class ProductController extends Controller
         $genders_list[0] = new Gender();
 
         $merchant_products =
-            MerchantProduct::
-            where($this->where_conditions)
+            MerchantProduct::with('brand', 'category', 'color')
+                ->where($this->where_conditions)
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 

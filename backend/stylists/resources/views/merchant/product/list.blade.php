@@ -11,6 +11,7 @@
                     @include('merchant.select')
                     @include('brand.select')
                     @include('category.select')
+                    @include('common.merchnatproductcolor')
                     @include('common.gender.select')
                     <input type="submit" name="filter" value="Filter"/>
                 </form>
@@ -37,10 +38,11 @@
                         <div class="image"><img src="{{$product->product_image_url }}" /></div>
                         <div class="extra text">
                             <span><a href="{{url('merchant/product/view/' . $product->id)}}">View</a></span>
-                            <span>{{$product->m_brand}}</span>
-                            <span>{{$product->m_category_name}}</span>
+                            <span>{{$product->brand->name}}</span>
+                            <span>{{$product->category->name}}</span>
                             <span>{{$product->m_product_price}}</span>
                             <span>{{$genders_list[$product->gender_id]->name}}</span>
+                            <span>{{$product->color->name}}</span>
                         </div>
                     </div>
                 </li>
