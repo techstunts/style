@@ -88,9 +88,6 @@ class SelectOptions{
     public function colors(){
         return $this->get_lookup_data_with_count('color', 'primary_color_id');
     }
-    public function m_colors(){
-        return $this->get_lookup_data_with_count('color', 'm_color_id');
-    }
 
     //To be cached
     protected function get_lookup_data_with_count($lookup_type, $count_table_fk=""){

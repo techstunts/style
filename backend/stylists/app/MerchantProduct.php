@@ -23,6 +23,6 @@ class MerchantProduct extends Model
     }
     public function color()
     {
-        return $this->belongsTo('App\Models\Lookups\Color', 'm_color_id');
+        return $this->belongsTo('App\Models\Lookups\Color', 'primary_color_id');
     }
 }

@@ -7,8 +7,11 @@ use App\MerchantProduct;
 use App\MerchantProductRejected;
 use App\Product;
 use App\Models\Enums\Stylist;
+use App\Models\Enums\TableName;
 use App\Error;
 use App\Success;
+use App\Category;
+use App\Models\Lookups\Lookup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,8 +21,8 @@ use Illuminate\Support\Facades\Redirect;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id', 'm_color_id'];
-    protected $filters = ['merchants', 'brands', 'categories', 'genders', 'm_colors'];
+    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id'];
+    protected $filters = ['merchants', 'brands', 'categories', 'genders', 'colors'];
 
     /**
      * Display a listing of the resource.
@@ -78,17 +81,26 @@ class ProductController extends Controller
         $this->initWhereConditions($request);
         $this->initFilters();
 
+        $lookup = new Lookup();
+        $category_obj = new Category();
+
         $view_properties = array(
             'merchants' => $this->merchants,
             'brands' => $this->brands,
             'categories' => $this->categories,
-            'm_colors' => $this->m_colors,
-            'genders' => $this->genders
+            'colors' => $this->colors,
+            'genders' => $this->genders,
+            'category_tree' => $category_obj->getCategoryTree(),
+            'gender_list' => $lookup->type('gender')->get(),
+            'color_list' => $lookup->type('color')->get(),
         );
 
         foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->input($filter) ? $request->input($filter) : "";
         }
+
+        $view_properties['stylist_id'] = Auth::user()->id;
+        $view_properties['table'] = TableName::MERCHANT_PRODUCTS;
 
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
@@ -103,7 +115,8 @@ class ProductController extends Controller
             MerchantProduct::with('brand', 'category', 'color')
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
-                ->simplePaginate($this->records_per_page)
+                ->orderBy('id', 'desc')
+                ->simplePaginate($this->records_per_page * 2)
                 ->appends($paginate_qs);
 
         $view_properties['merchant_products'] = $merchant_products;

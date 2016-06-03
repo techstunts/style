@@ -192,6 +192,7 @@ $(document).ready(function(){
         var gender_id = $(this).parent('form').children('#' +
             'gender_id').val();
         var primary_color_id = $(this).parent('form').children('#primary_color_id').val();
+        var table = $(this).parent('form').children('#table').val();
 
         var actionUrl = $(this).attr('action_url');
 
@@ -205,6 +206,8 @@ $(document).ready(function(){
             jQuery('<input>', {'name': 'gender_id', 'value': gender_id,'type': 'hidden'})
         ).append(
             jQuery('<input>', {'name': 'primary_color_id', 'value': primary_color_id,'type': 'hidden'})
+        ).append(
+            jQuery('<input>', {'name': 'table', 'value': table,'type': 'hidden'})
         );
 
         jQuery('ol.selectable li.ui-selected').each(function(){
@@ -214,5 +217,14 @@ $(document).ready(function(){
         })
 
         newForm.submit();
+    });
+
+    $( "#bulk_update" ).click(function(){
+        //var product_ids = $(this).parent().child('product_id').val();
+        var product_ids = [];
+        jQuery('ol.selectable li').each(function(){
+            product_ids.push($(this).attr('product_id'));
+        });
+        $(this).parent().children('#product_id').attr("value", product_ids);
     });
 });
