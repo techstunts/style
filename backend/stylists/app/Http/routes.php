@@ -45,4 +45,4 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::any('campaign/{action}/{id?}/', 'CampaignController@index');
 });
-
+Route::any('campaign/{action}/{id?}/', 'CampaignController@index');

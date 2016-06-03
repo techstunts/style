@@ -12,6 +12,9 @@ use Mockery\CountValidator\Exception;
 use App\Campaign;
 use App\MailerMasterRepository;
 use Mail;
+use Carbon\Carbon;
+use Event;
+use App\Events\CampaignEmailSentEvent;
 
 class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
 {
@@ -22,21 +25,11 @@ class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
 
     private $campaign;
 
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
     public function __construct(Campaign $campaign)
     {
         $this->campaign = $campaign;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
     public function handle()
     {
         try {
@@ -52,7 +45,6 @@ class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
     private function process()
     {
         $totalUser = MailerMasterRepository::getUsersCount();
-
         if($totalUser > 0){
             $counter = 0;
             do {
@@ -63,7 +55,7 @@ class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
                     $this->pushToMailQueue( $this->campaign->sender_name, $this->campaign->sender_email,
                                             $user->name, $user->email,
                                             $this->prepareMailContent($this->campaign->prepared_message),
-                                            $this->campaign->mail_subject);
+                                            $this->campaign->mail_subject, $this->getMailSendDelay());
                 }
             } while($counter < $totalUser);
         }
@@ -82,19 +74,28 @@ class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
 
     }
 
-    private function pushToMailQueue($senderName, $senderEmail, $receiverName, $receiverEmail, $content, $subject)
+    private function pushToMailQueue($senderName, $senderEmail, $receiverName, $receiverEmail, $content, $subject, $delay)
     {
-        Mail::laterOn(self::MAIL_QUEUE, 5, 'campaign.email', ['email_content' => $content], function ($message)
-               use($senderName, $senderEmail, $receiverName, $receiverEmail, $subject) {
+        $campaignId = $this->campaign->id;
+        Mail::laterOn(self::MAIL_QUEUE, $delay, 'campaign.email', ['email_content' => $content], function ($message)
+               use($senderName, $senderEmail, $receiverName, $receiverEmail, $subject, $campaignId) {
                     $message->from(trim($senderEmail), $senderName)
                                 ->to(trim($receiverEmail), $receiverName)
                                 ->subject($subject);
+            Event::fire(new CampaignEmailSentEvent($campaignId, $senderEmail));
         });
     }
 
     private function prepareMailContent($message)
     {
         return $message;
+    }
+
+    private function getMailSendDelay()
+    {
+        $publishedOn = new Carbon($this->campaign->published_on);
+        $diffInSecond = $publishedOn->diffInSeconds(Carbon::now());
+        return ($diffInSecond > 0)? $diffInSecond : 0;
     }
 
 }

@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use App\Campaign;
 use Validator;
 use App\Jobs\CampaignMailPublisher;
+use Carbon\Carbon;
+use App\Campaign\Entities\Enums\Placeholder;
+use App\Campaign\Utils\CampaignUtils;
 
 class CampaignController extends Controller
 {
@@ -43,14 +46,14 @@ class CampaignController extends Controller
 
     public function getCreate(Request $request)
     {
-        return view('campaign.create');
+        return view('campaign.create', ["placeholders" => Placeholder::getHolder()]);
     }
 
     public function getEdit(Request $request){
         $campaign = Campaign::find($this->resource_id);
 
         if($campaign && $campaign->isEditable ())
-            return view('campaign.edit', ['campaign'=>$campaign]);
+            return view('campaign.edit', ['campaign'=>$campaign, "placeholders" => Placeholder::getHolder()]);
         else if($campaign && !$campaign->isEditable ())
             return view('404', array('title' => 'Campaign is not in editable state.'));
         else
@@ -105,6 +108,7 @@ class CampaignController extends Controller
     }
 
     public function postPublish(Request $request){
+
         $campaign = Campaign::find($this->resource_id);
         if(!$campaign)
             return view('404', array('title' => 'Campaign not found.'));
@@ -118,9 +122,10 @@ class CampaignController extends Controller
                     ->withErrors($validator)
                     ->withInput();
 
-        $campaign->publish($request->publish_dt, self::USER_INPUT_DATE_FORMAT);
-        $this->pushToPublishQueue($campaign);
+        $campaign->publish(CampaignUtils::prepareMessage($campaign->message, $campaign->id),
+                                        $request->publish_dt, self::USER_INPUT_DATE_FORMAT);
 
+        $this->pushToPublishQueue($campaign);
         return redirect('campaign/view/'.$this->resource_id);
     }
 
@@ -144,9 +149,11 @@ class CampaignController extends Controller
         ]);
 
         $validator->after(function($validator) use($data) {
-            $publishDate = strtotime($data['publish_dt']);
-            if($publishDate <= strtotime(date(self::USER_INPUT_DATE_FORMAT)))
+            $publishDate = Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT, $data['publish_dt']);
+
+            if($publishDate->lte(Carbon::now()))
                 $validator->getMessageBag()->add('publish_dt', 'Publish datetime must be future datetime.');
+
         });
         return $validator;
     }
