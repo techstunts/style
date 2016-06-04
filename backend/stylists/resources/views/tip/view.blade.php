@@ -83,7 +83,7 @@
                                                    title="{{$entity->product->name}}"
                                                    target="product_win">
                                                     <img class="tip-product-img_size"
-                                                         src="{{strpos($entity->product->upload_image, "http") !== false ? $entity->product->upload_image : 'http://stylist.istyleyou.in/images/' . $entity->product->upload_image}}"/>
+                                                         src="{{strpos($entity->product->upload_image, "http") !== false ? $entity->product->upload_image : asset('images/' . $entity->product->upload_image)}}"/>
                                                 </a>
                                                 <span>Brand : {{$entity->product->brand ? $entity->product->brand->name : ''}}</span>
                                                 <a target="_blank" href={{$entity->product->product_link}}>External
@@ -103,7 +103,7 @@
                                                title="{{$entity->look->name}}"
                                                target="product_win">
                                                 <img class="entity"
-                                                     src="{{strpos($entity->look->image, "http") !== false ? $entity->look->image : 'http://stylist.istyleyou.in/images/' . $entity->look->image}}"/>
+                                                     src="{{strpos($entity->look->image, "http") !== false ? $entity->look->image : asset('images/' . $entity->look->image)}}"/>
                                             </a>
                                         @endif
                                     @endforeach
