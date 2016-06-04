@@ -19,6 +19,7 @@
                     @include('common.search')
                     <input type="submit" name="filter" value="Filter"/>
                     <a href="{{url('tip/list')}}" class="clearall">Clear All</a>
+                    <a href="{{url('tip/create')}}" class="clearall">Create Tip</a>
                 </form>
                 
             </div>
