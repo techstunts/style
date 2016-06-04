@@ -48,17 +48,14 @@ class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
     private function process()
     {
         $totalUser = MailerMasterRepository::getUsersCount();
-        echo "\n\$totalUser : $totalUser";
         if($totalUser > 0){
             $counter = 0;
             do {
-                echo "\nLoop started with \$counter :$counter ";
                 $users = MailerMasterRepository::getUsers($counter);
                 foreach($users as $user){
-                    echo "\nIn Loop \$counter : $counter ";
                     $counter++;
                     $userName =  $this->getUserName($user->name);
-                    $placeHolderValues = $this->preparedPlaceHolderValues($user->email, $userName);
+                    $placeHolderValues = $this->preparedPlaceHolderValues($userName, $user->email);
                     $this->addToCampaignMailerRepository($user->email, $userName);
                     $this->pushToMailQueue( $userName,
                                             $user->email,

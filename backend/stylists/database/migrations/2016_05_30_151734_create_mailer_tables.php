@@ -78,6 +78,7 @@ class CreateMailerTables extends Migration
             $table->boolean('is_open')->default(false);
             $table->dateTime('opened_at');
             $table->boolean('is_clicked')->default(false);
+            $table->dateTime('clicked_at');
             $table->timestamps();
         });
 

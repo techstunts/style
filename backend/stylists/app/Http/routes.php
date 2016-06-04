@@ -45,4 +45,6 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::any('campaign/{action}/{id?}/', 'CampaignController@index');
 });
-Route::any('campaign/{action}/{id?}/', 'CampaignController@index');
+
+Route::any('cr', 'CampaignRedirectController@index');
+Route::any('image-open/{tracker_id}', 'CampaignOpenTrackerController@index');

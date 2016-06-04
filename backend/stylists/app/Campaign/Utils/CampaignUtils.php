@@ -15,17 +15,15 @@ class CampaignUtils {
     const LINK_REGEX_EXP = '<a\s[^>]*href=([\"\']??)([^\">]*?)\\1[^>]*>(.*)<\/a>';
     const CLOSE_BODY_TAG  = '</body>';
     const OPEN_TRACKER_TAG = '<p style="text-align: center;"><img src="%s" border="0" /></p>';
+    const VAR_SEPARATOR = '_*';
 
     private static $imageExtensions = ['jpg', 'png', 'gif', 'jpeg'];
     private static $excludeLinks = ['#', '/'];
-    private static $redirectURI = '/cr?c=%d&e=[EMAIL]&u=%s';
-    private static $unsubscribeURI = '/unsubscribe?e=[EMAIL]';
-    private static $openTrackerURI = '/image_open/%s.op';
-    private static $openTrackerVariableFormat = '%s_*%d';
-
+    private static $redirectURI = '/cr?c=%d&e=%s&u=%s';
+    private static $unsubscribeURI = '/unsubscribe?e=';
+    private static $openTrackerURI = '/image-open/%s';
 
     public static function prepareMessage($message, $campaignId) {
-        //$message = self::replacePlaceholders($message, [Placeholder::UNSUBSCRIBE_LINK => self::getUnsubscribeLink()]);
         $links = self::findLinks($message);
 
         if(!empty($links) && is_array($links)) {
@@ -46,15 +44,28 @@ class CampaignUtils {
     }
 
     public static function getOpenTrackerVariableValue($email, $campaignId){
-       return sprintf(self::$openTrackerVariableFormat, $email, $campaignId);
+       return base64_encode($email.self::VAR_SEPARATOR.$campaignId);
     }
 
     public static function getUnsubscribeLinkWithTracker($email, $campaignId){
-        return self::addTrackerToLink(sprintf(URL::to(self::$unsubscribeURI), $email), $campaignId);
+        return self::addTrackerToLink(sprintf(URL::to(self::$unsubscribeURI.Placeholder::EMAIL), $email), $campaignId);
     }
 
+    public static function removeNonASCICharacter($string){
+        return preg_replace('/[^(\x20-\x7F)]*/','', $string);
+    }
+
+    public static function isUnsubcribeLink($link){
+        return (strpos($link, '/unsubscribe?e=') !== false)?true:false;
+    }
+    public static function getOpenTrackerData($trackerString){
+        $trackerValues = explode(self::VAR_SEPARATOR, $trackerString);
+        $email = isset($trackerValues[0])?$trackerValues[0]:null;
+        $campaignId = isset($trackerValues[0])?$trackerValues[0]:null;
+        return compact('email', 'campaignId');
+    }
     private static function addTrackerToLink($link, $campaignId){
-        return URL::to(sprintf(self::$redirectURI, $campaignId, urlencode($link)));
+        return URL::to(sprintf(self::$redirectURI, $campaignId, Placeholder::EMAIL, base64_encode($link)));
     }
 
     private static function findLinks($html){
@@ -84,7 +95,7 @@ class CampaignUtils {
     }
 
     private static function isTrackerPresent($message){
-        return (strpos($message, Placeholder::OPEN_TRACKER) !== false);
+        return (strpos($message, Placeholder::OPEN_TRACKER) !== false)?true:false;
     }
 
     private static function getOpenTrackerTag(){

@@ -10,7 +10,7 @@ class CampaignMailerRepository extends Model
     const TABLE_NAME = 'campaign_mailer_list';
 
     protected $table = self::TABLE_NAME;
-    protected $fillable = array('email', 'name', 'campaign_id');
+    protected $fillable = ['email', 'name', 'campaign_id'];
 
 
 }
