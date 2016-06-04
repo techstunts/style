@@ -41,6 +41,58 @@ class TipController extends Controller
         return $this->$method($request);
     }
 
+    public function getCreate(Request $request)
+    {
+        $this->base_table = 'tips';
+        $this->initWhereConditions($request);
+        $this->initFilters();
+        
+        $view_properties = array(
+            'stylists' => $this->createdBy,
+            'statuses' => $this->statuses,
+            'genders' => $this->genders,
+            'occasions' => $this->occasions,
+            'body_types' => $this->body_types,
+            'budgets' => $this->budgets,
+           'age_groups' => $this->age_groups
+        );
+        
+        foreach ($this->filter_ids as $filter) {
+            $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
+        }
+        $view_properties['stylist_id'] = $request->has('stylist_id') && $request->input('stylist_id') !== "" ? intval($request->input('stylist_id')) : "";
+        
+        return view('tip.create', $view_properties);
+    }
+    
+    public function postCreate(Request $request)
+    {
+        
+        $tip = new Tip();
+        
+        $tip->name          = isset($request->name) && $request->name != '' ? $request->name : '';
+        $tip->description   = isset($request->description) && $request->description != '' ? $request->description : '';
+        $tip->image         = isset($request->image) && $request->image != '' ? $request->image : '';
+        $tip->image_url     = isset($request->image_url) && $request->image_url != '' ? $request->image_url : '';
+        $tip->video_url     = isset($request->video_url) && $request->video_url != '' ? $request->video_url : '';
+        $tip->external_url  = isset($request->external_url) && $request->external_url != '' ? $request->external_url : '';
+        $tip->budget_id     = isset($request->budget_id) && $request->budget_id != '' ? $request->budget_id : '';
+        $tip->age_group_id  = isset($request->age_group_id) && $request->age_group_id != '' ? $request->age_group_id : '';
+        $tip->body_type_id  = isset($request->body_type_id) && $request->body_type_id != '' ? $request->body_type_id : '';
+        $tip->occasion_id   = isset($request->occasion_id) && $request->occasion_id != '' ? $request->occasion_id : '';
+        $tip->gender_id     = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
+        $tip->created_by    = $request->user()->id != '' ? $request->user()->id : '';
+        
+        $tip->created_at    = date('Y-m-d H:i:s');
+        
+        if ($tip->save()) {
+            return redirect('tip/view/' . $tip->id);
+        } else {
+            Redirect::back()->withError('Error occur while creating a tip');
+        }
+
+    }
+
     
     public function getList(Request $request)
     {
@@ -140,31 +192,45 @@ class TipController extends Controller
         return view('tip.view', $view_properties);
     }
     
-    public function getEdit($id)
+    public function getEdit(Request $request)
     {
+        if ( empty($this->resource_id) ) {
+            Redirect::back()->withError('Tip Not Found');
+        }
+        
         $tip = Tip::find($this->resource_id);
         $view_properties = null;
         
         if ($tip) {
             
-            $lookup = new Lookup();
+            $this->base_table = 'tips';
+            $this->initWhereConditions($request);
+            $this->initFilters();
+        
+            $view_properties = array(
+                'stylists' => $this->createdBy,
+                'statuses' => $this->statuses,
+                'genders' => $this->genders,
+                'occasions' => $this->occasions,
+                'body_types' => $this->body_types,
+                'budgets' => $this->budgets,
+               'age_groups' => $this->age_groups
+            );
+        
+            foreach ($this->filter_ids as $filter) {
+                $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
+            }
             
             $view_properties['tip']             = $tip;
             $view_properties['gender_id']       = intval($tip->gender_id);
-            $view_properties['genders']         = $lookup->type('gender')->get();
             $view_properties['status_id']       = intval($tip->status_id);
-            $view_properties['statuses']        = $lookup->type('status')->get();
             $view_properties['occasion_id']     = intval($tip->occasion_id);
-            $view_properties['occasions']       = $lookup->type('occasion')->get();
             $view_properties['age_group_id']    = intval($tip->age_group_id);
-            $view_properties['age_groups']      = $lookup->type('age_group')->get();
             $view_properties['budget_id']       = intval($tip->budget_id);
-            $view_properties['budgets']         = $lookup->type('budget')->get();
             $view_properties['body_type_id']    = intval($tip->body_type_id);
-            $view_properties['body_types']      = $lookup->type('body_type')->get();
             
-        } else {
-            
+        } 
+        else {
             return view('404', array('title' => 'Tip not found'));
         }
         
@@ -176,7 +242,6 @@ class TipController extends Controller
         $validator = $this->validator($request->all());
         
         if($validator->fails()) {
-            
             return redirect('tip/edit/' . $this->resource_id)
                    ->withErrors($validator)
                    ->withInput();
@@ -193,9 +258,13 @@ class TipController extends Controller
         $tip->image_url    = isset($request->image_url) && $request->image_url != '' ? $request->image_url : '';
         $tip->video_url    = isset($request->video_url) && $request->video_url != '' ? $request->video_url : '';
 
-        $tip->save();
+        if ($tip->save()) {
+            return redirect('tip/view/' . $this->resource_id);
+        } 
+        else {
+            return Redirect::back()->withError('Error occur while updating the tip');
+        }
 
-        return redirect('tip/view/' . $this->resource_id);
     }
     
     protected function validator(array $data)
