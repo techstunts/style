@@ -15,6 +15,8 @@ use Mail;
 use Carbon\Carbon;
 use Event;
 use App\Events\CampaignEmailSentEvent;
+use App\Campaign\Entities\Enums\Placeholder;
+use App\Campaign\Utils\CampaignUtils;
 
 class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
 {
@@ -22,6 +24,7 @@ class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
 
     const PUBLISH_QUEUE = 'campaign-publisher';
     const MAIL_QUEUE = 'campaign-mails';
+    const DEFAULT_CUSTOMER_NAME = "Customer";
 
     private $campaign;
 
@@ -45,17 +48,23 @@ class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
     private function process()
     {
         $totalUser = MailerMasterRepository::getUsersCount();
+        echo "\n\$totalUser : $totalUser";
         if($totalUser > 0){
             $counter = 0;
             do {
+                echo "\nLoop started with \$counter :$counter ";
                 $users = MailerMasterRepository::getUsers($counter);
                 foreach($users as $user){
+                    echo "\nIn Loop \$counter : $counter ";
                     $counter++;
-                    $this->addToCampaignMailerRepository($user->email, $user->name);
-                    $this->pushToMailQueue( $this->campaign->sender_name, $this->campaign->sender_email,
-                                            $user->name, $user->email,
-                                            $this->prepareMailContent($this->campaign->prepared_message),
-                                            $this->campaign->mail_subject, $this->getMailSendDelay());
+                    $userName =  $this->getUserName($user->name);
+                    $placeHolderValues = $this->preparedPlaceHolderValues($user->email, $userName);
+                    $this->addToCampaignMailerRepository($user->email, $userName);
+                    $this->pushToMailQueue( $userName,
+                                            $user->email,
+                                            $this->prepareMailContent($placeHolderValues),
+                                            $this->prepareMailSubject($placeHolderValues),
+                                            $this->getMailSendDelay());
                 }
             } while($counter < $totalUser);
         }
@@ -74,21 +83,40 @@ class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
 
     }
 
-    private function pushToMailQueue($senderName, $senderEmail, $receiverName, $receiverEmail, $content, $subject, $delay)
+    private function pushToMailQueue($receiverName, $receiverEmail, $content, $subject, $delay)
     {
         $campaignId = $this->campaign->id;
+        $senderName = $this->campaign->sender_name;
+        $senderEmail = $this->campaign->sender_email;
+
         Mail::laterOn(self::MAIL_QUEUE, $delay, 'campaign.email', ['email_content' => $content], function ($message)
                use($senderName, $senderEmail, $receiverName, $receiverEmail, $subject, $campaignId) {
                     $message->from(trim($senderEmail), $senderName)
                                 ->to(trim($receiverEmail), $receiverName)
                                 ->subject($subject);
-            Event::fire(new CampaignEmailSentEvent($campaignId, $senderEmail));
+                Event::fire(new CampaignEmailSentEvent($campaignId, $receiverEmail));
         });
+
     }
 
-    private function prepareMailContent($message)
+    private function prepareMailContent(array $placeHolderValues)
     {
-        return $message;
+        return CampaignUtils::replacePlaceholders($this->campaign->prepared_message, $placeHolderValues);
+    }
+
+    private function prepareMailSubject(array $placeHolderValues)
+    {
+        return CampaignUtils::replacePlaceholders($this->campaign->mail_subject, $placeHolderValues);
+    }
+
+    private function preparedPlaceHolderValues($userName, $email ){
+        return [
+            Placeholder::USER_NAME => $userName,
+            Placeholder::EMAIL => $email,
+            Placeholder::OPEN_TRACKER_VAR => CampaignUtils::getOpenTrackerVariableValue($email, $this->campaign->id),
+            Placeholder::UNSUBSCRIBE_LINK => CampaignUtils::getUnsubscribeLinkWithTracker($email, $this->campaign->id)
+
+        ];
     }
 
     private function getMailSendDelay()
@@ -98,4 +126,7 @@ class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
         return ($diffInSecond > 0)? $diffInSecond : 0;
     }
 
+    private function getUserName($userName){
+        return (!empty($userName)?$userName : self::DEFAULT_CUSTOMER_NAME);
+    }
 }

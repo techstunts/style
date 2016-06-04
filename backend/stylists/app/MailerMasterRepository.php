@@ -24,7 +24,7 @@ class MailerMasterRepository extends Model
                     ->skip($start)
                     ->take(self::FETCH_LIMIT);
 
-        //self::queryLogger($query);
+        self::queryLogger($query);
         return $query->get();
     }
 
@@ -34,7 +34,7 @@ class MailerMasterRepository extends Model
         $query = self::getUserQuery()
                     -> select(DB::raw('count(*) as user_count'));
 
-        //self::queryLogger($query);
+        self::queryLogger($query);
         return $query->count();
     }
 
