@@ -12,15 +12,19 @@ use URL;
 
 class CampaignUtils {
 
-    const LINK_REGEX_EXP = "<a\s[^>]*href=([\"\']??)([^\">]*?)\\1[^>]*>(.*)<\/a>";
+    const LINK_REGEX_EXP = '<a\s[^>]*href=([\"\']??)([^\">]*?)\\1[^>]*>(.*)<\/a>';
+    const CLOSE_BODY_TAG  = '</body>';
+    const OPEN_TRACKER_TAG = '<p style="text-align: center;"><img src="%s" border="0" /></p>';
 
     private static $imageExtensions = ['jpg', 'png', 'gif', 'jpeg'];
     private static $excludeLinks = ['#', '/'];
-    private static $redirectURI = "/cr?c=%d&e=[EMAIL]&u=%s";
-    private static $unsubscribeURI = "/unsubscribe?e=[EMAIL]";
+    private static $redirectURI = '/cr?c=%d&e=[EMAIL]&u=%s';
+    private static $unsubscribeURI = '/unsubscribe?e=[EMAIL]';
+    private static $openTrackerURI = '/image_open/%s.op';
+
 
     public static function prepareMessage($message, $campaignId) {
-        $message = self::replacePlaceholders($message, [Placeholder::UNSUBSCRIBE_LINK => self::getUnsubscribeLink()]);
+        //$message = self::replacePlaceholders($message, [Placeholder::UNSUBSCRIBE_LINK => self::getUnsubscribeLink()]);
         $links = self::findLinks($message);
 
         if(!empty($links) && is_array($links)) {
@@ -31,8 +35,7 @@ class CampaignUtils {
                 }
             }
         }
-
-        return $message;
+        return self::addOpenTrackerPixel($message);
     }
 
     public static function replacePlaceholders($message, array $values){
@@ -43,7 +46,7 @@ class CampaignUtils {
 
     private static function findLinks($html){
         preg_match_all("/".self::LINK_REGEX_EXP."/siU", $html, $matches);
-        return $matches[2];
+        return (!is_null($matches) && is_array($matches) && isset($matches[2]))?$matches[2]:null;
     }
 
     private static function getExtension($link){
@@ -60,18 +63,39 @@ class CampaignUtils {
         return URL::to(self::$unsubscribeURI);
     }
 
-    private static function addTrackerPixel($message){
+    private static function addOpenTrackerPixel($message){
         if(self::isTrackerPresent($message))
-            return $message;
-
-        if()
-
+            return self::replacePlaceholders($message, [Placeholder::OPEN_TRACKER => self::getOpenTrackerTag()]);
+        else
+            return self::addMissingOpenTracker($message);
     }
 
     private static function isTrackerPresent($message){
-        return true;
+        return (strpos($message, Placeholder::OPEN_TRACKER) !== false);
     }
 
+    private static function getOpenTrackerTag(){
+        return sprintf(self::OPEN_TRACKER_TAG, self::getOpenTrackerUrl());
+    }
 
+    private static function getOpenTrackerUrl(){
+        return URL::to(sprintf(self::$openTrackerURI, Placeholder::OPEN_TRACKER_VAR));
+    }
+
+    private static function addMissingOpenTracker($message){
+        $foundPosition = stripos($message, self::CLOSE_BODY_TAG);
+
+        if ($foundPosition !== false) { /** First try add tracker just before  </body>, if it exists. */
+            $actualText = substr($message, $foundPosition, strlen(self::CLOSE_BODY_TAG));
+            $message = substr_replace($message,
+                                        self::getOpenTrackerTag().$actualText,
+                                        $foundPosition,
+                                        strlen(self::CLOSE_BODY_TAG));
+        }else { /** if </body> tag doesn't exist then add at end of message. **/
+            $message =$message . self::getOpenTrackerTag();
+        }
+
+        return $message;
+    }
 
 } 
