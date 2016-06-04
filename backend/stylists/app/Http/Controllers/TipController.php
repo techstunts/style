@@ -179,7 +179,7 @@ class TipController extends Controller
         return view('tip.view', $view_properties);
     }
     
-    public function getEdit()
+    public function getEdit(Request $request)
     {
         if ( empty($this->resource_id) ) {
             Redirect::back()->withError('Tip Not Found');
@@ -189,21 +189,33 @@ class TipController extends Controller
         $view_properties = null;
         
         if ($tip) {
-            $lookup = new Lookup();
+            
+            $this->base_table = 'tips';
+            $this->initWhereConditions($request);
+            $this->initFilters();
+        
+            $view_properties = array(
+                'stylists' => $this->createdBy,
+                'statuses' => $this->statuses,
+                'genders' => $this->genders,
+                'occasions' => $this->occasions,
+                'body_types' => $this->body_types,
+                'budgets' => $this->budgets,
+               'age_groups' => $this->age_groups
+            );
+        
+            foreach ($this->filter_ids as $filter) {
+                $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
+            }
             
             $view_properties['tip']             = $tip;
             $view_properties['gender_id']       = intval($tip->gender_id);
-            $view_properties['genders']         = $lookup->type('gender')->get();
             $view_properties['status_id']       = intval($tip->status_id);
-            $view_properties['statuses']        = $lookup->type('status')->get();
             $view_properties['occasion_id']     = intval($tip->occasion_id);
-            $view_properties['occasions']       = $lookup->type('occasion')->get();
             $view_properties['age_group_id']    = intval($tip->age_group_id);
-            $view_properties['age_groups']      = $lookup->type('age_group')->get();
             $view_properties['budget_id']       = intval($tip->budget_id);
-            $view_properties['budgets']         = $lookup->type('budget')->get();
             $view_properties['body_type_id']    = intval($tip->body_type_id);
-            $view_properties['body_types']      = $lookup->type('body_type')->get();
+            
         } 
         else {
             return view('404', array('title' => 'Tip not found'));
