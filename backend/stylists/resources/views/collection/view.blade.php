@@ -14,6 +14,9 @@
                     <table class="info">
                         <tr class="row">
                             <td class="title" colspan="2">{{$collection->name}}</td>
+                            @if($is_owner_or_admin)
+                                <a class="product_link" href="{{url('collection/edit/' . $collection->id)}}" title="{{$collection->name}}" >Edit</a>
+                            @endif
                         </tr>
                         <tr class="row">
                             <td class="description" colspan="2">{{$collection->description}}</td>
