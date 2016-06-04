@@ -31,15 +31,11 @@ class TipController extends Controller
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
         
         if($id) {
-            
             $this->resource_id = $id;
-            
         }
         
         if($action_id) {
-            
             $this->action_resource_id = $action_id;
-            
         }
 
         return $this->$method($request);
@@ -111,23 +107,36 @@ class TipController extends Controller
   
     public function getView()
     {
-        $tip                = Tip::find($this->resource_id);
-        $view_properties    = [];
-        
-        if ($tip) {
-            
-            $products           = $tip->products;
-            $status             = Status::find($tip->status_id);
-            
-            $view_properties    = array('tip' => $tip, 'products' => $products, 'stylist' => $tip->stylist, 'status' => $status);
-            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $tip->stylist_id == Auth::user()->id;
-            
-            
-        } else {
-            
+        if (empty($this->resource_id)){
+            return view('404', array('title' => 'Tip id not provided'));
+        }
+        $fields = ['id', 'name', 'description', 'image', 'created_by as stylist_id', 'video_url', 'image_url', 'external_url',
+            'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id'];
+        $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group'];
+
+        $tip = Tip::with('status')
+            ->with(['entities.product' => function($query){
+                $query->with('gender', 'primary_color', 'category', 'brand')
+                    ->select('id', 'name', 'upload_image', 'product_link', 'product_type', 'price', 'gender_id', 'primary_color_id',
+                        'category_id', 'brand_id');
+            }])
+            ->with(['entities.look' => function($query){
+                $query->with('gender', 'status', 'occasion', 'body_type')
+                    ->select('id', 'name', 'image', 'price', 'gender_id', 'status_id', 'occasion_id', 'body_type_id');
+            }])
+            ->with($with_array)
+            ->select($fields)
+            ->where('id', $this->resource_id)
+            ->first();
+
+        if (empty($tip)){
             return view('404', array('title' => 'Tip not found'));
         }
-        
+        $view_properties    = array(
+            'tip' => $tip,
+            'is_owner_or_admin' => Auth::user()->hasRole('admin') || $tip->stylist_id == Auth::user()->id,
+        );
+
         return view('tip.view', $view_properties);
     }
     
