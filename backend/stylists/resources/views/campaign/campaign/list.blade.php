@@ -40,7 +40,7 @@
 
                                     | <a href="/campaign-tracker/list/{{$campaign->id}}">Tracker</a>
 
-                                    | <a href="/campaign/test-mail/{{$campaign->id}}">Test Mail</a>
+                                    | <a href="/campaign/testmail/{{$campaign->id}}">Test Mail</a>
 
                                     | <a href="/campaign-report/index/{{$campaign->id}}">Report</a>
                                 </td>

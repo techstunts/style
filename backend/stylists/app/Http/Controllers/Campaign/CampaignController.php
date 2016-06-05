@@ -16,6 +16,8 @@ use App\Jobs\CampaignMailPublisher;
 use Carbon\Carbon;
 use App\Campaign\Entities\Enums\Placeholder;
 use App\Campaign\Utils\CampaignUtils;
+use App\Campaign\MailerService;
+use App\Campaign\Entities\Receiver;
 
 class CampaignController extends Controller
 {
@@ -123,8 +125,7 @@ class CampaignController extends Controller
                     ->withErrors($validator)
                     ->withInput();
 
-        $campaign->publish(CampaignUtils::prepareMessage($campaign->message, $campaign->id),
-                                        $request->publish_dt, self::USER_INPUT_DATE_FORMAT);
+        $campaign->publish($request->publish_dt, self::USER_INPUT_DATE_FORMAT);
 
         $this->pushToPublishQueue($campaign);
         return redirect('campaign/view/'.$this->resource_id);
@@ -157,6 +158,37 @@ class CampaignController extends Controller
 
         });
         return $validator;
+    }
+
+    public function getTestMail(Request $request){
+        $campaign = Campaign::find($this->resource_id);
+
+        if($campaign)
+            return view('campaign.campaign.test-mail', ['campaign'=>$campaign]);
+        else
+            return view('404', array('title' => 'Campaign not found.'));
+    }
+
+    public function postTestMail(Request $request){
+        $campaign = Campaign::find($this->resource_id);
+        if(!$campaign)
+            return view('404', array('title' => 'Campaign not found.'));
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:4|max:5',
+            'email' => 'required|email|min:4|max:50'
+        ]);
+
+        if($validator->fails())
+            return view('campaign.campaign.test-mail', ['campaign'=>$campaign])->withErrors($validator);
+
+        $campaign->prepared_message = CampaignUtils::prepareMessage($campaign->message, $campaign->id);
+        $campaign->save();
+
+        $mailerService = new MailerService($campaign);
+        $mailerService->sendMail(new Receiver($request->email, $request->name), false, true);
+        $request->session()->put('success', 'Mail sent.');
+        return redirect('/campaign/list');
     }
 
     private function pushToPublishQueue(Campaign $campaign){

@@ -74,7 +74,7 @@ class CreateMailerTables extends Migration
             $table->string('name', 50);
             $table->bigInteger('campaign_id')->unsigned();
             $table->foreign('campaign_id')->references('id')->on(self::TABLE_CAMPAIGN);
-            $table->unique(array('email', 'campaign_id'));
+            $table->unique(array('campaign_id', 'email'));
             $table->boolean('is_sent')->default(false);
             $table->dateTime('sent_at');
             $table->boolean('is_open')->default(false);

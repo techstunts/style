@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use URL;
+use App\Campaign\Utils\CampaignUtils;
 
 class Campaign extends Model
 {
@@ -37,11 +38,10 @@ class Campaign extends Model
         return (in_array($this->status, $publishedState)) ? true : false;
     }
 
-    public function publish($preparedMessage, $publishDate, $dateFormat)
+    public function publish($publishDate, $dateFormat)
     {
         $this->status = Campaign::PUBLISHED_STATE;
         $this->published_on = Carbon::createFromFormat($dateFormat, $publishDate)->format(self::DB_DATE_FORMAT);
-        $this->prepared_message = $preparedMessage;
         $this->updateTimestamps();
         $this->save();
     }
@@ -49,6 +49,7 @@ class Campaign extends Model
     public function queuing()
     {
         $this->status = self::QUEUING_STATE;
+        $this->prepared_message = CampaignUtils::prepareMessage($this->message, $this->id);
         $this->updateTimestamps();
         $this->save();
     }
