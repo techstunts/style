@@ -13,9 +13,9 @@
                     <tr>
                         <th class="font-size-table-header" width="10%">Id</th>
                         <th class="font-size-table-header" width="20%">Campaign Name</th>
-                        <th class="font-size-table-header" width="50%">Mail Subject</th>
+                        <th class="font-size-table-header" width="40%">Mail Subject</th>
                         <th class="font-size-table-header" width="10%">Status</th>
-                        <th class="font-size-table-header" width="10%">Action</th>
+                        <th class="font-size-table-header" width="20%">Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -26,15 +26,19 @@
                                 <td class="table-font-size">{{$campaign->mail_subject}}</td>
                                 <td class="table-font-size">{{$campaign->status}}</td>
                                 <td class="table-font-size">
-				   @if($campaign->isPublishable())
-                                   	 <a href="/campaign/edit/{{$campaign->id}}">Edit</a> |
-				    @endif 
+                                    @if($campaign->isPublishable())
+                                        <a href="/campaign/edit/{{$campaign->id}}">Edit</a> |
+                                    @endif
 
-                                     	<a href="/campaign/view/{{$campaign->id}}">View</a>
+                                    <a href="/campaign/view/{{$campaign->id}}">View</a>
 
                                     @if($campaign->isPublishable())
                                         | <a href="/campaign/view/{{$campaign->id}}">Publish</a>
                                     @endif
+
+                                    | <a href="/campaign-mailer/list/{{$campaign->id}}">Mailer</a>
+
+                                    | <a href="/campaign-tracker/list/{{$campaign->id}}">Tracker</a>
                                 </td>
                             </tr>
                         @endforeach

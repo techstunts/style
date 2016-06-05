@@ -67,19 +67,18 @@
                 alert("Publish time must not be empty.");
                 return false;
             }
-//
-//            var publishDate = getPublishDate();
-//            console.log(publishDate);
-//            if(!publishDate) {
-//                alert("Invalid publish date.")
-//                return false;
-//            }
-//
-//            var curDate = new Date();
-//            if(curDate >= publishDate){
-//                alert("Publish datetime should future datetime.")
-//                return false;
-//            }
+
+            var publishDate = getPublishDate();
+            if(!publishDate) {
+                alert("Invalid publish date.")
+                return false;
+            }
+
+            var curDate = new Date();
+            if(curDate >= publishDate){
+                alert("Publish datetime should future datetime.")
+                return false;
+            }
 
             return true;
         }

@@ -6,8 +6,9 @@
  * Time: 11:38 PM
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Campaign;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Campaign\Utils\CampaignUtils;
 use App\CampaignMailerTracker;

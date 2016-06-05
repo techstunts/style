@@ -6,7 +6,9 @@
  * Time: 1:02 AM
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Campaign;
+
+use App\Http\Controllers\Controller;
 use App\Campaign\Utils\CampaignUtils;
 use Illuminate\Http\Request;
 use App\CampaignMailerTracker;
@@ -48,7 +50,7 @@ class CampaignOpenTrackerController extends Controller
             ->where('email', $emailId)
             ->where('campaign_id', $campaignId)
             ->take(1)
-            ->update(['is_clicked' => 1, 'clicked_at' =>Carbon::now()]);
+            ->update(['is_opened' => 1, 'opened_at' =>Carbon::now()]);
     }
 
 

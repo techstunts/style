@@ -86,7 +86,7 @@ class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
         $senderName = $this->campaign->sender_name;
         $senderEmail = $this->campaign->sender_email;
 
-        Mail::laterOn(self::MAIL_QUEUE, $delay, 'campaign.email', ['email_content' => $content], function ($message)
+        Mail::laterOn(self::MAIL_QUEUE, $delay, 'campaign.campaign.email', ['email_content' => $content], function ($message)
                use($senderName, $senderEmail, $receiverName, $receiverEmail, $subject, $campaignId) {
                     $message->from(trim($senderEmail), $senderName)
                                 ->to(trim($receiverEmail), $receiverName)

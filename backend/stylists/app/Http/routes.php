@@ -43,10 +43,13 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('report/{report_id}/query', 'ReportController@query');
 
-    Route::any('campaign/{action}/{id?}/', 'CampaignController@index');
+    Route::any('campaign/{action}/{id?}/', 'Campaign\CampaignController@index');
+    Route::any('campaign-mailer/{action}/{id?}/', 'Campaign\CampaignMailerController@index');
+    Route::any('campaign-tracker/{action}/{id?}/', 'Campaign\CampaignTrackerController@index');
+
 });
 
-Route::any('cr', 'CampaignRedirectController@index');
-Route::any('image-open/{tracker_id}', 'CampaignOpenTrackerController@index');
-Route::any('unsubscribe/{action}', 'UnsubscribeController@index');
+Route::any('cr', 'Campaign\CampaignRedirectController@index');
+Route::any('image-open/{tracker_id}', 'Campaign\CampaignOpenTrackerController@index');
+Route::any('unsubscribe/{action}', 'Campaign\UnsubscribeController@index');
 

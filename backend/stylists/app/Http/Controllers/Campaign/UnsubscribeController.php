@@ -6,7 +6,9 @@
  * Time: 1:05 PM
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Campaign;
+
+use App\Http\Controllers\Controller;
 use App\MailerType;
 use Redirect;
 use Illuminate\Http\Request;
@@ -31,13 +33,13 @@ class UnsubscribeController extends Controller{
 
     public function getIndex(Request $request){
         $email = $request->e;
-        return view('unsubscribe.index', ['email'=> $email, 'reasons' =>Unsubscription::getReasons()]);
+        return view('campaign.unsubscribe.index', ['email'=> $email, 'reasons' =>Unsubscription::getReasons()]);
     }
 
     public function postSave(Request $request){
         $validator = $this->validator($request->all());
         if($validator->fails())
-            return view('unsubscribe.index', ['email'=> $request->email, 'reasons' =>Unsubscription::getReasons()])
+            return view('campaign.unsubscribe.index', ['email'=> $request->email, 'reasons' =>Unsubscription::getReasons()])
                     ->withErrors($validator);
 
         $unsubscribe = Unsubscription::where('email', $request->email)->first();
@@ -57,7 +59,7 @@ class UnsubscribeController extends Controller{
             $unsubscribe->save();
         }
 
-        return view('unsubscribe.save', ['email'=> $request->email]);
+        return view('campaign.unsubscribe.save', ['email'=> $request->email]);
     }
 
     protected function validator(array $data)

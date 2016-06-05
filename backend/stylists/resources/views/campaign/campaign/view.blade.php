@@ -7,7 +7,7 @@
     <div class="container">
         <h3>View Campaign "{{$campaign->campaign_name}}"</h3>
         @if($campaign->isPublishable())
-            @include('campaign.publish-form')
+            @include('campaign.campaign.publish-form')
         @endif
 
         <div class="resource_view">

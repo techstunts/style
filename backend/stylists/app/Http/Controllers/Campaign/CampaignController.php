@@ -6,7 +6,9 @@
  * Time: 12:58 PM
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Campaign;
+
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Campaign;
 use Validator;
@@ -33,7 +35,6 @@ class CampaignController extends Controller
     }
 
     public function getList(Request $request){
-        $this->base_table = 'campaign';
         $paginateQuery = $request->query();
         unset($paginateQuery['page']);
         $campaigns =
@@ -41,19 +42,19 @@ class CampaignController extends Controller
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginateQuery);
         $viewProperties['campaigns'] = $campaigns;
-        return view('campaign.list', $viewProperties);
+        return view('campaign.campaign.list', $viewProperties);
     }
 
     public function getCreate(Request $request)
     {
-        return view('campaign.create', ["placeholders" => Placeholder::getHolder()]);
+        return view('campaign.campaign.create', ["placeholders" => Placeholder::getHolder()]);
     }
 
     public function getEdit(Request $request){
         $campaign = Campaign::find($this->resource_id);
 
         if($campaign && $campaign->isEditable ())
-            return view('campaign.edit', ['campaign'=>$campaign, "placeholders" => Placeholder::getHolder()]);
+            return view('campaign.campaign.edit', ['campaign'=>$campaign, "placeholders" => Placeholder::getHolder()]);
         else if($campaign && !$campaign->isEditable ())
             return view('404', array('title' => 'Campaign is not in editable state.'));
         else
@@ -94,7 +95,7 @@ class CampaignController extends Controller
     public function getView(Request $request){
         $campaign = Campaign::find($this->resource_id);
         if($campaign)
-            return view('campaign.view', ['campaign'=>$campaign]);
+            return view('campaign.campaign.view', ['campaign'=>$campaign]);
         else
             return view('404', array('title' => 'Campaign not found.'));
     }
@@ -102,7 +103,7 @@ class CampaignController extends Controller
     public function getMailTemplate(){
         $campaign = Campaign::find($this->resource_id);
         if($campaign)
-            return view('campaign.mail-template', ['campaign'=>$campaign]);
+            return view('campaign.campaign.mail-template', ['campaign'=>$campaign]);
         else
             return view('404', array('title' => 'Campaign not found.'));
     }

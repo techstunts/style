@@ -1,4 +1,4 @@
-@extends('unsubscribe.layout')
+@extends('campaign.unsubscribe.layout')
 
 @section('title', 'Unsubscribe')
 
