@@ -16,27 +16,19 @@ class CampaignMailerController extends Controller {
 
     protected $records_per_page = 50;
 
-    public function index(Request $request, $action, $id = null, $actionId = null)
+    public function index(Request $request, $action, $id = null)
     {
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
-        if($id){
-            $this->resource_id = $id;
-        }
-        if($actionId){
-            $this->action_resource_id = $actionId;
-        }
-
+        if($id) $this->resource_id = $id;
         return $this->$method($request);
     }
 
     public function getList(Request $request){
-        $paginateQuery = $request->query();
-        unset($paginateQuery['page']);
-        $mailers = CampaignMailerRepository::where('campaign_id', $this->resource_id)
-                        ->simplePaginate($this->records_per_page)
-                        ->appends($paginateQuery);
+        $paginateQuery = $request->query(); unset($paginateQuery['page']);
 
-        $viewProperties['mailers'] = $mailers;
-        return view('campaign.mailer.list', $viewProperties);
+        $mailers = CampaignMailerRepository::where('campaign_id', $this->resource_id)
+                        ->simplePaginate($this->records_per_page)->appends($paginateQuery);
+
+        return view('campaign.mailer.list', ['mailers' => $mailers]);
     }
 } 

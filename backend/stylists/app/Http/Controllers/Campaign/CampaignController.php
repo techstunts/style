@@ -23,28 +23,21 @@ class CampaignController extends Controller
 {
     const USER_INPUT_DATE_FORMAT = "M-j-Y h:i a";
 
-    public function index(Request $request, $action, $id = null, $actionId = null)
+    public function index(Request $request, $action, $id = null)
     {
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
-        if($id){
-            $this->resource_id = $id;
-        }
-        if($actionId){
-            $this->action_resource_id = $actionId;
-        }
-
+        if($id)$this->resource_id = $id;
         return $this->$method($request);
     }
 
-    public function getList(Request $request){
-        $paginateQuery = $request->query();
-        unset($paginateQuery['page']);
-        $campaigns =
-            Campaign::orderBy('id', 'desc')
-                ->simplePaginate($this->records_per_page)
-                ->appends($paginateQuery);
-        $viewProperties['campaigns'] = $campaigns;
-        return view('campaign.campaign.list', $viewProperties);
+    public function getList(Request $request)
+    {
+        $paginateQuery = $request->query(); unset($paginateQuery['page']);
+
+        $campaigns = Campaign::orderBy('id', 'desc')
+                        ->simplePaginate($this->records_per_page)->appends($paginateQuery);
+
+        return view('campaign.campaign.list', ['campaigns' => $campaigns]);
     }
 
     public function getCreate(Request $request)
@@ -52,7 +45,8 @@ class CampaignController extends Controller
         return view('campaign.campaign.create', ["placeholders" => Placeholder::getHolder()]);
     }
 
-    public function getEdit(Request $request){
+    public function getEdit(Request $request)
+    {
         $campaign = Campaign::find($this->resource_id);
 
         if($campaign && $campaign->isEditable ())
@@ -68,10 +62,12 @@ class CampaignController extends Controller
     {
         if(!empty($this->resource_id)){
             $campaign = Campaign::find($this->resource_id);
+
             if(!$campaign)
                 return view('404', array('title' => 'Campaign not found.'));
             else if($campaign && !$campaign->isEditable ())
                 return view('404', array('title' => 'Campaign is not in editable state.'));
+
         } else {
             $campaign = new Campaign();
         }
@@ -79,9 +75,7 @@ class CampaignController extends Controller
         $validator = $this->validator($request->all());
         if($validator->fails())
             return redirect(!empty($this->resource_id)?'campaign/edit/'.$this->resource_id: 'campaign/create/')
-                                    ->withErrors($validator)
-                                    ->withInput();
-
+                                    ->withErrors($validator)->withInput();
 
         $campaign->campaign_name = $request->campaign_name;
         $campaign->sender_email = $request->sender_email;
@@ -94,15 +88,18 @@ class CampaignController extends Controller
         return redirect('/campaign/list');
     }
 
-    public function getView(Request $request){
+    public function getView(Request $request)
+    {
         $campaign = Campaign::find($this->resource_id);
+
         if($campaign)
             return view('campaign.campaign.view', ['campaign'=>$campaign]);
         else
             return view('404', array('title' => 'Campaign not found.'));
     }
 
-    public function getMailTemplate(){
+    public function getMailTemplate()
+    {
         $campaign = Campaign::find($this->resource_id);
         if($campaign)
             return view('campaign.campaign.mail-template', ['campaign'=>$campaign]);
@@ -110,23 +107,17 @@ class CampaignController extends Controller
             return view('404', array('title' => 'Campaign not found.'));
     }
 
-    public function postPublish(Request $request){
-
+    public function postPublish(Request $request)
+    {
         $campaign = Campaign::find($this->resource_id);
-        if(!$campaign)
-            return view('404', array('title' => 'Campaign not found.'));
-            else if(!$campaign->isPublishable())
-            return view('404', array('title' => 'Campaign is not in publishable state.'));
+
+        if(!$campaign) return view('404', array('title' => 'Campaign not found.'));
+        else if(!$campaign->isPublishable()) return view('404', array('title' => 'Campaign is not in publishable state.'));
 
         $validator = $this->publishValidator($request->all());
-
-        if($validator->fails())
-            return redirect('campaign/view/'.$this->resource_id)
-                    ->withErrors($validator)
-                    ->withInput();
+        if($validator->fails()) return redirect('campaign/view/'.$this->resource_id)->withErrors($validator)->withInput();
 
         $campaign->publish($request->publish_dt, self::USER_INPUT_DATE_FORMAT);
-
         $this->pushToPublishQueue($campaign);
         return redirect('campaign/view/'.$this->resource_id);
     }
@@ -142,52 +133,43 @@ class CampaignController extends Controller
         ]);
     }
 
-    public function publishValidator(array $data){
-        $validator = Validator::make($data, [
-            'publish_dt' => 'required|date_format:'.self::USER_INPUT_DATE_FORMAT
-
-        ], [
-            'publish_dt' => 'Publish datetime is invalid.'
-        ]);
+    public function publishValidator(array $data)
+    {
+        $validator = Validator::make($data,
+            ['publish_dt' => 'required|date_format:'.self::USER_INPUT_DATE_FORMAT],
+            ['publish_dt' => 'Publish datetime is invalid.']);
 
         $validator->after(function($validator) use($data) {
             $publishDate = Carbon::createFromFormat(self::USER_INPUT_DATE_FORMAT, $data['publish_dt']);
-
-            if($publishDate->lte(Carbon::now()))
-                $validator->getMessageBag()->add('publish_dt', 'Publish datetime must be future datetime.');
-
+            if($publishDate->lte(Carbon::now())) $validator->getMessageBag()->add('publish_dt', 'Publish datetime must be future datetime.');
         });
+
         return $validator;
     }
 
-    public function getTestMail(Request $request){
+    public function getTestMail(Request $request)
+    {
         $campaign = Campaign::find($this->resource_id);
-
-        if($campaign)
-            return view('campaign.campaign.test-mail', ['campaign'=>$campaign]);
-        else
-            return view('404', array('title' => 'Campaign not found.'));
+        if($campaign) return view('campaign.campaign.test-mail', ['campaign'=>$campaign]);
+        else return view('404', array('title' => 'Campaign not found.'));
     }
 
     public function postTestMail(Request $request){
         $campaign = Campaign::find($this->resource_id);
-        if(!$campaign)
-            return view('404', array('title' => 'Campaign not found.'));
+        if(!$campaign) return view('404', array('title' => 'Campaign not found.'));
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|min:4|max:5',
-            'email' => 'required|email|min:4|max:50'
-        ]);
+                                        'name' => 'required|min:4|max:50',
+                                        'email' => 'required|email|min:4|max:50' ]);
 
-        if($validator->fails())
-            return view('campaign.campaign.test-mail', ['campaign'=>$campaign])->withErrors($validator);
+        if($validator->fails()) return view('campaign.campaign.test-mail', ['campaign'=>$campaign])->withErrors($validator);
 
         $campaign->prepared_message = CampaignUtils::prepareMessage($campaign->message, $campaign->id);
         $campaign->save();
 
         $mailerService = new MailerService($campaign);
         $mailerService->sendMail(new Receiver($request->email, $request->name), false, true);
-        $request->session()->put('success', 'Mail sent.');
+
         return redirect('/campaign/list');
     }
 
@@ -195,6 +177,5 @@ class CampaignController extends Controller
         $job = (new CampaignMailPublisher($campaign))->onQueue(CampaignMailPublisher::PUBLISH_QUEUE);
         $this->dispatch($job);
     }
-
 
 } 

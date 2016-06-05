@@ -13,8 +13,14 @@
 <body>
 
     <div class="message">
-        <div class="success">{{Session::get('success')}}</div>
-        <div class="error">{{Session::get('error')}}</div>
+
+        <div class="success" style="background-color: #0f0; color: #fff;text-align: center;">
+            {{Session::get('success')}}
+        </div>
+
+        <div class="error" style="background-color: #0f0; color: #fff; text-align: center;">
+            {{Session::get('error')}}
+        </div>
     </div>
 
     @yield('content')

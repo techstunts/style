@@ -8,7 +8,8 @@
 
 namespace App\Campaign\Entities\Enums;
 
-class Placeholder {
+class Placeholder
+{
 
     const USER_NAME = "{{user_name}}";
     const EMAIL = "{{email}}";
@@ -17,7 +18,6 @@ class Placeholder {
     const OPEN_TRACKER_VAR = "{{open_tracker_var}}";
 
     public static function getHolder(){
-        return [self::EMAIL, self::USER_NAME, self::UNSUBSCRIBE_LINK];
+        return [self::EMAIL, self::USER_NAME, self::UNSUBSCRIBE_LINK, self::OPEN_TRACKER];
     }
-
 } 

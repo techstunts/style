@@ -8,7 +8,8 @@
 
 namespace App\Campaign\Entities;
 
-class Sender {
+class Sender
+{
 
     private $name;
     private $email;

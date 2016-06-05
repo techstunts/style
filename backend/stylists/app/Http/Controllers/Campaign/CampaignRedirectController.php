@@ -17,45 +17,33 @@ use Carbon\Carbon;
 use DB;
 use Redirect;
 
-
 class CampaignRedirectController extends Controller{
+
+    const UNSUBSCRIBE_LINK = "unsubscribe_link";
 
     public function index(Request $request){
         $url = base64_decode($request->u);
         $url = CampaignUtils::removeNonASCICharacter($url);
 
-        $campaignId = $request->c;
-        $email = $request->e;
-
+        $campaignId = $request->c; $email = $request->e;
         if(!empty($campaignId) && !empty($email)){
-            $this->saveToTracker($campaignId, $email, $url);
+            $trackUrl = (CampaignUtils::isUnsubcribeLink($url))? self::UNSUBSCRIBE_LINK: $url;
+            $this->saveToTracker($campaignId, $email, $trackUrl);
             $this->updateCampaignMailerRepository($campaignId, $email);
         }
 
         return Redirect::to($url, 301);
-
     }
 
     public function saveToTracker($campaignId, $emailId, $url){
-        $tracker = new CampaignMailerTracker(
-                                    [
-                                        'campaign_id' => $campaignId,
-                                        'email' => $emailId,
-                                        'url' => $url,
-                                        'event' => CampaignMailerTracker::CLICK_EVENT
-                                    ]
-                                );
-        $tracker->save();
-
+        CampaignMailerTracker::create([ 'campaign_id' => $campaignId, 'email' => $emailId,
+                                        'url' => $url, 'event' => CampaignMailerTracker::CLICK_EVENT]);
     }
 
     public function updateCampaignMailerRepository($campaignId, $emailId){
         DB::table(CampaignMailerRepository::TABLE_NAME)
-            ->where('email', $emailId)
-            ->where('campaign_id', $campaignId)
+            ->where('email', $emailId)->where('campaign_id', $campaignId)
             ->take(1)
             ->update(['is_clicked' => 1, 'clicked_at' =>Carbon::now()]);
     }
-
-
 } 

@@ -8,13 +8,13 @@
 
 namespace App\Campaign\Entities;
 
-class Receiver {
+class Receiver
+{
 
     const DEFAULT_CUSTOMER_NAME = "Customer";
 
     private $name;
     private $email;
-
 
     function __construct($email, $name)
     {

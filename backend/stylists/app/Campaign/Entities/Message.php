@@ -9,7 +9,8 @@
 namespace App\Campaign\Entities;
 
 
-class Message {
+class Message
+{
 
     private $receiver;
     private $sender;

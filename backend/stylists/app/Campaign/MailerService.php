@@ -16,13 +16,16 @@ use App\Campaign\Entities\Sender;
 use App\Campaign\Entities\Message;
 use App\Campaign\Entities\Enums\Placeholder;
 use Mail;
+use Event;
+use Carbon\Carbon;
+use App\Events\CampaignEmailSentEvent;
 
 class MailerService
 {
     const MAIL_QUEUE = 'campaign-mails';
+
     private $campaign;
     private $sender;
-
 
     public function __construct(Campaign $campaign)
     {
@@ -64,6 +67,8 @@ class MailerService
         $subject = $mailerQueue->getMessage()->getSubject();
         $delay = $mailerQueue->getDelay();
         $isRaiseSendEvent = $mailerQueue->getIsRaiseSendEvent();
+
+
 
         Mail::laterOn(self::MAIL_QUEUE, $delay, 'campaign.campaign.email', ['email_content' => $content], function ($message)
         use($senderName, $senderEmail, $receiverName, $receiverEmail, $subject, $campaignId, $isRaiseSendEvent) {

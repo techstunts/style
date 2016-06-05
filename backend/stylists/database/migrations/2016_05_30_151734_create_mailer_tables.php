@@ -26,6 +26,7 @@ class CreateMailerTables extends Migration
             $table->bigIncrements('id')->unsigned();
             $table->string('email', 50)->unique();
             $table->string('name', 50);
+            $table->boolean('is_blocked')->default(false);
             $table->enum('source', array('INTERNAL', 'EXTERNAL'));
             $table->timestamps();
         });
@@ -45,6 +46,7 @@ class CreateMailerTables extends Migration
             )
         );
 
+        /** Unsubscribe Table **/
         Schema::create(self::TABLE_UNSUBCRIPTION, function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
             $table->string('email', 50);
@@ -77,7 +79,7 @@ class CreateMailerTables extends Migration
             $table->unique(array('campaign_id', 'email'));
             $table->boolean('is_sent')->default(false);
             $table->dateTime('sent_at');
-            $table->boolean('is_open')->default(false);
+            $table->boolean('is_opened')->default(false);
             $table->dateTime('opened_at');
             $table->boolean('is_clicked')->default(false);
             $table->dateTime('clicked_at');
@@ -88,12 +90,12 @@ class CreateMailerTables extends Migration
             $table->bigIncrements('id')->unsigned();
             $table->bigInteger('campaign_id')->unsigned();
             $table->string('email', 50);
-            $table->string('url', 512);
+            $table->string('url', 256);
+            $table->index('url');
             $table->enum('event', array('OPENED', 'CLICKED'));
             $table->foreign('campaign_id')->references('id')->on(self::TABLE_CAMPAIGN);
             $table->timestamps();
         });
-
     }
 
     /**
@@ -109,8 +111,6 @@ class CreateMailerTables extends Migration
         Schema::drop(self::TABLE_CAMPAIGN_MAILER_TRACKER);
         Schema::drop(self::TABLE_CAMPAIGN_MAILER_LIST);
         Schema::drop(self::TABLE_CAMPAIGN);
-
     }
 
-    //ALTER TABLE `unsubscriptions` ADD INDEX( `email`, `mailer_type_id`);
 }

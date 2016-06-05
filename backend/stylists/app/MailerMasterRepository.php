@@ -17,7 +17,7 @@ class MailerMasterRepository extends Model
 
         /**
          * SELECT * FROM mailer_master_list as m left join unsubscriptions as u on
-         * m.email=u.email and mailer_type_id=1 where mailer_type_id is null
+         * m.email=u.email and mailer_type_id=1 where is_blocked = 0 and mailer_type_id is null
          */
         $query = self::getUserQuery()
                     -> select(self::TABLE_NAME.".email", self::TABLE_NAME.".name")
@@ -62,6 +62,7 @@ class MailerMasterRepository extends Model
                 $join->on(self::TABLE_NAME.'.email', '=', Unsubscription::TABLE_NAME.".email")
                     ->where(Unsubscription::TABLE_NAME.'.mailer_type_id', '=', MailerType::CAMPAIGN_MAILER_TYPE_ID);
             })
+            ->where(self::TABLE_NAME.'.is_blocked' , '=',  0)
             ->whereNull(Unsubscription::TABLE_NAME.'.mailer_type_id');
     }
 }

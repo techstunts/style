@@ -9,7 +9,8 @@
 namespace App\Campaign\Entities;
 
 
-class MailerQueue {
+class MailerQueue
+{
 
     private $message;
     private $campaignId;

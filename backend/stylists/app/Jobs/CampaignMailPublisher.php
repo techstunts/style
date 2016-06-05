@@ -10,8 +10,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Mockery\CountValidator\Exception;
 use App\Campaign;
 use App\MailerMasterRepository;
-use Mail;
-use Event;
 use Illuminate\Database\QueryException ;
 use App\Campaign\MailerService;
 use App\Campaign\Entities\Receiver;
@@ -52,11 +50,13 @@ class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
                 foreach($users as $user){
                     $counter++;
                     try {
+
                         $receiver = new Receiver($user->email, $user->name);
                         $this->addToCampaignMailerRepository($user->email, $receiver->getName());
-                        $mailerService ->sendMail($receiver, true);
+                        $mailerService->sendMail($receiver, true);
+
+                    /** In case of duplicate entry, don't throw exception. **/
                     }catch (QueryException $exception){
-                        /** In case of duplicate entry, don't throw exception. **/
                         if(!isset($exception->errorInfo[1]) || $exception->errorInfo[1] !== self::DUPLICATE_ENTRY_EXCEPTION_CODE )
                             throw $exception;
                     }

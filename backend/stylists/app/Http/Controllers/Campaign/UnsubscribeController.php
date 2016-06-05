@@ -18,29 +18,21 @@ use Carbon\Carbon;
 
 class UnsubscribeController extends Controller{
 
-    public function index(Request $request, $action, $id = null, $action_id = null)
+    public function index(Request $request, $action="index")
     {
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
-        if($id){
-            $this->resource_id = $id;
-        }
-        if($action_id){
-            $this->action_resource_id = $action_id;
-        }
-
         return $this->$method($request);
     }
 
-    public function getIndex(Request $request){
-        $email = $request->e;
-        return view('campaign.unsubscribe.index', ['email'=> $email, 'reasons' =>Unsubscription::getReasons()]);
+    public function getIndex(Request $request)
+    {
+        return view('campaign.unsubscribe.index', ['email'=> $request->e, 'reasons' =>Unsubscription::getReasons()]);
     }
 
-    public function postSave(Request $request){
+    public function postSave(Request $request)
+    {
         $validator = $this->validator($request->all());
-        if($validator->fails())
-            return view('campaign.unsubscribe.index', ['email'=> $request->email, 'reasons' =>Unsubscription::getReasons()])
-                    ->withErrors($validator);
+        if($validator->fails()) return view('campaign.unsubscribe.index', ['email'=> $request->email, 'reasons' =>Unsubscription::getReasons()])->withErrors($validator);
 
         $unsubscribe = Unsubscription::where('email', $request->email)->first();
         
@@ -50,13 +42,9 @@ class UnsubscribeController extends Controller{
             $unsubscribe->updated_at = Carbon::now();
             $unsubscribe->save();
         }else{
-            $unsubscribe = new Unsubscription([
-                            'email' => $request->email,
-                            'mailer_type_id' => MailerType::CAMPAIGN_MAILER_TYPE_ID,
-                            'reason' => substr($request->unsubscribe_reason, 0, 50)
-                    ]);
-
-            $unsubscribe->save();
+            Unsubscription::create([ 'email' => $request->email,
+                                     'mailer_type_id' => MailerType::CAMPAIGN_MAILER_TYPE_ID,
+                                     'reason' => substr($request->unsubscribe_reason, 0, 50)]);
         }
 
         return view('campaign.unsubscribe.save', ['email'=> $request->email]);
@@ -64,18 +52,15 @@ class UnsubscribeController extends Controller{
 
     protected function validator(array $data)
     {
-        $validator = Validator::make($data, [
-            'email' => 'required|email|min:4|max:50',
-            'unsubscribe_reason' =>'required|min:4|max:50'
-        ]);
+        $validator = Validator::make($data, ['email' => 'required|email|min:4|max:50',
+                                            'unsubscribe_reason' =>'required|min:4|max:50']);
 
         $validator->after(function($validator) use($data) {
-            if($data['unsubscribe_reason'] == Unsubscription::REASON_OTHER &&
-                        empty(trim($data['unsubscribereason_others']))){
+            if($data['unsubscribe_reason'] == Unsubscription::REASON_OTHER && empty(trim($data['unsubscribereason_others'])))
+            {
                 $validator->getMessageBag()->add('unsubscribe_reason', 'Reason value must not empty.');
             }
         });
-
         return $validator;
     }
 
