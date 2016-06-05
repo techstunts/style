@@ -11,11 +11,11 @@
                 <table id="datatable" class="display select datatable" cellspacing="0" width="100%">
                     <thead>
                     <tr>
-                        <th class="font-size-table-header" width="10%">Id</th>
-                        <th class="font-size-table-header" width="20%">Campaign Name</th>
+                        <th class="font-size-table-header" width="5%">Id</th>
+                        <th class="font-size-table-header" width="15%">Campaign Name</th>
                         <th class="font-size-table-header" width="40%">Mail Subject</th>
-                        <th class="font-size-table-header" width="10%">Status</th>
-                        <th class="font-size-table-header" width="20%">Action</th>
+                        <th class="font-size-table-header" width="8%">Status</th>
+                        <th class="font-size-table-header" width="30%">Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -41,6 +41,8 @@
                                     | <a href="/campaign-tracker/list/{{$campaign->id}}">Tracker</a>
 
                                     | <a href="/campaign/test-mail/{{$campaign->id}}">Test Mail</a>
+
+                                    | <a href="/campaign-report/index/{{$campaign->id}}">Report</a>
                                 </td>
                             </tr>
                         @endforeach
