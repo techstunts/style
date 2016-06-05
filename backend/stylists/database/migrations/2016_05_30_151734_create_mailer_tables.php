@@ -50,6 +50,7 @@ class CreateMailerTables extends Migration
             $table->string('email', 50);
             $table->bigInteger('mailer_type_id')->unsigned();
             $table->unique(array('email',  'mailer_type_id'));
+            $table->string('reason', 50);
             $table->foreign('mailer_type_id')->references('id')->on(self::TABLE_MAILER_TYPE);
             $table->timestamps();
         });
