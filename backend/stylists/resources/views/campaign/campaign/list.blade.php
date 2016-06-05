@@ -39,6 +39,8 @@
                                     | <a href="/campaign-mailer/list/{{$campaign->id}}">Mailer</a>
 
                                     | <a href="/campaign-tracker/list/{{$campaign->id}}">Tracker</a>
+
+                                    | <a href="/campaign/test-mail/{{$campaign->id}}">Test Mail</a>
                                 </td>
                             </tr>
                         @endforeach
