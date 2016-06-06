@@ -4,26 +4,31 @@
     <link href="{!! asset('/css/classic.time.css') !!} " rel="stylesheet">
     <form method="POST" id="campaign-publish-form" action="{!! url('/campaign/publish/'. $campaign->id ) !!}">
         {!! csrf_field() !!}
-        <table style="border: 1px solid #ccc; width: 500px;">
-            <tr class="row">
-                <td class="title" colspan="2">
+        <input type="hidden" id="publish_dt" name="publish_dt"  />
+        <table >
+            <tr>
+                <th colspan="2" style="text-align: center">
                     Publish Campaign
+                </th>
+            </tr>
+
+            <tr ">
+                <td >
+                    <input type="text" id="publish_date" placeholder="Publish Date" />
+                </td>
+                <td>
+                    <input type="text" id="publish_time" placeholder="Publish Time" />
                 </td>
             </tr>
-            <tr class="row">
-                <td class="title">
-                    <input type="text" id="publish_date" placeholder="Publish Date" />
-                    <input type="text" id="publish_time" placeholder="Publish Time" />
-                    <input type="hidden" id="publish_dt" name="publish_dt"  />
-                </td>
-                <td class="title">
+            <tr>
+                <td colspan="2" style="text-align: center">
                     <input type="submit" class="btn btn-primary btn-lg" style="background-color: #ff0000" value="PUBLISH">
                 </td>
             </tr>
 
             @if (count($errors) > 0)
-                <tr class="row">
-                    <td class="title" colspan="2">
+                <tr>
+                    <td colspan="2">
                         @foreach ($errors->all() as $error)
                             <span class="errorMsg">{{ $error }}</span>
                             <br/>

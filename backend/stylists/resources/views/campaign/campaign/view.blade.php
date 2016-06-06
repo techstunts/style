@@ -5,55 +5,54 @@
 @section('content')
 <div id="contentCntr">
     <div class="container">
+        <a href="/campaign/list" class="btn btn-primary btn-lg" style="margin: 10px 0; ">Back</a>
         <h3>View Campaign "{{$campaign->campaign_name}}"</h3>
         @if($campaign->isPublishable())
             @include('campaign.campaign.publish-form')
         @endif
 
         <div class="resource_view">
-                    <table style="width: 100%; border: 1px solid #ccc;">
-                        <tr class="row" style="height:30px;">
-                            <td  class="head" style="width: 20%; font-weight: bold;">Mail Subject:</td>
+                    <table class="data-table"  style="width: 100%;">
+                        <tr>
+                            <th colspan="2" style="text-align: center">Mail Details</th>
+                        </tr>
+                        <tr >
+                            <td >Mail Subject:</td>
                             <td style="width: 80%">{!! $campaign->mail_subject !!} </td>
                         </tr>
-                        <tr class="row" style="height:30px;">
-                            <td style="width: 20%; font-weight: bold;" class="head">Sender Name</td>
-                            <td class="content">{{$campaign->sender_name}} </td>
+                        <tr >
+                            <td >Sender Name</td>
+                            <td >{{$campaign->sender_name}} </td>
                         </tr>
-                        <tr class="row" style="height:30px;">
-                            <td class="head" style="width: 20%; font-weight: bold;">Sender Email</td>
-                            <td class="content">{{$campaign->sender_email}} </td>
+                        <tr >
+                            <td >Sender Email</td>
+                            <td >{{$campaign->sender_email}} </td>
                         </tr>
-                        <tr class="row" style="height:30px;">
-                            <td class="head" style="width: 20%; font-weight: bold;">Status</td>
-                            <td class="content">{{$campaign->status}} </td>
+                        <tr >
+                            <td >Status</td>
+                            <td >{{$campaign->status}} </td>
                         </tr>
 
                         @if($campaign->isPublished())
-                            <tr class="row" style="height:30px;">
-                                <td class="head" style="width: 20%; font-weight: bold;">Published On</td>
-                                <td class="content">{{ date("j-M-Y H:i:s", strtotime($campaign->published_on))}} </td>
+                            <tr >
+                                <td >Published On</td>
+                                <td >{{ date("j-M-Y H:i:s", strtotime($campaign->published_on))}} </td>
                             </tr>
                         @endif
 
-                        <tr class="row" style="height:30px;">
-                            <td class="head" style="width: 20%; font-weight: bold;">Created At</td>
-                            <td class="content">{{date('d-M-Y H:j:s ', strtotime($campaign->created_at))}} </td>
+                        <tr >
+                            <td>Created At</td>
+                            <td>{{date('d-M-Y H:j:s ', strtotime($campaign->created_at))}} </td>
                         </tr>
-                        <tr class="row" style="height:30px;">
-                            <td class="head" style="width: 20%; font-weight: bold;">Updated At</td>
-                            <td class="content">{{date('d-M-Y H:j:s ', strtotime($campaign->updated_at))}} </td>
+                        <tr >
+                            <td >Updated At</td>
+                            <td >{{date('d-M-Y H:j:s ', strtotime($campaign->updated_at))}} </td>
                         </tr>
-
-                        <tr class="row">
-                            <td class="description" colspan="2">
-
-
-                                <iframe src="/campaign/mailTemplate/{{$campaign->id}}" width="1000" height="800" scrolling="yes"></iframe>
-                            </td>
-                        </tr>
-
                     </table>
+
+                <div style="text-align: center; ">
+                    <iframe src="/campaign/mailTemplate/{{$campaign->id}}" width="100%" height="800" scrolling="yes"></iframe>
+                </div>
 
 
             </div>
