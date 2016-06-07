@@ -6,23 +6,19 @@ use App\Brand;
 use App\Category;
 use App\Models\Lookups\Gender;
 use App\Models\Lookups\Color;
-use App\Models\Enums\Category as CategoryEnum;
-use App\Models\Enums\Brand as BrandEnum;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\RecommendationType;
-use App\Models\Enums\TableName;
-use App\Models\Enums\Stylist;
 use App\Models\Lookups\AppSections;
 use App\Merchant;
 use App\Models\Lookups\Lookup;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Mapper\ProductMapper;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use Validator;
 
 class ProductController extends Controller
@@ -77,8 +73,6 @@ class ProductController extends Controller
         $view_properties['min_price'] = $request->input('min_price');
         $view_properties['max_price'] = $request->input('max_price');
 
-        $view_properties['table'] = TableName::PRODUCTS;
-
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
@@ -90,6 +84,7 @@ class ProductController extends Controller
             EntityTypeName::CLIENT
         );
         $view_properties['nav_tab_index'] = '0';
+        $view_properties['url'] = 'product/';
 
         $genders_list = Gender::all()->keyBy('id');
         $genders_list[0] = new Gender();
@@ -286,5 +281,54 @@ class ProductController extends Controller
         $product->save();
 
         return redirect('product/view/' . $this->resource_id);
+    }
+
+    public function postBulkUpdate(Request $request)
+    {
+
+        if (!Auth::user()->hasRole('admin')) {
+            return Redirect::back()
+                ->withErrors(['You do not have permission to do bulk update'])
+                ->withInput();
+        }
+        if (is_null($request->input('product_id')) || empty($request->input('product_id'))) {
+            return Redirect::back()
+                ->withErrors(['Please select at least one item to be updated'])
+                ->withInput();
+        }
+        $productMapperObj = new ProductMapper();
+
+        $valdation_clauses = $productMapperObj->validationRules();
+        $validator = Validator::make($request->all(), $valdation_clauses);
+
+        if ($validator->fails()) {
+            foreach ($validator->errors()->getMessages() as $k => $v) {
+                echo $v[0] . "<br/>";
+            }
+
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $this->base_table = 'products';
+
+        $product_ids = explode(',', $request->input('product_id'));
+
+        $update_clauses = $productMapperObj->getUpdateClauses($request);
+        if (count($update_clauses) == 0) {
+            return Redirect::back()
+                ->withErrors(['Please specify at least 1 field to update'])
+                ->withInput();
+        }
+
+        if ($productMapperObj->updateData($this->base_table, $this->where_conditions, $this->where_raw, $product_ids, $update_clauses)) {
+            return Redirect::back()
+                ->withErrors(['Records updated'])
+                ->withInput();
+        } else {
+            return Redirect::back()
+                ->withErrors(['Error updating data'])
+                ->withInput();
+        }
     }
 }

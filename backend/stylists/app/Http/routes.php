@@ -29,8 +29,6 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::any('look/{action}/{id?}/{action_id?}', 'LookController@index');
 
-    Route::any('update/{action}/', 'updateController@index');
-
     Route::any('merchant/product/{action}/{id?}', 'Merchant\ProductController@index');
 
     Route::any('stylist/{action}/{id?}', 'StylistController@index');

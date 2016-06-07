@@ -7,7 +7,6 @@ use App\MerchantProduct;
 use App\MerchantProductRejected;
 use App\Product;
 use App\Models\Enums\Stylist;
-use App\Models\Enums\TableName;
 use App\Error;
 use App\Success;
 use App\Category;
@@ -18,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Mapper\ProductMapper;
+use Validator;
 
 class ProductController extends Controller
 {
@@ -100,7 +101,7 @@ class ProductController extends Controller
         }
 
         $view_properties['stylist_id'] = Auth::user()->id;
-        $view_properties['table'] = TableName::MERCHANT_PRODUCTS;
+        $view_properties['url'] = 'merchant/product/';
 
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
@@ -236,6 +237,55 @@ class ProductController extends Controller
 
         $successObj = new Success();
         return $successObj->success(400, false);
+    }
+
+    public function postBulkUpdate(Request $request)
+    {
+
+        if (!Auth::user()->hasRole('admin')) {
+            return Redirect::back()
+                ->withErrors(['You do not have permission to do bulk update'])
+                ->withInput();
+        }
+        if (is_null($request->input('product_id')) || empty($request->input('product_id'))) {
+            return Redirect::back()
+                ->withErrors(['Please select at least one item to be updated'])
+                ->withInput();
+        }
+        $productMapperObj = new ProductMapper();
+
+        $valdation_clauses = $productMapperObj->validationRules();
+        $validator = Validator::make($request->all(), $valdation_clauses);
+
+        if ($validator->fails()) {
+            foreach ($validator->errors()->getMessages() as $k => $v) {
+                echo $v[0] . "<br/>";
+            }
+
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $this->base_table = 'merchant_products';
+
+        $product_ids = explode(',', $request->input('product_id'));
+
+        $update_clauses = $productMapperObj->getUpdateClauses($request);
+        if (count($update_clauses) == 0) {
+            return Redirect::back()
+                ->withErrors(['Please specify at least 1 field to update'])
+                ->withInput();
+        }
+
+        if ($productMapperObj->updateData($this->base_table, $this->where_conditions, $this->where_raw, $product_ids, $update_clauses)) {
+            return Redirect::back()
+                ->withErrors(['Records updated'])
+                ->withInput();
+        } else {
+            return Redirect::back()
+                ->withErrors(['Error updating data'])
+                ->withInput();
+        }
     }
 
 }
