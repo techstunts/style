@@ -6,22 +6,19 @@ use App\Brand;
 use App\Category;
 use App\Models\Lookups\Gender;
 use App\Models\Lookups\Color;
-use App\Models\Enums\Category as CategoryEnum;
-use App\Models\Enums\Brand as BrandEnum;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\RecommendationType;
-use App\Models\Enums\Stylist;
 use App\Models\Lookups\AppSections;
 use App\Merchant;
 use App\Models\Lookups\Lookup;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Mapper\ProductMapper;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use Validator;
 
 class ProductController extends Controller
@@ -87,6 +84,7 @@ class ProductController extends Controller
             EntityTypeName::CLIENT
         );
         $view_properties['nav_tab_index'] = '0';
+        $view_properties['url'] = 'product/';
 
         $genders_list = Gender::all()->keyBy('id');
         $genders_list[0] = new Gender();
@@ -194,23 +192,6 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function getView()
     {
         $product = Product::find($this->resource_id);
@@ -302,120 +283,22 @@ class ProductController extends Controller
         return redirect('product/view/' . $this->resource_id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function postBulkUpdate(Request $request)
     {
-        $bulk_update_fields = ['category_id', 'gender_id', 'primary_color_id'];
 
         if (!Auth::user()->hasRole('admin')) {
             return Redirect::back()
                 ->withErrors(['You do not have permission to do bulk update'])
                 ->withInput();
         }
-
-        $this->base_table = 'products';
-        $this->initWhereConditions($request);
-
-        $valdation_clauses = [
-            'merchant_id' => 'integer',
-            'stylist_id' => 'integer',
-            'brand_id' => 'integer',
-            'gender_id' => 'integer',
-            'primary_color_id' => 'integer',
-            'category_id' => 'integer',
-            'search' => 'regex:/[\w]+/',
-        ];
-
-        $update_clauses = [];
-
-        foreach ($bulk_update_fields as $filter) {
-            if ($request->input($filter) != "") {
-                $valdation_clauses['old_' . $filter] = 'required|integer';
-                $valdation_clauses[$filter] = 'required|integer|min:1';
-
-                unset($this->where_conditions['products.' . $filter]);
-
-                $update_clauses[$filter] = $request->input($filter);
-            }
-
-            /*if(isset($this->where_conditions['products.' . $filter])){
-                unset($this->where_conditions['products.' . $filter]);
-            }*/
-
-            if ($request->input('old_' . $filter) != "") {
-                $this->where_conditions['products.' . $filter] = $request->input('old_' . $filter);
-            }
-        }
-
-        if (count($update_clauses) == 0) {
-            return Redirect::back()
-                ->withErrors(['Please specify at least 1 field to bulk update'])
-                ->withInput();
-        }
-
-        $validator = Validator::make($request->all(), $valdation_clauses);
-
-        if ($validator->fails()) {
-            foreach ($validator->errors()->getMessages() as $k => $v) {
-                echo $v[0] . "<br/>";
-            }
-
-            return Redirect::back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        DB::table('products')
-            ->where($this->where_conditions)
-            ->whereRaw($this->where_raw)
-            ->orderBy('id', 'desc')
-            ->take($this->records_per_page)
-            ->update($update_clauses);
-
-        return Redirect::back()
-            ->withErrors(['Records updated'])
-            ->withInput();
-    }
-
-    public function getUpdateSelected(Request $request)
-    {
-        $bulk_update_fields = ['category_id', 'gender_id', 'primary_color_id'];
-        if (!Auth::user()->hasRole('admin')) {
-            return Redirect::back()
-                ->withErrors(['You do not have permission to do bulk update'])
-                ->withInput();
-        }
-        if (is_null($request->product_id)) {
+        if (is_null($request->input('product_id')) || empty($request->input('product_id'))) {
             return Redirect::back()
                 ->withErrors(['Please select at least one item to be updated'])
                 ->withInput();
         }
-        $this->base_table = 'products';
-        $this->initWhereConditions($request);
+        $productMapperObj = new ProductMapper();
 
-        $update_clauses = [];
-
-        foreach ($bulk_update_fields as $filter) {
-            if ($request->input($filter) != "") {
-                $valdation_clauses[$filter] = 'required|integer|min:1';
-
-                unset($this->where_conditions['products.' . $filter]);
-
-                $update_clauses[$filter] = $request->input($filter);
-            }
-        }
-        if (count($update_clauses) == 0) {
-            return Redirect::back()
-                ->withErrors(['Please specify at least one field to selected update'])
-                ->withInput();
-        }
-
+        $valdation_clauses = $productMapperObj->validationRules();
         $validator = Validator::make($request->all(), $valdation_clauses);
 
         if ($validator->fails()) {
@@ -427,26 +310,25 @@ class ProductController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
+        $this->base_table = 'products';
 
-        DB::table('products')
-            ->where($this->where_conditions)
-            ->whereRaw($this->where_raw)
-            ->update($update_clauses);
+        $product_ids = explode(',', $request->input('product_id'));
 
-        return Redirect::back()
-            ->withErrors(['Records updated'])
-            ->withInput();
-    }
+        $update_clauses = $productMapperObj->getUpdateClauses($request);
+        if (count($update_clauses) == 0) {
+            return Redirect::back()
+                ->withErrors(['Please specify at least 1 field to update'])
+                ->withInput();
+        }
 
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        if ($productMapperObj->updateData($this->base_table, $this->where_conditions, $this->where_raw, $product_ids, $update_clauses)) {
+            return Redirect::back()
+                ->withErrors(['Records updated'])
+                ->withInput();
+        } else {
+            return Redirect::back()
+                ->withErrors(['Error updating data'])
+                ->withInput();
+        }
     }
 }

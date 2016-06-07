@@ -9,17 +9,21 @@ use App\Product;
 use App\Models\Enums\Stylist;
 use App\Error;
 use App\Success;
+use App\Category;
+use App\Models\Lookups\Lookup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Mapper\ProductMapper;
+use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id'];
-    protected $filters = ['merchants', 'brands', 'categories', 'genders'];
+    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id'];
+    protected $filters = ['merchants', 'brands', 'categories', 'genders', 'colors'];
 
     /**
      * Display a listing of the resource.
@@ -56,7 +60,7 @@ class ProductController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollback();
-            return $redirect->with('errorMsg', 'Some exception(s) found, please contact admin');
+            return $redirect->with('errorMsg', 'Some exception(s) found, please contact admin ' . $e->getMessage());
         }
 
         if (!empty($response['success'])) {
@@ -78,16 +82,29 @@ class ProductController extends Controller
         $this->initWhereConditions($request);
         $this->initFilters();
 
+        $lookup = new Lookup();
+        $category_obj = new Category();
+
         $view_properties = array(
             'merchants' => $this->merchants,
             'brands' => $this->brands,
             'categories' => $this->categories,
-            'genders' => $this->genders
+            'colors' => $this->colors,
+            'genders' => $this->genders,
+            'category_tree' => $category_obj->getCategoryTree(),
+            'gender_list' => $lookup->type('gender')->get(),
+            'color_list' => $lookup->type('color')->get(),
         );
 
         foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->input($filter) ? $request->input($filter) : "";
         }
+
+        $view_properties['stylist_id'] = Auth::user()->id;
+        $view_properties['url'] = 'merchant/product/';
+
+        $view_properties['search'] = $request->input('search');
+        $view_properties['exact_word'] = $request->input('exact_word');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -96,9 +113,11 @@ class ProductController extends Controller
         $genders_list[0] = new Gender();
 
         $merchant_products =
-            MerchantProduct::
-            where($this->where_conditions)
-                ->simplePaginate($this->records_per_page)
+            MerchantProduct::with('brand', 'category', 'color')
+                ->where($this->where_conditions)
+                ->whereRaw($this->where_raw)
+                ->orderBy('id', 'desc')
+                ->simplePaginate($this->records_per_page * 2)
                 ->appends($paginate_qs);
 
         $view_properties['merchant_products'] = $merchant_products;
@@ -218,6 +237,55 @@ class ProductController extends Controller
 
         $successObj = new Success();
         return $successObj->success(400, false);
+    }
+
+    public function postBulkUpdate(Request $request)
+    {
+
+        if (!Auth::user()->hasRole('admin')) {
+            return Redirect::back()
+                ->withErrors(['You do not have permission to do bulk update'])
+                ->withInput();
+        }
+        if (is_null($request->input('product_id')) || empty($request->input('product_id'))) {
+            return Redirect::back()
+                ->withErrors(['Please select at least one item to be updated'])
+                ->withInput();
+        }
+        $productMapperObj = new ProductMapper();
+
+        $valdation_clauses = $productMapperObj->validationRules();
+        $validator = Validator::make($request->all(), $valdation_clauses);
+
+        if ($validator->fails()) {
+            foreach ($validator->errors()->getMessages() as $k => $v) {
+                echo $v[0] . "<br/>";
+            }
+
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $this->base_table = 'merchant_products';
+
+        $product_ids = explode(',', $request->input('product_id'));
+
+        $update_clauses = $productMapperObj->getUpdateClauses($request);
+        if (count($update_clauses) == 0) {
+            return Redirect::back()
+                ->withErrors(['Please specify at least 1 field to update'])
+                ->withInput();
+        }
+
+        if ($productMapperObj->updateData($this->base_table, $this->where_conditions, $this->where_raw, $product_ids, $update_clauses)) {
+            return Redirect::back()
+                ->withErrors(['Records updated'])
+                ->withInput();
+        } else {
+            return Redirect::back()
+                ->withErrors(['Error updating data'])
+                ->withInput();
+        }
     }
 
 }
