@@ -113,8 +113,8 @@ document.addEventListener('DOMContentLoaded', function() {
 						labels = document.querySelectorAll(\'.prod-main-wrapper li\');\
 						var i;\
 						for (i = 0; i < labels.length; i++) {\
-						    if(labels[i].querySelector(\'label\').innerText == \'Color\'){\
-								colors.push(labels[i].querySelector(\'span\').innerText);\
+						    if(labels[i].querySelectorAll(\'span\')[0].innerText == \'Color\'){\
+								colors.push(labels[i].querySelectorAll(\'span\')[1].innerText);\
 							}\
 						}\
 					}\

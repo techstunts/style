@@ -39,10 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
         foreach ($occasions as $occasion) {
             $occasion_id = Lookup::getId('occasion', $occasion);
             $latest_looks_sql =
-                "Select cl.id as look_id, cl.description, cl.image, cl.price, o.name as occasion, cl.name, uf.fav_id
+                "Select cl.id as look_id, cl.description, cl.image, cl.price, o.name as occasion, cl.name, uf.fav_id, s.id as stylist_id, s.name as stylist_name, s.image as stylist_image
 			from looks cl
 		  	join lu_occasion o on cl.occasion_id = o.id
 			LEFT JOIN usersfav uf ON cl.id = uf.look_id and uf.user_id = '$userid'
+			JOIN stylists s ON s.id = cl.stylist_id
 			where cl.gender_id = '$gender_id'
 				$body_type_condition
 				AND cl.occasion_id = '$occasion_id'

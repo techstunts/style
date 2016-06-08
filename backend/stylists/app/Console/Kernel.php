@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\Inspire::class,
+        Commands\Fetcher::class,
+        Commands\Importer::class,
     ];
 
     /**
@@ -26,5 +28,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('inspire')
                  ->hourly();
+        $schedule->command('fetch')->daily();
+        $schedule->command('import')->daily();
     }
 }

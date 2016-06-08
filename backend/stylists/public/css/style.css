@@ -533,4 +533,14 @@ img.loader{
     max-height: 110px;
     margin-right: 5px;
     border: 1px solid #d3d3d3;
+.message-position{
+    top: 60px;
+    margin-bottom: 5px;
+    text-align: center
+}
+.wysiwyg-color-red {
+    color: red;
+}
+.wysiwyg-color-green {
+    color: green;
 }
