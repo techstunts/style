@@ -46,11 +46,11 @@
                             </tr>
                             <tr class="row">
                                 <td class="head">Image URL</td>
-                                <td class="content">{{$tip->image_url}} </td>
+                                <td class="content"><a target="_blank" href=" {{$tip->image_url}}" >View</a> </td>
                             </tr>
                             <tr class="row">
                                 <td class="head">Video URL</td>
-                                <td class="content">{{$tip->video_url}} </td>
+                                <td class="content"><a target="_blank" href=" {{$tip->video_url}}" >Watch</a>  </td>
                             </tr>
                             <tr class="row">
                                 <td class="head">Status</td>
