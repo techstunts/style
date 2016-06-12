@@ -62,6 +62,7 @@ class TipController extends Controller
         $tip = new Tip();
 
         $tip = $tipMapperObj->setObjectProperties($tip, $request);
+        $tip->created_by = $request->user()->id != '' ? $request->user()->id : '';
         $tip->created_at = date('Y-m-d H:i:s');
 
         try {
@@ -199,6 +200,8 @@ class TipController extends Controller
         $tip = Tip::find($this->resource_id);
 
         $tip = $tipMapperObj->setObjectProperties($tip, $request);
+        $tip->updated_by = $request->user()->id != '' ? $request->user()->id : '';
+
         try{
             $tip->save();
             return redirect('tip/view/' . $this->resource_id);

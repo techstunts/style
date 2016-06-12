@@ -94,7 +94,7 @@ class CollectionController extends Controller
         $view_properties['app_sections']            = AppSections::all();
         $view_properties['logged_in_stylist_id']    = $user_data->id;
         $view_properties['popup_entity_type_ids']   = $entity_nav_tabs;
-        $view_properties['entity_type_to_send']     = EntityType::LOOK;
+        $view_properties['entity_type_to_send']     = EntityType::COLLECTION;
         $view_properties['recommendation_type_id']  = RecommendationType::MANUAL;
         $view_properties['is_owner_or_admin']       = Auth::user()->hasRole('admin');
         

@@ -13,6 +13,7 @@ use App\Client;
 use App\Stylist;
 use App\Look;
 use App\Tip;
+use App\Collection;
 use App\Product;
 use App\StyleRequests;
 use App\Models\Lookups\EntityType;
@@ -83,6 +84,8 @@ class RecommendationController extends Controller
             $entity_data = Look::whereIn('id', $entity_ids)->get();
         } elseif ($entity_type_id == EntityTypeId::TIP) {
             $entity_data = Tip::whereIn('id', $entity_ids)->get();
+        } elseif ($entity_type_id == EntityTypeId::COLLECTION) {
+            $entity_data = Collection::whereIn('id', $entity_ids)->get();
         }
         if (empty($entity_data)) {
             return response()->json(
@@ -140,12 +143,23 @@ class RecommendationController extends Controller
                 }
             }
         }
-        Recommendation::insert($recommends_arr);
+        $error_message = '';
+        $success_message = '';
+        $success = false;
+        try{
+            Recommendation::insert($recommends_arr);
+            $success_message = 'Sent successfully';
+            $success = true;
+        } catch (\Exception $e) {
+            $error_message = 'Exception: '. $e->getMessage();
+            $success = false;
+        }
 
         return response()->json(
             array(
-                'success' => true,
-                'error_message' => '',
+                'success' => $success,
+                'error_message' => $error_message,
+                'success_message' => $success_message,
             ), 200
         );
     }

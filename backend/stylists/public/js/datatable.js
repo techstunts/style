@@ -1,7 +1,7 @@
 //variables for navigation in various entity sections
 var entity_type_id = '';
 var entity_type_to_send = '';
-var entity = ['', 'product', 'look', '', 'tips', '', 'client'];
+var entity = ['', 'product', 'look', '', 'tip', 'collection', 'client'];
 var next_page = '';
 var prev_page = '';
 var EntityType = {
@@ -24,8 +24,8 @@ var entity_filters = [
     ['genders', 'colors', 'stylists'],
     ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
     [],
-    [],
-    [],
+    ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
+    ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
     []
 ];
 var entity_filter_ids = [
@@ -33,14 +33,16 @@ var entity_filter_ids = [
     ['id', 'id', 'id'],
     ['id', 'id', 'id', 'id', 'id', 'id', 'id'],
     [],
-    []
+    ['id', 'id', 'id', 'id', 'id', 'id', 'id'],
+    ['id', 'id', 'id', 'id', 'id', 'id', 'id'],
 ];
 var entity_fields_ids = [
     [],
     ['gender_id', 'primary_color_id', 'stylist_id'],
     ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'stylist_id'],
     [],
-    []
+    ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'created_by'],
+    ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'created_by'],
 ];
 var api_origin = '';
 var stylist_id = '';
@@ -181,7 +183,7 @@ $(document).ready(function () {
 
     $("#send").on('click', function (e) {
         var entity_ids = [];
-        if (entity_type_id == EntityType.CLIENT || entity_type_id == EntityType.TIP) {
+        if (entity_type_id == EntityType.CLIENT) {
             $('.items #popup-item :checked').each(function () {
                 entity_ids.push($(this).val());
             });
@@ -225,15 +227,15 @@ $(document).ready(function () {
                 _token: $(this).parent().children('input[name="_token"]').val()
             },
             success: function (response) {
-                if (response.error_message != "") {
+                if (response.success == false) {
                     alert(response.error_message);
                 } else {
-                    alert("Sent Successfully");
+                    alert(response.success_message);
                     $(".popup-inner > .pop-up-item input").attr('checked', false);
                     $(".mobile-app-send .btn").removeClass('active');
                     $(".mobile-app-send .btn").addClass('disabled');
                     entity_ids = [];
-                    if (entity_type_id == EntityType.CLIENT || entity_type_id == EntityType.TIP) {
+                    if (entity_type_id == EntityType.CLIENT) {
                         rows_selected = [];
                     }
                     entity_sent_once = EntitySent.YES;
@@ -276,12 +278,14 @@ function initializeFilters() {
             url: api_origin + '/filters/list',
             beforeSend: toggleLoader,
             success: function (data) {
-                all_filters[1] = data;
+                all_filters[EntityType.PRODUCT] = data;
                 $.ajax({
                     url: api_origin + '/look/filters',
                     beforeSend: toggleLoader,
                     success: function (data) {
-                        all_filters[2] = data;
+                        all_filters[EntityType.LOOK] = data;
+                        all_filters[EntityType.TIP] = data;
+                        all_filters[EntityType.COLLECTION] = data;
                         showFilters();
                     },
                     complete: toggleLoader
@@ -319,7 +323,7 @@ function showFilters() {
 }
 
 function getEntityUrl(entity_type_id) {
-    if (entity_type_id == EntityType.CLIENT || entity_type_id == EntityType.TIP) {
+    if (entity_type_id == EntityType.CLIENT) {
         if (role_admin) {
             entity_url = api_origin + "/" + entity[entity_type_id] + "/list?stylist_id=&";
         } else {
@@ -342,7 +346,7 @@ function displayPopup(e) {
     entity_url = getEntityUrl(entity_type_id);
 
     $('#filters form').attr('action', entity_url);
-    if (entity_type_id != EntityType.CLIENT || entity_type_id != EntityType.TIP) {
+    if (entity_type_id != EntityType.CLIENT) {
         initializeFilters();
     }
 
@@ -376,7 +380,7 @@ function showEntities(entity_url) {
                     '</div>';
 
                 for (var i = 0; i < item.data.length; i++) {
-                    if (entity_type_id != EntityType.CLIENT || entity_type_id != EntityType.TIP) {
+                    if (entity_type_id != EntityType.CLIENT) {
                         var popover_data = "Price: " + item.data[i].price + "/- <br >" +
                             "Description: " + item.data[i].description + "<br >" +
                             "<img src='" + item.data[i].image + "' />";

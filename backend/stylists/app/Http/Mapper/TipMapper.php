@@ -85,7 +85,6 @@ class TipMapper extends Controller
         $tip->age_group_id = isset($request->age_group_id) && $request->age_group_id != '' ? $request->age_group_id : '';
         $tip->body_type_id = isset($request->body_type_id) && $request->body_type_id != '' ? $request->body_type_id : '';
         $tip->occasion_id = isset($request->occasion_id) && $request->occasion_id != '' ? $request->occasion_id : '';
-        $tip->created_by = $request->user()->id != '' ? $request->user()->id : '';
 
         return $tip;
     }

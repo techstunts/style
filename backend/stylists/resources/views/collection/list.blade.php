@@ -25,12 +25,18 @@
             {!! $collections->render() !!}
 
             <div class="clear"></div>
+            @include('common.sendrecommendations')
+            <div class="clear"></div>
+
 
             <ol class="selectable" >
             @foreach($collections as $collection)
                 <li class="ui-state-default" collection_id="{{$collection->id}}">
                     <div class="items">
-                        <div class="name text"><a href="{{url('collection/view/' . $collection->id)}}">{{$collection->name}}</a></div>
+                        <div class="name text " id="popup-item">
+                            <a href="{{url('collection/view/' . $collection->id)}}">{{$collection->name == "" ? "Error! Collection name empty" : $collection->name }}</a>
+                            <input class="entity_ids pull-right"  value="{{$collection->id}}" type="checkbox">
+                        </div>
                         <div class="image"><img src="{!! asset('images/' . $collection->image) !!}" /></div>
                         <div class="extra text">
                             <span>{{$collection->status->name}}</span>
@@ -53,6 +59,7 @@
         </div>
 
         @include('look.create')
+        @include('push.popup')
     </div>
 </div>
 @endsection
