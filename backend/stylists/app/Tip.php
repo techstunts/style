@@ -40,8 +40,8 @@ class Tip extends Model
         return $this->belongsTo('App\Models\Lookups\Occasion', 'occasion_id');
     }
     
-    public function created_by(){
-        return $this->belongsTo('App\Stylist', 'stylist_id');
+    public function createdBy(){
+        return $this->belongsTo('App\Stylist', 'created_by');
     }
      
     public function updated_by(){

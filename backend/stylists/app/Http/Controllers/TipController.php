@@ -42,7 +42,7 @@ class TipController extends Controller
     {
         $tipMapperObj = new TipMapper();
         $view_properties = $tipMapperObj->getDropDowns();
-        $view_properties = array_merge($view_properties, $tipMapperObj->getViewProperties($request));
+        $view_properties = array_merge($view_properties, $tipMapperObj->getViewProperties($request->old()));
         return view('tip.create', $view_properties);
     }
 
@@ -52,11 +52,10 @@ class TipController extends Controller
 
         $validator = $tipMapperObj->inputValidator($request);
         if ($validator->fails()) {
-            $view_properties = $tipMapperObj->getViewProperties($request);
 
             return Redirect::back()
                 ->withErrors($validator)
-                ->withInput($view_properties);
+                ->withInput($request->all());
         }
 
         $tip = new Tip();
@@ -93,7 +92,12 @@ class TipController extends Controller
         foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
-        $view_properties['stylist_id'] = $request->has('stylist_id') && $request->input('stylist_id') !== "" ? intval($request->input('stylist_id')) : "";
+
+        $view_properties['stylist_id'] = '';
+        if ($request->has('stylist_id') && $request->input('stylist_id') !== "" ) {
+            $view_properties['stylist_id'] = intval($request->input('stylist_id'));
+            $this->where_conditions[$this->base_table.'.created_by'] = $request->input('stylist_id');
+        }
 
         $entity_nav_tabs = array(
             EntityType::CLIENT
@@ -106,7 +110,10 @@ class TipController extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
-        $tips = Tip::where($this->where_conditions)
+        $tips = Tip::with(['createdBy' => function($query) {
+            $query->select('id', 'name');
+        }])
+            ->where($this->where_conditions)
             ->whereRaw($this->where_raw)
             ->orderBy('id', 'desc')
             ->simplePaginate($this->records_per_page)
@@ -132,7 +139,7 @@ class TipController extends Controller
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
         $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
 
-
+//        dd($tips);
         return view('tip.list', $view_properties);
 
     }

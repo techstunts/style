@@ -22,7 +22,7 @@
                                 <tr class="row">
                                     <td class="title" colspan="2">
                                         <input class="form-control" placeholder="Name" type="text" name="name"
-                                               value="{{old('name') != "" ? old('name'): ''}}" validation="required">
+                                               value="{{$name != "" ? $name: ''}}" validation="required">
 
                                     </td>
                                 </tr>
@@ -30,7 +30,14 @@
                                 <tr class="row">
                                     <td class="description" colspan="2">
                                         <textarea class="form-control" placeholder="Description" type="text"
-                                                  name="description">{{old('description') != '' ? old('description') : ''}}</textarea>
+                                                  name="description">{{$description != '' ? $description : ''}}</textarea>
+
+                                    </td>
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="title" colspan="2">
+                                        @include('common.gender.select')
 
                                     </td>
                                 </tr>
@@ -65,15 +72,8 @@
 
                                 <tr class="row">
                                     <td class="title" colspan="2">
-                                        @include('common.gender.select')
-
-                                    </td>
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="title" colspan="2">
                                         <input class="form-control" placeholder="Image URL" type="text" name="image_url"
-                                               value="{{old('image_url') ? old('image_url') : ''}}" validation="required">
+                                               value="{{$image_url ? $image_url : ''}}" validation="required">
 
                                     </td>
                                 </tr>
@@ -81,7 +81,7 @@
                                 <tr class="row">
                                     <td class="title" colspan="2">
                                         <input class="form-control" placeholder="Video URL" type="text" name="video_url"
-                                               value="{{old('video_url') ? old('video_url') : ''}}" validation="required">
+                                               value="{{$video_url ? $video_url : ''}}" validation="required">
 
                                     </td>
                                 </tr>
@@ -89,7 +89,7 @@
                                 <tr class="row">
                                     <td class="title" colspan="2">
                                         <input class="form-control" placeholder="External URL" type="text"
-                                               name="external_url" value="{{old('external_url') ? old('external_url') : ''}}" validation="required">
+                                               name="external_url" value="{{$external_url ? $external_url : ''}}" validation="required">
 
                                     </td>
                                 </tr>
@@ -97,7 +97,7 @@
                                 <tr class="row">
                                     <td class="title" colspan="2">
                                         <input class="form-control" placeholder="Image" type="text" name="image"
-                                               value="{{old('image') ? old('image') : ''}}" validation="required">
+                                               value="{{$image ? $image : ''}}" validation="required">
 
                                     </td>
                                 </tr>

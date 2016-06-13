@@ -20,7 +20,7 @@
                     <input type="submit" name="filter" value="Filter"/>
                     <a href="{{url('tip/list')}}" class="clearall">Clear All</a>
                 </form>
-                
+
             </div>
             <div class="clear"></div>
 
@@ -32,7 +32,7 @@
             @if(count($tips) == 0)
                 No Tips found
             @endif
-            
+
             @foreach($tips as $tip)
                 <li class="ui-state-default" tip_id="{{$tip->id}}">
                     <div class="items">
@@ -40,26 +40,32 @@
                             <a href="{{url('tip/view/' . $tip->id)}}">{{$tip->name == "" ? "Error! Tip name empty" : $tip->name }}</a>
                             <input class="entity_ids pull-right"  value="{{$tip->id}}" type="checkbox">
                         </div>
-                        <div class="image"><img src="{!! asset('images/' . $tip->image) !!}" /></div>
+                        @if($tip->image)
+                            <div class="image"><img src="{!! asset('images/' . $tip->image) !!}" /></div>
+                        @elseif($tip->image_url)
+                            <div class="image"><img src="{!! $tip->image_url !!}" /></div>
+                        @else
+                            <div class="image"><img src="{!! asset('images/logoistle.png') !!}" /></div>
+                        @endif
                         <div class="extra text">
-                            
-                           
+
+
                         </div>
-                        <div class="extra text">
-                            <span>{{$tip->name}}</span>
-                            <span>{{$tip->description}}</span>
-                            <span>{{$tip->created_by}}</span>
-                        </div>
+                        @if($tip->createdBy)
+                            <div class="extra text">
+                                <a target="_blank" href="{{url('stylist/view/' . $tip->createdBy->id)}}"><span>{{$tip->createdBy->name}}</span></a>
+                            </div>
+                        @endif
                     </div>
                 </li>
             @endforeach
             </ol>
 
             <div class="clear"></div>
-            
+
         </div>
 
-        
+
         @include('push.popup')
     </div>
 </div>

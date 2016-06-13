@@ -60,8 +60,13 @@ class CollectionController extends Controller
         foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
-        $view_properties['stylist_id'] = $request->has('stylist_id') && $request->input('stylist_id') !== "" ? intval($request->input('stylist_id')) : "";
-        
+
+        $view_properties['stylist_id'] = '';
+        if ($request->has('stylist_id') && $request->input('stylist_id') !== "" ) {
+            $view_properties['stylist_id'] = intval($request->input('stylist_id'));
+            $this->where_conditions[$this->base_table.'.created_by'] = $request->input('stylist_id');
+        }
+
         $view_properties['nav_tab_index'] = '0';
         $user_data = Auth::user();
         $entity_nav_tabs = array(

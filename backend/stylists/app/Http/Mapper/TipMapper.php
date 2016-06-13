@@ -55,20 +55,20 @@ class TipMapper extends Controller
         );
     }
 
-    public function getViewProperties($request)
+    public function getViewProperties($old_values)
     {
         return array(
-            'name' => isset($request->name) && $request->name != '' ? $request->name : '',
-            'description' => isset($request->description) && $request->description != '' ? $request->description : '',
-            'image' => isset($request->image) && $request->image != '' ? $request->image : '',
-            'image_url' => isset($request->image_url) && $request->image_url != '' ? $request->image_url : '',
-            'video_url' => isset($request->video_url) && $request->video_url != '' ? $request->video_url : '',
-            'external_url' => isset($request->external_url) && $request->external_url != '' ? $request->external_url : '',
-            'body_type_id' => isset($request->body_type_id) && $request->body_type_id != '' ? $request->body_type_id : '',
-            'budget_id' => isset($request->budget_id) && $request->budget_id != '' ? $request->budget_id : '',
-            'age_group_id' => isset($request->age_group_id) && $request->age_group_id != '' ? $request->age_group_id : '',
-            'occasion_id' => isset($request->occasion_id) && $request->occasion_id != '' ? $request->occasion_id : '',
-            'gender_id' => isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '',
+            'name' => isset($old_values['name']) && $old_values['name'] != '' ? $old_values['name'] : '',
+            'description' => isset($old_values['description']) && $old_values['description'] != '' ? $old_values['description'] : '',
+            'image' => isset($old_values['image']) && $old_values['image'] != '' ? $old_values['image'] : '',
+            'image_url' => isset($old_values['image_url']) && $old_values['image_url'] != '' ? $old_values['image_url'] : '',
+            'video_url' => isset($old_values['video_url']) && $old_values['video_url'] != '' ? $old_values['video_url'] : '',
+            'external_url' => isset($old_values['external_url']) && $old_values['external_url'] != '' ? $old_values['external_url'] : '',
+            'body_type_id' => isset($old_values['body_type_id']) && $old_values['body_type_id'] != '' ? intval($old_values['body_type_id']) : '',
+            'budget_id' => isset($old_values['budget_id']) && $old_values['budget_id'] != '' ? intval($old_values['budget_id']) : '',
+            'age_group_id' => isset($old_values['age_group_id']) && $old_values['age_group_id'] != '' ? intval($old_values['age_group_id']) : '',
+            'occasion_id' => isset($old_values['occasion_id']) && $old_values['occasion_id'] != '' ? intval($old_values['occasion_id']) : '',
+            'gender_id' => isset($old_values['gender_id']) && $old_values['gender_id'] != '' ? intval($old_values['gender_id']) : '',
         );
     }
 
@@ -94,7 +94,7 @@ class TipMapper extends Controller
         return Validator::make($request->all(), [
             'name' => 'required|max:256|min:5',
             'description' => 'required|min:25',
-            'gender_id' => 'required',
+            'gender_id' => 'required|in:1,2',
         ]);
     }
 
