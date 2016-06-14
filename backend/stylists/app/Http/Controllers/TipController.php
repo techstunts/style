@@ -175,13 +175,8 @@ class TipController extends Controller
         if ($tip) {
             $view_properties = $tipMapperObj->getDropDowns();
 
-            $view_properties['tip'] = $tip;
-            $view_properties['gender_id'] = intval($tip->gender_id);
-            $view_properties['status_id'] = intval($tip->status_id);
-            $view_properties['occasion_id'] = intval($tip->occasion_id);
-            $view_properties['age_group_id'] = intval($tip->age_group_id);
-            $view_properties['budget_id'] = intval($tip->budget_id);
-            $view_properties['body_type_id'] = intval($tip->body_type_id);
+            $view_properties = array_merge($view_properties, $tipMapperObj->getViewProperties($request->old(), $tip));
+            $view_properties = array_merge($view_properties, ['tip' => $tip]);
 
         } else {
             return view('404', array('title' => 'Tip not found'));
@@ -201,7 +196,7 @@ class TipController extends Controller
         if ($validator->fails()) {
             return redirect('tip/edit/' . $this->resource_id)
                 ->withErrors($validator)
-                ->withInput();
+                ->withInput($request->all());
         }
 
         $tip = Tip::find($this->resource_id);
