@@ -80,7 +80,7 @@
                             <tr class="row">
                                 <td class="head">Products</td>
                                 <td class="content">
-                                    @foreach($tip->entities as $entity)
+                                    @foreach($tip->product_entities as $entity)
                                         @if(!empty($entity->product))
                                             <div>
                                                 <a href="{{url('product/view/' . $entity->product->id)}}"
@@ -101,7 +101,7 @@
                             <tr class="row">
                                 <td class="head">Looks</td>
                                 <td class="content">
-                                    @foreach($tip->entities as $entity)
+                                    @foreach($tip->look_entities as $entity)
                                         @if(!empty($entity->look))
                                             <a href="{{url('look/view/' . $entity->look->id)}}"
                                                title="{{$entity->look->name}}"

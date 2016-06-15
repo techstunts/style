@@ -103,6 +103,23 @@
                                 </tr>
 
                                 <tr class="row">
+                                    <td class="title" colspan="1">
+                                        <a class="btn active btn-primary btn-xs btn_add_entity" style="color: #fff;" data-popup-open="send-entities" href="#">Add Looks and Products</a>
+                                    </td>
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="head">Products</td>
+                                    <input type="hidden" name="product_ids" value="{{old('product_ids') != "" ? old('product_ids') : ''}}" id="product_ids">
+                                </tr>
+
+
+                                <tr class="row">
+                                    <td class="head">Looks</td>
+                                    <input type="hidden" name="look_ids" value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
+                                </tr>
+
+                                <tr class="row">
                                     <td class="title" colspan="2">
                                         <input type="submit" class="btn btn-primary btn-lg" value="Save">
                                         <a href="{!! url('tip/create/') !!}">Cancel</a>
@@ -118,6 +135,7 @@
 
 
         @include('look.create')
+        @include('push.popup')
 
     </div>
 

@@ -47,7 +47,10 @@ class Tip extends Model
     public function updated_by(){
         return $this->belongsTo('App\Stylist', 'stylist_id');
     }
-    public function entities(){
+    public function product_entities(){
+        return $this->hasMany('App\TipEntity');
+    }
+    public function look_entities(){
         return $this->hasMany('App\TipEntity');
     }
 

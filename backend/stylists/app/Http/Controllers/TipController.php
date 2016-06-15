@@ -15,6 +15,7 @@ use App\Http\Mapper\TipMapper;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
 
 class TipController extends Controller
 {
@@ -43,6 +44,8 @@ class TipController extends Controller
         $tipMapperObj = new TipMapper();
         $view_properties = $tipMapperObj->getDropDowns();
         $view_properties = array_merge($view_properties, $tipMapperObj->getViewProperties($request->old()));
+        $view_properties = array_merge($view_properties, $tipMapperObj->getPopupProperties($request));
+
         return view('tip.create', $view_properties);
     }
 
@@ -63,11 +66,19 @@ class TipController extends Controller
         $tip = $tipMapperObj->setObjectProperties($tip, $request);
         $tip->created_by = $request->user()->id != '' ? $request->user()->id : '';
         $tip->created_at = date('Y-m-d H:i:s');
-
+        DB::beginTransaction();
         try {
             $tip->save();
+            $result = $tipMapperObj->saveEntities($tip->id, $request->input('product_ids'), $request->input('look_ids'));
+
+            if ($result['status'] == false) {
+                DB::rollback();
+                return Redirect::back()->withError('Exception while creating tip entities'. PHP_EOL. $result['message']);
+            }
+            DB::commit();
             return redirect('tip/view/' . $tip->id);
         } catch (\Exception $e) {
+            DB::rollback();
             return Redirect::back()->withError('Error occur while creating a tip '.PHP_EOL . $e->getMessage());
         }
     }
@@ -139,7 +150,6 @@ class TipController extends Controller
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
         $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
 
-//        dd($tips);
         return view('tip.list', $view_properties);
 
     }
@@ -176,6 +186,8 @@ class TipController extends Controller
             $view_properties = $tipMapperObj->getDropDowns();
 
             $view_properties = array_merge($view_properties, $tipMapperObj->getViewProperties($request->old(), $tip));
+            $view_properties = array_merge($view_properties, $tipMapperObj->getPopupProperties($request));
+            
             $view_properties = array_merge($view_properties, ['tip' => $tip]);
 
         } else {
@@ -199,16 +211,22 @@ class TipController extends Controller
                 ->withInput($request->all());
         }
 
+
         $tip = Tip::find($this->resource_id);
 
         $tip = $tipMapperObj->setObjectProperties($tip, $request);
+        $result = $tipMapperObj->saveEntities($tip->id, $request->input('product_ids'), $request->input('look_ids'));
+
+        if ($result['status'] == false) {
+            return Redirect::back()->withError('Exception while updating tip entities'. PHP_EOL. $result['message']);
+        }
         $tip->updated_by = $request->user()->id != '' ? $request->user()->id : '';
 
         try{
             $tip->save();
             return redirect('tip/view/' . $this->resource_id);
         } catch(\Exception $e){
-            return Redirect::back()->withError('Error occur while updating the tip'. PHP_EOL. $e->getMessage());
+            return Redirect::back()->withError('Exception while updating. '. PHP_EOL. $e->getMessage());
         }
     }
 

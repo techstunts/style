@@ -43,7 +43,12 @@
         <div class="mobile-app-send">
             {!! csrf_field() !!}
             @include('common.app_section.select')
-            <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
+            @if(!empty($add_entity) && $add_entity == true)
+                <a class="btn disabled btn-primary btn-xs" id="add" value="send">Add</a>
+                <input type="hidden" value="{{$add_entity}}" id="add_entity_btn">
+            @else
+                <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
+            @endif
             <img class="loader" src="/images/popup-loader.gif"/>
         </div>
     </div>

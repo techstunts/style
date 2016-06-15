@@ -80,14 +80,60 @@
                             <tr class="row">
                                 <td class="title" colspan="2">
                                     <input class="form-control" placeholder="Image URL" type="text" name="image_url" value="{{ old('image_url') != "" ? old('image_url') : $tip->image_url }}">
-               
+
                                 </td>
                             </tr>
-                            
+
                             <tr class="row">
                                 <td class="title" colspan="2">
                                     <input class="form-control" placeholder="Video URL" type="text" name="video_url" value="{{ old('video_url') != "" ? old('video_url') : $tip->video_url }}">
-               
+
+                                </td>
+                            </tr>
+
+                            <tr class="row">
+                                <td class="title" colspan="1">
+                                    <a class="btn active btn-primary btn-xs btn_add_entity" style="color: #fff;" data-popup-open="send-entities" href="#">Add Looks and Products</a>
+                                </td>
+                            </tr>
+
+                            <tr class="row">
+                                <td class="head">Products</td>
+                                <input type="hidden" name="product_ids" value="{{old('product_ids') != "" ? old('product_ids') : ''}}" id="product_ids">
+                                <td class="content">
+                                @foreach($tip->product_entities as $entity)
+                                    @if(!empty($entity->product))
+                                            <div>
+                                                <a href="{{url('product/view/' . $entity->product->id)}}"
+                                                   title="{{$entity->product->name}}"
+                                                   target="product_win">
+                                                    <img class="tip-product-img_size"
+                                                         src="{{strpos($entity->product->upload_image, "http") !== false ? $entity->product->upload_image : asset('images/' . $entity->product->upload_image)}}"/>
+                                                </a>
+                                                <span>Brand : {{$entity->product->brand ? $entity->product->brand->name : ''}}</span>
+                                                <a target="_blank" href={{$entity->product->product_link}}>External
+                                                    link</a>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </td>
+                            </tr>
+
+
+                            <tr class="row">
+                                <td class="head">Looks</td>
+                                <input type="hidden" name="look_ids" value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
+                                <td class="content">
+                                    @foreach($tip->look_entities as $entity)
+                                        @if(!empty($entity->look))
+                                            <a href="{{url('look/view/' . $entity->look->id)}}"
+                                               title="{{$entity->look->name}}"
+                                               target="product_win">
+                                                <img class="entity"
+                                                     src="{{strpos($entity->look->image, "http") !== false ? $entity->look->image : asset('images/' . $entity->look->image)}}"/>
+                                            </a>
+                                        @endif
+                                    @endforeach
                                 </td>
                             </tr>
 
@@ -105,8 +151,8 @@
         </ol>
     </div>
 
-
     @include('look.create')
+    @include('push.popup')
 
 </div>
 

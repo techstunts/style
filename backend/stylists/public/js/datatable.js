@@ -174,6 +174,7 @@ $(document).ready(function () {
 
     //----- OPEN
     $('div.container a.btn_recommendation').on('click', displayPopup);
+    $('div.container a.btn_add_entity').on('click', displayPopup);
 
     $('#filters form').submit(function (e) {
         url = $(this).attr('action') + $(this).serialize();
@@ -268,6 +269,29 @@ $(document).ready(function () {
         } else {
             $(".container .btn-primary").removeClass('active');
             $(".container .btn-primary").addClass('disabled');
+        }
+    });
+
+    $("#add").on('click', function (e) {
+        var entity_ids = [];
+        $(".popup-inner > .pop-up-item :checked").each(function () {
+            entity_ids.push($(this).val());
+        });
+
+        if (entity_ids.length <= 0) {
+            alert('Please select at least one item');
+            return false;
+        }
+
+        if (entity_type_id == EntityType.LOOK) {
+            $("#look_ids")[0].value = entity_ids;
+            $(".mobile-app-send .btn").removeClass('active');
+            $(".mobile-app-send .btn").addClass('disabled');
+        }
+        if (entity_type_id == EntityType.PRODUCT) {
+            $("#product_ids")[0].value = entity_ids;
+            $(".mobile-app-send .btn").removeClass('active');
+            $(".mobile-app-send .btn").addClass('disabled');
         }
     });
 });
