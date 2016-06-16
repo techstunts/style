@@ -77,6 +77,7 @@ function getLooksDetails($looks, $userid){
             $stylist_details['stylist_name'] = $looks[$i]['stylist_name'];
             $stylist_details['stylish_image'] = $looks[$i]['stylist_image'];
             $stylist_details['stylist_image'] = $looks[$i]['stylist_image'];
+            $stylist_details['stylist_icon'] = isset($looks[$i]['stylist_icon']) ? $looks[$i]['stylist_icon'] : $looks[$i]['stylist_image'];
         }
 
         $current_look_details =
