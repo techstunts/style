@@ -67,31 +67,35 @@
 
                             <tr class="row">
                                 <td class="head">Stylist</td>
-                                @if(!empty($stylist))
+                                @if(!empty($tip->createdBy))
                                     <td class="content">
-                                        <a href="{{url('stylist/view/' . $stylist->id)}}" title="{{$stylist->name}}"
+                                        <a href="{{url('stylist/view/' . $tip->createdBy->id)}}" title="{{$tip->createdBy->name}}"
                                            target="stylist_win">
-                                            <img class="icon" src="{{asset('images/' . $stylist->image)}}"/>
-                                            {{$stylist->name}}
+                                            <img class="icon" src="{{asset('images/' . $tip->createdBy->image)}}"/>
+                                            {{$tip->createdBy->name}}
                                         </a>
                                     </td>
                                 @endif
                             </tr>
                             <tr class="row">
                                 <td class="head">Products</td>
-                                <td class="content">
+                                <td class="content products">
                                     @foreach($tip->product_entities as $entity)
                                         @if(!empty($entity->product))
-                                            <div>
-                                                <a href="{{url('product/view/' . $entity->product->id)}}"
-                                                   title="{{$entity->product->name}}"
-                                                   target="product_win">
-                                                    <img class="tip-product-img_size"
-                                                         src="{{strpos($entity->product->upload_image, "http") !== false ? $entity->product->upload_image : asset('images/' . $entity->product->upload_image)}}"/>
-                                                </a>
-                                                <span>Brand : {{$entity->product->brand ? $entity->product->brand->name : ''}}</span>
-                                                <a target="_blank" href={{$entity->product->product_link}}>External
-                                                    link</a>
+                                            <div class="items pop-up-item">
+                                                <div class="name text">
+                                                    <a href="{{url('product/view/' . $entity->product->id)}}"
+                                                       title="{{$entity->product->name}}"
+                                                       target="product_win">
+                                                        <img class="tip-product-img_size"
+                                                             src="{{strpos($entity->product->upload_image, "http") !== false ? $entity->product->upload_image : asset('images/' . $entity->product->upload_image)}}"/>
+                                                    </a>
+                                                </div>
+                                                <div class="image">
+                                                    <span>Brand : {{$entity->product->brand ? $entity->product->brand->name : ''}}</span>
+                                                    <a target="_blank" href={{$entity->product->product_link}}>External
+                                                        link</a>
+                                                </div>
                                             </div>
                                         @endif
                                     @endforeach
@@ -100,15 +104,19 @@
                             <div class="clear"></div>
                             <tr class="row">
                                 <td class="head">Looks</td>
-                                <td class="content">
+                                <td class="content looks">
                                     @foreach($tip->look_entities as $entity)
                                         @if(!empty($entity->look))
-                                            <a href="{{url('look/view/' . $entity->look->id)}}"
-                                               title="{{$entity->look->name}}"
-                                               target="product_win">
-                                                <img class="entity"
-                                                     src="{{strpos($entity->look->image, "http") !== false ? $entity->look->image : asset('images/' . $entity->look->image)}}"/>
-                                            </a>
+                                            <div class="items pop-up-item">
+                                                <div class="name text">
+                                                    <a href="{{url('look/view/' . $entity->look->id)}}"
+                                                       title="{{$entity->look->name}}"
+                                                       target="product_win">
+                                                        <img class="entity"
+                                                             src="{{strpos($entity->look->image, "http") !== false ? $entity->look->image : asset('images/' . $entity->look->image)}}"/>
+                                                    </a>
+                                                </div>
+                                            </div>
                                         @endif
                                     @endforeach
                                 </td>

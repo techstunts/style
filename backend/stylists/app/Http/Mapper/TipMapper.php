@@ -15,7 +15,7 @@ use App\TipEntity;
 
 class TipMapper extends Controller
 {
-    protected $fields = ['id', 'name', 'description', 'image', 'created_by as stylist_id', 'video_url', 'image_url', 'external_url',
+    protected $fields = ['id', 'name', 'description', 'image', 'created_by', 'video_url', 'image_url', 'external_url',
         'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'created_at'];
 
     protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group'];
@@ -88,30 +88,75 @@ class TipMapper extends Controller
     public function saveEntities($tip_id, $products, $looks)
     {
         $entity_product_ids = $products ? explode(',', $products) : [];
+        $entity_look_ids = $looks ? explode(',', $looks) : [];
+
+        $tip_entities = $this->getExistingEntities($tip_id);
+
+        $existing_look_entities = [];
+        $existing_product_entities = [];
+
+        $entity_type_look = EntityType::LOOK;
+        $entity_type_product = EntityType::PRODUCT;
+
+        if (count($tip_entities) > 0) {
+            foreach ($tip_entities as $tip_entity){
+                if ($tip_entity->entity_type_id == $entity_type_look) {
+                    array_push($existing_look_entities, $tip_entity->entity_id);
+                }elseif ($tip_entity->entity_type_id == $entity_type_product) {
+                    array_push($existing_product_entities, $tip_entity->entity_id);
+                }
+            }
+        }
+
+        $products_to_delete = array_diff($existing_product_entities, $entity_product_ids);
+        $looks_to_delete = array_diff($existing_look_entities, $entity_look_ids);
+        $products_to_add = array_diff($entity_product_ids, $existing_product_entities);
+        $looks_to_add = array_diff($entity_look_ids, $existing_look_entities);
 
         $entity_array = [];
         $index = 0;
-        foreach ($entity_product_ids as $entity_product_id) {
+        foreach ($products_to_add as $entity_product_id) {
             $entity_array[$index++] = array(
                 'tip_id' => $tip_id,
-                'entity_type_id' => EntityType::PRODUCT,
+                'entity_type_id' => $entity_type_product,
                 'entity_id' => $entity_product_id,
             );
         }
 
-        $entity_look_ids = $looks ? explode(',', $looks) : [];
-        foreach ($entity_look_ids as $entity_look_id) {
+        foreach ($looks_to_add as $entity_look_id) {
             $entity_array[$index++] = array(
                 'tip_id' => $tip_id,
-                'entity_type_id' => EntityType::LOOK,
+                'entity_type_id' => $entity_type_look,
                 'entity_id' => $entity_look_id,
             );
         }
+
         $status = true;
         $message = '';
         if (count($entity_array) > 0) {
             try {
                 TipEntity::insert($entity_array);
+            } catch (\Exception $e) {
+                $status = false;
+                $message = $e->getMessage();
+                return array(
+                    'status' => $status,
+                    'message' => $message,
+                );
+            }
+        }
+
+        $raw_query = '';
+        foreach ($products_to_delete as $item) {
+            $raw_query = $raw_query . " OR (tip_id = '{$tip_id}' AND entity_type_id = '{$entity_type_product}' AND entity_id = '{$item}')";
+        }
+        foreach ($looks_to_delete as $item) {
+            $raw_query = $raw_query . " OR (tip_id = '{$tip_id}' AND entity_type_id = '{$entity_type_look}' AND entity_id = '{$item}')";
+        }
+
+        if (!empty($raw_query)) {
+            try {
+                TipEntity::whereRaw(substr($raw_query, 4))->delete();
             } catch (\Exception $e) {
                 $status = false;
                 $message = $e->getMessage();
@@ -158,6 +203,9 @@ class TipMapper extends Controller
                 $query->with(['look' => $look])
                     ->where('entity_type_id', $entity_type_look);
             }])
+            ->with([('createdBy') => function ($query) {
+                $query->select('id', 'name', 'image');
+            }])
             ->with($this->with_array)
             ->select($this->fields)
             ->where('id', $id)
@@ -194,4 +242,9 @@ class TipMapper extends Controller
         return $view_properties;
     }
 
+    public function getExistingEntities($tip_id)
+    {
+        $tip_entities = TipEntity::where('tip_id', $tip_id)->get();
+        return $tip_entities;
+    }
 }

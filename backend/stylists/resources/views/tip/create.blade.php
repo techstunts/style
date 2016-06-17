@@ -2,6 +2,7 @@
 
 @section('title', 'Create a Tip')
 
+@include('common.iconlibrary')
 @section('content')
     <div id="contentCntr">
         <div class="container">
@@ -107,16 +108,19 @@
                                         <a class="btn active btn-primary btn-xs btn_add_entity" style="color: #fff;" data-popup-open="send-entities" href="#">Add Looks and Products</a>
                                     </td>
                                 </tr>
-
                                 <tr class="row">
                                     <td class="head">Products</td>
-                                    <input type="hidden" name="product_ids" value="{{old('product_ids') != "" ? old('product_ids') : ''}}" id="product_ids">
+                                    <input type="hidden" name="product_ids"
+                                           value="{{old('product_ids') != "" ? old('product_ids') : ''}}"
+                                           id="product_ids">
+                                    <td class="content"></td>
                                 </tr>
-
 
                                 <tr class="row">
                                     <td class="head">Looks</td>
-                                    <input type="hidden" name="look_ids" value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
+                                    <input type="hidden" name="look_ids"
+                                           value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
+                                    <td class="content"></td>
                                 </tr>
 
                                 <tr class="row">

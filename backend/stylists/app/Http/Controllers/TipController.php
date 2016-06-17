@@ -187,7 +187,7 @@ class TipController extends Controller
 
             $view_properties = array_merge($view_properties, $tipMapperObj->getViewProperties($request->old(), $tip));
             $view_properties = array_merge($view_properties, $tipMapperObj->getPopupProperties($request));
-            
+
             $view_properties = array_merge($view_properties, ['tip' => $tip]);
 
         } else {

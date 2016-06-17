@@ -274,27 +274,72 @@ $(document).ready(function () {
 
     $("#add").on('click', function (e) {
         var entity_ids = [];
-        $(".popup-inner > .pop-up-item :checked").each(function () {
-            entity_ids.push($(this).val());
-        });
+        var checked_items = $(".popup-inner > .pop-up-item :checked");
 
-        if (entity_ids.length <= 0) {
+        if (checked_items.length <= 0) {
             alert('Please select at least one item');
             return false;
         }
 
+        var cross_mark = '<span class="pull-right cross_mark"><a href="#"><i class="material-icons" style="font-size: 13px;">close</i></a></span>';
+
         if (entity_type_id == EntityType.LOOK) {
-            $("#look_ids")[0].value = entity_ids;
+            checked_items.parent().parent().each(function () {
+                var inputChkBox = $(this).children('.name').children('input');
+
+                $(this).children('.name').prepend(cross_mark);
+                $(this).children('.name').children('span').on('click', deleteItem);
+                $(this).attr('value', inputChkBox.val());
+                inputChkBox.remove();
+                $(this).appendTo($("#look_ids").parent().children('.content')[0]);
+                $("#look_ids").parent().children('.content')[0].value = $(this).val();
+            });
+
             $(".mobile-app-send .btn").removeClass('active');
             $(".mobile-app-send .btn").addClass('disabled');
         }
         if (entity_type_id == EntityType.PRODUCT) {
-            $("#product_ids")[0].value = entity_ids;
+            checked_items.parent().parent().each(function () {
+                var inputChkBox = $(this).children('.name').children('input');
+                $(this).children('.name').prepend(cross_mark);
+                $(this).children('.name').children('span').on('click', deleteItem);
+                $(this).attr('value', inputChkBox.val());
+                inputChkBox.remove();
+                $(this).appendTo($("#product_ids").parent().children('.content')[0]);
+                $("#product_ids").parent().children('.content').value = $(this).val();
+            });
+
             $(".mobile-app-send .btn").removeClass('active');
             $(".mobile-app-send .btn").addClass('disabled');
         }
+        alert('Items added in list');
+    });
+
+    $(".info").find('input:submit').on('click', function(){
+        var look_ids = [];
+
+        $("#look_ids").parent().children('.content').find('.items').each(function(){
+            look_ids.push($(this).attr('value'));
+        });
+        $("#look_ids")[0].value = look_ids;
+
+        var product_ids = [];
+
+        $("#product_ids").parent().children('.content').find('.items').each(function(){
+            product_ids.push($(this).attr('value'));
+        });
+        $("#product_ids")[0].value = product_ids;
+    });
+
+    $(".pop-up-item").each(function () {
+        $(this).children('span').on('click', deleteItem);
     });
 });
+
+function deleteItem(e){
+    $(this).parents('.items').remove();
+    e.preventDefault();
+}
 
 function initializeFilters() {
     if ($("#filters select").length == 0) {
@@ -395,7 +440,7 @@ function showEntities(entity_url) {
             } else {
                 var str = '<div class="items pop-up-item" >' +
                     '<div class="name text">' +
-                    '<input class="entity_ids" name="entity_ids" id="entity_ids" value="{{item_id}}" type="checkbox">' +
+                    '<input class="entity_ids" name="entity_ids" value="{{item_id}}" type="checkbox">' +
                     '<a href="' + '/' + entity[entity_type_id] + '/view//{{item_id}}" target="_blank">{{item_name}}</a>' +
                     '</div>' +
                     '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="{{item_popover}}">' +
