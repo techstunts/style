@@ -62,25 +62,13 @@ class TipController extends Controller
         }
 
         $tip = new Tip();
+        $result = $tipMapperObj->saveTipDetails($tip, $request);
 
-        $tip = $tipMapperObj->setObjectProperties($tip, $request);
-        $tip->created_by = $request->user()->id != '' ? $request->user()->id : '';
-        $tip->created_at = date('Y-m-d H:i:s');
-        DB::beginTransaction();
-        try {
-            $tip->save();
-            $result = $tipMapperObj->saveEntities($tip->id, $request->input('product_ids'), $request->input('look_ids'));
-
-            if ($result['status'] == false) {
-                DB::rollback();
-                return Redirect::back()->withError('Exception while creating tip entities'. PHP_EOL. $result['message']);
-            }
-            DB::commit();
-            return redirect('tip/view/' . $tip->id);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return Redirect::back()->withError('Error occur while creating a tip '.PHP_EOL . $e->getMessage());
+        if ($result['status'] == false) {
+            return Redirect::back()->withError($result['message'])->withInput($request->all());
         }
+        return redirect('tip/view/' . $tip->id);
+
     }
 
 
@@ -105,9 +93,9 @@ class TipController extends Controller
         }
 
         $view_properties['stylist_id'] = '';
-        if ($request->has('stylist_id') && $request->input('stylist_id') !== "" ) {
+        if ($request->has('stylist_id') && $request->input('stylist_id') !== "") {
             $view_properties['stylist_id'] = intval($request->input('stylist_id'));
-            $this->where_conditions[$this->base_table.'.created_by'] = $request->input('stylist_id');
+            $this->where_conditions[$this->base_table . '.created_by'] = $request->input('stylist_id');
         }
 
         $entity_nav_tabs = array(
@@ -121,7 +109,7 @@ class TipController extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
-        $tips = Tip::with(['createdBy' => function($query) {
+        $tips = Tip::with(['createdBy' => function ($query) {
             $query->select('id', 'name');
         }])
             ->where($this->where_conditions)
@@ -210,24 +198,14 @@ class TipController extends Controller
                 ->withErrors($validator)
                 ->withInput($request->all());
         }
-
-
         $tip = Tip::find($this->resource_id);
 
-        $tip = $tipMapperObj->setObjectProperties($tip, $request);
-        $result = $tipMapperObj->saveEntities($tip->id, $request->input('product_ids'), $request->input('look_ids'));
+        $result = $tipMapperObj->saveTipDetails($tip, $request);
 
         if ($result['status'] == false) {
-            return Redirect::back()->withError('Exception while updating tip entities'. PHP_EOL. $result['message']);
+            return Redirect::back()->withError($result['message'])->withInput($request->all());
         }
-        $tip->updated_by = $request->user()->id != '' ? $request->user()->id : '';
-
-        try{
-            $tip->save();
-            return redirect('tip/view/' . $this->resource_id);
-        } catch(\Exception $e){
-            return Redirect::back()->withError('Exception while updating. '. PHP_EOL. $e->getMessage());
-        }
+        return redirect('tip/view/' . $tip->id);
     }
 
 }

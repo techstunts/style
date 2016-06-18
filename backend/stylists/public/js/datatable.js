@@ -284,29 +284,29 @@ $(document).ready(function () {
         var cross_mark = '<span class="pull-right cross_mark"><a href="#"><i class="material-icons" style="font-size: 13px;">close</i></a></span>';
 
         if (entity_type_id == EntityType.LOOK) {
-            checked_items.parent().parent().each(function () {
+            checked_items.parents('.items').each(function () {
                 var inputChkBox = $(this).children('.name').children('input');
 
                 $(this).children('.name').prepend(cross_mark);
                 $(this).children('.name').children('span').on('click', deleteItem);
                 $(this).attr('value', inputChkBox.val());
                 inputChkBox.remove();
-                $(this).appendTo($("#look_ids").parent().children('.content')[0]);
-                $("#look_ids").parent().children('.content')[0].value = $(this).val();
+                $(this).appendTo($("#look_ids").siblings('.content')[0]);
+                $("#look_ids").siblings('.content')[0].value = $(this).val();
             });
 
             $(".mobile-app-send .btn").removeClass('active');
             $(".mobile-app-send .btn").addClass('disabled');
         }
         if (entity_type_id == EntityType.PRODUCT) {
-            checked_items.parent().parent().each(function () {
+            checked_items.parents('.items').each(function () {
                 var inputChkBox = $(this).children('.name').children('input');
                 $(this).children('.name').prepend(cross_mark);
                 $(this).children('.name').children('span').on('click', deleteItem);
                 $(this).attr('value', inputChkBox.val());
                 inputChkBox.remove();
-                $(this).appendTo($("#product_ids").parent().children('.content')[0]);
-                $("#product_ids").parent().children('.content').value = $(this).val();
+                $(this).appendTo($("#product_ids").siblings('.content')[0]);
+                $("#product_ids").siblings('.content').value = $(this).val();
             });
 
             $(".mobile-app-send .btn").removeClass('active');
@@ -318,17 +318,20 @@ $(document).ready(function () {
     $(".info").find('input:submit').on('click', function(){
         var look_ids = [];
 
-        $("#look_ids").parent().children('.content').find('.items').each(function(){
+        var element_look_ids = $(this).parents('.info').find('#look_ids');
+
+        element_look_ids.siblings('.content').find('.items').each(function(){
             look_ids.push($(this).attr('value'));
         });
-        $("#look_ids")[0].value = look_ids;
+        element_look_ids.attr('value', look_ids);
 
         var product_ids = [];
 
-        $("#product_ids").parent().children('.content').find('.items').each(function(){
+        var element_product_ids = $(this).parents('.info').find('#product_ids');
+        element_product_ids.siblings('.content').find('.items').each(function(){
             product_ids.push($(this).attr('value'));
         });
-        $("#product_ids")[0].value = product_ids;
+        element_product_ids.attr('value', product_ids);
     });
 
     $(".pop-up-item").each(function () {

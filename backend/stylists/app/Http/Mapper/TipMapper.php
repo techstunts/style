@@ -87,36 +87,36 @@ class TipMapper extends Controller
 
     public function saveEntities($tip_id, $products, $looks)
     {
-        $entity_product_ids = $products ? explode(',', $products) : [];
-        $entity_look_ids = $looks ? explode(',', $looks) : [];
+        $new_product_ids = $products ? explode(',', $products) : [];
+        $new_look_ids = $looks ? explode(',', $looks) : [];
 
         $tip_entities = $this->getExistingEntities($tip_id);
 
-        $existing_look_entities = [];
-        $existing_product_entities = [];
+        $existing_look_ids = [];
+        $existing_product_ids = [];
 
         $entity_type_look = EntityType::LOOK;
         $entity_type_product = EntityType::PRODUCT;
 
         if (count($tip_entities) > 0) {
-            foreach ($tip_entities as $tip_entity){
+            foreach ($tip_entities as $tip_entity) {
                 if ($tip_entity->entity_type_id == $entity_type_look) {
-                    array_push($existing_look_entities, $tip_entity->entity_id);
-                }elseif ($tip_entity->entity_type_id == $entity_type_product) {
-                    array_push($existing_product_entities, $tip_entity->entity_id);
+                    array_push($existing_look_ids, $tip_entity->entity_id);
+                } elseif ($tip_entity->entity_type_id == $entity_type_product) {
+                    array_push($existing_product_ids, $tip_entity->entity_id);
                 }
             }
         }
 
-        $products_to_delete = array_diff($existing_product_entities, $entity_product_ids);
-        $looks_to_delete = array_diff($existing_look_entities, $entity_look_ids);
-        $products_to_add = array_diff($entity_product_ids, $existing_product_entities);
-        $looks_to_add = array_diff($entity_look_ids, $existing_look_entities);
+        $products_to_delete = array_diff($existing_product_ids, $new_product_ids);
+        $looks_to_delete = array_diff($existing_look_ids, $new_look_ids);
+        $products_to_add = array_diff($new_product_ids, $existing_product_ids);
+        $looks_to_add = array_diff($new_look_ids, $existing_look_ids);
 
-        $entity_array = [];
+        $insert_entities = [];
         $index = 0;
         foreach ($products_to_add as $entity_product_id) {
-            $entity_array[$index++] = array(
+            $insert_entities[$index++] = array(
                 'tip_id' => $tip_id,
                 'entity_type_id' => $entity_type_product,
                 'entity_id' => $entity_product_id,
@@ -124,7 +124,7 @@ class TipMapper extends Controller
         }
 
         foreach ($looks_to_add as $entity_look_id) {
-            $entity_array[$index++] = array(
+            $insert_entities[$index++] = array(
                 'tip_id' => $tip_id,
                 'entity_type_id' => $entity_type_look,
                 'entity_id' => $entity_look_id,
@@ -133,34 +133,25 @@ class TipMapper extends Controller
 
         $status = true;
         $message = '';
-        if (count($entity_array) > 0) {
-            try {
-                TipEntity::insert($entity_array);
-            } catch (\Exception $e) {
-                $status = false;
-                $message = $e->getMessage();
-                return array(
-                    'status' => $status,
-                    'message' => $message,
-                );
-            }
-        }
 
-        $raw_query = '';
+        $delete_entities_query = '';
         foreach ($products_to_delete as $item) {
-            $raw_query = $raw_query . " OR (tip_id = '{$tip_id}' AND entity_type_id = '{$entity_type_product}' AND entity_id = '{$item}')";
+            $delete_entities_query = $delete_entities_query . " OR (tip_id = '{$tip_id}' AND entity_type_id = '{$entity_type_product}' AND entity_id = '{$item}')";
         }
         foreach ($looks_to_delete as $item) {
-            $raw_query = $raw_query . " OR (tip_id = '{$tip_id}' AND entity_type_id = '{$entity_type_look}' AND entity_id = '{$item}')";
+            $delete_entities_query = $delete_entities_query . " OR (tip_id = '{$tip_id}' AND entity_type_id = '{$entity_type_look}' AND entity_id = '{$item}')";
         }
 
-        if (!empty($raw_query)) {
-            try {
-                TipEntity::whereRaw(substr($raw_query, 4))->delete();
-            } catch (\Exception $e) {
-                $status = false;
-                $message = $e->getMessage();
+        try {
+            if (count($insert_entities) > 0) {
+                TipEntity::insert($insert_entities);
             }
+            if (!empty($delete_entities_query)) {
+                TipEntity::whereRaw(substr($delete_entities_query, 4))->delete();
+            }
+        } catch (\Exception $e) {
+            $status = false;
+            $message = $e->getMessage();
         }
 
         return array(
@@ -246,5 +237,38 @@ class TipMapper extends Controller
     {
         $tip_entities = TipEntity::where('tip_id', $tip_id)->get();
         return $tip_entities;
+    }
+
+    public function saveTipDetails($tip, $request)
+    {
+        $tip = $this->setObjectProperties($tip, $request);
+        $logged_in_stylist = $request->user()->id != '' ? $request->user()->id : '';
+
+        if ($tip->exists) {
+            $tip->updated_by = $logged_in_stylist;
+        } else {
+            $tip->created_by = $logged_in_stylist;
+            $tip->created_at = date('Y-m-d H:i:s');
+        }
+
+        DB::beginTransaction();
+        try {
+            $tip->save();
+            $result = $this->saveEntities($tip->id, $request->input('product_ids'), $request->input('look_ids'));
+
+            if ($result['status'] == false) {
+                DB::rollback();
+                return $result;
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+        }
+
+        return $result;
     }
 }
