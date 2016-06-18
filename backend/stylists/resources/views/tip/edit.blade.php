@@ -113,7 +113,7 @@
                                                 <div class="items pop-up-item" value="{{$entity->product->id}}">
                                                     <span class="pull-right cross_mark"><a href="#"><i class="material-icons" style="font-size: 13px;">close</i></a></span>
                                                     <div class="name text">
-                                                        <a href="{{url('look/view/' . $entity->product->id)}}"
+                                                        <a href="{{url('product/view/' . $entity->product->id)}}"
                                                            target="_blank">{{$entity->product->name}}</a>
                                                     </div>
                                                     <div class="image" data-toggle="popover" data-trigger="hover"
