@@ -9,32 +9,44 @@ class MailerMasterRepository extends Model
 {
 
     const TABLE_NAME = 'mailer_master_list';
-    const FETCH_LIMIT = 1;
+    const FETCH_LIMIT = 100;
 
     protected $table = self::TABLE_NAME;
 
     public static function getUsers($start){
+        /*
+        ---------------------------------
+        select `mailer_master_list`.`email`, `mailer_master_list`.`name` from `mailer_master_list`
+                left join `unsubscriptions` on `mailer_master_list`.`email` = `unsubscriptions`.`email`
+                and `unsubscriptions`.`mailer_type_id` = 1 where `mailer_master_list`.`is_blocked` = 0 and
+                `unsubscriptions`.`mailer_type_id` is null limit 100 offset 0
+        --------------------------------
+        */
 
-        /**
-         * SELECT * FROM mailer_master_list as m left join unsubscriptions as u on
-         * m.email=u.email and mailer_type_id=1 where is_blocked = 0 and mailer_type_id is null
-         */
         $query = self::getUserQuery()
                     -> select(self::TABLE_NAME.".email", self::TABLE_NAME.".name")
                     ->skip($start)
                     ->take(self::FETCH_LIMIT);
 
-        self::queryLogger($query);
+        //self::queryLogger($query);
         return $query->get();
     }
 
 
 
     public static function getUsersCount(){
+        /*
+        ---------------------------------
+        select count(*) as user_count from `mailer_master_list` left join `unsubscriptions`
+                on `mailer_master_list`.`email` = `unsubscriptions`.`email` and
+                `unsubscriptions`.`mailer_type_id` = 1 where `mailer_master_list`.`is_blocked` = 0
+                and `unsubscriptions`.`mailer_type_id` is null
+        --------------------------------
+        */
         $query = self::getUserQuery()
                     -> select(DB::raw('count(*) as user_count'));
 
-        self::queryLogger($query);
+        //self::queryLogger($query);
         return $query->count();
     }
 

@@ -21,10 +21,12 @@ class CampaignOpenTrackerController extends Controller
 {
     const IMAGE_FILE_PATH = "/../../../Campaign/spacer.gif";
 
-    public function index(Request $request, $trackerId){
+    public function index(Request $request){
 
+        $trackerId = isset($request->tid)?$request->tid:"";
         $trackerString = base64_decode($trackerId);
         $trackerData = CampaignUtils::getOpenTrackerData($trackerString);
+
         if(!empty($trackerData['email']) && !empty($trackerData['campaignId'])){
             $this->saveToTracker($trackerData['campaignId'], $trackerData['email']);
             $this->updateCampaignMailerRepository($trackerData['campaignId'], $trackerData['email']);

@@ -7,7 +7,7 @@ class CreateMailerTables extends Migration
 {
 
     CONST TABLE_MASTER_LIST = "mailer_master_list";
-    CONST TABLE_MAILER_TYPE = "mailer_types";
+    CONST TABLE_MAILER_TYPE = "lu_mailer_type";
     CONST TABLE_UNSUBCRIPTION = "unsubscriptions";
     CONST TABLE_CAMPAIGN = "campaigns";
     CONST TABLE_CAMPAIGN_MAILER_LIST = "campaign_mailer_list";
@@ -34,7 +34,7 @@ class CreateMailerTables extends Migration
         /**  Mailer Type **/
         Schema::create(self::TABLE_MAILER_TYPE, function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->string('type', 50);
+            $table->string('name', 50);
             $table->timestamps();
         });
 
@@ -42,7 +42,7 @@ class CreateMailerTables extends Migration
         DB::table(self::TABLE_MAILER_TYPE)->insert(
             array(
                 'id' => 1,
-                'type' => 'Campaign Mailer'
+                'name' => 'Campaign Mailer'
             )
         );
 

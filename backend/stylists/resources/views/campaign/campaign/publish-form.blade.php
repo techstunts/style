@@ -5,30 +5,30 @@
     <form method="POST" id="campaign-publish-form" action="{!! url('/campaign/publish/'. $campaign->id ) !!}">
         {!! csrf_field() !!}
         <input type="hidden" id="publish_dt" name="publish_dt"  />
-        <table >
+        <table class="frmtbl">
             <tr>
-                <th colspan="2" style="text-align: center">
+                <th colspan="2" style="text-align: center" class="frmtbl">
                     Publish Campaign
                 </th>
             </tr>
 
             <tr ">
-                <td >
-                    <input type="text" id="publish_date" placeholder="Publish Date" />
+                <td class="frmtbl">
+                    <input type="text" id="publish_date" class="frmtbl" placeholder="Publish Date" />
                 </td>
-                <td>
-                    <input type="text" id="publish_time" placeholder="Publish Time" />
+                <td class="frmtbl">
+                    <input type="text" id="publish_time" class="frmtbl" placeholder="Publish Time" />
                 </td>
             </tr>
             <tr>
-                <td colspan="2" style="text-align: center">
+                <td colspan="2" style="text-align: center" class="frmtbl">
                     <input type="submit" class="btn btn-primary btn-lg" style="background-color: #ff0000" value="PUBLISH">
                 </td>
             </tr>
 
             @if (count($errors) > 0)
                 <tr>
-                    <td colspan="2">
+                    <td colspan="2" class="frmtbl">
                         @foreach ($errors->all() as $error)
                             <span class="errorMsg">{{ $error }}</span>
                             <br/>
@@ -47,10 +47,11 @@
     <script type="text/javascript">
         $(function() {
             $('#publish_date').pickadate({
-                format: 'mmm-dd-yyyy'
+                format: 'mmm dd yyyy',
+                min: new Date()
             });
             $('#publish_time').pickatime({
-                format: 'h:i A'
+                format: 'H:i'
             });
 
             $("#campaign-publish-form").submit(function(){
@@ -89,7 +90,9 @@
         }
 
         function getPublishDate(){
+
             var dateStr =  getPublishDateStr();
+
             try{
                 return Date.parse(dateStr);
             }catch (e){

@@ -21,7 +21,7 @@ use App\Campaign\Entities\Receiver;
 
 class CampaignController extends Controller
 {
-    const USER_INPUT_DATE_FORMAT = "M-j-Y h:i a";
+    const USER_INPUT_DATE_FORMAT = "M j Y  H:i";
 
     public function index(Request $request, $action, $id = null)
     {
@@ -135,6 +135,7 @@ class CampaignController extends Controller
 
     public function publishValidator(array $data)
     {
+
         $validator = Validator::make($data,
             ['publish_dt' => 'required|date_format:'.self::USER_INPUT_DATE_FORMAT],
             ['publish_dt' => 'Publish datetime is invalid.']);

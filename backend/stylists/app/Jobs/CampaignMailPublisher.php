@@ -41,6 +41,7 @@ class CampaignMailPublisher extends Job implements SelfHandling, ShouldQueue
 
     private function process()
     {
+
         $totalUser = MailerMasterRepository::getUsersCount();
         if($totalUser > 0){
             $counter = 0;

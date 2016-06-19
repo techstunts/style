@@ -21,7 +21,7 @@ class CampaignUtils {
     private static $excludeLinks = ['#', '/', Placeholder::UNSUBSCRIBE_LINK];
     private static $redirectURI = '/cr?c=%d&e=%s&u=%s';
     private static $unsubscribeURI = '/unsubscribe?e=%s';
-    private static $openTrackerURI = '/image-open/%s';
+    private static $openTrackerURI = '/image-open?tid=%s';
 
     public static function prepareMessage($message, $campaignId)
     {

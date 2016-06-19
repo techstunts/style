@@ -68,8 +68,6 @@ class MailerService
         $delay = $mailerQueue->getDelay();
         $isRaiseSendEvent = $mailerQueue->getIsRaiseSendEvent();
 
-
-
         Mail::laterOn(self::MAIL_QUEUE, $delay, 'campaign.campaign.email', ['email_content' => $content], function ($message)
         use($senderName, $senderEmail, $receiverName, $receiverEmail, $subject, $campaignId, $isRaiseSendEvent) {
             $message->from(trim($senderEmail), $senderName)
