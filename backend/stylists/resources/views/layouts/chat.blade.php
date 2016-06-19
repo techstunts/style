@@ -30,6 +30,7 @@
     <script src="{{asset("chat/scripts/directives/selector.js")}}"></script>
     <script src="{{asset("chat/scripts/directives/icon.js")}}"></script>
     <script src="{{asset("chat/scripts/directives/info.js")}}"></script>
+    <script src="{{asset("chat/scripts/directives/unsubscribe.js")}}"></script>
     <script src="{{asset("chat/scripts/filters/browser.js")}}"></script>
     <script src="{{asset("chat/scripts/filters/spaces.js")}}"></script>
     <script src="{{asset("chat/scripts/filters/time.js")}}"></script>
@@ -37,7 +38,7 @@
 
 </head>
 
-<body notifications>
+<body notifications unsubscribe>
 
     <header>
         @include('layouts.menu')
