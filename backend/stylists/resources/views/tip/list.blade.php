@@ -24,7 +24,7 @@
             </div>
             <div class="clear"></div>
 
-            <a href="{{url('tip/create')}}" class="clearall">Create Tip</a>
+            <a class="btn btn-primary btn-xs" href="{{url('tip/create')}}" class="clearall">Create Tip</a>
             @include('common.sendrecommendations')
             <div class="clear"></div>
 

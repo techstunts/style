@@ -10,18 +10,18 @@ use App\Models\Enums\EntityTypeName;
 use App\Models\Lookups\AppSections;
 use App\Models\Enums\RecommendationType;
 use Validator;
-use App\Tip;
-use App\TipEntity;
+use App\Collection;
+use App\CollectionEntity;
 
-class TipMapper extends Controller
+class CollectionMapper extends Controller
 {
-    protected $fields = ['id', 'name', 'description', 'image', 'created_by', 'video_url', 'image_url', 'external_url',
+    protected $fields = ['id', 'name', 'description', 'created_by',
         'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'created_at'];
 
     protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group'];
 
     protected $dropdown_fields = ['body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id'];
-    protected $input_fields = ['name', 'description', 'image', 'video_url', 'image_url', 'external_url'];
+    protected $input_fields = ['name', 'description', 'image'];
 
     public function getDropDowns()
     {
@@ -35,13 +35,13 @@ class TipMapper extends Controller
         );
     }
 
-    public function getViewProperties($old_values, $tip = null)
+    public function getViewProperties($old_values, $collection = null)
     {
         $values_array = array();
 
-        if ($tip) {
+        if ($collection) {
             foreach ($this->dropdown_fields as $dropdown_field) {
-                $values_array[$dropdown_field] = isset($old_values[$dropdown_field]) && $old_values[$dropdown_field] != '' ? intval($old_values[$dropdown_field]) : $tip->$dropdown_field;
+                $values_array[$dropdown_field] = isset($old_values[$dropdown_field]) && $old_values[$dropdown_field] != '' ? intval($old_values[$dropdown_field]) : $collection->$dropdown_field;
             }
         } else {
             foreach ($this->dropdown_fields as $dropdown_field) {
@@ -55,27 +55,24 @@ class TipMapper extends Controller
         return $values_array;
     }
 
-    public function setObjectProperties($tip, $request)
+    public function setObjectProperties($collection, $request)
     {
-        $tip->name = isset($request->name) && $request->name != '' ? strtoupper(substr($request->name, 0, 1)) . substr($request->name, 1) : '';
-        $tip->description = strtoupper(substr($request->description, 0, 1)) . substr($request->description, 1);
-        $tip->image = isset($request->image) && $request->image != '' ? $request->image : '';
-        $tip->image_url = isset($request->image_url) && $request->image_url != '' ? $request->image_url : '';
-        $tip->video_url = isset($request->video_url) && $request->video_url != '' ? $request->video_url : '';
-        $tip->external_url = isset($request->external_url) && $request->external_url != '' ? $request->external_url : '';
+        $collection->name = isset($request->name) && $request->name != '' ? strtoupper(substr($request->name, 0, 1)) . substr($request->name, 1) : '';
+        $collection->description  = strtoupper(substr($request->description, 0, 1)) . substr($request->description, 1);
+        $collection->image = isset($request->image) && $request->image != '' ? $request->image : '';
 
         foreach ($this->dropdown_fields as $dropdown_field) {
-            $tip->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : '';;
+            $collection->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : '';;
         }
-        return $tip;
+        return $collection;
     }
 
-    public function saveEntities($tip_id, $products, $looks)
+    public function saveEntities($collection_id, $products, $looks)
     {
         $new_product_ids = $products ? explode(',', $products) : [];
         $new_look_ids = $looks ? explode(',', $looks) : [];
 
-        $tip_entities = $this->getExistingEntities($tip_id);
+        $collection_entities = $this->getExistingEntities($collection_id);
 
         $existing_look_ids = [];
         $existing_product_ids = [];
@@ -83,12 +80,12 @@ class TipMapper extends Controller
         $entity_type_look = EntityType::LOOK;
         $entity_type_product = EntityType::PRODUCT;
 
-        if (count($tip_entities) > 0) {
-            foreach ($tip_entities as $tip_entity) {
-                if ($tip_entity->entity_type_id == $entity_type_look) {
-                    array_push($existing_look_ids, $tip_entity->entity_id);
-                } elseif ($tip_entity->entity_type_id == $entity_type_product) {
-                    array_push($existing_product_ids, $tip_entity->entity_id);
+        if (count($collection_entities) > 0) {
+            foreach ($collection_entities as $collection_entity) {
+                if ($collection_entity->entity_type_id == $entity_type_look) {
+                    array_push($existing_look_ids, $collection_entity->entity_id);
+                } elseif ($collection_entity->entity_type_id == $entity_type_product) {
+                    array_push($existing_product_ids, $collection_entity->entity_id);
                 }
             }
         }
@@ -102,7 +99,7 @@ class TipMapper extends Controller
         $index = 0;
         foreach ($products_to_add as $entity_product_id) {
             $insert_entities[$index++] = array(
-                'tip_id' => $tip_id,
+                'collection_id' => $collection_id,
                 'entity_type_id' => $entity_type_product,
                 'entity_id' => $entity_product_id,
             );
@@ -110,7 +107,7 @@ class TipMapper extends Controller
 
         foreach ($looks_to_add as $entity_look_id) {
             $insert_entities[$index++] = array(
-                'tip_id' => $tip_id,
+                'collection_id' => $collection_id,
                 'entity_type_id' => $entity_type_look,
                 'entity_id' => $entity_look_id,
             );
@@ -121,18 +118,18 @@ class TipMapper extends Controller
 
         $delete_entities_query = '';
         foreach ($products_to_delete as $item) {
-            $delete_entities_query = $delete_entities_query . " OR (tip_id = '{$tip_id}' AND entity_type_id = '{$entity_type_product}' AND entity_id = '{$item}')";
+            $delete_entities_query = $delete_entities_query . " OR (collection_id = '{$collection_id}' AND entity_type_id = '{$entity_type_product}' AND entity_id = '{$item}')";
         }
         foreach ($looks_to_delete as $item) {
-            $delete_entities_query = $delete_entities_query . " OR (tip_id = '{$tip_id}' AND entity_type_id = '{$entity_type_look}' AND entity_id = '{$item}')";
+            $delete_entities_query = $delete_entities_query . " OR (collection_id = '{$collection_id}' AND entity_type_id = '{$entity_type_look}' AND entity_id = '{$item}')";
         }
 
         try {
             if (count($insert_entities) > 0) {
-                TipEntity::insert($insert_entities);
+                CollectionEntity::insert($insert_entities);
             }
             if (!empty($delete_entities_query)) {
-                TipEntity::whereRaw(substr($delete_entities_query, 4))->delete();
+                CollectionEntity::whereRaw(substr($delete_entities_query, 4))->delete();
             }
         } catch (\Exception $e) {
             $status = false;
@@ -149,12 +146,11 @@ class TipMapper extends Controller
     {
         return Validator::make($request->all(), [
             'name' => 'required|max:256|min:5',
-            'description' => 'required|min:25',
             'gender_id' => 'required|in:1,2',
         ]);
     }
 
-    public function getTipById($id)
+    public function getCollectionById($id)
     {
         $entity_type_look = EntityType::LOOK;
         $entity_type_product = EntityType::PRODUCT;
@@ -170,7 +166,9 @@ class TipMapper extends Controller
                     'category_id', 'brand_id');
         };
 
-        $tip = Tip::with('status')
+        $collection = Collection::with([('createdBy') => function ($query) {
+                $query->select('id', 'name', 'image');
+            }])
             ->with([('product_entities') => function ($query) use ($product, $entity_type_product) {
                 $query->with(['product' => $product])
                     ->where('entity_type_id', $entity_type_product);
@@ -179,14 +177,11 @@ class TipMapper extends Controller
                 $query->with(['look' => $look])
                     ->where('entity_type_id', $entity_type_look);
             }])
-            ->with([('createdBy') => function ($query) {
-                $query->select('id', 'name', 'image');
-            }])
             ->with($this->with_array)
             ->select($this->fields)
             ->where('id', $id)
             ->first();
-        return $tip;
+        return $collection;
 
     }
 
@@ -218,28 +213,28 @@ class TipMapper extends Controller
         return $view_properties;
     }
 
-    public function getExistingEntities($tip_id)
+    public function getExistingEntities($collection_id)
     {
-        $tip_entities = TipEntity::where('tip_id', $tip_id)->get();
-        return $tip_entities;
+        $collection_entities = CollectionEntity::where('collection_id', $collection_id)->get();
+        return $collection_entities;
     }
 
-    public function saveTipDetails($tip, $request)
+    public function saveCollectionDetails($collection, $request)
     {
-        $tip = $this->setObjectProperties($tip, $request);
+        $collection = $this->setObjectProperties($collection, $request);
         $logged_in_stylist = $request->user()->id != '' ? $request->user()->id : '';
 
-        if ($tip->exists) {
-            $tip->updated_by = $logged_in_stylist;
+        if ($collection->exists) {
+            $collection->updated_by = $logged_in_stylist;
         } else {
-            $tip->created_by = $logged_in_stylist;
-            $tip->created_at = date('Y-m-d H:i:s');
+            $collection->created_by = $logged_in_stylist;
+            $collection->created_at = date('Y-m-d H:i:s');
         }
 
         DB::beginTransaction();
         try {
-            $tip->save();
-            $result = $this->saveEntities($tip->id, $request->input('product_ids'), $request->input('look_ids'));
+            $collection->save();
+            $result = $this->saveEntities($collection->id, $request->input('product_ids'), $request->input('look_ids'));
 
             if ($result['status'] == false) {
                 DB::rollback();
