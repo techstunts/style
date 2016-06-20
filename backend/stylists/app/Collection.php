@@ -41,4 +41,16 @@ class Collection extends Model
     public function age_group(){
         return $this->belongsTo('App\Models\Lookups\AgeGroup', 'age_group_id');
     }
+
+    public function createdBy(){
+        return $this->belongsTo('App\Stylist', 'created_by');
+    }
+
+    public function product_entities(){
+        return $this->hasMany('App\CollectionEntity');
+    }
+
+    public function look_entities(){
+        return $this->hasMany('App\CollectionEntity');
+    }
 }

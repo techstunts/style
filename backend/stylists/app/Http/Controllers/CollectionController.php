@@ -13,9 +13,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Lookups\AppSections;
 use App\Models\Enums\RecommendationType;
+use App\Http\Mapper\CollectionMapper;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Validator;
 
 class CollectionController extends Controller
@@ -23,11 +25,7 @@ class CollectionController extends Controller
     
     protected $filter_ids   = ['age_group_id', 'gender_id','created_by', 'body_type_id', 'budget_id', 'occasion_id', 'status_id'];
     protected $filters      = ['age_groups', 'genders','createdBy', 'body_types', 'budgets', 'occasions', 'statuses'];
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(Request $request, $action, $id = null, $action_id = null)
     {
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
@@ -106,150 +104,104 @@ class CollectionController extends Controller
         return view('collection.list', $view_properties);
     }
 
-
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getView()
     {
-        $female_entities = $male_entities = [];
-        $collection = Collection::find($this->resource_id);
-        if($collection){
-            $entity_ids = DB::table('collection_entities')
-                ->where('collection_id', $collection->id)
-                ->select('entity_id', 'entity_type_id')
-                ->get();
-            foreach($entity_ids as $data){
-                $entity = '';
-                if($data->entity_type_id == EntityType::LOOK){
-                    $entity = array(EntityType::LOOK, Look::find($data->entity_id));
-                }
-                else if($data->entity_type_id == EntityType::PRODUCT){
-                    $entity = array(EntityType::PRODUCT, Product::find($data->entity_id));
-                }
-                else{
-                    continue;
-                }
-                if(isset($entity[1]->id)){
-                    if($entity[1]->gender_id == Gender::Female)
-                        $female_entities[] = $entity;
-                    else if($entity[1]->gender_id == Gender::Male)
-                        $male_entities[] = $entity;
-                }
-            }
-            $status = Status::find($collection->status_id);
-            //var_dump($collection, $collection->stylist, $product_ids, $products);
-            $view_properties = array('collection' => $collection,
-                'female_entities' => $female_entities,
-                'male_entities' => $male_entities,
-                'status' => $status);
-            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $collection->stylist_id == Auth::user()->id;
+        if (empty($this->resource_id)) {
+            return view('404', array('title' => 'Collection id not provided'));
         }
-        else{
-            return view('404', array('title' => 'collection not found'));
+        $collectionMapperObj = new CollectionMapper();
+        $collection = $collectionMapperObj->getCollectionById($this->resource_id);
+
+        if (empty($collection)) {
+            return view('404', array('title' => 'Collection not found'));
         }
+        $view_properties = array(
+            'collection' => $collection,
+            'is_owner_or_admin' => Auth::user()->hasRole('admin') || $collection->created_by == Auth::user()->id,
+        );
 
         return view('collection.view', $view_properties);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function getEdit(Request $request)
     {
-        if ( empty($this->resource_id) ) {
+        if (empty($this->resource_id)) {
             Redirect::back()->withError('Collection Not Found');
         }
-        
-        $collection = Collection::find($this->resource_id);
+        $collectionMapperObj = new CollectionMapper();
+        $collection = $collectionMapperObj->getCollectionById($this->resource_id);
         $view_properties = null;
-        
+
         if ($collection) {
-            
-            $this->base_table = 'collections';
-            $this->initWhereConditions($request);
-            $this->initFilters();
-        
-            $view_properties = array(
-                'stylists' => $this->createdBy,
-                'statuses' => $this->statuses,
-                'genders' => $this->genders,
-                'occasions' => $this->occasions,
-                'body_types' => $this->body_types,
-                'budgets' => $this->budgets,
-               'age_groups' => $this->age_groups
-            );
-        
-            foreach ($this->filter_ids as $filter) {
-                $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
-            }
-            
-            $view_properties['collection']      = $collection;
-            $view_properties['gender_id']       = intval($collection->gender_id);
-            $view_properties['status_id']       = intval($collection->status_id);
-            $view_properties['occasion_id']     = intval($collection->occasion_id);
-            $view_properties['age_group_id']    = intval($collection->age_group_id);
-            $view_properties['budget_id']       = intval($collection->budget_id);
-            $view_properties['body_type_id']    = intval($collection->body_type_id);
-            
-        } 
-        else {
+            $view_properties = $collectionMapperObj->getDropDowns();
+
+            $view_properties = array_merge($view_properties, $collectionMapperObj->getViewProperties($request->old(), $collection));
+            $view_properties = array_merge($view_properties, $collectionMapperObj->getPopupProperties($request));
+
+            $view_properties = array_merge($view_properties, ['collection' => $collection]);
+
+        } else {
             return view('404', array('title' => 'Collection not found'));
         }
-        
+
         return view('collection.edit', $view_properties);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function postUpdate(Request $request)
     {
-        $validator = $this->validator($request->all());
-        
-        if($validator->fails()) {
+
+        if (empty($this->resource_id)) {
+            Redirect::back()->withError('Collection Not Found');
+        }
+
+        $collectionMapperObj = new CollectionMapper();
+        $validator = $collectionMapperObj->inputValidator($request);
+
+        if ($validator->fails()) {
             return redirect('collection/edit/' . $this->resource_id)
-                   ->withErrors($validator)
-                   ->withInput();
+                ->withErrors($validator)
+                ->withInput($request->all());
         }
 
-        $collection               = Collection::find($this->resource_id);
-        $collection->name         = isset($request->name) && $request->name != '' ? $request->name : '';
-        $collection->description  = isset($request->description) && $request->description != '' ? $request->description : '';
-        $collection->age_group_id = isset($request->age_group_id) && $request->age_group_id != '' ? $request->age_group_id : '';
-        $collection->body_type_id = isset($request->body_type_id) && $request->body_type_id != '' ? $request->body_type_id : '';
-        $collection->budget_id    = isset($request->budget_id) && $request->budget_id != '' ? $request->budget_id : '';
-        $collection->gender_id    = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
-        $collection->occasion_id  = isset($request->occasion_id) && $request->occasion_id != '' ? $request->occasion_id : '';
+        $collection = Collection::find($this->resource_id);
+        $result = $collectionMapperObj->saveCollectionDetails($collection, $request);
 
-        if ($collection->save()) {
-            return redirect('collection/view/' . $this->resource_id);
-        } 
-        else {
-            return Redirect::back()->withError('Error occur while updating the collection');
+        if ($result['status'] == false) {
+            return Redirect::back()->withError($result['message'])->withInput($request->all());
         }
+        return redirect('collection/view/' . $collection->id);
 
     }
 
-    protected function validator(array $data)
+
+    public function getCreate(Request $request)
     {
-        return Validator::make($data, [
-            'name' => 'required|max:256|min:5',
-            'description' => 'required|min:25',
-            'body_type_id' => 'required',
-            'budget_id' => 'required',
-            'age_group_id' => 'required',
-            'occasion_id' => 'required',
-            'gender_id' => 'required',
-        ]);
+        $collectionMapperObj = new CollectionMapper();
+        $view_properties = $collectionMapperObj->getDropDowns();
+        $view_properties = array_merge($view_properties, $collectionMapperObj->getViewProperties($request->old()));
+        $view_properties = array_merge($view_properties, $collectionMapperObj->getPopupProperties($request));
+
+        return view('collection.create', $view_properties);
+    }
+
+    public function postCreate(Request $request)
+    {
+        $collectionMapperObj = new CollectionMapper();
+
+        $validator = $collectionMapperObj->inputValidator($request);
+        if ($validator->fails()) {
+
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput($request->all());
+        }
+
+        $collection = new Collection();
+        $result = $collectionMapperObj->saveCollectionDetails($collection, $request);
+
+        if ($result['status'] == false) {
+            return Redirect::back()->withError($result['message'])->withInput($request->all());
+        }
+        return redirect('collection/view/' . $collection->id);
     }
 }

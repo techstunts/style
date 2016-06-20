@@ -15,7 +15,6 @@ use App\Http\Mapper\TipMapper;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\DB;
 
 class TipController extends Controller
 {
@@ -155,7 +154,7 @@ class TipController extends Controller
         }
         $view_properties = array(
             'tip' => $tip,
-            'is_owner_or_admin' => Auth::user()->hasRole('admin') || $tip->stylist_id == Auth::user()->id,
+            'is_owner_or_admin' => Auth::user()->hasRole('admin') || $tip->created_by == Auth::user()->id,
         );
 
         return view('tip.view', $view_properties);
