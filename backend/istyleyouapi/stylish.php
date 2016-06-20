@@ -3,9 +3,9 @@ include("db_config.php");
 include("ProductLink.php");
 include("Lookup.php");
 
-if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty($_GET['stylish_id']) && !empty($_GET['gender'])) {
+if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty($_GET['stylish_id'])) {
     $userid = $_GET['stylish_id'];
-    $gender = $_GET['gender'];
+    $gender = !empty($_GET['gender']) ? $_GET['gender'] : "";
     $sql = "SELECT s.id as stylist_id, s.name, description, image, code, d.name as designation, blog_url, facebook_id, twitter_id, pinterest_id, instagram_id
             FROM stylists s
             JOIN lu_designation d on s.designation_id = d.id
@@ -14,7 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
     $res = mysql_query($sql);
     $rows = mysql_num_rows($res);
 
-    $gender_id = Lookup::getId('gender', $gender);
+    $gender_clause = "";
+    if($gender != ""){
+        $gender_id = Lookup::getId('gender', $gender);
+        if($gender_id){
+            $gender_clause = " AND gender_id= '$gender_id'";
+        }
+    }
 
     if ($rows == 1) {
         while ($data = mysql_fetch_assoc($res)) {
@@ -37,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
         $looks = array();
         $sql = "Select l.id as look_id, l.description, l.image, l.price, l.name, o.name as occasion
               FROM looks l join lu_occasion o on l.occasion_id = o.id
-              where gender_id= '$gender_id' AND stylist_id='$userid'
+              where stylist_id='$userid' $gender_clause
               order by l.id ASC LIMIT 5";
 
         $res = mysql_query($sql);
@@ -141,6 +147,49 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
     }
 } else {
     $data = array('result' => 'fail', 'message' => 'Request Method is wrong or userid wrong/empty');
+}
+
+if($data['result'] == "success"){
+
+    $services = [
+        'chat' => [
+            'title' =>'Dedicated chat',
+            'description' => 'This allows you to live chat with ' . $data['stylish_name'] . '. No more waiting for the stylist to get back.',
+            'currency' => 'INR',
+            'price' => '50',
+            'action' => 'Book'
+        ],
+        'call' => [
+            'title' =>'Call',
+            'description' => 'Resolve all your queries over a phone call with ' . $data['stylish_name'] . '.',
+            'currency' => 'INR',
+            'price' => '200',
+            'action' => 'Book'
+        ],
+        'video' => [
+            'title' =>'Video Call',
+            'description' => 'Resolve all your queries over a video call with ' . $data['stylish_name'] . '.',
+            'currency' => 'INR',
+            'price' => '500',
+            'action' => 'Book'
+        ],
+        'wardrobe' => [
+            'title' =>'Wardrobe Design',
+            'description' => 'Get a wardrobe revamp with the help of ' . $data['stylish_name'] . '.',
+            'currency' => 'INR',
+            'price' => '500',
+            'action' => 'Book'
+        ],
+        'lookbook' => [
+            'title' =>'Look book assistance',
+            'description' => 'Have a big day? Get all your looks right with lookbook assistance.',
+            'currency' => 'INR',
+            'price' => '500',
+            'action' => 'Book'
+        ]
+    ];
+
+    $data["services"] = $services;
 }
 
 mysql_close($conn);
