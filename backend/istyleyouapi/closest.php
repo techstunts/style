@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
     $userid = $_REQUEST['userid'];
 
     $page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
-    $records_per_page = 20;
+    $records_per_page = 5;
     $record_start = intval($page * $records_per_page);
 
     $sql = "Select distinct l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
 				  join looks l on r.entity_id=l.id and r.entity_type_id = 2
 				  join lu_occasion o on l.occasion_id = o.id
 				  where r.user_id='$userid'
-				  and l.status_id = 1
+				  and l.status_id != 3
 				  ORDER BY r.id DESC
 				  LIMIT $record_start, $records_per_page ";
     $res = mysql_query($sql);
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
 				join merchants m ON p.merchant_id = m.id
 				join brands b ON p.brand_id = b.id
 				where l.id='$id'
-				and l.status_id = 1
+				and l.status_id != 3
 				";
             $res1 = mysql_query($query);
             $rows = mysql_num_rows($res);

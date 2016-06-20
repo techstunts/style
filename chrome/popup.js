@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				{
 					code: '\
 					var merchant = window.location.hostname.split(\'.\')[1];\
-					var prod_name = \'\', prod_price = \'\', prod_desc = \'\', a_tags = \'\', category = \'\', brand = \'\', gender = \'\', img_links = [], colors = [];\
+					var prod_name = \'\', prod_price = \'\', prod_desc = \'\', a_tags = \'\', category = \'\', brand = \'\', gender = \'\', img_links = [], colors = [], sku_id = \'\';\
 					\
 					if(merchant == \'koovs\'){\
 						prod_name = document.getElementById(\'prod_name_hide\').value;\
@@ -113,18 +113,61 @@ document.addEventListener('DOMContentLoaded', function() {
 						labels = document.querySelectorAll(\'.prod-main-wrapper li\');\
 						var i;\
 						for (i = 0; i < labels.length; i++) {\
-						    if(labels[i].querySelector(\'label\').innerText == \'Color\'){\
-								colors.push(labels[i].querySelector(\'span\').innerText);\
+						    if(labels[i].querySelectorAll(\'span\')[0].innerText == \'Color\'){\
+								colors.push(labels[i].querySelectorAll(\'span\')[1].innerText);\
 							}\
 						}\
 					}\
-					if(gender == "Women" || gender == "Girls"){\
+					else if(merchant == \'stalkbuylove\'){\
+						prod_name = document.querySelectorAll(\'h1[itemprop=\"name\"]\')[0].innerText;\
+						prod_price = document.getElementsByClassName(\'regular-price\')[0].getElementsByClassName(\'price\')[0].innerText.slice(1).replace(\',\', \'\');\
+						prod_desc = document.getElementsByClassName(\'info_block_content\')[0].innerText;\
+						category = document.getElementsByClassName(\'breadcrumbs\')[0].getElementsByTagName(\'ul\')[0].getElementsByTagName(\'li\')[2].querySelectorAll(\'span[itemprop=\"title\"]\')[0].innerText;\
+						brand = "Stalk Buy Love";\
+						gender = "Women";\
+						img_links.push(document.getElementsByClassName(\'slick-active\')[0].getElementsByClassName(\'my_image_box\')[0].src)\
+					}\
+					else if(merchant == \'violetstreet\'){\
+						prod_name = document.querySelectorAll(\'h1[itemprop=\"name\"]\')[0].innerText;\
+						prod_price = document.getElementsByClassName(\'price\')[0].getElementsByTagName(\'span\')[0].innerText.slice(1).replace(\',\', \'\');\
+						if(document.getElementById(\'tab-description\')){\
+							prod_desc = document.getElementById(\'tab-description\').innerText;\
+						}\
+						category = document.getElementsByClassName(\'woocommerce-breadcrumb\')[0].getElementsByTagName(\'a\')[2].innerText;\
+						colors.push(document.getElementsByClassName(\'shop_attributes\')[0].getElementsByTagName(\'tr\')[0].getElementsByTagName(\'p\')[0].innerText);\
+						brand = "Voilet Street";\
+						gender = "Women";\
+						img_links.push(document.getElementsByClassName(\'zoomWindow\')[0].style.backgroundImage.slice(5).replace(\'")\', \'\'));\
+						sku_id = document.getElementsByClassName(\'sku_wrapper\')[0].getElementsByTagName(\'span\')[0].innerText;\
+					}\
+					else if(merchant == \'trendin\'){\
+						prod_name = document.querySelectorAll(\'h2[itemprop=\"name\"]\')[0].innerText;\
+						prod_price = document.getElementsByClassName(\'price_block\')[0].getElementsByTagName(\'h1\')[0].innerText.replace(\',\', \'\');\
+						prod_desc = document.querySelectorAll(\'div[itemprop=\"description\"]\')[0].getElementsByTagName(\'p\')[0].innerText;\
+						gender = document.getElementsByClassName(\'breadcrumb\')[0].getElementsByTagName(\'a\')[1].title;\
+						category = document.getElementsByClassName(\'breadcrumb\')[0].getElementsByTagName(\'a\')[2].title;\
+						colors.push(document.getElementById(\'prod_feature\').innerText.match(/Color\\s*:\\s*(.*)/)[1]);\
+						brand = document.getElementById(\'prod_feature\').innerText.match(/Brand\\s*:\\s*(.*)/)[1];\
+						img_links.push(document.getElementById(\'product_image\').getElementsByTagName(\'img\')[0].src);\
+						sku_id = document.getElementById(\'sleProductID\').value;\
+					}\
+					else if(merchant == \'fabindia\'){\
+						prod_name = document.getElementsByTagName(\'h1\')[0].innerText;\
+						prod_price = document.getElementsByClassName(\'price\')[0].innerText.slice(4, -3).replace(\',\', \'\');\
+						prod_desc = document.getElementsByClassName(\'product-view\')[0].getElementsByTagName(\'p\')[4].innerText;\
+						colors.push(document.getElementsByClassName(\'super-attribute-select\')[0].getElementsByTagName(\'option\')[1].innerText);\
+						brand = "Fabindia";\
+						img_links.push(document.getElementsByClassName(\'MagicZoomPlus\')[0].getElementsByTagName(\'img\')[0].src);\
+						sku_id = document.getElementsByClassName(\'product-view\')[0].getElementsByTagName(\'p\')[0].innerText.slice(5);\
+					}\
+					gender = gender.toLowerCase();\
+					if(gender == "women" || gender == "girls"){\
 						gender = "Female";\
 					}\
-					else if(gender == "Men" || gender == "Boys"){\
+					else if(gender == "men" || gender == "boys"){\
 						gender = "Male";\
 					}\
-					var r = [prod_name, prod_price, prod_desc, img_links, merchant, category, brand, gender, colors];\
+					var r = [prod_name, prod_price, prod_desc, img_links, merchant, category, brand, gender, colors, sku_id];\
 					r;\
 					'
 				},
@@ -139,7 +182,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					document.getElementById('category').value = results[0][5].trim().capitalizeFirstLetter();
 					document.getElementById('brand').value = results[0][6].capitalizeFirstLetter();
 					document.getElementById('gender').value = results[0][7];
-					
+					document.getElementById('sku_id').value = results[0][9];
+
 					for(cnt in results[0][8]){
 						var input = document.getElementById('color' + (parseInt(cnt) + 1));
 						if(input != null){
@@ -204,7 +248,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				 var e = textarea_elements[i];
 				 kvpairs.push(encodeURIComponent(e.name) + "=" + encodeURIComponent(e.value));
 			}
-
 			var queryString = kvpairs.join("&");
 
 		  	var url = "http://stylist.istyleyou.in/product/create";

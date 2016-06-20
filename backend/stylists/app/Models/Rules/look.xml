@@ -75,7 +75,15 @@
         <status>
             <id>1</id>
             <name>Active</name>
-            <edit_status></edit_status>
+            <edit_status>
+                <new_status>
+                    <id>2</id>
+                    <name>Inactive</name>
+                    <roles>
+                        <role>admin</role>
+                    </roles>
+                </new_status>
+            </edit_status>
             <edit_data></edit_data>
         </status>
         <status>

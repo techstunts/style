@@ -1,25 +1,25 @@
 @extends('layouts.master')
 
-@section('title', $client->username)
+@section('title', $client->name)
 
 @section('content')
 <div id="contentCntr">
     <div class="container">
         <ol class="selectable">
-            <li class="ui-state-default" id="{{$client->user_id}}">
+            <li class="ui-state-default" id="{{$client->id}}">
                 <div class="resource_view">
                     <div class="image">
-                        <img src="{{$client->userimage}}" />
+                        <img src="{{$client->image}}" />
                     </div>
                     <table class="info">
                         <tr class="row">
-                            <td class="title" colspan="2">{{$client->username}}</td>
+                            <td class="title" colspan="2">{{$client->name}}</td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Gender</td><td class="content">{{$client->gender}} </td>
+                            <td class="head">Gender</td><td class="content">{{$client->genders ? $client->genders->name : ''}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Stylist</td><td class="content">{{$client->stylist->name}} </td>
+                            <td class="head">Stylist</td><td class="content">{{$client->stylist ? $client->stylist->name : ''}} </td>
                         </tr>
                         <tr class="row">
                             <td class="head">Age Group</td><td class="content">{{$client->age}} </td>

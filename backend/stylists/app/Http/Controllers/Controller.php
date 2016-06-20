@@ -41,22 +41,38 @@ abstract class Controller extends BaseController
         }
         $where_raw = [];
 
+        if ($this->base_table == 'merchant_products') {
+            $name = $this->base_table . '.m_product_name';
+            $description = $this->base_table . '.m_product_description';
+        }else{
+            $name = $this->base_table . '.name';
+            $description = $this->base_table . '.description';
+        }
+
         if($request->input('search') != "" and strlen(trim($request->input('search')))>0){
             $search_term  = trim($request->input('search'));
+            $search_query = $desc_condition = "";
             if($request->input('exact_word') == "search exact word"){
-                $where_raw[] = "({$this->base_table}.name REGEXP '[[:<:]]{$search_term}[[:>:]]' OR {$this->base_table}.description REGEXP '[[:<:]]{$search_term}[[:>:]]')";
+                $search_query = "({$name} REGEXP '[[:<:]]{$search_term}[[:>:]]' {{desc}} )";
+                if($this->base_table != 'clients'){
+                    $desc_condition = " OR {$description} REGEXP '[[:<:]]{$search_term}[[:>:]]' ";
+                }
             }
             else{
-                $where_raw[] = "({$this->base_table}.name like '%{$search_term}%' OR {$this->base_table}.description like '%{$search_term}%')";
+                $search_query = "({$name} like '%{$search_term}%' {{desc}} )";
+                if($this->base_table != 'clients'){
+                    $desc_condition = " OR {$description} like '%{$search_term}%' ";
+                }
             }
+            $where_raw[] = str_replace("{{desc}}", $desc_condition, $search_query);
         }
 
         if($request->input('from_date') != ""){
-            $where_raw[] = "({$this->base_table}.created_at >= '" . date("Y-m-d",strtotime($request->input('from_date'))) . "')";
+            $where_raw[] = "({$this->base_table}.created_at >= '" . date("Y-m-d 00:00:00",strtotime($request->input('from_date'))) . "')";
         }
 
         if($request->input('to_date') != ""){
-            $where_raw[] = "({$this->base_table}.created_at <= '" . date("Y-m-d",strtotime($request->input('to_date'))) . "')";
+            $where_raw[] = "({$this->base_table}.created_at <= '" . date("Y-m-d 23:59:59",strtotime($request->input('to_date'))) . "')";
         }
 
         if($request->input('min_price') != ""){

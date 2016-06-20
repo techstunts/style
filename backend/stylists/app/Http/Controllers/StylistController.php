@@ -37,7 +37,7 @@ class StylistController extends Controller
 
         $stylists =
             Stylist::with('gender','expertise','designation')
-                ->orderBy('stylish_id', 'desc')
+                ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
@@ -79,8 +79,8 @@ class StylistController extends Controller
             $view_properties['stylist'] = $stylist;
             $view_properties['status_list'] = $status_list;
             $view_properties['looks'] = $stylist->looks;
-            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $stylist->stylish_id == Auth::user()->stylish_id;
-            $view_properties['profile_images'] = Storage::disk('public_images')->files('stylish/profile/' . $stylist->stylish_id);
+            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $stylist->id == Auth::user()->id;
+            $view_properties['profile_images'] = Storage::disk('public_images')->files('stylish/profile/' . $stylist->id);
 
         }
         else{
@@ -101,7 +101,7 @@ class StylistController extends Controller
         $stylist = Stylist::find($this->resource_id);
         $is_admin = Auth::user()->hasRole('admin');
         if(!$is_admin){
-            if($stylist->stylish_id != Auth::user()->stylish_id){
+            if($stylist->id != Auth::user()->id){
                 return view('404', array('title' => 'You do not have permission to change this Stylist\'s details'));
             }
         }
@@ -145,7 +145,7 @@ class StylistController extends Controller
 
             if ($request->file('image')->isValid()) {
                 $destinationPath = public_path() . '/' . env('STYLIST_IMAGE_PATH');
-                $filename = $request->file('image')->getClientOriginalName();
+                $filename = preg_replace('/[^a-zA-Z0-9_.]/', '_', $request->file('image')->getClientOriginalName());
                 $request->file('image')->move($destinationPath, $filename);
                 $stylist->image = 'stylish/' . $filename;
                 $stylist->save();
@@ -174,7 +174,7 @@ class StylistController extends Controller
 
         $stylist = Stylist::find($this->resource_id);
 
-        if(!Auth::user()->hasRole('admin') && $stylist->stylish_id != Auth::user()->stylish_id){
+        if(!Auth::user()->hasRole('admin') && $stylist->id != Auth::user()->id){
             return view('404', array('title' => 'You do not have permission to change this Stylist\'s details'));
         }
 

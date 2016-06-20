@@ -118,8 +118,8 @@ class SendEmail extends Job implements SelfHandling, ShouldQueue
         $user = Client::find($user_id);
         if($user && $user->user_id){
             $stylist = $user->stylist;
-            $data['user_email'] = $user->user_email;
-            $data['username'] = $user->username;
+            $data['email'] = $user->email;
+            $data['name'] = $user->name;
             $data['stylist_name'] = $stylist->name;
             $data['stylist_email'] = $stylist->email;
             $data['stylist_image'] = $stylist->image;
@@ -133,8 +133,8 @@ class SendEmail extends Job implements SelfHandling, ShouldQueue
     }
 
     protected function replaceTags($subject, $replacements){
-        $mapping['user_email_address'] = 'user_email';
-        $mapping['user_first_name'] = 'username';
+        $mapping['user_email_address'] = 'email';
+        $mapping['user_first_name'] = 'name';
         $mapping['stylist_name'] = 'stylist_name';
         $mapping['stylist_email_address'] = 'stylist_email';
 

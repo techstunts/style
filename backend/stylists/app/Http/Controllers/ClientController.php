@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
-    protected $filter_ids = ['stylish_id',];
+    protected $records_per_page=100;
+    protected $filter_ids = ['stylist_id',];
     protected $filters = ['stylists',];
     /**
      * Display a listing of the resource.
@@ -37,7 +38,7 @@ class ClientController extends Controller
     }
 
     public function getList(Request $request){
-        $this->base_table = 'userdetails';
+        $this->base_table = 'clients';
         $this->initWhereConditions($request);
         $this->initFilters();
 
@@ -56,6 +57,12 @@ class ClientController extends Controller
         );
         $view_properties['nav_tab_index'] = '0';
 
+        $view_properties['search'] = $request->input('search');
+        $view_properties['exact_word'] = $request->input('exact_word');
+
+        $view_properties['from_date'] = $request->input('from_date');
+        $view_properties['to_date'] = $request->input('to_date');
+
         foreach($this->filter_ids as $filter){
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
@@ -65,10 +72,11 @@ class ClientController extends Controller
 
         $authWhereClauses = $this->authWhereClauses();
         $clients =
-            Client::with('stylist')
+            Client::with('stylist', 'genders')
                 ->where($this->where_conditions)
+                ->whereRaw($this->where_raw)
                 ->whereRaw($authWhereClauses)
-                ->orderBy('user_id', 'desc')
+                ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
@@ -88,7 +96,8 @@ class ClientController extends Controller
     public function getView()
     {
         $authWhereClauses = $this->authWhereClauses();
-        $client = Client::whereRaw($authWhereClauses)
+        $client = Client::with('genders')
+                ->whereRaw($authWhereClauses)
                 ->find($this->resource_id);
         if($client){
             $view_properties = array('client' => $client);
@@ -103,7 +112,7 @@ class ClientController extends Controller
     protected function authWhereClauses(){
         $where = "1=1";
         if(!Auth::user()->hasRole('admin')){
-            $where .= " AND stylish_id = " . Auth::user()->stylish_id;
+            $where .= " AND stylist_id = " . Auth::user()->id;
         }
         return $where;
     }
@@ -112,7 +121,7 @@ class ClientController extends Controller
     {
         $authorised_stylists_for_chat = [36, 49, 66];
         $stylists=[];
-        $stylist_id_to_chat = Auth::user()->stylish_id;
+        $stylist_id_to_chat = Auth::user()->id;
 
         $is_admin = Auth::user()->hasRole('admin');
         if(!$is_admin && !in_array($stylist_id_to_chat, $authorised_stylists_for_chat)){

@@ -10,6 +10,8 @@
                     @if(Auth::user()->hasRole('admin'))
                         <form method="get" action="">
                             @include('stylist.select')
+                            @include('common.search')
+                            @include('common.daterange')
                             <input type="submit" name="filter" value="Filter"/>
                             <a href="{{url('client/list')}}" class="clearall">Clear All</a>
                         </form>
@@ -25,6 +27,7 @@
                         <thead>
                         <tr>
                             <th><input name="select_all" value="1" type="checkbox"></th>
+                            <th class="font-size-table-header">Id</th>
                             <th class="font-size-table-header">Name</th>
                             <th class="font-size-table-header">Profile Image</th>
                             <th class="font-size-table-header">Age</th>
@@ -34,21 +37,22 @@
                             <th class="font-size-table-header">Skin Type</th>
                             <th class="font-size-table-header">Height</th>
                             <th class="font-size-table-header">Price range</th>
-                            <th class="font-size-table-header">Stylish name</th>
+                            <th class="font-size-table-header">Stylist name</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($clients as $client)
                             <tr>
 
-                                <td>{{$client->user_id}}</td>
+                                <td>{{$client->id}}</td>
+                                <td>{{$client->id}}</td>
                                 <td class="table-font-size"><a
-                                            href="{{url("client/view/".$client->user_id)}}"> {{$client->username}}</a>
+                                            href="{{url("client/view/".$client->id)}}"> {{$client->name}}</a>
                                 </td>
-                                <td class="image image-width"><a href="{{url("client/view/".$client->user_id)}}"><img
-                                                src="{{$client->userimage}}"/></a></td>
+                                <td class="image image-width"><a href="{{url("client/view/".$client->id)}}"><img
+                                                src="{{$client->image}}"/></a></td>
                                 <td class="table-font-size">{{$client->age}}</td>
-                                <td class="table-font-size">{{$client->gender}}</td>
+                                <td class="table-font-size">{{$client->genders ? $client->genders->name : ''}}</td>
                                 <td class="table-font-size">{{$client->bodytype}}</td>
                                 <td class="table-font-size"> {{$client->bodyshape}} </td>
                                 <td class="table-font-size"> {{$client->skintype}} </td>

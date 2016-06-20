@@ -21,7 +21,7 @@
             <script src="{{asset("collage/scripts/drag.js")}}"></script>
 
             <div class="collage">
-                <input type="hidden" id="stylish_id" value="{{Auth::user()->stylish_id}}"/>
+                <input type="hidden" id="stylist_id" value="{{Auth::user()->id}}"/>
                 <input type="hidden" id="api_origin" value="{{env('API_ORIGIN')}}"/>
                 <!--
                     Tools

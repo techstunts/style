@@ -10,10 +10,10 @@
         @endforeach
 
         <ol class="selectable">
-            <li class="ui-state-default" id="{{$stylist->stylish_id}}">
+            <li class="ui-state-default" id="{{$stylist->id}}">
                 <div class="resource_view">
                     <div class="image">
-                        <form method="POST" action="{!! url('/stylist/image/' . $stylist->stylish_id) !!}" enctype="multipart/form-data" style="display: initial;">
+                        <form method="POST" action="{!! url('/stylist/image/' . $stylist->id) !!}" enctype="multipart/form-data" style="display: initial;">
                             <img src="{!! strpos($stylist->image, "stylish") === 0 ? asset('images/' . $stylist->image) : $stylist->image !!}"/>
                             {!! csrf_field() !!}
                             <input id="image" name="image" type="file" class="file-loading">
@@ -23,7 +23,7 @@
                             <input style="display: block;" type="submit" class="btn btn-primary btn-lg" value="Upload">
                         </form>
                     </div>
-                    <form method="POST" action="{!! url('/stylist/update/' . $stylist->stylish_id) !!}" style="display: initial;">
+                    <form method="POST" action="{!! url('/stylist/update/' . $stylist->id) !!}" style="display: initial;">
                         {!! csrf_field() !!}
                         <table class="info">
                             <tr class="row">
@@ -168,7 +168,7 @@
                             <tr class="row">
                                 <td class="title" colspan="2">
                                     <input type="submit" class="btn btn-primary btn-lg" value="Save">
-                                    <a href="{!! url('stylist/view/' . $stylist->stylish_id) !!}">Cancel</a>
+                                    <a href="{!! url('stylist/view/' . $stylist->id) !!}">Cancel</a>
                                 </td>
                             </tr>
 

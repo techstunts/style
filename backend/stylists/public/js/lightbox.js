@@ -188,30 +188,19 @@ $(document).ready(function(){
     $( "#sortable" ).sortable();
 
     $( "#update_selected" ).click(function(){
-        var category_id = $(this).parent('form').children('#category_id').val();
-        var gender_id = $(this).parent('form').children('#gender_id').val();
-        var primary_color_id = $(this).parent('form').children('#primary_color_id').val();
-
-        var actionUrl = $(this).attr('action_url');
-
-        event.preventDefault();
-        var newForm = jQuery('<form>', {
-            'action': actionUrl,
-            'method': 'GET'
-        }).append(
-            jQuery('<input>', {'name': 'category_id', 'value': category_id,'type': 'hidden'})
-        ).append(
-            jQuery('<input>', {'name': 'gender_id', 'value': gender_id,'type': 'hidden'})
-        ).append(
-            jQuery('<input>', {'name': 'primary_color_id', 'value': primary_color_id,'type': 'hidden'})
-        );
-
+        var product_ids = [];
         jQuery('ol.selectable li.ui-selected').each(function(){
-            newForm.append(
-                jQuery('<input>', {'name': 'product_id[]', 'value': $(this).attr('product_id'),'type': 'hidden'})
-            )
-        })
+                product_ids.push($(this).attr('product_id'));
+        });
+        $( "#bulk_update" ).parent().children('#product_id').attr("value", product_ids);
+    });
 
-        newForm.submit();
+    $( "#bulk_update" ).click(function(){
+        //var product_ids = $(this).parent().child('product_id').val();
+        var product_ids = [];
+        jQuery('ol.selectable li').each(function(){
+            product_ids.push($(this).attr('product_id'));
+        });
+        $(this).parent().children('#product_id').attr("value", product_ids);
     });
 });

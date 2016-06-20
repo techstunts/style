@@ -120,13 +120,13 @@ class SelectOptions{
     //To be cached
     public function stylists(){
         $whereClauses = $this->whereClauses;
-        unset($whereClauses['stylish_id']);
+        unset($whereClauses['stylist_id']);
         $stylists = DB::table($this->table)
-            ->join('stylists', $this->table . '.stylish_id', '=', 'stylists.stylish_id')
+            ->join('stylists', $this->table . '.stylist_id', '=', 'stylists.id')
             ->where($whereClauses)
             ->whereRaw($this->whereRawClauses)
-            ->select('stylists.stylish_id', 'stylists.name', DB::raw('COUNT(' . $this->table . '.stylish_id) as product_count'))
-            ->groupBy('stylists.stylish_id', 'stylists.name')
+            ->select('stylists.id', 'stylists.name', DB::raw('COUNT(' . $this->table . '.stylist_id) as product_count'))
+            ->groupBy('stylists.id', 'stylists.name')
             ->orderBy('stylists.name')
             ->get();
         return $stylists;
