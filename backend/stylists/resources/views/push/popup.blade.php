@@ -8,7 +8,13 @@
         @if(!empty($is_owner_or_admin))
             <input type="hidden" value="{{$is_owner_or_admin}}" id="role_admin">
         @endif
-        <p><a data-popup-close="send-entities" href="#" style="float: right">Close</a></p>
+
+        @if(!empty($add_entity) && $add_entity == true)
+            <p><a data-popup-close="send-entities" href="#" style="float: right">Done</a></p>
+        @else
+            <p><a data-popup-close="send-entities" href="#" style="float: right">Close</a></p>
+        @endif
+
             <ul class="nav nav-tabs" id="entity">
                 @foreach($popup_entity_type_ids as $entity_type_id)
                     <li class="" id="send-entities_{{$nav_tab_index}}" data-value="{{$entity_type_id}}"
@@ -42,8 +48,13 @@
         <div class="clear"></div>
         <div class="mobile-app-send">
             {!! csrf_field() !!}
-            @include('common.app_section.select')
-            <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
+            @if(!empty($add_entity) && $add_entity == true)
+                <a class="btn disabled btn-primary btn-xs" id="add" value="send">Add</a>
+                <input type="hidden" value="{{$add_entity}}" id="add_entity_btn">
+            @else
+                @include('common.app_section.select')
+                <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
+            @endif
             <img class="loader" src="/images/popup-loader.gif"/>
         </div>
     </div>

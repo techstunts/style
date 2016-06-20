@@ -528,6 +528,11 @@ img.loader{
     display:none;
     width: 30px;
 }
+.tip-product-img_size{
+    max-width:110px;
+    max-height: 110px;
+    margin-right: 5px;
+    border: 1px solid #d3d3d3;
 .message-position{
     top: 60px;
     margin-bottom: 5px;
