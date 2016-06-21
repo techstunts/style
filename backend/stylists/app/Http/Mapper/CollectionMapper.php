@@ -15,7 +15,7 @@ use App\CollectionEntity;
 
 class CollectionMapper extends Controller
 {
-    protected $fields = ['id', 'name', 'description', 'created_by',
+    protected $fields = ['id', 'name', 'description', 'image' , 'created_by',
         'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'created_at'];
 
     protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group'];

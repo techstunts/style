@@ -61,7 +61,7 @@
                                                 <div class="image" data-toggle="popover" data-trigger="hover"
                                                      data-placement="right" data-html="true"
                                                      data-content="{{$entity->product->name}}">
-                                                    <img src="{{strpos($entity->product->image, "http") !== false ? $entity->product->image : asset('images/' . $entity->product->image)}}"
+                                                    <img src="{{strpos($entity->product->upload_image, "http") !== false ? $entity->product->upload_image : asset('images/' . $entity->product->upload_image)}}"
                                                          class="pop-image-size"/>
                                                 </div>
                                             </div>
