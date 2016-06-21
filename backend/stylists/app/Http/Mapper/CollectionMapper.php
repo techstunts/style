@@ -4,9 +4,11 @@ namespace App\Http\Mapper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Lookups\Lookup;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
+use App\Models\Enums\Status;
 use App\Models\Lookups\AppSections;
 use App\Models\Enums\RecommendationType;
 use Validator;
@@ -18,9 +20,9 @@ class CollectionMapper extends Controller
     protected $fields = ['id', 'name', 'description', 'image' , 'created_by',
         'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'created_at'];
 
-    protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group'];
+    protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group', 'status'];
 
-    protected $dropdown_fields = ['body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id'];
+    protected $dropdown_fields = ['body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'status_id'];
     protected $input_fields = ['name', 'description', 'image'];
 
     public function getDropDowns()
@@ -32,6 +34,7 @@ class CollectionMapper extends Controller
             'age_groups' => $lookup->type('age_group')->get(),
             'budgets' => $lookup->type('budget')->get(),
             'occasions' => $lookup->type('occasion')->get(),
+            'statuses' => $lookup->type('status')->get(),
         );
     }
 
@@ -51,6 +54,7 @@ class CollectionMapper extends Controller
                 $values_array[$input_field] = isset($old_values[$input_field]) && $old_values[$input_field] != '' ? $old_values[$input_field] : '';
             }
         }
+        $values_array['is_admin'] = Auth::user()->hasRole('admin');
 
         return $values_array;
     }
@@ -62,8 +66,9 @@ class CollectionMapper extends Controller
         $collection->image = isset($request->image) && $request->image != '' ? $request->image : '';
 
         foreach ($this->dropdown_fields as $dropdown_field) {
-            $collection->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : '';;
+            $collection->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : '';
         }
+        $collection->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : Status::Submitted;
         return $collection;
     }
 

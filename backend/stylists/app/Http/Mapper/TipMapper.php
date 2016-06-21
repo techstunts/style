@@ -3,10 +3,12 @@ namespace App\Http\Mapper;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Lookups\Lookup;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
+use App\Models\Enums\Status;
 use App\Models\Lookups\AppSections;
 use App\Models\Enums\RecommendationType;
 use Validator;
@@ -16,11 +18,11 @@ use App\TipEntity;
 class TipMapper extends Controller
 {
     protected $fields = ['id', 'name', 'description', 'image', 'created_by', 'video_url', 'image_url', 'external_url',
-        'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'created_at'];
+        'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'created_at', 'status_id'];
 
-    protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group'];
+    protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group', 'status'];
 
-    protected $dropdown_fields = ['body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id'];
+    protected $dropdown_fields = ['body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'status_id'];
     protected $input_fields = ['name', 'description', 'image', 'video_url', 'image_url', 'external_url'];
 
     public function getDropDowns()
@@ -32,6 +34,7 @@ class TipMapper extends Controller
             'age_groups' => $lookup->type('age_group')->get(),
             'budgets' => $lookup->type('budget')->get(),
             'occasions' => $lookup->type('occasion')->get(),
+            'statuses' => $lookup->type('status')->get(),
         );
     }
 
@@ -51,6 +54,7 @@ class TipMapper extends Controller
                 $values_array[$input_field] = isset($old_values[$input_field]) && $old_values[$input_field] != '' ? $old_values[$input_field] : '';
             }
         }
+        $values_array['is_admin'] = Auth::user()->hasRole('admin');
 
         return $values_array;
     }
@@ -65,8 +69,9 @@ class TipMapper extends Controller
         $tip->external_url = isset($request->external_url) && $request->external_url != '' ? $request->external_url : '';
 
         foreach ($this->dropdown_fields as $dropdown_field) {
-            $tip->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : '';;
+            $tip->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : '';
         }
+        $tip->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : Status::Submitted;
         return $tip;
     }
 
@@ -151,6 +156,9 @@ class TipMapper extends Controller
             'name' => 'required|max:256|min:5',
             'description' => 'required|min:25',
             'gender_id' => 'required|in:1,2',
+            'video_url' => 'url',
+            'image_url' => 'url',
+            'external_url' => 'url',
         ]);
     }
 

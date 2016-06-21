@@ -45,6 +45,10 @@
                                 <td class="content">{{$tip->gender->name}} </td>
                             </tr>
                             <tr class="row">
+                                <td class="head">Status</td>
+                                <td class="content">{{$tip->status->name}} </td>
+                            </tr>
+                            <tr class="row">
                                 <td class="head">Image URL</td>
                                 @if($tip->image_url)
                                     <td class="content"><a target="_blank" href=" {{$tip->image_url}}">View</a></td>
@@ -54,6 +58,12 @@
                                 <td class="head">Video URL</td>
                                 @if($tip->video_url)
                                     <td class="content"><a target="_blank" href=" {{$tip->video_url}}">Watch</a></td>
+                                @endif
+                            </tr>
+                            <tr class="row">
+                                <td class="head">External URL</td>
+                                @if($tip->external_url)
+                                    <td class="content"><a target="_blank" href=" {{$tip->external_url}}">View</a></td>
                                 @endif
                             </tr>
                             <tr class="row">
