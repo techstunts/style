@@ -63,7 +63,7 @@ class ScraperMapper
 
     public function getSpiders()
     {
-        return Spiders::with($this->with_array)->get();
+        return Spiders::with($this->with_array)->where('status_id', true)->get();
     }
 
     public function noJobExists($job_id)
