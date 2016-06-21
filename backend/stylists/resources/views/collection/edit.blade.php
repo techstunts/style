@@ -10,7 +10,7 @@
                 <li class="ui-state-default" id="{{$collection->id}}">
                     <div class="resource_view">
                         <div class="image">
-                            <img src="{!! strpos($collection->image, "uploadfile") === 0 ? asset('images/' . $collection->image) : $collection->image !!}"/>
+                            <img src="{!! asset('images/' . $collection->image) !!}"/>
                         </div>
                         <form method="POST" action="{!! url('/collection/update/' . $collection->id) !!}" style="display: initial;">
                             {!! csrf_field() !!}

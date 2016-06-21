@@ -9,7 +9,7 @@
                 <li class="ui-state-default" id="{{$tip->id}}">
                     <div class="resource_view">
                         <div class="image">
-                            <img src="{!! strpos($tip->image, "uploadfile") === 0 ? asset('images/' . $tip->image) : $tip->image !!}"/>
+                            <img src="{!! asset('images/' . $tip->image) !!}"/>
                         </div>
                         <form method="POST" action="{!! url('/tip/update/' . $tip->id) !!}" style="display: initial;">
                             {!! csrf_field() !!}
