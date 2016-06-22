@@ -55,6 +55,7 @@ class CollectionMapper extends Controller
             }
         }
         $values_array['is_admin'] = Auth::user()->hasRole('admin');
+        $values_array['entity_type_id'] = isset($old_values['entity_type_id']) && $old_values['entity_type_id'] != '' ? $old_values['entity_type_id'] : EntityType::COLLECTION;
 
         return $values_array;
     }
