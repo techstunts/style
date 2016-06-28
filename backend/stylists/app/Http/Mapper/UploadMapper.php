@@ -2,10 +2,12 @@
 namespace App\Http\Mapper;
 
 use App\Http\Controllers\Controller;
+use App\Look;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
 use Validator;
 use App\Collection;
+use App\Tip;
 
 class UploadMapper extends Controller
 {
@@ -21,6 +23,10 @@ class UploadMapper extends Controller
     {
         if (EntityType::COLLECTION == $entity_type_id) {
             return EntityTypeName::COLLECTION;
+        } elseif (EntityType::TIP == $entity_type_id) {
+            return EntityTypeName::TIP;
+        } elseif (EntityType::LOOK == $entity_type_id) {
+            return EntityTypeName::LOOK;
         }
     }
 
@@ -28,6 +34,10 @@ class UploadMapper extends Controller
     {
         if (EntityType::COLLECTION == $entity_type_id) {
             $entityObj = Collection::where('id', $entity_id)->first();
+        } elseif (EntityType::TIP == $entity_type_id) {
+            $entityObj = Tip::where('id', $entity_id)->first();
+        } elseif (EntityType::LOOK == $entity_type_id) {
+            $entityObj = Look::where('id', $entity_id)->first();
         }
 
         if ($entityObj && $entityObj->exists()) {
@@ -41,7 +51,11 @@ class UploadMapper extends Controller
     {
         $image_path = env(strtoupper($entity_name) . '_IMAGE_PATH');
 
-        $entity_image_folder_name = strtolower($entity_name) . 's';
+        $entity_image_folder_name = strtolower($entity_name);
+
+        if (EntityTypeName::COLLECTION == $entity_name) {
+            $entity_image_folder_name = $entity_image_folder_name . 's';
+        }
 
         if ($request->file('image')->isValid()) {
             $destinationPath = public_path() . '/' . $image_path;

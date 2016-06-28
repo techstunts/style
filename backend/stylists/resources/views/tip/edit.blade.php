@@ -9,7 +9,16 @@
                 <li class="ui-state-default" id="{{$tip->id}}">
                     <div class="resource_view">
                         <div class="image">
-                            <img src="{!! asset('images/' . $tip->image) !!}"/>
+                            <form method="POST" action="{!! url('/upload/image/' . $tip->id) !!}" enctype="multipart/form-data" style="display: initial;">
+                                <img src="{!! strpos($tip->image, "tips") === 0 ? asset('images/'.$tip->image) : $tip->image !!}"/>
+                                {!! csrf_field() !!}
+                                <input id="image" name="image" type="file" class="file-loading">
+                                <input name="entity_type_id" type="hidden" value="{{$entity_type_id}}">
+                                @if($image_error = $errors->first('image'))
+                                    <span class="errorMsg">{{$image_error}}</span>
+                                @endif
+                                <input style="display: block;" type="submit" class="btn btn-primary btn-lg" value="Upload">
+                            </form>
                         </div>
                         <form method="POST" action="{!! url('/tip/update/' . $tip->id) !!}" style="display: initial;">
                             {!! csrf_field() !!}
@@ -180,6 +189,11 @@
 
                                 <tr class="row">
                                     <td class="title" colspan="2">
+                                        <input type="hidden" name="image"
+                                               value="@if(!empty($tip->image)){{$tip->image}}
+                                               @else{{''}}
+                                               @endif
+                                                       ">
                                         <input type="submit" class="btn btn-primary btn-lg" value="Save">
                                         <a href="{!! url('tip/view/' . $tip->id) !!}">Cancel</a>
                                     </td>

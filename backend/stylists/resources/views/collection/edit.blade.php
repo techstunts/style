@@ -10,7 +10,8 @@
                 <li class="ui-state-default" id="{{$collection->id}}">
                     <div class="resource_view">
                         <div class="image">
-                            <form method="POST" action="{!! url('/upload/image/' . $collection->id) !!}" enctype="multipart/form-data" style="display: initial;">
+                            <form method="POST" action="{!! url('/upload/image/' . $collection->id) !!}"
+                                  enctype="multipart/form-data" style="display: initial;">
                                 <img src="{!! strpos($collection->image, "collections") === 0 ? asset('images/'.$collection->image) : $collection->image !!}"/>
                                 {!! csrf_field() !!}
                                 <input id="image" name="image" type="file" class="file-loading">
@@ -18,10 +19,12 @@
                                 @if($image_error = $errors->first('image'))
                                     <span class="errorMsg">{{$image_error}}</span>
                                 @endif
-                                <input style="display: block;" type="submit" class="btn btn-primary btn-lg" value="Upload">
+                                <input style="display: block;" type="submit" class="btn btn-primary btn-lg"
+                                       value="Upload">
                             </form>
                         </div>
-                        <form method="POST" action="{!! url('/collection/update/' . $collection->id) !!}" style="display: initial;">
+                        <form method="POST" action="{!! url('/collection/update/' . $collection->id) !!}"
+                              style="display: initial;">
                             {!! csrf_field() !!}
                             <table class="info">
                                 <tr class="row">
@@ -159,6 +162,11 @@
 
                                 <tr class="row">
                                     <td class="title" colspan="2">
+                                        <input type="hidden" name="image"
+                                               value="@if(!empty($collection->image)){{$collection->image}}
+                                               @else{{''}}
+                                               @endif
+                                                       ">
                                         <input type="submit" class="btn btn-primary btn-lg" value="Save">
                                         <a href="{!! url('collection/view/' . $collection->id) !!}">Cancel</a>
                                     </td>
