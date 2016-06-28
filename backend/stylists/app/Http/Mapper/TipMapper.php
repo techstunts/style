@@ -64,7 +64,6 @@ class TipMapper extends Controller
     {
         $tip->name = isset($request->name) && $request->name != '' ? strtoupper(substr($request->name, 0, 1)) . substr($request->name, 1) : '';
         $tip->description = strtoupper(substr($request->description, 0, 1)) . substr($request->description, 1);
-        $tip->image = isset($request->image) && $request->image != '' ? $request->image : '';
         $tip->image_url = isset($request->image_url) && $request->image_url != '' ? $request->image_url : '';
         $tip->video_url = isset($request->video_url) && $request->video_url != '' ? $request->video_url : '';
         $tip->external_url = isset($request->external_url) && $request->external_url != '' ? $request->external_url : '';

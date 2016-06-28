@@ -189,11 +189,6 @@
 
                                 <tr class="row">
                                     <td class="title" colspan="2">
-                                        <input type="hidden" name="image"
-                                               value="@if(!empty($tip->image)){{$tip->image}}
-                                               @else{{''}}
-                                               @endif
-                                                       ">
                                         <input type="submit" class="btn btn-primary btn-lg" value="Save">
                                         <a href="{!! url('tip/view/' . $tip->id) !!}">Cancel</a>
                                     </td>

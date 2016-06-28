@@ -162,11 +162,6 @@
 
                                 <tr class="row">
                                     <td class="title" colspan="2">
-                                        <input type="hidden" name="image"
-                                               value="@if(!empty($collection->image)){{$collection->image}}
-                                               @else{{''}}
-                                               @endif
-                                                       ">
                                         <input type="submit" class="btn btn-primary btn-lg" value="Save">
                                         <a href="{!! url('collection/view/' . $collection->id) !!}">Cancel</a>
                                     </td>

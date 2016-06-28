@@ -64,7 +64,6 @@ class CollectionMapper extends Controller
     {
         $collection->name = isset($request->name) && $request->name != '' ? strtoupper(substr($request->name, 0, 1)) . substr($request->name, 1) : '';
         $collection->description  = strtoupper(substr($request->description, 0, 1)) . substr($request->description, 1);
-        $collection->image = isset($request->image) && $request->image != '' ? $request->image : '';
 
         foreach ($this->dropdown_fields as $dropdown_field) {
             $collection->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : '';
