@@ -25,6 +25,8 @@
                 {!! $looks->render() !!}
             </div>
 
+            <div class="clear"></div>
+            <a class="btn btn-primary btn-xs" href="{{url('look/create')}}">Create Look</a>
             @include('common.sendrecommendations')
             <div class="clear"></div>
 
@@ -80,7 +82,6 @@
             {!! $looks->render() !!}
         </div>
 
-        @include('look.create')
         @include('push.popup')
     </div>
 </div>

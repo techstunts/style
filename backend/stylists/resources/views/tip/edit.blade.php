@@ -201,7 +201,6 @@
             </ol>
         </div>
 
-        @include('look.create')
         @include('push.popup')
 
     </div>

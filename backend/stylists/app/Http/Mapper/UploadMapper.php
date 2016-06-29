@@ -51,10 +51,12 @@ class UploadMapper extends Controller
     {
         $image_path = env(strtoupper($entity_name) . '_IMAGE_PATH');
 
-        $entity_image_folder_name = strtolower($entity_name);
-
         if (EntityTypeName::COLLECTION == $entity_name) {
-            $entity_image_folder_name = $entity_image_folder_name . 's';
+            $entity_image_folder_name = EntityTypeName::COLLECTION . 's';
+        } elseif (EntityTypeName::LOOK == $entity_name) {
+            $entity_image_folder_name = 'uploadfile1';
+        } else {
+            $entity_image_folder_name = strtolower($entity_name);
         }
 
         if ($request->file('image')->isValid()) {
