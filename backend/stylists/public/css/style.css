@@ -11,12 +11,10 @@ nav li {
     margin: 0px 2px 4px 0px;
     padding: 3px 5px;
     list-style: none;
-    border: 1px solid wheat;
-    background-color: #E91E63;
 }
 
 nav li a {
-    color: white;
+    color: #000000;
     text-decoration: none;
     padding: 3px;
 }
@@ -24,9 +22,8 @@ nav li a {
 div.items {
     float: left;
     margin: 5px;
-    height: 350px;
-    width: 260px;
-    border: 2px solid beige;
+    height: 335px;
+    width: 209px;
     overflow: hidden;
 }
 
@@ -35,11 +32,11 @@ div.items div {
 }
 
 div.items div.image {
-    height: 280px;
+    height: 230px;
 }
 
 div.items img {
-    max-height: 280px;
+    max-height: 220px;
 }
 
 div.items div.text {
@@ -58,15 +55,16 @@ div.items div.extra {
 }
 
 div.items div.extra span {
-    background-color: #E91E63;
-    overflow: overlay;
-    color: wheat;
+    /*background-color: #000;*/
+    /*overflow:overlay;*/
+    /*color: wheat;*/
     margin: 0 5px 0 0;
     padding: 0 1px;
+    color:#000;
 }
 
 div.items div.extra a {
-    color: wheat;
+    color: #000;
 }
 
 div.items div.extra a.action {
@@ -150,7 +148,7 @@ div.filters form select, div.filters form input, div.filters form label {
 }
 
 div.filters form input[type="submit"] {
-    background-color: #D32F2F;
+    background-color: #000;
     border: 1px beige;
     color: white;
     font-weight: bold;
@@ -247,7 +245,7 @@ ol.selectable {
 }
 
 ol.selectable li {
-    margin: 3px;
+    margin: 6px;
     float: left;
     text-align: center;
     background: white;
@@ -528,11 +526,12 @@ img.loader{
     display:none;
     width: 30px;
 }
-.tip-product-img_size{
-    max-width:110px;
+.tip-product-img_size {
+    max-width: 110px;
     max-height: 110px;
     margin-right: 5px;
     border: 1px solid #d3d3d3;
+}
 .message-position{
     top: 60px;
     margin-bottom: 5px;
@@ -543,4 +542,74 @@ img.loader{
 }
 .wysiwyg-color-green {
     color: green;
+}
+
+/*CSS added By: Danish Ahmed*/
+.chat-icon-floating{
+    position:fixed;
+    bottom: 10px;
+    right: 16px;
+    border-radius: 79px;
+    padding: 10px 10px;
+    background-color: #000;
+}
+
+.chat-icon-floating a{
+    color:white;
+}
+
+.chat-icon-floating a:hover{
+    color:white;
+}
+
+.main-logo{
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.logo-size{
+    margin-top:12px;
+    margin-left: 15px;
+}
+
+
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{
+    color: #555555;
+    text-decoration: none;
+    font-family: "freight-text-pro","Times New Roman","Lucida Sans Unicode","Lucida Grande",sans-serif;
+    font-style: italic;
+    font-size: 16px;
+}
+
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{
+    color: #000;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+/*.image .ui-selectee > a{*/
+    /*text-align: leftdiv.items div.extra span;*/
+/*}*/
+
+/*ul li ul.dropdown{*/
+    /*min-width: 50%; !* Set width of the dropdown *!*/
+    /*background: #f2f2f2;*/
+    /*display: none;*/
+    /*position: absolute;*/
+    /*z-index: 999;*/
+    /*left: 0;*/
+/*}*/
+/*ul li:hover ul.dropdown{*/
+    /*display: block;	!* Display the dropdown *!*/
+/*}*/
+/*ul li ul.dropdown li{*/
+    /*display: block;*/
+/*}*/
+
+.dropdown{
+    z-index:1;
+}
+
+ul li{
+    z-index:9999;
 }

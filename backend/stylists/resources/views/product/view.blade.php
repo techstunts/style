@@ -6,7 +6,7 @@
 <div id="contentCntr">
     <div class="container">
         <ol class="selectable">
-            <li class="ui-state-default" id="{{$product->id}}">
+            <li class="ui-state-default card" id="{{$product->id}}">
                 <div class="resource_view">
                     <div class="image">
                         <img src="{{strpos($product->upload_image, "http") !== false ? $product->upload_image : asset('images/' . $product->upload_image)}}"/>

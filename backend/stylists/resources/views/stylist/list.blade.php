@@ -7,7 +7,6 @@
     <div class="section">
         <div class="container">
             {!! $stylists->render() !!}
-
             <div class="clear"></div>
             <ol class="selectable" >
             @foreach($stylists as $stylist)

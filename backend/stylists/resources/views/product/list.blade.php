@@ -45,13 +45,14 @@
                 No Products found
             @endif
             @foreach($products as $product)
-                <li class="ui-state-default" product_id="{{$product->id}}">
+                <li class="ui-state-default card" product_id="{{$product->id}}">
                     <div class="items">
                         <div class="name text" id="popup-item">
-                            <a href="{{url('product/view/' . $product->id)}}">{{$product->name}}</a>
+                            {{--<a href="{{url('product/view/' . $product->id)}}">{{$product->name}}</a>--}}
                             <input class="entity_ids pull-right"  value="{{$product->id}}" type="checkbox">
                         </div>
                         <div class="image"><img src="{!! strpos($product->upload_image, "uploadfile") === 0 ? asset('images/' . $product->upload_image) : $product->upload_image !!}" /></div>
+                        <a href="{{url('product/view/' . $product->id)}}">{{$product->name}}</a>
                         <div class="extra text">
                             <span><a href="{{$product->product_link}}">View</a></span>
                             <span>{{$product->product_type}}</span>
@@ -71,7 +72,6 @@
             {!! $products->render() !!}
 
         </div>
-
 
         @include('look.create')
         @include('push.popup')
