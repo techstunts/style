@@ -143,8 +143,11 @@ class ProductController extends Controller
             return;
         }
 
+        $brand_name = preg_replace('/[^a-zA-Z0-9_&-@\' \']/', null, $request->input('brand'));
+        $brand_name = trim($brand_name);
+
         $merchant = Merchant::where('name', $request->input('merchant'))->first();
-        $brand = Brand::firstOrCreate(['name' => $request->input('brand')]);
+        $brand = Brand::firstOrCreate(['name' => $brand_name]);
         $category = Category::where(['name' => $request->input('category')])->first();
         $gender = Gender::where(['name' => $request->input('gender')])->first();
         $primary_color = Color::where(['name' => $request->input('color1')])->first();

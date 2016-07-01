@@ -234,8 +234,15 @@ class TipMapper extends Controller
 
     public function saveTipDetails($tip, $request)
     {
-        $tip = $this->setObjectProperties($tip, $request);
+        if ($tip->status_id !== Status::Active && !empty($request->status_id) && $request->status_id == Status::Active && empty($tip->image)) {
+            return array(
+                'status' => false,
+                'message' => 'Upload image first for this tip',
+            );
+        }
+
         $logged_in_stylist = $request->user()->id != '' ? $request->user()->id : '';
+        $tip = $this->setObjectProperties($tip, $request);
 
         if ($tip->exists) {
             $tip->updated_by = $logged_in_stylist;
