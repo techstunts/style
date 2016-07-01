@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Collections list')
+@section('title', 'Tips list')
 
 @section('content')
 <div id="contentCntr">
@@ -20,35 +20,42 @@
                     <input type="submit" name="filter" value="Filter"/>
                     <a href="{{url('tip/list')}}" class="clearall">Clear All</a>
                 </form>
-                
-            </div>
-            {!! $collections->render() !!}
 
+            </div>
             <div class="clear"></div>
-            <a class="btn btn-primary btn-xs" href="{{url('collection/create')}}">Create Collection</a>
+
+            <a class="btn btn-primary btn-xs" href="{{url('tip/create')}}" class="clearall">Create Tip</a>
             @include('common.sendrecommendations')
             <div class="clear"></div>
 
-
             <ol class="selectable" >
-            @foreach($collections as $collection)
-                <li class="ui-state-default" collection_id="{{$collection->id}}">
+            @if(count($tips) == 0)
+                No Tips found
+            @endif
+
+            @foreach($tips as $tip)
+                <li class="ui-state-default" tip_id="{{$tip->id}}">
                     <div class="items">
                         <div class="name text " id="popup-item">
-                            <a href="{{url('collection/view/' . $collection->id)}}">{{$collection->name == "" ? "Error! Collection name empty" : $collection->name }}</a>
-                            <input class="entity_ids pull-right"  value="{{$collection->id}}" type="checkbox">
+                            <a href="{{url('tip/view/' . $tip->id)}}">{{$tip->name == "" ? "Error! Tip name empty" : $tip->name }}</a>
+                            <input class="entity_ids pull-right"  value="{{$tip->id}}" type="checkbox">
                         </div>
-                        <div class="image"><img src="{!! asset('images/' . $collection->image) !!}" /></div>
+                        @if($tip->image)
+                            <div class="image"><img src="{!! asset('images/' . $tip->image) !!}" /></div>
+                        @elseif($tip->image_url)
+                            <div class="image"><img src="{!! $tip->image_url !!}" /></div>
+                        @else
+                            <div class="image"><img src="{!! asset('images/logoistle.png') !!}" /></div>
+                        @endif
                         <div class="extra text">
-                            <span>{{$collection->status->name}}</span>
-                            <span>{{$collection->gender->name}}</span>
-                            <span>{{$collection->occasion->name}}</span>
-                            <span>{{$collection->body_type->name}}</span>
+
+
                         </div>
-                        <div class="extra text">
-                            <span>{{$collection->age_group->name}}</span>
-                            <span>Rs.{{$collection->budget->name}}</span>
-                        </div>
+                        @if($tip->createdBy)
+                            <div class="extra text">
+                                <a target="_blank" href="{{url('stylist/view/' . $tip->createdBy->id)}}"><span>{{$tip->createdBy->name}}</span></a>
+                            </div>
+                        @endif
                     </div>
                 </li>
             @endforeach
@@ -56,10 +63,9 @@
 
             <div class="clear"></div>
 
-            {!! $collections->render() !!}
         </div>
 
-        @include('look.create')
+
         @include('push.popup')
     </div>
 </div>

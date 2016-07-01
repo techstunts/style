@@ -48,12 +48,16 @@ class ClientController extends Controller
 
         $view_properties['popup_entity_type_ids'] = array(
             EntityType::LOOK,
-            EntityType::PRODUCT
+            EntityType::PRODUCT,
+            EntityType::TIP,
+            EntityType::COLLECTION,
         );
 
         $view_properties['entity_type_names']= array(
             EntityTypeName::LOOK,
-            EntityTypeName::PRODUCT
+            EntityTypeName::PRODUCT,
+            EntityTypeName::TIP,
+            EntityTypeName::COLLECTION,
         );
         $view_properties['nav_tab_index'] = '0';
 
@@ -120,15 +124,20 @@ class ClientController extends Controller
     public function getChat(Request $request)
     {
         $authorised_stylists_for_chat = [36, 49, 66];
+        $authorised_stylists_for_chat_as_admin = [89];
+
         $stylists=[];
         $stylist_id_to_chat = Auth::user()->id;
 
         $is_admin = Auth::user()->hasRole('admin');
-        if(!$is_admin && !in_array($stylist_id_to_chat, $authorised_stylists_for_chat)){
+
+        $is_authorised_for_chat_as_admin = in_array($stylist_id_to_chat, $authorised_stylists_for_chat_as_admin);
+        if(!$is_admin && !in_array($stylist_id_to_chat, $authorised_stylists_for_chat)
+            && !$is_authorised_for_chat_as_admin){
             return redirect('look/list')->withError('Chat access denied!');
         }
 
-        if($is_admin){
+        if($is_admin || $is_authorised_for_chat_as_admin){
             $stylists = Stylist::whereIn('status_id',[StylistStatus::Active, StylistStatus::Inactive])
                 ->orderBy('name')->get();
             $stylist_id_to_chat = $request->input('stylist_id') ? $request->input('stylist_id') : $stylist_id_to_chat;
@@ -137,6 +146,7 @@ class ClientController extends Controller
         $view_properties['stylist_id_to_chat'] = $stylist_id_to_chat;
         $view_properties['stylists'] = $stylists;
         $view_properties['is_admin'] = $is_admin;
+        $view_properties['is_authorised_for_chat_as_admin'] = $is_authorised_for_chat_as_admin;
 
         return view('client/chat', $view_properties);
     }
