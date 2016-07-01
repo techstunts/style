@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title',  'Create a Collection')
+@section('title',  'Create a Look')
 
 @include('common.iconlibrary')
 @section('content')

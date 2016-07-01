@@ -151,6 +151,9 @@ class LookController extends Controller
     {
         $look = Look::find($this->resource_id);
         if ($look) {
+            if ($look->status_id !== LookupStatus::Active && $this->action_resource_id == LookupStatus::Active && empty($look->image)) {
+                return Redirect::back()->withError('Error! Please upload the image for this look.');
+            }
             $this->initStatusRules();
             if (isset($this->status_rules[$look->status->id]['edit_status']['new_status'])) {
 
