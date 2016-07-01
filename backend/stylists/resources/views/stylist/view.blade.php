@@ -110,9 +110,6 @@
         </ol>
     </div>
 
-
-    @include('look.create')
-
 </div>
 
 @endsection

@@ -67,11 +67,21 @@
                                     </td>
                                 </tr>
 
+                                @if($is_admin)
+                                    <tr class="row">
+                                        <td class="title" colspan="2">
+                                            @include('common.status.select')
+                                        </td>
+                                    </tr>
+                                @endif
+
                                 <tr class="row">
                                     <td class="title" colspan="2">
                                         <input class="form-control" placeholder="Image URL" type="text" name="image_url"
                                                value="{{$image_url ? $image_url : ''}}" validation="required">
-
+                                        @if($image_url_error = $errors->first('image_url'))
+                                            <span class="errorMsg">{{$image_url_error}}</span>
+                                        @endif
                                     </td>
                                 </tr>
 
@@ -79,7 +89,9 @@
                                     <td class="title" colspan="2">
                                         <input class="form-control" placeholder="Video URL" type="text" name="video_url"
                                                value="{{$video_url ? $video_url : ''}}" validation="required">
-
+                                        @if($video_url_error = $errors->first('video_url'))
+                                            <span class="errorMsg">{{$video_url_error}}</span>
+                                        @endif
                                     </td>
                                 </tr>
 
@@ -87,7 +99,9 @@
                                     <td class="title" colspan="2">
                                         <input class="form-control" placeholder="External URL" type="text"
                                                name="external_url" value="{{$external_url ? $external_url : ''}}" validation="required">
-
+                                        @if($external_url_error = $errors->first('external_url'))
+                                            <span class="errorMsg">{{$external_url_error}}</span>
+                                        @endif
                                     </td>
                                 </tr>
 
@@ -133,10 +147,7 @@
             </ol>
         </div>
 
-
-        @include('look.create')
         @include('push.popup')
-
     </div>
 
 @endsection

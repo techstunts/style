@@ -78,7 +78,6 @@
                 {!! $clients->render() !!}
             </div>
 
-            @include('look.create')
             @include('push.popup')
 
 
