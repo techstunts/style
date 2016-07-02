@@ -136,15 +136,17 @@ div.filters form {
 }
 
 div.filters form select, div.filters form input, div.filters form label {
-    padding: 2px 0 1px 1px;
-    color: grey;
+    padding: 11px 0px;
+    color: #000;
     background-color: white;
     border: 1px solid #d3d3d3;
     max-width: 200px;
     display: inline;
-    width: 90px;
+    width: 102px;
     height: initial;
-    font-size: 10px;
+    font-size: 12px;
+    margin-right:-5px;
+    border-top: 2px solid black;
 }
 
 div.filters form input[type="submit"] {
@@ -152,8 +154,9 @@ div.filters form input[type="submit"] {
     border: 1px beige;
     color: white;
     font-weight: bold;
-    padding: 3px 4px 3px 4px;
+    padding: 13px 13px;
     margin: 1px 5px 0px 0px;
+    width: auto;
 }
 
 div.filters form input[type="checkbox"] {
@@ -177,7 +180,9 @@ div.filters form.approve input[type="submit"] {
 }
 
 div.filters form input.search {
-    width: 55px;
+    width: 80px;
+    height: 16px;
+    text-align: center;
 }
 
 div.filters form input.search_text {
@@ -242,6 +247,7 @@ ol.selectable {
     list-style-type: none;
     margin: 0;
     padding: 0;
+    margin-left:70px;
 }
 
 ol.selectable li {
@@ -249,6 +255,7 @@ ol.selectable li {
     float: left;
     text-align: center;
     background: white;
+    border: 1px solid #e0e1e2;
 }
 
 /* Sortable css*/
@@ -572,7 +579,6 @@ img.loader{
     margin-left: 15px;
 }
 
-
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{
     color: #555555;
     text-decoration: none;
@@ -584,7 +590,6 @@ img.loader{
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited{
     color: #000;
     text-decoration: none;
-    letter-spacing: 1px;
 }
 
 /*.image .ui-selectee > a{*/
@@ -612,4 +617,24 @@ img.loader{
 
 ul li{
     z-index:9999;
+}
+
+.top-menu-links{
+    margin-top: 10px;
+}
+
+
+.second-menu{
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.second-menu li a{
+    font-family: Arial,'Lucida Sans Unicode','Lucida Grande',sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+}
+
+.second-menu li a:hover{
+    color:#00b9f1;
 }
