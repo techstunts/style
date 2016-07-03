@@ -3,20 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Collection;
-use App\Look;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
-use App\Models\Enums\Gender;
-use App\Product;
-use App\Models\Lookups\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Lookups\AppSections;
 use App\Models\Enums\RecommendationType;
 use App\Http\Mapper\CollectionMapper;
+use App\Http\Mapper\UploadMapper;
 
 use App\Http\Requests;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Validator;
 
@@ -149,7 +145,7 @@ class CollectionController extends Controller
 
     public function postUpdate(Request $request)
     {
-
+        $uploadMapperObj = new UploadMapper();
         if (empty($this->resource_id)) {
             Redirect::back()->withError('Collection Not Found');
         }
@@ -163,8 +159,21 @@ class CollectionController extends Controller
                 ->withInput($request->all());
         }
 
+        $validator = $uploadMapperObj->inputValidator($request);
+        if ($validator->fails()) {
+
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput($request->all());
+        }
+
         $collection = Collection::find($this->resource_id);
-        $result = $collectionMapperObj->saveCollectionDetails($collection, $request);
+
+        if ($request->file('image')) {
+            $result = $collectionMapperObj->saveCollectionDetails($collection, $request, $uploadMapperObj);
+        } else {
+            $result = $collectionMapperObj->saveCollectionDetails($collection, $request);
+        }
 
         if ($result['status'] == false) {
             return Redirect::back()->withError($result['message'])->withInput($request->all());
@@ -187,6 +196,7 @@ class CollectionController extends Controller
     public function postCreate(Request $request)
     {
         $collectionMapperObj = new CollectionMapper();
+        $uploadMapperObj = new UploadMapper();
 
         $validator = $collectionMapperObj->inputValidator($request);
         if ($validator->fails()) {
@@ -195,9 +205,21 @@ class CollectionController extends Controller
                 ->withErrors($validator)
                 ->withInput($request->all());
         }
+        $validator = $uploadMapperObj->inputValidator($request);
+        if ($validator->fails()) {
+
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput($request->all());
+        }
 
         $collection = new Collection();
-        $result = $collectionMapperObj->saveCollectionDetails($collection, $request);
+
+        if ($request->file('image')) {
+            $result = $collectionMapperObj->saveCollectionDetails($collection, $request, $uploadMapperObj);
+        } else {
+            $result = $collectionMapperObj->saveCollectionDetails($collection, $request);
+        }
 
         if ($result['status'] == false) {
             return Redirect::back()->withError($result['message'])->withInput($request->all());

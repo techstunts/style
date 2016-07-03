@@ -337,7 +337,17 @@ $(document).ready(function () {
     $(".pop-up-item").each(function () {
         $(this).children('span').on('click', deleteItem);
     });
+
+    $("#image").change(function () {
+        var reader = new FileReader();
+        reader.onload = showImage;
+        reader.readAsDataURL(this.files[0]);
+    });
 });
+
+function showImage(e) {
+    $("#loadedImage").attr('src', e.target.result);
+};
 
 function deleteItem(e){
     $(this).parents('.items').remove();

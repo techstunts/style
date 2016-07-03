@@ -23,7 +23,7 @@ class CollectionMapper extends Controller
     protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group', 'status'];
 
     protected $dropdown_fields = ['body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'status_id'];
-    protected $input_fields = ['name', 'description', 'image'];
+    protected $input_fields = ['name', 'description'];
 
     public function getDropDowns()
     {
@@ -224,8 +224,15 @@ class CollectionMapper extends Controller
         return $collection_entities;
     }
 
-    public function saveCollectionDetails($collection, $request)
+    public function saveCollectionDetails($collection, $request, $uploadMapperObj = null)
     {
+        if ($collection->status_id !== Status::Active && !empty($request->status_id) && $request->status_id == Status::Active && empty($collection->image)) {
+            return array(
+                'status' => false,
+                'message' => 'Upload image first for this collection',
+            );
+        }
+
         $collection = $this->setObjectProperties($collection, $request);
         $logged_in_stylist = $request->user()->id != '' ? $request->user()->id : '';
 
@@ -238,13 +245,19 @@ class CollectionMapper extends Controller
 
         DB::beginTransaction();
         try {
-            $collection->save();
+            if (!$collection->exists) {
+                $collection->save();
+            }
             $result = $this->saveEntities($collection->id, $request->input('product_ids'), $request->input('look_ids'));
-
             if ($result['status'] == false) {
                 DB::rollback();
                 return $result;
             }
+            if ($uploadMapperObj) {
+                $collection->image = $uploadMapperObj->moveImageInFolder($request);
+            }
+            $collection->save();
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
