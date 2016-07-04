@@ -44,5 +44,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('report/{report_id}', 'ReportController@index');
 
     Route::get('report/{report_id}/query', 'ReportController@query');
+    
+    Route::any('tip/{action}/{id?}/{action_id?}', 'TipController@index');
+
+    Route::any('upload/{action}/{id?}', 'UploadController@index');
 });
 

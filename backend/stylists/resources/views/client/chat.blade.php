@@ -19,7 +19,7 @@
                     <img ng-src="@{{stylist.icon}}">
                     <h1 ng-bind="stylist.name"></h1>
                     <h2 ng-bind="stylist.designation"></h2>
-                    @if($is_admin)
+                    @if($is_admin || $is_authorised_for_chat_as_admin)
                         <form action="">
                             <select name="stylist_id" onchange="this.form.submit()">
                                 <option>Switch stylist</option>

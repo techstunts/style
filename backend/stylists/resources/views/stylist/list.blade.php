@@ -33,9 +33,6 @@
 
         </div>
 
-
-        @include('look.create')
-
     </div>
 </div>
 

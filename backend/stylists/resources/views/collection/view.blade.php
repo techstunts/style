@@ -3,78 +3,96 @@
 @section('title', $collection->name)
 
 @section('content')
-<div id="contentCntr">
-    <div class="container">
-        <ol class="selectable">
-            <li class="ui-state-default" id="{{$collection->id}}">
-                <div class="resource_view">
-                    <div class="image">
-                        <img src="{!! asset('images/' . $collection->image) !!}" />
+    <div id="contentCntr">
+        <div class="container">
+            <ol class="selectable">
+                <li class="ui-state-default" id="{{$collection->id}}">
+                    <div class="resource_view">
+                        <table class="info">
+                            <tr class="row">
+                                <td class="title" colspan="2">{{$collection->name}}
+                                    @if($is_owner_or_admin)
+                                        <a class="product_link" href="{{url('collection/edit/' . $collection->id)}}"
+                                           title="{{$collection->name}}">Edit</a>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="description" colspan="2">{{$collection->description}}</td>
+                            </tr>
+                            <tr class="row">
+                                <td class="head">Body Type</td>
+                                <td class="content">{{$collection->body_type->name}} </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="head">Budget</td>
+                                <td class="content">{{$collection->budget->name}} </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="head">Age Group</td>
+                                <td class="content">{{$collection->age_group->name}} </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="head">Occasion</td>
+                                <td class="content">{{$collection->occasion->name}} </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="head">Gender</td>
+                                <td class="content">{{$collection->gender->name}} </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="head">Status</td>
+                                <td class="content">{{$collection->status->name}} </td>
+                            </tr>
+
+                            <tr class="row">
+                                <td class="head">Products</td>
+                                <td class="content">
+                                    @foreach($collection->product_entities as $entity)
+                                        @if(!empty($entity->product))
+                                            <div class="items pop-up-item" value="{{$entity->product->id}}">
+                                                <div class="name text">
+                                                    <a href="{{url('product/view/' . $entity->product->id)}}"
+                                                       target="_blank">{{$entity->product->name}}</a>
+                                                </div>
+                                                <div class="image" data-toggle="popover" data-trigger="hover"
+                                                     data-placement="right" data-html="true"
+                                                     data-content="{{$entity->product->name}}">
+                                                    <img src="{{strpos($entity->product->upload_image, "http") !== false ? $entity->product->upload_image : asset('images/' . $entity->product->upload_image)}}"
+                                                         class="pop-image-size"/>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </td>
+                            </tr>
+                            <div class="clear"></div>
+                            <tr class="row">
+                                <td class="head">Looks</td>
+                                <td class="content looks">
+                                    @foreach($collection->look_entities as $entity)
+                                        @if(!empty($entity->look))
+                                            <div class="items pop-up-item">
+                                                <div class="name text">
+                                                    <a href="{{url('look/view/' . $entity->look->id)}}"
+                                                       title="{{$entity->look->name}}"
+                                                       target="product_win">
+                                                        <img class="entity"
+                                                             src="{{strpos($entity->look->image, "http") !== false ? $entity->look->image : asset('images/' . $entity->look->image)}}"/>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="image">
+                            <img src="{!! asset('images/' . $collection->image) !!}"/>
+                        </div>
                     </div>
-                    <table class="info">
-                        <tr class="row">
-                            <td class="title" colspan="2">{{$collection->name}}</td>
-                        </tr>
-                        <tr class="row">
-                            <td class="description" colspan="2">{{$collection->description}}</td>
-                        </tr>
-                        <tr class="row">
-                            <td class="head">Body Type</td><td class="content">{{$collection->body_type->name}} </td>
-                        </tr>
-                        <tr class="row">
-                            <td class="head">Budget</td><td class="content">{{$collection->budget->name}} </td>
-                        </tr>
-                        <tr class="row">
-                            <td class="head">Age Group</td><td class="content">{{$collection->age_group->name}} </td>
-                        </tr>
-                        <tr class="row">
-                            <td class="head">Occasion</td><td class="content">{{$collection->occasion->name}} </td>
-                        </tr>
-                        <tr class="row">
-                            <td class="head">Gender</td><td class="content">{{$collection->gender->name}} </td>
-                        </tr>
-                        <tr class="row">
-                            <td class="head">Status</td><td class="content">{{$status->name}} </td>
-                        </tr>
-                        <tr class="row">
-                            <td class="head">Entities</td>
-                            <td class="content">
-
-                                <?php
-                                    $href_tag = '<a href="%s" title="%s" target="new_win"><img class="entity" src="%s"/></a>';
-                                    $combined = array('Female' => $female_entities, 'Male' => $male_entities);
-                                    foreach($combined as $gender => $entities){
-                                        echo "<br/>" . $gender . "<br />";
-                                        foreach($entities as $entity){
-                                            if($entity[0] == \App\Models\Enums\EntityType::PRODUCT){
-                                                echo sprintf($href_tag,
-                                                        url('product/view/' . $entity[1]->id),
-                                                        $entity[1]->name,
-                                                        strpos($entity[1]->upload_image, "http") !== false ? $entity[1]->upload_image : asset('images/' . $entity[1]->upload_image)
-                                                );
-                                            }
-                                            else if($entity[0] == \App\Models\Enums\EntityType::LOOK){
-                                                echo sprintf($href_tag,
-                                                        url('look/view/' . $entity[1]->id),
-                                                        $entity[1]->name,
-                                                        strpos($entity[1]->image, "http") !== false ? $entity[1]->image : asset('images/' . $entity[1]->image)
-                                                );
-                                            }
-                                        }
-                                        echo "<br/><br/>";
-                                    }
-                                ?>
-                            </td>
-                        </tr>
-                    </table>
-
-                </div>
-            </li>
-        </ol>
+                </li>
+            </ol>
+        </div>
     </div>
-
-    @include('look.create')
-
-</div>
-
 @endsection

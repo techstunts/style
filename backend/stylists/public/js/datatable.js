@@ -1,7 +1,7 @@
 //variables for navigation in various entity sections
 var entity_type_id = '';
 var entity_type_to_send = '';
-var entity = ['', 'product', 'look', '', 'tips', '', 'client'];
+var entity = ['', 'product', 'look', '', 'tip', 'collection', 'client'];
 var next_page = '';
 var prev_page = '';
 var EntityType = {
@@ -24,8 +24,8 @@ var entity_filters = [
     ['genders', 'colors', 'stylists'],
     ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
     [],
-    [],
-    [],
+    ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
+    ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
     []
 ];
 var entity_filter_ids = [
@@ -33,14 +33,16 @@ var entity_filter_ids = [
     ['id', 'id', 'id'],
     ['id', 'id', 'id', 'id', 'id', 'id', 'id'],
     [],
-    []
+    ['id', 'id', 'id', 'id', 'id', 'id', 'id'],
+    ['id', 'id', 'id', 'id', 'id', 'id', 'id'],
 ];
 var entity_fields_ids = [
     [],
     ['gender_id', 'primary_color_id', 'stylist_id'],
     ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'stylist_id'],
     [],
-    []
+    ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'created_by'],
+    ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'created_by'],
 ];
 var api_origin = '';
 var stylist_id = '';
@@ -172,6 +174,7 @@ $(document).ready(function () {
 
     //----- OPEN
     $('div.container a.btn_recommendation').on('click', displayPopup);
+    $('div.container a.btn_add_entity').on('click', displayPopup);
 
     $('#filters form').submit(function (e) {
         url = $(this).attr('action') + $(this).serialize();
@@ -225,10 +228,10 @@ $(document).ready(function () {
                 _token: $(this).parent().children('input[name="_token"]').val()
             },
             success: function (response) {
-                if (response.error_message != "") {
+                if (response.success == false) {
                     alert(response.error_message);
                 } else {
-                    alert("Sent Successfully");
+                    alert(response.success_message);
                     $(".popup-inner > .pop-up-item input").attr('checked', false);
                     $(".mobile-app-send .btn").removeClass('active');
                     $(".mobile-app-send .btn").addClass('disabled');
@@ -268,7 +271,88 @@ $(document).ready(function () {
             $(".container .btn-primary").addClass('disabled');
         }
     });
+
+    $("#add").on('click', function (e) {
+        var entity_ids = [];
+        var checked_items = $(".popup-inner > .pop-up-item :checked");
+
+        if (checked_items.length <= 0) {
+            alert('Please select at least one item');
+            return false;
+        }
+
+        var cross_mark = '<span class="pull-right cross_mark"><a href="#"><i class="material-icons" style="font-size: 13px;">close</i></a></span>';
+
+        if (entity_type_id == EntityType.LOOK) {
+            checked_items.parents('.items').each(function () {
+                var inputChkBox = $(this).children('.name').children('input');
+
+                $(this).children('.name').prepend(cross_mark);
+                $(this).children('.name').children('span').on('click', deleteItem);
+                $(this).attr('value', inputChkBox.val());
+                inputChkBox.remove();
+                $(this).appendTo($("#look_ids").siblings('.content')[0]);
+                $("#look_ids").siblings('.content')[0].value = $(this).val();
+            });
+
+            $(".mobile-app-send .btn").removeClass('active');
+            $(".mobile-app-send .btn").addClass('disabled');
+        }
+        if (entity_type_id == EntityType.PRODUCT) {
+            checked_items.parents('.items').each(function () {
+                var inputChkBox = $(this).children('.name').children('input');
+                $(this).children('.name').prepend(cross_mark);
+                $(this).children('.name').children('span').on('click', deleteItem);
+                $(this).attr('value', inputChkBox.val());
+                inputChkBox.remove();
+                $(this).appendTo($("#product_ids").siblings('.content')[0]);
+                $("#product_ids").siblings('.content').value = $(this).val();
+            });
+
+            $(".mobile-app-send .btn").removeClass('active');
+            $(".mobile-app-send .btn").addClass('disabled');
+        }
+        alert('Items added in list');
+    });
+
+    $(".info").find('input:submit').on('click', function(){
+        var look_ids = [];
+
+        var element_look_ids = $(this).parents('.info').find('#look_ids');
+
+        element_look_ids.siblings('.content').find('.items').each(function(){
+            look_ids.push($(this).attr('value'));
+        });
+        element_look_ids.attr('value', look_ids);
+
+        var product_ids = [];
+
+        var element_product_ids = $(this).parents('.info').find('#product_ids');
+        element_product_ids.siblings('.content').find('.items').each(function(){
+            product_ids.push($(this).attr('value'));
+        });
+        element_product_ids.attr('value', product_ids);
+    });
+
+    $(".pop-up-item").each(function () {
+        $(this).children('span').on('click', deleteItem);
+    });
+
+    $("#image").change(function () {
+        var reader = new FileReader();
+        reader.onload = showImage;
+        reader.readAsDataURL(this.files[0]);
+    });
 });
+
+function showImage(e) {
+    $("#loadedImage").attr('src', e.target.result);
+};
+
+function deleteItem(e){
+    $(this).parents('.items').remove();
+    e.preventDefault();
+}
 
 function initializeFilters() {
     if ($("#filters select").length == 0) {
@@ -276,12 +360,14 @@ function initializeFilters() {
             url: api_origin + '/filters/list',
             beforeSend: toggleLoader,
             success: function (data) {
-                all_filters[1] = data;
+                all_filters[EntityType.PRODUCT] = data;
                 $.ajax({
                     url: api_origin + '/look/filters',
                     beforeSend: toggleLoader,
                     success: function (data) {
-                        all_filters[2] = data;
+                        all_filters[EntityType.LOOK] = data;
+                        all_filters[EntityType.TIP] = data;
+                        all_filters[EntityType.COLLECTION] = data;
                         showFilters();
                     },
                     complete: toggleLoader
@@ -367,7 +453,7 @@ function showEntities(entity_url) {
             } else {
                 var str = '<div class="items pop-up-item" >' +
                     '<div class="name text">' +
-                    '<input class="entity_ids" name="entity_ids" id="entity_ids" value="{{item_id}}" type="checkbox">' +
+                    '<input class="entity_ids" name="entity_ids" value="{{item_id}}" type="checkbox">' +
                     '<a href="' + '/' + entity[entity_type_id] + '/view//{{item_id}}" target="_blank">{{item_name}}</a>' +
                     '</div>' +
                     '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="{{item_popover}}">' +

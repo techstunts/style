@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title',  'Create a Look')
+@section('title',  'Create a Collection')
 
 @include('common.iconlibrary')
 @section('content')
@@ -9,14 +9,13 @@
             <ol class="selectable">
                 <li class="ui-state-default">
                     <div class="resource_view">
-                        <form method="POST" action="{!! url('/look/create/') !!}" enctype="multipart/form-data"
-                              style="display: initial;">
+                        <form method="POST" action="{!! url('/collection/create/') !!}" enctype="multipart/form-data" style="display: initial;">
                             {!! csrf_field() !!}
                             <table class="info">
                                 <tr class="row">
                                     <td class="title" colspan="2">
                                         <input class="form-control" placeholder="Name" type="text" name="name"
-                                               value="{{!empty($name) ? $name: ''}}">
+                                               value="{{$name != "" ? $name: ''}}">
                                         @if($name_error = $errors->first('name'))
                                             <span class="errorMsg">{{$name_error}}</span>
                                         @endif
@@ -26,7 +25,7 @@
                                 <tr class="row">
                                     <td class="description" colspan="2">
                                         <textarea class="form-control" placeholder="Description" type="text"
-                                                  name="description">{{!empty($description) ? $description : ''}}</textarea>
+                                                  name="description">{{$description != '' ? $description : ''}}</textarea>
                                         @if($description_error = $errors->first('description'))
                                             <span class="errorMsg">{{$description_error}}</span>
                                         @endif
@@ -89,7 +88,7 @@
                                 <tr class="row">
                                     <td class="title" colspan="1">
                                         <a class="btn active btn-primary btn-xs btn_add_entity" style="color: #fff;"
-                                           data-popup-open="send-entities" href="#">Add Products</a>
+                                           data-popup-open="send-entities" href="#">Add Looks and Products</a>
                                     </td>
                                 </tr>
 
@@ -102,14 +101,20 @@
                                 </tr>
 
                                 <tr class="row">
+                                    <td class="head">Looks</td>
+                                    <input type="hidden" name="look_ids"
+                                           value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
+                                    <td class="content"></td>
+                                </tr>
+
+                                <tr class="row">
                                     <td class="title" colspan="2">
                                         <input type="submit" class="btn btn-primary btn-lg" value="Save">
-                                        <a href="{!! url('look/list/') !!}">Cancel</a>
+                                        <a href="{!! url('collection/list/') !!}">Cancel</a>
                                     </td>
                                 </tr>
 
                             </table>
-
                             <div class="image">
                                 <input id="image" name="image" type="file" class="file-loading">
                                 <input name="entity_type_id" type="hidden" value="{{$entity_type_id}}">
@@ -123,6 +128,9 @@
                 </li>
             </ol>
         </div>
+
         @include('push.popup')
+
     </div>
+
 @endsection
