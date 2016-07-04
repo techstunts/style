@@ -89,6 +89,10 @@ class SelectOptions{
         return $this->get_lookup_data_with_count('color', 'primary_color_id');
     }
 
+    public function ratings(){
+        return $this->get_lookup_data_with_count('rating', 'rating_id');
+    }
+
     //To be cached
     protected function get_lookup_data_with_count($lookup_type, $count_table_fk=""){
         $whereClauses = $this->whereClauses;

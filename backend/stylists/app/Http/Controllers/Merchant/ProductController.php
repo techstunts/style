@@ -200,7 +200,7 @@ class ProductController extends Controller
             'brand_id' => $m_product->brand_id,
             'category_id' => $m_product->category_id,
             'gender_id' => $m_product->gender_id,
-            'primary_color_id' => $m_product->m_color,
+            'primary_color_id' => $m_product->primary_color_id,
             'in_stock' => $m_product->m_in_stock,
             'stylist_id' => Stylist::Scraper,
             'approved_by' => Auth::user()->id,
