@@ -8,10 +8,6 @@
             <ol class="selectable">
                 <li class="ui-state-default" id="{{$look->id}}">
                     <div class="resource_view">
-                        <div class="image">
-                            <img src="{!! asset('images/' . $look->image) !!}"/>
-                        </div>
-
                         <table class="info">
                             <tr class="row">
                                 <td class="title" colspan="2">{{$look->name}}
@@ -81,7 +77,9 @@
                                 </td>
                             </tr>
                         </table>
-
+                        <div class="image">
+                            <img src="{!! asset('images/' . $look->image) !!}"/>
+                        </div>
                     </div>
                 </li>
             </ol>

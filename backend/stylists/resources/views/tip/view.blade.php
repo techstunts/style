@@ -8,10 +8,6 @@
             <ol class="selectable">
                 <li class="ui-state-default" id="{{$tip->id}}">
                     <div class="resource_view">
-                        <div class="image">
-                            <img src="{!! asset('images/' . $tip->image) !!}"/>
-                        </div>
-
                         <table class="info">
                             <tr class="row">
                                 <td class="title" colspan="2">{{$tip->name}}
@@ -132,6 +128,9 @@
                                 </td>
                             </tr>
                         </table>
+                        <div class="image">
+                            <img src="{!! asset('images/' . $tip->image) !!}"/>
+                        </div>
 
                     </div>
                 </li>

@@ -177,8 +177,15 @@ class LookMapper extends Controller
         return $look_products;
     }
 
-    public function saveLookDetails($look, $request)
+    public function saveLookDetails($look, $request, $uploadMapperObj = null)
     {
+        if ($look->status_id !== Status::Active && !empty($request->status_id) && $request->status_id == Status::Active && empty($look->image)) {
+            return array(
+                'status' => false,
+                'message' => 'Upload image first for this look',
+            );
+        }
+
         $look = $this->setObjectProperties($look, $request);
         $logged_in_stylist = $request->user()->id != '' ? $request->user()->id : '';
 
@@ -190,19 +197,18 @@ class LookMapper extends Controller
         try {
             if (!$look->exists) {
                 $look->save();
-                $result = $this->saveProducts($look->id, $request->input('product_ids'));;
-                $look->price = $this->evaluatePrice($look->id);
-                $look->save();
-            } else {
-                $result = $this->saveProducts($look->id, $request->input('product_ids'));;
-                $look->price = $this->evaluatePrice($look->id);
-                $look->save();
             }
-
+            $result = $this->saveProducts($look->id, $request->input('product_ids'));
             if ($result['status'] == false) {
                 DB::rollback();
                 return $result;
             }
+            if ($uploadMapperObj) {
+                $look->image = $uploadMapperObj->moveImageInFolder($request);
+            }
+            $look->price = $this->evaluatePrice($look->id);
+            $look->save();
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
@@ -238,4 +244,5 @@ class LookMapper extends Controller
         }
         return $price;
     }
+
 }

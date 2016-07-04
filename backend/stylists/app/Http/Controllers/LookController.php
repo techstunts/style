@@ -3,17 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Look;
-use App\LookProduct;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\RecommendationType;
 use App\Models\Enums\Status as LookupStatus;
 use App\Models\Enums\StylistStatus;
-use App\Models\Lookups\Lookup;
-use App\Product;
 use App\Models\Lookups\Status;
 use App\Models\Lookups\AppSections;
 use App\Http\Mapper\LookMapper;
+use App\Http\Mapper\UploadMapper;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -28,11 +26,6 @@ class LookController extends Controller
 
     protected $status_rules;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request, $action, $id = null, $action_id = null)
     {
         $method = strtolower($request->method()) . strtoupper(substr($action, 0, 1)) . substr($action, 1);
@@ -181,16 +174,10 @@ class LookController extends Controller
         return Redirect::back()->withError('Error! Status cant be changed.');
     }
 
-
-    /**
-     * Store a newly created look in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function postCreate(Request $request)
     {
         $lookMapperObj = new LookMapper();
+        $uploadMapperObj = new UploadMapper();
 
         $validator = $lookMapperObj->inputValidator($request);
         if ($validator->fails()) {
@@ -200,8 +187,20 @@ class LookController extends Controller
                 ->withInput($request->all());
         }
 
+        $validator = $uploadMapperObj->inputValidator($request);
+        if ($validator->fails()) {
+
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput($request->all());
+        }
+
         $look = new Look();
-        $result = $lookMapperObj->saveLookDetails($look, $request);
+        if ($request->file('image')) {
+            $result = $lookMapperObj->saveLookDetails($look, $request, $uploadMapperObj);
+        } else {
+            $result = $lookMapperObj->saveLookDetails($look, $request);
+        }
 
         if ($result['status'] == false) {
             return Redirect::back()->withError($result['message'])->withInput($request->all());
@@ -209,11 +208,6 @@ class LookController extends Controller
         return redirect('look/view/' . $look->id);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getView()
     {
         $look = Look::find($this->resource_id);
@@ -230,12 +224,6 @@ class LookController extends Controller
         return view('look.view', $view_properties);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function getEdit($request)
     {
         if (empty($this->resource_id)) {
@@ -274,13 +262,6 @@ class LookController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function postUpdate(Request $request)
     {
         if (empty($this->resource_id)) {
@@ -296,7 +277,20 @@ class LookController extends Controller
         }
         $look = Look::find($this->resource_id);
 
-        $result = $lookMapperObj->saveLookDetails($look, $request);
+        $uploadMapperObj = new UploadMapper();
+
+        $validator = $uploadMapperObj->inputValidator($request);
+        if ($validator->fails()) {
+
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput($request->all());
+        }
+        if ($request->file('image')) {
+            $result = $lookMapperObj->saveLookDetails($look, $request, $uploadMapperObj);
+        } else {
+            $result = $lookMapperObj->saveLookDetails($look, $request);
+        }
 
         if ($result['status'] == false) {
             return Redirect::back()->withError($result['message'])->withInput($request->all());
@@ -312,16 +306,5 @@ class LookController extends Controller
             return redirect('look/list')->withError('Collage access denied!');
         }
         return view('look/collage');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
