@@ -204,6 +204,7 @@ class ProductController extends Controller
             'gender_id' => $m_product->gender_id,
             'primary_color_id' => $m_product->primary_color_id,
             'in_stock' => $m_product->m_in_stock,
+            'rating_id' => $m_product->rating_id,
             'stylist_id' => Stylist::Scraper,
             'approved_by' => Auth::user()->id,
         );
