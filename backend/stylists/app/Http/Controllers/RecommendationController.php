@@ -199,7 +199,8 @@ class RecommendationController extends Controller
         $client_id = $active_reg_ids[0]->client_id;
         $index = 0;
         foreach ($reg_ids as $reg_id) {
-            if (!empty($reg_id->error) && ($reg_id->error == "NotRegistered" || $reg_id->error == "InvalidRegistration")) {
+            if (!empty($reg_id->error) &&
+                ($reg_id->error == "NotRegistered" || $reg_id->error == "InvalidRegistration" || $reg_id->error == "MissingRegistration")) {
                 $regId = $active_reg_ids[$index++]->regId;
                 $query = $query . " OR (client_id = '{$client_id}' AND regId = '{$regId}')";
             }
