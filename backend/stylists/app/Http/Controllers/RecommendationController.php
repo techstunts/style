@@ -19,6 +19,7 @@ use App\Product;
 use App\StyleRequests;
 use App\Models\Lookups\EntityType;
 use App\Models\Enums\AppSections;
+use App\Models\Enums\DeviceStatus;
 use App\Models\Enums\RecommendationType;
 use App\Models\Enums\EntityType as EntityTypeId;
 use App\ClientDeviceRegDetails as DeviceDetails;
@@ -111,17 +112,19 @@ class RecommendationController extends Controller
         $query_count = 0;
         $push = new Push();
         $inactive_reg_ids_query = '';
+        $client_ids_inactive_device_status = array();
+
         for ($i = 0; $i < $clients_count; $i++) {
             if($recommendation_type_id == RecommendationType::STYLE_REQUEST ){
                 if(!isset($stylists[$client_data[$i]->client->stylist_id])){
                     $stylists[$client_data[$i]->client->stylist_id] = Stylist::find($client_data[$i]->client->stylist_id);
                 }
                 $stylist_data = $stylists[$client_data[$i]->client->stylist_id];
-                $active_reg_ids = $client_data[$i]->client->client_reg_details;
+                $reg_ids = $client_data[$i]->client->client_reg_details;
             }
             else{
                 $stylist_data = $client_data[$i]->stylist;
-                $active_reg_ids = $client_data[$i]->client_reg_details;
+                $reg_ids = $client_data[$i]->client_reg_details;
             }
 
             if(!$stylist_data){
@@ -129,8 +132,8 @@ class RecommendationController extends Controller
             }
 
             $regIds = array();
-            foreach ($active_reg_ids as $active_reg_id) {
-                array_push($regIds, $active_reg_id->regId);
+            foreach ($reg_ids as $reg_id) {
+                array_push($regIds, $reg_id->regId);
             }
 
             if (count($regIds) > 0) {
@@ -158,7 +161,10 @@ class RecommendationController extends Controller
                         );
                         $response = $push->sendMessage($params);
                         if ($response['result'] && $response['result']->failure > 0) {
-                            $inactive_reg_ids_query = $inactive_reg_ids_query . $this->getQueryForInactiveRegIds($active_reg_ids, $response['result']->results);
+                            $inactive_reg_ids_query = $inactive_reg_ids_query . $this->getQueryForInactiveRegIds($reg_ids, $response['result']->results);
+                            if ($response['result']->failure == count($regIds)) {
+                                array_push($client_ids_inactive_device_status, $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->id : $client_data[$i]->id);
+                            }
                         }
                         $message_pushed++;
                     }
@@ -174,6 +180,9 @@ class RecommendationController extends Controller
             Recommendation::insert($recommends_arr);
             if (!empty($inactive_reg_ids_query)) {
                 DeviceDetails::whereRaw(substr($inactive_reg_ids_query, 4))->update(['regId_status' => false]);
+            }
+            if (!empty($client_ids_inactive_device_status)) {
+                Client::whereIn('id', $client_ids_inactive_device_status)->update(['device_status' => DeviceStatus::Inactive]);
             }
             $success_message = 'Sent successfully';
             $success = true;
@@ -193,15 +202,15 @@ class RecommendationController extends Controller
         );
     }
 
-    public function getQueryForInactiveRegIds($active_reg_ids, $reg_ids)
+    public function getQueryForInactiveRegIds($reg_ids, $reg_status)
     {
         $query = '';
-        $client_id = $active_reg_ids[0]->client_id;
+        $client_id = $reg_ids[0]->client_id;
         $index = 0;
-        foreach ($reg_ids as $reg_id) {
-            if (!empty($reg_id->error) &&
-                ($reg_id->error == "NotRegistered" || $reg_id->error == "InvalidRegistration" || $reg_id->error == "MissingRegistration")) {
-                $regId = $active_reg_ids[$index++]->regId;
+        foreach ($reg_status as $status) {
+            if (!empty($status->error) &&
+                ($status->error == "NotRegistered" || $status->error == "InvalidRegistration" || $status->error == "MissingRegistration")) {
+                $regId = $reg_ids[$index++]->regId;
                 $query = $query . " OR (client_id = '{$client_id}' AND regId = '{$regId}')";
             }
         }

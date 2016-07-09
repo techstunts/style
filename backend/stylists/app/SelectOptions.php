@@ -93,6 +93,10 @@ class SelectOptions{
         return $this->get_lookup_data_with_count('rating', 'rating_id');
     }
 
+    public function devicesStatuses(){
+        return $this->get_lookup_data_with_count('device_status', 'device_status');
+    }
+
     //To be cached
     protected function get_lookup_data_with_count($lookup_type, $count_table_fk=""){
         $whereClauses = $this->whereClauses;
