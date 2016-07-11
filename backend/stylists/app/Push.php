@@ -10,7 +10,7 @@ class Push
 
         ## data is different from what your app is programmed
         $data = array(
-            'registration_ids' => array($registration_id),
+            'registration_ids' => $registration_id,
 
             'data' => array(
                 'message' => $params["message"],
@@ -40,7 +40,7 @@ class Push
 
         $rtn["code"] = "000";//means result OK
         $rtn["message"] = "OK";
-        $rtn["result"] = $result;
+        $rtn["result"] = json_decode($result);
         return $rtn;
     }
 
@@ -57,7 +57,7 @@ class Push
             switch ($params["pushtype"]) {
                 case "android":
 
-                    $this->sendMessageAndroid($params["registration_id"], $params);
+                    return $this->sendMessageAndroid($params["registration_id"], $params);
                     break;
             }
         }

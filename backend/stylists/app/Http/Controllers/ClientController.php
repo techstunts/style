@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Auth;
 class ClientController extends Controller
 {
     protected $records_per_page=100;
-    protected $filter_ids = ['stylist_id',];
-    protected $filters = ['stylists',];
+    protected $filter_ids = ['stylist_id', 'device_status'];
+    protected $filters = ['stylists', 'devicesStatuses'];
     /**
      * Display a listing of the resource.
      *
@@ -44,6 +44,7 @@ class ClientController extends Controller
 
         $view_properties = array(
             'stylists' => $this->stylists,
+            'devicesStatuses' => $this->devicesStatuses,
         );
 
         $view_properties['popup_entity_type_ids'] = array(

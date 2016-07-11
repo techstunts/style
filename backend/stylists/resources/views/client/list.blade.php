@@ -10,6 +10,7 @@
                     @if(Auth::user()->hasRole('admin'))
                         <form method="get" action="">
                             @include('stylist.select')
+                            @include('common.status.deviceStatusSelect')
                             @include('common.search')
                             @include('common.daterange')
                             <input type="submit" name="filter" value="Filter"/>
