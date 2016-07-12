@@ -206,12 +206,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $client_data = mysql_fetch_array($result1, MYSQL_ASSOC);
     if ($rows != 0) {
         if ($rows1 == 0) {
-            $sql = "Update clients set facebook_id='$facebookid',gender='$gender', gender_id=$gender_id, device_status=TRUE where email='$email'";
+            $sql = "Update clients set facebook_id='$facebookid',gender='$gender', gender_id=$gender_id where email='$email'";
             mysql_query($sql);
 
         }
         //$data = array('result' => 0, 'message' => 'User already registered with the given email');
-        $sql = "Update clients set regId='$regId' where email='$email'";
+        $sql = "Update clients set regId='$regId', device_status=TRUE  where email='$email'";
         mysql_query($sql);
         saveDeviceDetails($client_data['id'], $regId, $user_signup_ip_address, $current_date_time);
         $data = FacebookLogin($email, $facebookid, $gender, $gender_id);
@@ -292,11 +292,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $client_data = mysql_fetch_array($result1, MYSQL_ASSOC);
     if ($rows != 0) {
         if ($rows1 == 0) {
-            $sql = "Update clients set google_id='$googleid',gender='$gender',gender_id='$gender_id', device_status=TRUE where email='$email'";
+            $sql = "Update clients set google_id='$googleid',gender='$gender',gender_id='$gender_id' where email='$email'";
             mysql_query($sql);
         }
         //$data = array('result' => 'fail', 'message' => 'User already registered with the given email');
-        $sql = "Update clients set regId='$regId' where email='$email'";
+        $sql = "Update clients set regId='$regId', device_status=TRUE  where email='$email'";
         mysql_query($sql);
         saveDeviceDetails($client_data['id'], $regId, $user_signup_ip_address, $current_date_time);
         $data = GoogleLogin($email, $googleid, $gender, $gender_id);
