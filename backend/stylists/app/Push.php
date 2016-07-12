@@ -2,6 +2,7 @@
 namespace App;
 
 use App\Models\Enums\AppSections;
+use Illuminate\Support\Facades\Log;
 
 class Push
 {
@@ -41,6 +42,10 @@ class Push
         $rtn["code"] = "000";//means result OK
         $rtn["message"] = "OK";
         $rtn["result"] = json_decode($result);
+
+        Log::info('GCM send data: ', $data);
+        Log::info('GCM response: ', $rtn);
+
         return $rtn;
     }
 

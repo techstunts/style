@@ -468,7 +468,7 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id)
             $result[1] = $data['stylist_id'];
         }
         if ($result[1] != 0) {
-            $sql = "SELECT clients.id as user_id,clients.name,clients.gender_id,clients.gender,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.id as stylist_id FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
+            $sql = "SELECT clients.id as user_id,clients.name,clients.gender_id,clients.gender,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.id as stylist_id, stylists.icon as stylist_icon FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
 
             $select = mysql_query($sql);
             $result = array();
@@ -492,8 +492,9 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id)
                 $result[14] = $data['stylist_code'];
                 $result[15] = $data['stylist_image'];
                 $result[16] = $data['stylist_id'];
+                $result[17] = $data['stylist_icon'];
             }
-            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16]));
+            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16], 'stylist_icon' => $result[17]));
         } else {
             $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
         }
@@ -541,7 +542,7 @@ function GoogleLogin($email, $googleid, $gender, $gender_id)
 
 
         if ($result[1] != 0) {
-            $sql = "SELECT clients.id as user_id,clients.name,clients.gender_id,clients.gender,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as  stylist_image, stylists.id as stylist_id FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
+            $sql = "SELECT clients.id as user_id,clients.name,clients.gender_id,clients.gender,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as  stylist_image, stylists.id as stylist_id, stylists.icon as stylist_icon FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
             $select = mysql_query($sql);
             $result = array();
 
@@ -565,8 +566,9 @@ function GoogleLogin($email, $googleid, $gender, $gender_id)
                 $result[14] = $data['stylist_code'];
                 $result[15] = $data['stylist_image'];
                 $result[16] = $data['stylist_id'];
+                $result[17] = $data['stylist_icon'];
             }
-            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => "http://istyleyou.in/istyleyouapi/profileimage/" . $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16]));
+            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => "http://istyleyou.in/istyleyouapi/profileimage/" . $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16], 'stylist_icon' => $result[17]));
         } else {
             $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
         }

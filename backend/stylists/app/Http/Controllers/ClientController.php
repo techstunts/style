@@ -124,7 +124,7 @@ class ClientController extends Controller
 
     public function getChat(Request $request)
     {
-        $authorised_stylists_for_chat = [36, 49, 66];
+        $authorised_stylists_for_chat = [36, 49, 66, 91, 92];
         $authorised_stylists_for_chat_as_admin = [89];
 
         $stylists=[];
