@@ -203,6 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $result2 = mysql_query($checkfb);
 
     $rows1 = mysql_num_rows($result2);
+    $client_data = mysql_fetch_array($result1, MYSQL_ASSOC);
     if ($rows != 0) {
         if ($rows1 == 0) {
             $sql = "Update clients set facebook_id='$facebookid',gender='$gender', gender_id=$gender_id  where email='$email'";
@@ -212,6 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         //$data = array('result' => 0, 'message' => 'User already registered with the given email');
         $sql = "Update clients set regId='$regId' where email='$email'";
         mysql_query($sql);
+        saveDeviceDetails($client_data['id'], $regId, $user_signup_ip_address, $current_date_time);
         $data = FacebookLogin($email, $facebookid, $gender, $gender_id);
     } else {
         $stylishid = getStylistId();
@@ -219,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
 
         $insert = mysql_query($sql);
         $lastid = mysql_insert_id();
-
+        saveDeviceDetails($lastid, $regId, $user_signup_ip_address, $current_date_time);
 
         if ($lastid) {
 
@@ -287,7 +289,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $result2 = mysql_query($checkg);
 
     $rows1 = mysql_num_rows($result2);
-
+    $client_data = mysql_fetch_array($result1, MYSQL_ASSOC);
     if ($rows != 0) {
         if ($rows1 == 0) {
             $sql = "Update clients set google_id='$googleid',gender='$gender',gender_id='$gender_id' where email='$email'";
@@ -296,12 +298,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
         //$data = array('result' => 'fail', 'message' => 'User already registered with the given email');
         $sql = "Update clients set regId='$regId' where email='$email'";
         mysql_query($sql);
+        saveDeviceDetails($client_data['id'], $regId, $user_signup_ip_address, $current_date_time);
         $data = GoogleLogin($email, $googleid, $gender, $gender_id);
     } else {
         $stylishid = getStylistId();
         $sql = "INSERT INTO clients(facebook_id,google_id,linked_id,email,password,gender,gender_id,stylist_id,name,image,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,regId,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$gender_id','$stylishid','$name','$image','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$regId','$user_signup_ip_address', '$current_date_time')";
         $insert = mysql_query($sql);
         $lastid = mysql_insert_id();
+        saveDeviceDetails($lastid, $regId, $user_signup_ip_address, $current_date_time);
         if ($lastid) {
 
             $sql = "SELECT id,name,image,stylist_id,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM clients where id='$lastid'";
@@ -591,6 +595,16 @@ function getStylistId()
     return $stylist_array[mt_rand() % (count($stylist_array))];
 }
 
+function saveDeviceDetails($client_id, $regId, $ip, $current_date_time)
+{
+    $checkRegId = "SELECT id from client_device_registration_details where regId='$regId' AND client_id='$client_id'";
+    $result = mysql_query($checkRegId);
+    $rows = mysql_num_rows($result);
+    if ($rows == 0) {
+        $sql = "INSERT INTO client_device_registration_details(client_id, regId, os, os_version, ip, created_at, regId_status) VALUES('$client_id', '$regId', 'android', '', '$ip', '$current_date_time', TRUE )";
+        mysql_query($sql);
+    }
+}
 mysql_close($conn);
 /* JSON Response */
 header("Content-type: application/json");
