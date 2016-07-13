@@ -70,6 +70,7 @@ class LookMapper extends Controller
             $look->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : '';
         }
         $look->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : Status::Submitted;
+        $look->is_collage=false;
         return $look;
     }
 
