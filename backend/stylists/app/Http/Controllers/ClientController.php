@@ -125,7 +125,7 @@ class ClientController extends Controller
     public function getChat(Request $request)
     {
         $authorised_stylists_for_chat = [36, 49, 66, 91, 92];
-        $authorised_stylists_for_chat_as_admin = [89];
+        $authorised_stylists_for_chat_as_admin = [63, 76];
 
         $stylists=[];
         $stylist_id_to_chat = Auth::user()->id;
