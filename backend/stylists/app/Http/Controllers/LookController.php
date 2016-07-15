@@ -105,11 +105,17 @@ class LookController extends Controller
             $remove_deleted_looks = 'looks.status_id != ' . LookupStatus::Deleted;
         }
 
+        $created_by = "1=1";
+        if (!empty($this->resource_id)) {
+            $created_by = " stylist_id = " . $this->resource_id;
+        }
+
         $looks =
             Look::with('gender', 'status', 'body_type', 'budget', 'occasion', 'age_group')
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereRaw($remove_deleted_looks)
+                ->whereRaw($created_by)
                 ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);

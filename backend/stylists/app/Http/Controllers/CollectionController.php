@@ -70,6 +70,11 @@ class CollectionController extends Controller
         $view_properties['entity_type_names']= array(
             EntityTypeName::CLIENT
         );
+
+        $created_by = "1=1";
+        if (!empty($this->resource_id)) {
+            $created_by = " created_by = " . $this->resource_id;
+        }
         
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -77,6 +82,8 @@ class CollectionController extends Controller
         $collections =
             Collection::with('gender','status','body_type','budget','occasion','age_group')
                 ->where($this->where_conditions)
+                ->whereRaw($this->where_raw)
+                ->whereRaw($created_by)
                 ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);

@@ -121,11 +121,17 @@ class TipController extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
+        $created_by = "1=1";
+        if (!empty($this->resource_id)) {
+            $created_by = " created_by = " . $this->resource_id;
+        }
+
         $tips = Tip::with(['createdBy' => function ($query) {
             $query->select('id', 'name');
         }])
             ->where($this->where_conditions)
             ->whereRaw($this->where_raw)
+            ->whereRaw($created_by)
             ->orderBy('id', 'desc')
             ->simplePaginate($this->records_per_page)
             ->appends($paginate_qs);
