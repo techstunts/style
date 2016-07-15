@@ -4,7 +4,8 @@
     @include('category.tree.select')
     @include('common.gender.select', array('genders' => $gender_list))
     @include('common.color.select', array('colors' => $color_list))
-    <input style="margin-left: 12px;" type="submit" id="bulk_update" name="update" value="Bulk update" />
+    @include('common.rating.product', array('ratings' => $ratings_list))
+    <input type="submit" id="bulk_update" name="update" value="Bulk update" />
     <input type="submit" id="update_selected" name="update_selected" value="Update Selected" action_url="{!! url($url.'bulkUpdate') !!}" />
     <input type="hidden" name="merchant_id" value="{{$merchant_id}}"/>
     <input type="hidden" name="stylist_id" value="{{$stylist_id}}"/>

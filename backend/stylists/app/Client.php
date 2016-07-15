@@ -29,5 +29,7 @@ class Client extends Model
     public function genders(){
         return $this->belongsTo('App\Models\Lookups\Gender', 'gender_id');
     }
-
+    public function client_reg_details(){
+        return $this->hasMany('App\ClientDeviceRegDetails');
+    }
 }

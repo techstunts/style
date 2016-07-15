@@ -161,6 +161,9 @@
                         <a class="button icon open" ng-click="text()"></a>
                         <a class="button icon look" ng-click="share('look')"></a>
                         <a class="button icon product" ng-click="share('product')"></a>
+                        <div class="button icon file">
+                            <input type="file" accept="image/*" fileread="upload(data)" client="client">
+                        </div>
                     </div>
                 </div>
 

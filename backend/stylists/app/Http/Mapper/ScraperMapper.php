@@ -18,6 +18,7 @@ class ScraperMapper
     protected $process_data_count = 10;
     protected $start = 0;
     protected $none = 0;
+    protected $diff_cur_merchants_id = [25 => 'Indianroots', 38 => 'Violetstreet'];
 
     public function getContent($url, $file_name = '')
     {
@@ -62,7 +63,7 @@ class ScraperMapper
 
     public function getSpiders()
     {
-        return Spiders::with($this->with_array)->get();
+        return Spiders::with($this->with_array)->where('status_id', true)->get();
     }
 
     public function noJobExists($job_id)
@@ -266,11 +267,20 @@ class ScraperMapper
 
     public function createArray($product, $merchant_id)
     {
+        if (in_array($merchant_id, array_keys($this->diff_cur_merchants_id))){
+            $price = ceil($product->mrp * env($this->diff_cur_merchants_id[$merchant_id]));
+            $discounted_price = !empty($product->discounted_price) ?
+                ceil($product->discounted_price * env($this->diff_cur_merchants_id[$merchant_id])) : $this->none;
+        } else{
+            $price = $product->mrp;
+            $discounted_price = !empty($product->discounted_price) ? $product->discounted_price : $this->none;
+        }
+
         return array(
             'merchant_id' => $merchant_id,
             'sku' => $product->sku,
-            'mrp' => $product->mrp,
-            'discounted_price' => !empty($product->discounted_price) ? $product->discounted_price : $this->none,
+            'mrp' => $price,
+            'discounted_price' => $discounted_price,
             'in_stock' => !empty($product->sold_out) ? $this->getInStockId($product->sold_out) : true,
         );
     }
@@ -327,10 +337,20 @@ class ScraperMapper
             $category = $product->category;
         }
 
+        if (in_array($merchant_id, array_keys($this->diff_cur_merchants_id))){
+            $price = ceil($product->mrp * env($this->diff_cur_merchants_id[$merchant_id]));
+            $discounted_price = !empty($product->discounted_price) ?
+                ceil($product->discounted_price * env($this->diff_cur_merchants_id[$merchant_id])) : $this->none;
+        } else{
+            $price = $product->mrp;
+            $discounted_price = !empty($product->discounted_price) ? $product->discounted_price : $this->none;
+        }
+
+
         $product_array = array(
             'name' => $product->product_name,
             'merchant_id' => $merchant_id,
-            'price' => $product->mrp,
+            'price' => $price,
             'url' => $product->url,
             'image0' => $product->image_url,
             'sku_id' => $product->sku,
@@ -338,7 +358,7 @@ class ScraperMapper
             'category' => $category,
             'color_id' => $product->colors,
             'gender_id' => $this->getGenderId($product->gender),
-            'discounted_price' => !empty($product->discounted_price) ? $product->discounted_price : $this->none,
+            'discounted_price' => $discounted_price,
             'in_stock' => !empty($product->sold_out) ? $this->getInStockId($product->sold_out) : true,
             'status' => $status,
             'desc' => $product->product_detail,

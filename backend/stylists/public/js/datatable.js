@@ -21,7 +21,7 @@ var EntitySent = {
 var all_filters = [];
 var entity_filters = [
     [],
-    ['genders', 'colors', 'stylists'],
+    ['genders', 'colors', 'stylists', 'categories'],
     ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
     [],
     ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
@@ -30,7 +30,7 @@ var entity_filters = [
 ];
 var entity_filter_ids = [
     [],
-    ['id', 'id', 'id'],
+    ['id', 'id', 'id', 'id'],
     ['id', 'id', 'id', 'id', 'id', 'id', 'id'],
     [],
     ['id', 'id', 'id', 'id', 'id', 'id', 'id'],
@@ -38,7 +38,7 @@ var entity_filter_ids = [
 ];
 var entity_fields_ids = [
     [],
-    ['gender_id', 'primary_color_id', 'stylist_id'],
+    ['gender_id', 'primary_color_id', 'stylist_id', 'category_id'],
     ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'stylist_id'],
     [],
     ['status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id', 'created_by'],
@@ -337,7 +337,17 @@ $(document).ready(function () {
     $(".pop-up-item").each(function () {
         $(this).children('span').on('click', deleteItem);
     });
+
+    $("#image").change(function () {
+        var reader = new FileReader();
+        reader.onload = showImage;
+        reader.readAsDataURL(this.files[0]);
+    });
 });
+
+function showImage(e) {
+    $("#loadedImage").attr('src', e.target.result);
+};
 
 function deleteItem(e){
     $(this).parents('.items').remove();
@@ -352,17 +362,24 @@ function initializeFilters() {
             success: function (data) {
                 all_filters[EntityType.PRODUCT] = data;
                 $.ajax({
-                    url: api_origin + '/look/filters',
+                    url: api_origin + '/category/all',
                     beforeSend: toggleLoader,
                     success: function (data) {
-                        all_filters[EntityType.LOOK] = data;
-                        all_filters[EntityType.TIP] = data;
-                        all_filters[EntityType.COLLECTION] = data;
-                        showFilters();
+                        all_filters[EntityType.PRODUCT]['categories'] = data['categories'];
+                        $.ajax({
+                            url: api_origin + '/look/filters',
+                            beforeSend: toggleLoader,
+                            success: function (data) {
+                                all_filters[EntityType.LOOK] = data;
+                                all_filters[EntityType.TIP] = data;
+                                all_filters[EntityType.COLLECTION] = data;
+                                showFilters();
+                            },
+                            complete: toggleLoader
+                        });
                     },
                     complete: toggleLoader
                 });
-
             },
             complete: toggleLoader
         });
