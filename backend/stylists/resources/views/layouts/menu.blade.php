@@ -10,7 +10,7 @@
             <a href="http://stylist.istyleyou.loc/product/list"><img class="logo-size" src="{{ asset('images/logo.png') }}" alt=""></a>
         </div>
         <div class="col s3" style="border-right: 1px solid #3d464d;">
-            <input type="text" placeholder="Search Here">
+            <input style="color:#fff" type="text" placeholder="Search Here">
             {{--<form method="get" action="{!! url('/product/list') !!}">--}}
                 {{--@include('common.search')--}}
                 {{--<input type="submit" name="filter" value="Filter"/>--}}
