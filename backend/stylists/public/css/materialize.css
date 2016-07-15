@@ -3438,7 +3438,7 @@ input[type=range] + .thumb {
   .container {
     width: 85%;
     background-color: #f6f6f6;
-    margin-top:-34px;
+    margin-top:0px;
   }
 }
 
@@ -4131,15 +4131,18 @@ nav .button-collapse i {
   font-size: 2.7rem;
   height: 56px;
   line-height: 56px;
+  color: #000;
+  margin-top:12%;
 }
 
 nav .brand-logo {
   position: absolute;
-  color: #fff;
+  color: #000;
   display: inline-block;
   font-size: 2.1rem;
   padding: 0;
   white-space: nowrap;
+  margin-top:1%;
 }
 
 nav .brand-logo.center {
@@ -4872,9 +4875,9 @@ small {
   box-shadow: none;
   color: #9F9F9F !important;
   cursor: default;
-  position: fixed;
-  bottom: 62px;
-  right: 12px;
+  /*position: fixed;*/
+  /*bottom: 62px;*/
+  /*right: 12px;*/
 }
 
 .btn.disabled *, .disabled.btn-large *,
@@ -4912,9 +4915,9 @@ small {
   letter-spacing: .5px;
   transition: .2s ease-out;
   cursor: pointer;
-  position: fixed;
-  bottom: 62px;
-  right: 12px;
+  /*position: fixed;*/
+  /*bottom: 62px;*/
+  /*right: 12px;*/
 }
 
 .btn:hover, .btn-large:hover {
@@ -5085,10 +5088,11 @@ button.btn-floating {
 
 .dropdown-content li > a, .dropdown-content li > span {
   font-size: 16px;
-  color: #26a69a;
+  color: #000;
   display: block;
   line-height: 22px;
   padding: 14px 16px;
+  font-family: Lato;
 }
 
 .dropdown-content li > span > label {
@@ -5540,7 +5544,7 @@ textarea.materialize-textarea {
   box-shadow: none;
   box-sizing: content-box;
   transition: all 0.3s;
-  color:#fff;
+  color:#000;
 }
 
 input:not([type]):disabled, input:not([type])[readonly="readonly"],
@@ -8197,4 +8201,34 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 
 .dropdown-button > a{
   font-size: 20px;
+}
+
+
+.bulk-update-button{
+  margin-left:12px;
+}
+
+
+.form-control.login{
+  width: 50%;
+  padding-left:15px;
+}
+
+.section.login{
+  height: auto;
+  background-color: #ffffff;
+}
+
+.contentCntr.login{
+}
+
+.container.login{
+  background-color: #fff;
+  width: 50%;
+  height: 450px;
+}
+
+.container.login img{
+  width: 400px;
+  margin-top:50px;
 }

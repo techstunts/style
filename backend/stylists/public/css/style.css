@@ -638,3 +638,52 @@ ul li{
 .second-menu li a:hover{
     color:#00b9f1;
 }
+
+.second-menu.bottom{
+background-color:#fff;
+color: #fff;
+width: 85%;
+padding: 12px 43px;
+border-bottom: 2px solid #000;}
+
+.category-dropdown{
+    width:100px;
+}
+
+.login-navbar{
+    line-height: 64px;
+    overflow-y: hidden;
+    border-bottom-color: #000;
+    border-bottom-style: dotted;
+}
+
+.btn.btn-primary.btn-lg.login{
+    background-color: #000;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: all 5000s ease-in-out 0s;
+    transition-property: background-color, color;
+}
+
+input:-webkit-autofill,textarea:-webkit-autofill,select:-webkit-autofilll{
+    transition: all 5000s ease-in-out 0s;
+    transition-property: background-color, color;
+}
+
+.login-heading{
+    font-family: Lato;
+}
+
+.footer-login{
+    border-top-color: #000;
+    border-top-style: dotted;
+}
+
+
+.dataTables_wrapper .dataTables_filter{
+    float: left;
+}

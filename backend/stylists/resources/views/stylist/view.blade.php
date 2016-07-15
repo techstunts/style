@@ -5,6 +5,7 @@
 @section('content')
 <div id="contentCntr">
     <div class="container">
+        <div class="section">
         <ol class="selectable">
             <li class="ui-state-default" id="{{$stylist->id}}">
                 <div class="resource_view">
@@ -108,6 +109,7 @@
                 </div>
             </li>
         </ol>
+        </div>
     </div>
 
 

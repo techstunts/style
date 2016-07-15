@@ -3,7 +3,7 @@
     <head>
         <title>Welcome to IStyleYou</title>
 
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet" type="text/css">
 
         <style>
             html, body {
@@ -15,7 +15,6 @@
                 padding: 0;
                 width: 100%;
                 display: table;
-                font-weight: 100;
                 font-family: 'Lato';
             }
 
@@ -34,21 +33,20 @@
                 font-size: 96px;
             }
 
-            h3 a, a:visited{color:#f15a29;}
         </style>
     </head>
     <body>
         <div class="container">
             <div class="content">
                 <h1 class="logo">
-                    <img style="height:150px;" src="{!! asset('images/logoistle.png') !!}" alt="">
+                    <img src="{!! asset('images/isy_logo_backend.png') !!}" alt="">
                 </h1>
-                <div style="margin-top:6px;">
-                    <div>Discover a New you</div>
+                <div class="intro" style="margin-top:6px;font-family: Lato; font-weight: bold">
+                    <h3>Discover a New you</h3>
                 </div>
                 <div class="intro-section">
                     <h1 class="intro">Help people discover their best look !</h1>
-                    <h3 class="" ><a href="/product/list">Start here</a></h3>
+                    <h3 style="margin-top:10px;"><a style="text-decoration: none;color:white;background:black;padding:10px;" href="/product/list">Start here</a></h3>
                 </div>
             </div>
         </div>

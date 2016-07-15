@@ -19,6 +19,7 @@
                         </tr>
                         <tr class="row">
                             <td class="description" colspan="2">{{$product->description}}</td>
+                            <td class="description" colspan="2">{{$product->description}}</td>
                         </tr>
                         <tr class="row">
                             <td class="head">Product Type</td><td class="content">{{$product->product_type}} </td>

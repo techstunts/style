@@ -10,11 +10,16 @@
     {{--<link rel="stylesheet" href="{!! asset('css/bootstrap.css') !!}" />--}}
     <link rel="stylesheet" href="{!! asset('css/report.css') !!}" />
     <link rel="stylesheet" href="{!! asset('css/materialize.css') !!}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+
 
     {{--<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">--}}
     <link rel="stylesheet" href="{!! asset('jquery-ui.css') !!}">
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="icon" href="{!! asset('images/favi.ico') !!}">
 
     <script src="{!! asset('js/lightbox.js') !!}"></script>
     <script src="{!! asset('js/jquery.cookie.js') !!}"></script>

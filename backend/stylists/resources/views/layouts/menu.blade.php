@@ -1,10 +1,10 @@
 <nav style="background-color:#eee;">
     <div class="row" style="width:85%;margin: auto;background-color: #000">
         @if(!Auth::check())
-        <div class="col-s12">
-                <li><a href="{!! url('auth/register') !!}">Sign Up</a></li>
-                <li><a href="{!! url('auth/login') !!}">Login</a></li>
-        </div>
+        {{--<div class="col-s12">--}}
+                {{--<li><a href="{!! url('auth/register') !!}">Sign Up</a></li>--}}
+                {{--<li><a href="{!! url('auth/login') !!}">Login</a></li>--}}
+        {{--</div>--}}
         @else
         <div class="col s4">
             <a href="http://stylist.istyleyou.loc/product/list"><img class="logo-size" src="{{ asset('images/logo.png') }}" alt=""></a>
@@ -40,7 +40,7 @@
                 </ul>
             </div>
     </div>{{--enf of row--}}
-    <div class="row" style="background-color:#fff;color: #fff;width: 85%;padding: 12px 43px;border-bottom: 21px solid #000">
+    <div class="row second-menu bottom">
         <div class="col s12">
             <ul class="second-menu">
                 <li class="chat-icon-floating"><a href="/client/chat">Chat</a></li>

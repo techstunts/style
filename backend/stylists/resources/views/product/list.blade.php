@@ -14,19 +14,18 @@
                     @include('category.select')
                     @include('common.gender.select')
                     @include('common.color.select')
-                    @include('common.search')
+                    {{--@include('common.search')--}}
                     @include('common.daterange')
                     @include('common.pricerange')
                     <input type="submit" name="filter" value="Filter"/>
-                    <a href="{{url('product/list')}}" class="clearall">Clear All</a>
+                    <a href="{{url('product/list')}}" class="clearall"><img style="width: 20px;height: 20px;" src="{{ asset('images/closebutton.png') }}" alt=""></a>
                 </form>
-                {!! $products->render() !!}
             </div>
+            <br><br>
 
             @include('common.sendrecommendations')
-
             <div class="clear"></div>
-
+            <br>
             @foreach($errors->all() as $e)
                 <span class="errorMsg">{{$e}}</span><br/>
             @endforeach
@@ -35,17 +34,19 @@
                 <div class="filters">
                     @include('product.bulk_update')
                 </div>
-
                 <div class="clear"></div>
             @endif
-
-
+            <br>
+            <div class="row">
+                <div class="col s4 offset-s5"> {!! $products->render() !!}</div>
+            </div>
+            <br>
             <ol class="selectable" id="selectable">
             @if(count($products) == 0)
                 No Products found
             @endif
             @foreach($products as $product)
-                <li class="ui-state-default card" product_id="{{$product->id}}">
+                <li class="ui-state-default" product_id="{{$product->id}}">
                     <div class="items">
                         <div class="name text" id="popup-item">
                             {{--<a href="{{url('product/view/' . $product->id)}}">{{$product->name}}</a>--}}
@@ -59,7 +60,7 @@
                             <span>{{$product->category ? $product->category->name : ''}}</span>
                             <span>{{$product->price}}</span>
                             <span>{{$genders_list[$product->gender_id]->name}}</span>
-                            <span style="background-color:{{$product->primary_color->name}}">{{$product->primary_color->name}}
+                            <span>{{$product->primary_color->name}}
                                 {{$product->secondary_color->id != 0 ? "({$product->secondary_color->name})" : ""}}</span>
                         </div>
                     </div>
