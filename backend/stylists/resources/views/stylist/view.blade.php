@@ -5,14 +5,14 @@
 @section('content')
 <div id="contentCntr">
     <div class="container">
-        <div class="section">
-        <ol class="selectable">
-            <li class="ui-state-default" id="{{$stylist->id}}">
+        <div class="section" style="padding-top:0px;">
+        <ol class="selectable" style="margin-left: 0px;">
+            <li style="width: 100%;margin: 0px;" class="ui-state-default" id="{{$stylist->id}}">
                 <div class="resource_view">
                     <div class="image">
                         <img src="{!! strpos($stylist->image, "stylish") === 0 ? asset('images/' . $stylist->image) : $stylist->image !!}"/>
                     </div>
-                    <table class="info">
+                    <table class="info profile">
                         <tr class="row">
                             <td class="title" colspan="2">
                                 {{$stylist->name}}

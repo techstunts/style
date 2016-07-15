@@ -133,6 +133,7 @@ div.filters {
 
 div.filters form {
     float: left;
+    width: 100%;
 }
 
 div.filters form select, div.filters form input, div.filters form label {
@@ -147,6 +148,7 @@ div.filters form select, div.filters form input, div.filters form label {
     font-size: 12px;
     margin-right:-5px;
     border-top: 2px solid black;
+    float: left;
 }
 
 div.filters form input[type="submit"] {
@@ -687,3 +689,5 @@ input:-webkit-autofill,textarea:-webkit-autofill,select:-webkit-autofilll{
 .dataTables_wrapper .dataTables_filter{
     float: left;
 }
+
+

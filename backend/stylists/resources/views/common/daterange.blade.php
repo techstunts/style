@@ -7,7 +7,7 @@
 <script src="/js/picker.js"></script>
 <script src="/js/picker.date.js"></script>
 <script>
-    $(function() {
+    $(document).ready(function () {
         $('#from_date').pickadate({
             format: 'dd mmm yyyy',
         });
@@ -16,5 +16,10 @@
         });
 
 //        to_date should be greater than from_date
+
+        $('.picker').each(function(){
+            $(this).removeClass('picker');
+           $(this).addClass('date-picker');
+        });
     });
 </script>
