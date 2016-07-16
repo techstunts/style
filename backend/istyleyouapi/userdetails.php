@@ -203,15 +203,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $result2 = mysql_query($checkfb);
 
     $rows1 = mysql_num_rows($result2);
+    $client_data = mysql_fetch_array($result1, MYSQL_ASSOC);
     if ($rows != 0) {
         if ($rows1 == 0) {
-            $sql = "Update clients set facebook_id='$facebookid',gender='$gender', gender_id=$gender_id  where email='$email'";
+            $sql = "Update clients set facebook_id='$facebookid',gender='$gender', gender_id=$gender_id where email='$email'";
             mysql_query($sql);
 
         }
         //$data = array('result' => 0, 'message' => 'User already registered with the given email');
-        $sql = "Update clients set regId='$regId' where email='$email'";
+        $sql = "Update clients set regId='$regId', device_status=TRUE  where email='$email'";
         mysql_query($sql);
+        saveDeviceDetails($client_data['id'], $regId, $user_signup_ip_address, $current_date_time);
         $data = FacebookLogin($email, $facebookid, $gender, $gender_id);
     } else {
         $stylishid = getStylistId();
@@ -219,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
 
         $insert = mysql_query($sql);
         $lastid = mysql_insert_id();
-
+        saveDeviceDetails($lastid, $regId, $user_signup_ip_address, $current_date_time);
 
         if ($lastid) {
 
@@ -287,21 +289,23 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $result2 = mysql_query($checkg);
 
     $rows1 = mysql_num_rows($result2);
-
+    $client_data = mysql_fetch_array($result1, MYSQL_ASSOC);
     if ($rows != 0) {
         if ($rows1 == 0) {
             $sql = "Update clients set google_id='$googleid',gender='$gender',gender_id='$gender_id' where email='$email'";
             mysql_query($sql);
         }
         //$data = array('result' => 'fail', 'message' => 'User already registered with the given email');
-        $sql = "Update clients set regId='$regId' where email='$email'";
+        $sql = "Update clients set regId='$regId', device_status=TRUE  where email='$email'";
         mysql_query($sql);
+        saveDeviceDetails($client_data['id'], $regId, $user_signup_ip_address, $current_date_time);
         $data = GoogleLogin($email, $googleid, $gender, $gender_id);
     } else {
         $stylishid = getStylistId();
         $sql = "INSERT INTO clients(facebook_id,google_id,linked_id,email,password,gender,gender_id,stylist_id,name,image,bodyshape,bodytype,skintype,styletype,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,height,regId,signup_ip_address,created_at) VALUES('$facebookid','$googleid','$linkedid','$email','$password','$gender','$gender_id','$stylishid','$name','$image','$bodyshape','$bodytype','$skintype','$styletype','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$height','$regId','$user_signup_ip_address', '$current_date_time')";
         $insert = mysql_query($sql);
         $lastid = mysql_insert_id();
+        saveDeviceDetails($lastid, $regId, $user_signup_ip_address, $current_date_time);
         if ($lastid) {
 
             $sql = "SELECT id,name,image,stylist_id,bodytype,bodyshape,height,age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice FROM clients where id='$lastid'";
@@ -468,7 +472,7 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id)
             $result[1] = $data['stylist_id'];
         }
         if ($result[1] != 0) {
-            $sql = "SELECT clients.id as user_id,clients.name,clients.gender_id,clients.gender,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.id as stylist_id FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
+            $sql = "SELECT clients.id as user_id,clients.name,clients.gender_id,clients.gender,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as stylist_image, stylists.id as stylist_id, stylists.icon as stylist_icon FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
 
             $select = mysql_query($sql);
             $result = array();
@@ -492,8 +496,9 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id)
                 $result[14] = $data['stylist_code'];
                 $result[15] = $data['stylist_image'];
                 $result[16] = $data['stylist_id'];
+                $result[17] = $data['stylist_icon'];
             }
-            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16]));
+            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16], 'stylist_icon' => $result[17]));
         } else {
             $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
         }
@@ -541,7 +546,7 @@ function GoogleLogin($email, $googleid, $gender, $gender_id)
 
 
         if ($result[1] != 0) {
-            $sql = "SELECT clients.id as user_id,clients.name,clients.gender_id,clients.gender,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as  stylist_image, stylists.id as stylist_id FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
+            $sql = "SELECT clients.id as user_id,clients.name,clients.gender_id,clients.gender,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice, stylists.code as stylist_code, stylists.image as  stylist_image, stylists.id as stylist_id, stylists.icon as stylist_icon FROM clients Join stylists on stylists.id=clients.stylist_id where clients.id='$userid'";
             $select = mysql_query($sql);
             $result = array();
 
@@ -565,8 +570,9 @@ function GoogleLogin($email, $googleid, $gender, $gender_id)
                 $result[14] = $data['stylist_code'];
                 $result[15] = $data['stylist_image'];
                 $result[16] = $data['stylist_id'];
+                $result[17] = $data['stylist_icon'];
             }
-            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => "http://istyleyou.in/istyleyouapi/profileimage/" . $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16]));
+            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => "http://istyleyou.in/istyleyouapi/profileimage/" . $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16], 'stylist_icon' => $result[17]));
         } else {
             $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
         }
@@ -591,6 +597,16 @@ function getStylistId()
     return $stylist_array[mt_rand() % (count($stylist_array))];
 }
 
+function saveDeviceDetails($client_id, $regId, $ip, $current_date_time)
+{
+    $checkRegId = "SELECT id from client_device_registration_details where regId='$regId' AND client_id='$client_id'";
+    $result = mysql_query($checkRegId);
+    $rows = mysql_num_rows($result);
+    if ($rows == 0) {
+        $sql = "INSERT INTO client_device_registration_details(client_id, regId, os, os_version, ip, created_at, regId_status) VALUES('$client_id', '$regId', 'android', '', '$ip', '$current_date_time', TRUE )";
+        mysql_query($sql);
+    }
+}
 mysql_close($conn);
 /* JSON Response */
 header("Content-type: application/json");

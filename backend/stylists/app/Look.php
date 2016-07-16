@@ -58,4 +58,7 @@ class Look extends Model
         return $this->belongsTo('App\Models\Lookups\AgeGroup', 'age_group_id');
     }
 
+    public function look_products(){
+        return $this->hasMany('App\LookProduct');
+    }
 }

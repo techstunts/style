@@ -14,6 +14,7 @@
                     @include('category.select')
                     @include('common.gender.select')
                     @include('common.color.select')
+                    @include('common.rating.product')
                     @include('common.search')
                     @include('common.daterange')
                     @include('common.pricerange')
@@ -72,8 +73,6 @@
 
         </div>
 
-
-        @include('look.create')
         @include('push.popup')
 
     </div>

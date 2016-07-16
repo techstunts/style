@@ -47,5 +47,6 @@ Route::group(['middleware' => 'auth'], function(){
     
     Route::any('tip/{action}/{id?}/{action_id?}', 'TipController@index');
 
+    Route::any('upload/{action}/{id?}', 'UploadController@index');
 });
 
