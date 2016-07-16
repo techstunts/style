@@ -687,7 +687,7 @@ input:-webkit-autofill,textarea:-webkit-autofill,select:-webkit-autofilll{
 
 
 .dataTables_wrapper .dataTables_filter{
-    float: left;
+    float: left !important;
 }
 
 
