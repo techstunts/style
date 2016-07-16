@@ -158,6 +158,7 @@ class RecommendationController extends Controller
                             "look_url" => $entity_type_id == EntityTypeId::PRODUCT ? $entity_data[$j]->image : env('IMAGE_BASE_URL') . $entity_data[$j]->image,
                             "url" => $entity_type_id == EntityTypeId::PRODUCT ? $entity_data[$j]->image : env('IMAGE_BASE_URL') . $entity_data[$j]->image,
                             'app_section' => $app_section,
+                            "stylist" => Stylist::getExposableData($stylist_data)
                         );
                         $response = $push->sendMessage($params);
                         if ($response['result'] && $response['result']->failure > 0) {
