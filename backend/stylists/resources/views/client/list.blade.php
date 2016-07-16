@@ -11,6 +11,9 @@
                         <form method="get" action="">
                             @include('stylist.select')
                             @include('common.status.deviceStatusSelect')
+                            @include('common.gender.select')
+                            @include('common.body_type.select')
+                            @include('common.age_group.select')
                             @include('common.search')
                             @include('common.daterange')
                             <input type="submit" name="filter" value="Filter"/>
