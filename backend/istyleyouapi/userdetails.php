@@ -16,7 +16,38 @@ $current_date_time = date("Y-m-d H:i:s");
 
 $signup_successful = false;
 
-if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && !empty($_REQUEST['password']) && isset($_REQUEST['password'])) {
+if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['gender']) && !empty($_REQUEST['regid']) && !empty($_REQUEST['skipped_login']) && $_REQUEST['skipped_login'] == true) {
+    $name = 'Guest';
+    $regId = $_REQUEST['regid'];
+
+    $gender = "";
+    $gender_id = 3;
+    if (!empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
+        $gender = strtolower($_REQUEST['gender']);
+        $gender_id = $gender == 'male' ? 2 : 1;
+    }
+    if ($gender_id == 1) {
+        $image = 'http://d36o0t9p57q98i.cloudfront.net/resources/images/android/female.png';
+    } else {
+        $image = 'http://d36o0t9p57q98i.cloudfront.net/resources/images/android/male.png';
+    }
+
+    $stylishid = getStylistId();
+    $sql = "INSERT INTO clients(gender,gender_id,stylist_id,name,image,regId,signup_ip_address,created_at) VALUES('$gender','$gender_id','$stylishid','$name','$image','$regId','$user_signup_ip_address','$current_date_time')";
+    $insert = mysql_query($sql);
+    $lastid = mysql_insert_id();
+    if ($lastid) {
+        saveDeviceDetails($lastid, $regId, $user_signup_ip_address, $current_date_time);
+
+        $sql = "SELECT id as stylist_id,name as stylist_name,code as stylist_code, image as stylist_image, icon as stylist_icon FROM stylists where id='$stylishid'";
+        $query = mysql_query($sql);
+        $stylist_data = mysql_fetch_array($query, MYSQL_ASSOC);
+        $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $lastid, "user_id" => $lastid, "name" => $name, "username" => $name, "image" => $image, "stylist_name" => $stylist_data['stylist_name'], "body_type" => '', "body_shape" => '', "height" => '', "age" => '', "skin_type" => '', 'price range' => array("club" => '', "ethic" => '', "denim" => '', "footwear" => ''), 'styletype' => '', 'stylecode' => $stylist_data['stylist_code'], 'styleimage' => $stylist_data['stylist_image'], 'stylist_id' => $stylist_data['stylist_id'], 'stylish_id' => $stylist_data['stylist_id'], 'stylist_icon' => $stylist_data['stylist_icon']));
+    } else {
+        $data = array('result' => 'fail', 'message' => 'Something went wrong');
+    }
+}
+elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && !empty($_REQUEST['password']) && isset($_REQUEST['password'])) {
 
     $email = $_REQUEST['email'];
     $password = $_REQUEST['password'];
@@ -339,7 +370,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty(
     $data = array('result' => 'fail', 'message' => 'Request method is wrong or some parameters missing!');
 
 }
-
 if ($signup_successful) {
     if ($data['result'] == 'success' && isset($data['response body']) && $data['response body']['id'] != '') {
         $mailer = new Emailer();
