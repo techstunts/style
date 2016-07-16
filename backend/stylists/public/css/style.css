@@ -143,7 +143,7 @@ div.filters form select, div.filters form input, div.filters form label {
     border: 1px solid #d3d3d3;
     max-width: 200px;
     display: inline;
-    width: 102px;
+    width: 90px;
     height: initial;
     font-size: 12px;
     margin-right:-5px;
@@ -189,12 +189,6 @@ div.filters form input.search {
 
 div.filters form input.search_text {
     width: 120px;
-}
-
-div.filters form a.clearall {
-    color: #000;
-    font-size: 12px;
-    text-decoration: underline;
 }
 
 span.errorMsg {
@@ -249,11 +243,11 @@ ol.selectable {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    margin-left:70px;
-}
+    /*margin-left:70px;*/
+}ol.selectable li
 
 ol.selectable li {
-    margin: 6px;
+    /*margin: 6px;*/
     float: left;
     text-align: center;
     background: white;
@@ -690,4 +684,18 @@ input:-webkit-autofill,textarea:-webkit-autofill,select:-webkit-autofilll{
     float: left !important;
 }
 
+div.filters form a.clearall{
+    padding: 12px 12px !important;
+    color: white !important;
+    font-size: 12px !important;
+    text-decoration: none !important;
+    background-color: #000000;
+}
 
+.form-control.search{
+    color:#fff;
+}
+
+.content-center{
+    margin-left:0px;
+}

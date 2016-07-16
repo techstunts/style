@@ -6,7 +6,7 @@
 @section('content')
     <div id="contentCntr">
         <div class="container">
-            <ol class="selectable">
+            <ol class="selectable"  class="content-center">
                 <li class="ui-state-default" id="{{$collection->id}}">
                     <div class="resource_view">
                         <form method="POST" action="{!! url('/collection/update/' . $collection->id) !!}"

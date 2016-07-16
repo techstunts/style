@@ -6,7 +6,7 @@
 <div id="contentCntr">
     <div class="container">
         <div class="section" style="padding-top:0px;">
-        <ol class="selectable" style="margin-left: 0px;">
+        <ol class="selectable" style="margin-left:0px;">
             <li style="width: 100%;margin: 0px;" class="ui-state-default" id="{{$stylist->id}}">
                 <div class="resource_view">
                     <div class="image">

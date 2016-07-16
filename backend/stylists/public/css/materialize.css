@@ -4195,7 +4195,7 @@ nav ul a {
   font-size: 1rem;
   color: #000;
   display: inline-block;
-  padding: 0 15px;
+  padding: 0 12px;
   cursor: pointer;
 }
 
@@ -4910,7 +4910,7 @@ small {
 .btn, .btn-large {
   text-decoration: none;
   color: #fff;
-  background-color: #26a69a;
+  background-color: #000;
   text-align: center;
   letter-spacing: .5px;
   transition: .2s ease-out;
@@ -5537,7 +5537,7 @@ textarea.materialize-textarea {
   border-radius: 0;
   outline: none;
   height: 3rem;
-  width: 100%;
+  width: 60%;
   font-size: 1rem;
   margin: 0 0 15px 0;
   padding: 0;
@@ -6332,9 +6332,9 @@ input[type=checkbox]:not(:disabled).tabbed:focus ~ .lever::after {
 
 /* Select Field
    ========================================================================== */
-select {
-  display: none;
-}
+/*select {*/
+  /*display: none;*/
+/*}*/
 
 select.browser-default {
   display: block;

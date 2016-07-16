@@ -7,7 +7,7 @@
         <div class="col s3" style="border-right: 1px solid #3d464d;">
             <form class="main-search-bar">
                 @include('common.search')
-                <input type="submit" name="Search"/>
+                <input type="submit" name="Search" style="background-color:#000;color:white"/>
             </form>
         </div>
         <div class="col s2" style="border-right:1px solid #3d464d;height: 60px">

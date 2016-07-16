@@ -28,7 +28,7 @@
             <div class="clear"></div>
 
 
-            <ol class="selectable" >
+            <ol class="selectable" class="content-center" >
             @foreach($collections as $collection)
                 <li class="ui-state-default" collection_id="{{$collection->id}}">
                     <div class="items">
