@@ -16,7 +16,6 @@
                     @include('common.body_type.select')
                     @include('common.budget.select')
                     @include('common.age_group.select')
-                    @include('common.search')
                     @include('common.daterange')
                     @include('common.pricerange')
                     <input type="submit" name="filter" value="Filter"/>
@@ -25,6 +24,7 @@
                 {!! $looks->render() !!}
             </div>
 
+            <div class="clear"></div>
             @include('common.sendrecommendations')
             <div class="clear"></div>
 
@@ -80,7 +80,6 @@
             {!! $looks->render() !!}
         </div>
 
-        @include('look.create')
         @include('push.popup')
     </div>
 </div>

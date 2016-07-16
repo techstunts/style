@@ -23,8 +23,8 @@ use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id'];
-    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders', 'colors'];
+    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id'];
+    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders', 'colors', 'ratings'];
 
     /**
      * Display a listing of the resource.
@@ -56,10 +56,13 @@ class ProductController extends Controller
             'categories' => $this->categories,
             'genders' => $this->genders,
             'colors' => $this->colors,
+            'ratings' => $this->ratings,
             'category_tree' => $category_obj->getCategoryTree(),
             'gender_list' => $lookup->type('gender')->get(),
             'color_list' => $lookup->type('color')->get(),
+            'ratings_list' => $lookup->type('rating')->where('status_id', true)->get(),
         );
+
 
         foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
@@ -93,7 +96,7 @@ class ProductController extends Controller
             Product::with('category', 'primary_color', 'secondary_color')
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
-                ->orderBy('id', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
@@ -143,8 +146,11 @@ class ProductController extends Controller
             return;
         }
 
+        $brand_name = preg_replace('/[^a-zA-Z0-9_&-@\' \']/', null, $request->input('brand'));
+        $brand_name = trim($brand_name);
+
         $merchant = Merchant::where('name', $request->input('merchant'))->first();
-        $brand = Brand::firstOrCreate(['name' => $request->input('brand')]);
+        $brand = Brand::firstOrCreate(['name' => $brand_name]);
         $category = Category::where(['name' => $request->input('category')])->first();
         $gender = Gender::where(['name' => $request->input('gender')])->first();
         $primary_color = Color::where(['name' => $request->input('color1')])->first();

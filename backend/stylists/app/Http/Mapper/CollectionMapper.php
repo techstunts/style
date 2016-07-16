@@ -4,9 +4,11 @@ namespace App\Http\Mapper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Lookups\Lookup;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
+use App\Models\Enums\Status;
 use App\Models\Lookups\AppSections;
 use App\Models\Enums\RecommendationType;
 use Validator;
@@ -18,10 +20,10 @@ class CollectionMapper extends Controller
     protected $fields = ['id', 'name', 'description', 'image' , 'created_by',
         'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'created_at'];
 
-    protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group'];
+    protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group', 'status'];
 
-    protected $dropdown_fields = ['body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id'];
-    protected $input_fields = ['name', 'description', 'image'];
+    protected $dropdown_fields = ['body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'status_id'];
+    protected $input_fields = ['name', 'description'];
 
     public function getDropDowns()
     {
@@ -32,6 +34,7 @@ class CollectionMapper extends Controller
             'age_groups' => $lookup->type('age_group')->get(),
             'budgets' => $lookup->type('budget')->get(),
             'occasions' => $lookup->type('occasion')->get(),
+            'statuses' => $lookup->type('status')->get(),
         );
     }
 
@@ -51,6 +54,8 @@ class CollectionMapper extends Controller
                 $values_array[$input_field] = isset($old_values[$input_field]) && $old_values[$input_field] != '' ? $old_values[$input_field] : '';
             }
         }
+        $values_array['is_admin'] = Auth::user()->hasRole('admin');
+        $values_array['entity_type_id'] = isset($old_values['entity_type_id']) && $old_values['entity_type_id'] != '' ? $old_values['entity_type_id'] : EntityType::COLLECTION;
 
         return $values_array;
     }
@@ -59,11 +64,11 @@ class CollectionMapper extends Controller
     {
         $collection->name = isset($request->name) && $request->name != '' ? strtoupper(substr($request->name, 0, 1)) . substr($request->name, 1) : '';
         $collection->description  = strtoupper(substr($request->description, 0, 1)) . substr($request->description, 1);
-        $collection->image = isset($request->image) && $request->image != '' ? $request->image : '';
 
         foreach ($this->dropdown_fields as $dropdown_field) {
-            $collection->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : '';;
+            $collection->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : '';
         }
+        $collection->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : Status::Submitted;
         return $collection;
     }
 
@@ -219,8 +224,15 @@ class CollectionMapper extends Controller
         return $collection_entities;
     }
 
-    public function saveCollectionDetails($collection, $request)
+    public function saveCollectionDetails($collection, $request, $uploadMapperObj = null)
     {
+        if ($collection->status_id !== Status::Active && !empty($request->status_id) && $request->status_id == Status::Active && empty($collection->image)) {
+            return array(
+                'status' => false,
+                'message' => 'Upload image first for this collection',
+            );
+        }
+
         $collection = $this->setObjectProperties($collection, $request);
         $logged_in_stylist = $request->user()->id != '' ? $request->user()->id : '';
 
@@ -233,13 +245,19 @@ class CollectionMapper extends Controller
 
         DB::beginTransaction();
         try {
-            $collection->save();
+            if (!$collection->exists) {
+                $collection->save();
+            }
             $result = $this->saveEntities($collection->id, $request->input('product_ids'), $request->input('look_ids'));
-
             if ($result['status'] == false) {
                 DB::rollback();
                 return $result;
             }
+            if ($uploadMapperObj) {
+                $collection->image = $uploadMapperObj->moveImageInFolder($request);
+            }
+            $collection->save();
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();

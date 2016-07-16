@@ -25,4 +25,9 @@ class LookProduct extends Model
 
     public $timestamps = false;
 
+    public function product()
+    {
+        return $this->belongsTo('App\Product', 'product_id');
+    }
+
 }

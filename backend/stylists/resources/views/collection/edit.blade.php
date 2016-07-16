@@ -9,10 +9,8 @@
             <ol class="selectable">
                 <li class="ui-state-default" id="{{$collection->id}}">
                     <div class="resource_view">
-                        <div class="image">
-                            <img src="{!! asset('images/' . $collection->image) !!}"/>
-                        </div>
-                        <form method="POST" action="{!! url('/collection/update/' . $collection->id) !!}" style="display: initial;">
+                        <form method="POST" action="{!! url('/collection/update/' . $collection->id) !!}"
+                              enctype="multipart/form-data" style="display: initial;">
                             {!! csrf_field() !!}
                             <table class="info">
                                 <tr class="row">
@@ -79,6 +77,14 @@
                                         @endif
                                     </td>
                                 </tr>
+
+                                @if($is_admin)
+                                    <tr class="row">
+                                        <td class="title" colspan="2">
+                                            @include('common.status.select')
+                                        </td>
+                                    </tr>
+                                @endif
 
                                 <tr class="row">
                                     <td class="title" colspan="1">
@@ -148,13 +154,22 @@
                                 </tr>
 
                             </table>
+
+                            <div class="image">
+                                <img src="{!! strpos($collection->image, "collections") === 0 ? asset('images/'.$collection->image) : $collection->image !!}"/>
+                                <input id="image" name="image" type="file" class="file-loading">
+                                <input name="entity_type_id" type="hidden" value="{{$entity_type_id}}">
+                                <img id="loadedImage" src="" class="pop-image-size"/>
+                                @if($image_error = $errors->first('image'))
+                                    <span class="errorMsg">{{$image_error}}</span>
+                                @endif
+                            </div>
                         </form>
                     </div>
                 </li>
             </ol>
         </div>
 
-        @include('look.create')
         @include('push.popup')
 
     </div>

@@ -12,6 +12,7 @@ use App\Models\Enums\RecommendationType;
 use App\Models\Lookups\AppSections;
 use App\Tip;
 use App\Http\Mapper\TipMapper;
+use App\Http\Mapper\UploadMapper;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -51,6 +52,7 @@ class TipController extends Controller
     public function postCreate(Request $request)
     {
         $tipMapperObj = new TipMapper();
+        $uploadMapperObj = new UploadMapper();
 
         $validator = $tipMapperObj->inputValidator($request);
         if ($validator->fails()) {
@@ -59,9 +61,20 @@ class TipController extends Controller
                 ->withErrors($validator)
                 ->withInput($request->all());
         }
+        $validator = $uploadMapperObj->inputValidator($request);
+        if ($validator->fails()) {
+
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput($request->all());
+        }
 
         $tip = new Tip();
-        $result = $tipMapperObj->saveTipDetails($tip, $request);
+        if ($request->file('image')) {
+            $result = $tipMapperObj->saveTipDetails($tip, $request, $uploadMapperObj);
+        } else {
+            $result = $tipMapperObj->saveTipDetails($tip, $request);
+        }
 
         if ($result['status'] == false) {
             return Redirect::back()->withError($result['message'])->withInput($request->all());
@@ -108,11 +121,17 @@ class TipController extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
+        $created_by = "1=1";
+        if (!empty($this->resource_id)) {
+            $created_by = " created_by = " . $this->resource_id;
+        }
+
         $tips = Tip::with(['createdBy' => function ($query) {
             $query->select('id', 'name');
         }])
             ->where($this->where_conditions)
             ->whereRaw($this->where_raw)
+            ->whereRaw($created_by)
             ->orderBy('id', 'desc')
             ->simplePaginate($this->records_per_page)
             ->appends($paginate_qs);
@@ -186,6 +205,7 @@ class TipController extends Controller
 
     public function postUpdate(Request $request)
     {
+        $uploadMapperObj = new UploadMapper();
         if (empty($this->resource_id)) {
             Redirect::back()->withError('Tip Not Found');
         }
@@ -197,9 +217,22 @@ class TipController extends Controller
                 ->withErrors($validator)
                 ->withInput($request->all());
         }
+        $validator = $uploadMapperObj->inputValidator($request);
+        if ($validator->fails()) {
+
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput($request->all());
+        }
+
         $tip = Tip::find($this->resource_id);
 
-        $result = $tipMapperObj->saveTipDetails($tip, $request);
+
+        if ($request->file('image')) {
+            $result = $tipMapperObj->saveTipDetails($tip, $request, $uploadMapperObj);
+        } else {
+            $result = $tipMapperObj->saveTipDetails($tip, $request);
+        }
 
         if ($result['status'] == false) {
             return Redirect::back()->withError($result['message'])->withInput($request->all());

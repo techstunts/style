@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Auth;
 class ClientController extends Controller
 {
     protected $records_per_page=100;
-    protected $filter_ids = ['stylist_id',];
-    protected $filters = ['stylists',];
+    protected $filter_ids = ['stylist_id', 'device_status'];
+    protected $filters = ['stylists', 'devicesStatuses'];
     /**
      * Display a listing of the resource.
      *
@@ -44,6 +44,7 @@ class ClientController extends Controller
 
         $view_properties = array(
             'stylists' => $this->stylists,
+            'devicesStatuses' => $this->devicesStatuses,
         );
 
         $view_properties['popup_entity_type_ids'] = array(
@@ -123,8 +124,8 @@ class ClientController extends Controller
 
     public function getChat(Request $request)
     {
-        $authorised_stylists_for_chat = [36, 49, 66];
-        $authorised_stylists_for_chat_as_admin = [89];
+        $authorised_stylists_for_chat = [36, 49, 66, 91, 92];
+        $authorised_stylists_for_chat_as_admin = [63, 76];
 
         $stylists=[];
         $stylist_id_to_chat = Auth::user()->id;

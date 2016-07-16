@@ -203,4 +203,10 @@ $(document).ready(function(){
         });
         $(this).parent().children('#product_id').attr("value", product_ids);
     });
+
+    $('.main-search-bar').find('input:submit').on('click', function(){
+        $(this).prepend($('.s3').find('input:checkbox'));
+        $(this).prepend($('.s3').find('input:input'));
+        $('.filters .main').find('input:submit').trigger('click');
+    });
 });

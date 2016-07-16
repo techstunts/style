@@ -8,9 +8,6 @@
             <ol class="selectable">
                 <li class="ui-state-default" id="{{$collection->id}}">
                     <div class="resource_view">
-                        <div class="image">
-                            <img src="{!! asset('images/' . $collection->image) !!}"/>
-                        </div>
                         <table class="info">
                             <tr class="row">
                                 <td class="title" colspan="2">{{$collection->name}}
@@ -90,13 +87,12 @@
                                 </td>
                             </tr>
                         </table>
+                        <div class="image">
+                            <img src="{!! asset('images/' . $collection->image) !!}"/>
+                        </div>
                     </div>
                 </li>
             </ol>
         </div>
-
-        @include('look.create')
-
     </div>
-
 @endsection

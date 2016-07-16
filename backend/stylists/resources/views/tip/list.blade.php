@@ -16,15 +16,12 @@
                     @include('common.age_group.select')
                     @include('common.body_type.select')
                     @include('common.budget.select')
-                    @include('common.search')
                     <input type="submit" name="filter" value="Filter"/>
                     <a href="{{url('tip/list')}}" class="clearall">Clear All</a>
                 </form>
 
             </div>
             <div class="clear"></div>
-
-            <a class="btn btn-primary btn-xs" href="{{url('tip/create')}}" class="clearall">Create Tip</a>
             @include('common.sendrecommendations')
             <div class="clear"></div>
 
