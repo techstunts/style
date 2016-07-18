@@ -18,7 +18,8 @@ class Push
                 'message_summery' => $params["message_summery"],
                 'look_url' => $params["look_url"],
                 'url' => $params["url"],
-                'app_section' => ((isset($params["app_section"]) && $params["app_section"] != "") ? $params["app_section"] : AppSections::MY_REQUESTS)
+                'app_section' => ((isset($params["app_section"]) && $params["app_section"] != "") ? $params["app_section"] : AppSections::MY_REQUESTS),
+                'stylist' => $params['stylist']
             )
         );
 
