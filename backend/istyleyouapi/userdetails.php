@@ -1,7 +1,7 @@
 <?php
 include("db_config.php");
 include_once("Emailer.php");
-//file_put_contents('userdetails-data', "\n" . var_export($_REQUEST, true), FILE_APPEND);
+file_put_contents('userdetails-data', "\n" . var_export($_REQUEST, true), FILE_APPEND);
 
 if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
     $ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['client_id']) && !em
 }
 
 
-if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['gender']) && !empty($_REQUEST['regid']) && !empty($_REQUEST['skipped_login']) && $_REQUEST['skipped_login'] == true) {
+if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['gender']) && !empty($_REQUEST['regid']) && !empty($_REQUEST['login_skipped']) && $_REQUEST['login_skipped'] == true) {
     $name = 'Guest';
     $regId = $_REQUEST['regid'];
 
@@ -466,7 +466,7 @@ function login($email, $password, $gender, $gender_id, $stylishid)
                 $result[15] = $data['stylist_image'];
             }
 
-            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => "http://istyleyou.in/istyleyouapi/profileimage/" . $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylishcode' => $result[14], 'stylishimage' => $result[15]));
+            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => "http://istyleyou.in/istyleyouapi/profileimage/" . $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylishcode' => $result[14], 'stylishimage' => $result[15], "stylist_name" => $result[3], ));
 
         } else {
 
@@ -543,7 +543,7 @@ function FacebookLogin($email, $facebookid, $gender, $gender_id)
                 $result[16] = $data['stylist_id'];
                 $result[17] = $data['stylist_icon'];
             }
-            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16], 'stylist_icon' => $result[17]));
+            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16], 'stylist_icon' => $result[17], "stylist_name" => $result[3] ));
         } else {
             $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
         }
@@ -617,7 +617,7 @@ function GoogleLogin($email, $googleid, $gender, $gender_id)
                 $result[16] = $data['stylist_id'];
                 $result[17] = $data['stylist_icon'];
             }
-            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => "http://istyleyou.in/istyleyouapi/profileimage/" . $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16], 'stylist_icon' => $result[17]));
+            $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $result[0], "user_id" => $result[0], "name" => $result[1], "username" => $result[1], "image" => "http://istyleyou.in/istyleyouapi/profileimage/" . $result[2], "stylish_name" => $result[3], "body_type" => $result[4], "body_shape" => $result[5], "height" => $result[6], "age" => $result[7], "skin_type" => $result[8], 'price range' => array("club" => $result[10], "ethic" => $result[11], "denim" => $result[12], "footwear" => $result[13]), 'styletype' => $result[9], 'stylecode' => $result[14], 'styleimage' => $result[15], 'stylist_id' => $result[16], 'stylish_id' => $result[16], 'stylist_icon' => $result[17],  "stylist_name" => $result[3]));
         } else {
             $data = array('result' => 'fail', 'message' => 'User not assign to any stylish,provide stylish code for that user');
         }
@@ -683,12 +683,12 @@ function map_guest_with_current_client($client_id, $email){
     $email_exists = exec_sql("SELECT * from clients where clients.account_id=1 and email='$email'");
     if($email_exists){
         if($email_exists['id'] != $client_id){
-            $mapping_exists = exec_sql("SELECT * FROM CLIENT_GUEST_MAPPING WHERE guest_id={$client_id}");
+            $mapping_exists = exec_sql("SELECT * FROM GUEST_CLIENT_MAPPING WHERE guest_id={$client_id}");
             if($mapping_exists){
                 return array('result' => 'fail', 'message' => 'Guest client id ' . $client_id . ' is already mapped with a client ');
             }
-            $mapping_sql = "insert into CLIENT_GUEST_MAPPING (client_id, guest_id)
-                            values ({$email_exists['id']}, {$client_id})";
+            $mapping_sql = "insert into GUEST_CLIENT_MAPPING (guest_id, client_id)
+                            values ({$client_id}, {$email_exists['id']})";
             if(!mysql_query($mapping_sql)){
                 return array('result' => 'fail', 'message' => 'Error in mapping guest client id ' . $client_id . ' with any existing client record.');
             }
