@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
         }
         $data = array('result' => 'success', 'myfav' => $abc);
     } else {
-        $data = array('result' => 'success', 'myfav' => 'No fav looks');
+        $data = array('result' => 'success', 'myfav' => []);
 
     }
 
