@@ -5,8 +5,9 @@
 @include('common.iconlibrary')
 @section('content')
     <div id="contentCntr">
+        <div class="section">
         <div class="container">
-            <ol class="selectable">
+            <ol class="selectable" style="height: 1000px;">
                 <li class="ui-state-default">
                     <div class="resource_view">
                         <form method="POST" action="{!! url('/look/create/') !!}" enctype="multipart/form-data"
@@ -124,5 +125,6 @@
             </ol>
         </div>
         @include('push.popup')
+    </div>
     </div>
 @endsection

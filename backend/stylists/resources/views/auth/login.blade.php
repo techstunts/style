@@ -10,7 +10,7 @@
             {{--</div>--}}
         {{--</div>--}}
             <nav class="login-navbar">
-                <div class="nav-wrapper container">
+                <div class="nav-wrapper container" style="min-height: 0px;">
                     <a href="#!" class="brand-logo"><img class="responsive-img" src="{{ asset('images/isy_logo_backend.png') }}" alt=""></a>
                     <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                     <ul class="right hide-on-med-and-down">

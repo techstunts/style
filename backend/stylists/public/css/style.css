@@ -25,6 +25,8 @@ div.items {
     height: 335px;
     width: 209px;
     overflow: hidden;
+    text-align:center;
+    border:1px solid #d3d3d3;
 }
 
 div.items div {
@@ -157,7 +159,7 @@ div.filters form input[type="submit"] {
     color: white;
     font-weight: bold;
     padding: 13px 13px;
-    margin: 1px 5px 0px 0px;
+    margin: 1px 5px 0px 10px;
     width: auto;
 }
 
@@ -185,6 +187,7 @@ div.filters form input.search {
     width: 80px;
     height: 16px;
     text-align: center;
+    color:#000;
 }
 
 div.filters form input.search_text {
@@ -243,11 +246,12 @@ ol.selectable {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    /*margin-left:70px;*/
-}ol.selectable li
+    margin-left:70px;
+    margin-top:20px;
+}
 
 ol.selectable li {
-    /*margin: 6px;*/
+    margin: 6px;
     float: left;
     text-align: center;
     background: white;
@@ -690,6 +694,7 @@ div.filters form a.clearall{
     font-size: 12px !important;
     text-decoration: none !important;
     background-color: #000000;
+    display: inline-block;
 }
 
 .form-control.search{
@@ -698,4 +703,8 @@ div.filters form a.clearall{
 
 .content-center{
     margin-left:0px;
+}
+
+.info.profile td{
+    padding: 0px;
 }
