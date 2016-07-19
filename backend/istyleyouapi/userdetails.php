@@ -85,7 +85,11 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
         } else {
             $image = 'http://d36o0t9p57q98i.cloudfront.net/resources/images/android/male.png';
         }
+        $bodytype = "";
+        $bodyshape = "";
+        $height = "";
         $age = 18;
+        $skintype = "";
         $clubprice = 100;
         $ethicprice = 100;
         $denimprice = 100;
@@ -101,7 +105,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
         } else {
             $password_hashed = password_hash($_REQUEST['password'], PASSWORD_BCRYPT);
             $stylishid = getStylistId();
-            $sql = "INSERT INTO clients(email,password,gender,gender_id,stylist_id,name,image,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,regId,signup_ip_address,created_at) VALUES('$email','$password_hashed','$gender','$gender_id','$stylishid','$name','$image','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$regId','$user_signup_ip_address', '$current_date_time')";
+            $sql = "INSERT INTO clients(email,password,gender,gender_id,stylist_id,name,image,bodytype,bodyshape,height,age,skintype,pricerange,clubprice,ethicprice,denimprice,footwearprice,regId,signup_ip_address,created_at) VALUES('$email','$password_hashed','$gender','$gender_id','$stylishid','$name','$image','$bodytype', '$bodyshape','$height','$age','$skintype','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$regId','$user_signup_ip_address', '$current_date_time')";
             $insert = mysql_query($sql);
             $lastid = mysql_insert_id();
             if ($lastid) {
@@ -297,11 +301,11 @@ if ($signup_successful) {
 
 function login($email, $password, $gender, $gender_id)
 {
-    $client_data = exec_sql("SELECT clients.id,clients.name,clients.gender, clients.gender_id,clients.email,clients.password,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylists.code as stylist_code, stylists.image as stylist_image FROM clients Join stylists on stylists.id=clients.stylist_id where clients.account_id=1 and clients.email='$email'");
+    $client_data = exec_sql("SELECT clients.id,clients.name,clients.gender, clients.gender_id,clients.email,clients.password,clients.image,stylists.name as stylist_name,bodytype,bodyshape,height,clients.age,skintype,styletype,clubprice,ethicprice,denimprice,footwearprice,stylists.code as stylist_code, stylists.image as stylist_image, stylists.icon as stylist_icon, stylists.id as stylist_id FROM clients Join stylists on stylists.id=clients.stylist_id where clients.account_id=1 and clients.email='$email'");
 
     $password_verified = password_verify($password, $client_data['password']);
     if ($client_data['email'] == $email && $password_verified && (($client_data['gender'] == $gender) || ($client_data['gender_id'] == $gender_id))) {
-        $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $client_data['id'], "user_id" => $client_data['id'], "name" => $client_data['name'], "username" => $client_data['name'], "image" => "http://istyleyou.in/istyleyouapi/profileimage/" . $client_data['image'], "stylish_name" => $client_data['stylist_name'], "body_type" => $client_data['bodytype'], "body_shape" => $client_data['bodytype'], "height" => $client_data['height'], "age" => $client_data['age'], "skin_type" => $client_data['skintype'], 'price range' => array("club" => $client_data['clubprice'], "ethic" => $client_data['ethicprice'], "denim" => $client_data['denimprice'], "footwear" => $client_data['footwearprice']), 'styletype' => $client_data['styletype'], 'stylishcode' => $client_data['stylist_code'], 'stylishimage' => $client_data['stylist_image'], "stylist_name" => $client_data['stylist_name'], ));
+        $data = array('result' => 'success', 'message' => 'Login Success ', 'response body' => array("id" => $client_data['id'], "user_id" => $client_data['id'], "name" => $client_data['name'], "username" => $client_data['name'], "image" => $client_data['image'], "stylist_name" => $client_data['stylist_name'], "body_type" => $client_data['bodytype'], "body_shape" => $client_data['bodytype'], "height" => $client_data['height'], "age" => $client_data['age'], "skin_type" => $client_data['skintype'], 'price range' => array("club" => $client_data['clubprice'], "ethic" => $client_data['ethicprice'], "denim" => $client_data['denimprice'], "footwear" => $client_data['footwearprice']), 'styletype' => $client_data['styletype'], 'stylecode' => $client_data['stylist_code'], 'styleimage' => $client_data['stylist_image'], "stylist_id" => $client_data['stylist_id'], "stylish_id" => $client_data['stylist_id'], "stylist_icon" => $client_data['stylist_icon'], ));
     } else {
         if ($client_data['email'] == $email && !$password_verified && (($client_data['gender'] == $gender) || ($client_data['gender_id'] == $gender_id))) {
             $data = array('result' => 'fail', 'message' => 'Incorrect Password');
