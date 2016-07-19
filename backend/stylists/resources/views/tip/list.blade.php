@@ -19,11 +19,17 @@
                     <input type="submit" name="filter" value="Filter"/>
                     <a href="{{url('tip/list')}}" class="clearall">Clear All</a>
                 </form>
-
             </div>
+
             <div class="clear"></div>
+            <br>
             @include('common.sendrecommendations')
             <div class="clear"></div>
+            <br>
+            <div class="row">
+                <div class="col s4 offset-s5">{!! $tips->render() !!}</div>
+            </div>
+            <br>
 
             <ol class="selectable" >
             @if(count($tips) == 0)
@@ -34,7 +40,6 @@
                 <li class="ui-state-default" tip_id="{{$tip->id}}">
                     <div class="items">
                         <div class="name text " id="popup-item">
-                            <a href="{{url('tip/view/' . $tip->id)}}">{{$tip->name == "" ? "Error! Tip name empty" : $tip->name }}</a>
                             <input class="entity_ids pull-right"  value="{{$tip->id}}" type="checkbox">
                         </div>
                         @if($tip->image)
@@ -44,6 +49,9 @@
                         @else
                             <div class="image"><img src="{!! asset('images/logoistle.png') !!}" /></div>
                         @endif
+                        <div class="name text " id="popup-item">
+                            <a href="{{url('tip/view/' . $tip->id)}}">{{$tip->name == "" ? "Error! Tip name empty" : $tip->name }}</a>
+                        </div>
                         <div class="extra text">
 
 

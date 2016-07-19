@@ -6,6 +6,7 @@ use App\Report\Entities\Enums\FilterType as FilterType;
 @section('title', 'Report')
 
 @section('content')
+    <div class="section">
     <div class="alan-report">
         <h1>{{$reportEntity->getDisplayName()}}</h1>
         <div class="report-index">
@@ -44,6 +45,7 @@ use App\Report\Entities\Enums\FilterType as FilterType;
                 @include('report.partial.report', ['reportEntity' => $reportEntity])
             </div>
         </div>
+    </div>
     </div>
 
     <link href="{!! asset('/css/classic.css') !!}" rel="stylesheet">

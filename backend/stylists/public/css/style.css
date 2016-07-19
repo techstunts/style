@@ -26,7 +26,7 @@ div.items {
     width: 209px;
     overflow: hidden;
     text-align:center;
-    border:1px solid #d3d3d3;
+    /*border:1px solid #d3d3d3;*/
 }
 
 div.items div {
@@ -178,9 +178,11 @@ div.filters form.approve {
 div.filters form.approve input[type="submit"] {
     background-color: white;
     border: none;
-    color: #D32F2F;
+    color: #000;
     text-decoration: underline;
     cursor: pointer;
+    letter-spacing: 1px;
+    font-weight: 400;
 }
 
 div.filters form input.search {
@@ -551,14 +553,13 @@ img.loader{
     color: green;
 }
 
-/*CSS added By: Danish Ahmed*/
 .chat-icon-floating{
     position:fixed;
     bottom: 10px;
-    right: 16px;
-    border-radius: 79px;
-    padding: 10px 10px;
+    right: 11px;
+    padding: 7px 19px;
     background-color: #000;
+    font-size: 13px;
 }
 
 .chat-icon-floating a{
@@ -583,7 +584,7 @@ img.loader{
     color: #555555;
     text-decoration: none;
     font-family: "freight-text-pro","Times New Roman","Lucida Sans Unicode","Lucida Grande",sans-serif;
-    font-style: italic;
+    /*font-style: italic;*/
     font-size: 16px;
 }
 
@@ -655,6 +656,7 @@ border-bottom: 2px solid #000;}
     overflow-y: hidden;
     border-bottom-color: #000;
     border-bottom-style: dotted;
+    background-color: #fff;
 }
 
 .btn.btn-primary.btn-lg.login{
@@ -707,4 +709,15 @@ div.filters form a.clearall{
 
 .info.profile td{
     padding: 0px;
+}
+
+body {
+   font-family: lato;
+}
+
+.alan-report{
+    background-color: #fff;
+    width: 85%;
+    margin: auto;
+    margin-top:-45px;
 }

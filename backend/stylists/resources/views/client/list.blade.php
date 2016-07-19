@@ -11,17 +11,22 @@
                         <form method="get" action="">
                             @include('stylist.select')
                             @include('common.status.deviceStatusSelect')
-                            @include('common.search')
+                            {{--@include('common.search')--}}
                             @include('common.daterange')
                             <input type="submit" name="filter" value="Filter"/>
                             <a href="{{url('client/list')}}" class="clearall">Clear All</a>
                         </form>
                     @endif
-                    {!! $clients->render() !!}
                 </div>
 
                 @include('common.sendrecommendations')
                 <div class="clear"></div>
+
+                <br>
+                <div class="row">
+                    <div class="col s4 offset-s5"> {!! $clients->render() !!}</div>
+                </div>
+                <br>
 
                 <form name="frm-datatable" id="frm-datatable" method="POST" action="">
                     <table id="datatable" class="display select datatable" cellspacing="0" width="100%">

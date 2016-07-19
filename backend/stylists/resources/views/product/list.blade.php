@@ -26,8 +26,7 @@
 
                 @include('common.sendrecommendations')
                 <div class="clear"></div>
-                <br>
-                @foreach($errors->all() as $e)
+                               @foreach($errors->all() as $e)
                     <span class="errorMsg">{{$e}}</span><br/>
                 @endforeach
 
@@ -61,7 +60,7 @@
                                     <span><a href="{{$product->product_link}}">View</a></span>
                                     <span>{{$product->product_type}}</span>
                                     <span>{{$product->category ? $product->category->name : ''}}</span>
-                                    <span>{{$product->price}}</span>
+                                    <span>&#x20b9; {{$product->price}}</span>
                                     <span>{{$genders_list[$product->gender_id]->name}}</span>
                             <span>{{$product->primary_color->name}}
                                 {{$product->secondary_color->id != 0 ? "({$product->secondary_color->name})" : ""}}</span>

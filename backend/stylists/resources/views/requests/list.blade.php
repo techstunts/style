@@ -14,15 +14,21 @@
                         <input type="submit" name="filter" value="Filter"/>
                         <a href="{{url('requests/list')}}" class="clearall">Clear All</a>
                     </form>
-                    {!! $requests->render() !!}
                 </div>
 
                 <div class="clear"></div>
 
                 @include('common.sendrecommendations')
                 @if(count($requests) == 0)
-                    No Looks found
+                    No Request's Found
                 @endif
+
+                <br>
+                <div class="row">
+                    <div class="col s4 offset-s5"> {!! $requests->render() !!}</div>
+                </div>
+                <br>
+
                 <form name="frm-datatable" id="frm-datatable" method="POST" action="">
                     <table id="datatable" class="display select datatable" cellspacing="0" width="100%">
                         <thead>

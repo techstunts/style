@@ -1,13 +1,13 @@
 <nav style="background-color:#eee;">
-    <div class="row" style="width:85%;margin: auto;background-color: #000">
+    <div class="row" style="width:85%;margin: auto;background-color: #000;">
         @if(Auth::check())
         <div class="col s4">
             <a href="http://stylist.istyleyou.loc/product/list"><img class="logo-size" src="{{ asset('images/logo.png') }}" alt=""></a>
         </div>
-        <div class="col s3" style="border-right: 1px solid #3d464d;">
+        <div class="col s3" style="border-right: 1px solid #3d464d;height: 60px;">
             <form class="main-search-bar">
                 @include('common.search')
-                <input type="submit" name="Search" style="background-color:#000;color:white"/>
+                {{--<input type="submit" name="Search" style="background-color:#000;color:white"/>--}}
             </form>
         </div>
         <div class="col s2" style="border-right:1px solid #3d464d;height: 60px">

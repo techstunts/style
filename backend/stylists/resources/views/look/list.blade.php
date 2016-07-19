@@ -21,13 +21,17 @@
                     <input type="submit" name="filter" value="Filter"/>
                     <a href="{{url('look/list')}}" class="clearall">Clear All</a>
                 </form>
-                {!! $looks->render() !!}
-            </div>
+             </div>
 
             <div class="clear"></div>
+            <br>
             @include('common.sendrecommendations')
             <div class="clear"></div>
-
+            <br>
+            <div class="row">
+                <div class="col s4 offset-s5"> {!! $looks->render() !!}</div>
+            </div>
+            <br>
             <ol class="selectable" >
             @if(count($looks) == 0)
                 No Looks found
@@ -37,10 +41,12 @@
                 <li class="ui-state-default" look_id="{{$look->id}}">
                     <div class="items">
                         <div class="name text " id="popup-item">
-                            <a href="{{url('look/view/' . $look->id)}}">{{$look->name == "" ? "Error! Look name empty" : $look->name }}</a>
                             <input class="entity_ids pull-right"  value="{{$look->id}}" type="checkbox">
                         </div>
                         <div class="image"><img src="{!! asset('images/' . $look->image) !!}" /></div>
+                        <div class="name text " id="popup-item">
+                            <a href="{{url('look/view/' . $look->id)}}">{{$look->name == "" ? "Error! Look name empty" : $look->name }}</a>
+                        </div>
                         <div class="extra text">
                             <?php
                                 if (isset($status_rules) && isset($status_rules[$look->status->id]['edit_status']['new_status'])){
@@ -68,8 +74,8 @@
                         </div>
                         <div class="extra text">
                             <span>{{$look->age_group->name}}</span>
-                            <span>Rs.{{$look->price}}</span>
-                            <span>Rs.{{$look->budget->name}}</span>
+                            <span>&#x20b9; {{$look->price}}</span>
+                            <span>&#x20b9; {{$look->budget->name}}</span>
                         </div>
                     </div>
                 </li>

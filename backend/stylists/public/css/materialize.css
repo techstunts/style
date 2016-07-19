@@ -4878,9 +4878,14 @@ small {
   box-shadow: none;
   color: #9F9F9F !important;
   cursor: default;
-  /*position: fixed;*/
-  /*bottom: 62px;*/
-  /*right: 12px;*/
+  position: fixed;
+  bottom: 62px;
+  right: 12px;
+  letter-spacing: 2px;
+  padding: 0px 27px;
+  border-radius:0px;
+  font-size: 15px;
+  z-index:1000;
 }
 
 .btn.disabled *, .disabled.btn-large *,
@@ -4924,7 +4929,7 @@ small {
 }
 
 .btn:hover, .btn-large:hover {
-  background-color: #2bbbad;
+  background-color: #000;
 }
 
 .btn-floating {
@@ -8238,4 +8243,15 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 
 table .profile > td{
   padding: 0px;
+}
+
+
+.btn.btn-primary.btn-xs.btn_recommendation.active{
+  position: fixed;
+  bottom:62px;
+  right:12px;
+  font-family: Lato;
+  letter-spacing: 2px;
+  font-size:13px;
+  font-family: lato;
 }

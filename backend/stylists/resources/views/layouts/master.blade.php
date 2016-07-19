@@ -31,7 +31,7 @@
 
 </head>
 
-<body>
+<body style="background-color: #eee">
 
     <header>
         @include('layouts.menu')

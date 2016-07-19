@@ -14,7 +14,7 @@
                         @include('common.color.select')
                         @include('common.gender.select')
                         @include('common.rating.product')
-                        @include('common.search')
+                        {{--@include('common.search')--}}
                         <input type="submit" name="filter" value="Filter"/>
                         <a href="{{url('merchant/product/list')}}" class="clearall">Clear All</a>
                     </form>
@@ -24,7 +24,6 @@
                         <input type="submit" name="reject_all" title="reject" value="Reject All"/>
                         {!! csrf_field() !!}
                     </form>
-                    {!! $merchant_products->render() !!}
                 </div>
 
                 <div class="clear"></div>
@@ -46,22 +45,25 @@
                     <div class="clear"></div>
                 @endif
 
-                @if(count($merchant_products) == 0)
-                    No Products found
-                @endif
+                <br>
+                <div class="row">
+                    <div class="col s4 offset-s5"> {!! $merchant_products->render() !!}</div>
+                </div>
+                <br>
+
 
                 <ol class="selectable" id="selectable">
                     @foreach($merchant_products as $product)
                         <li class="ui-state-default" product_id="{{$product->id}}">
                             <div class="items">
+                                <div class="image"><img src="{{$product->product_image_url }}"/></div>
                                 <div class="name text"><a
                                             href="{{$product->m_product_url}}">{{$product->m_product_name}}</a></div>
-                                <div class="image"><img src="{{$product->product_image_url }}"/></div>
                                 <div class="extra text">
                                     <span><a href="{{url('merchant/product/view/' . $product->id)}}">View</a></span>
                                     <span>{{$product->brand->name}}</span>
                                     <span>{{$product->category->name}}</span>
-                                    <span>{{$product->m_product_price}}</span>
+                                    <span>&#x20b9; {{$product->m_product_price}}</span>
                                     <span>{{$genders_list[$product->gender_id]->name}}</span>
                                     <span>{{$product->color->name}}</span>
                                 </div>
