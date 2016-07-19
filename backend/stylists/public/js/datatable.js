@@ -409,6 +409,16 @@ function showFilters() {
 
         $("#filters .options").append(filter_str);
     }
+    var min_discount_field = $('.buttons input[name="min_discount"]');
+    var max_discount_field = $('.buttons input[name="max_discount"]');
+
+    if (entity_type_id == EntityType.PRODUCT) {
+        min_discount_field.show();
+        max_discount_field.show();
+    } else {
+        min_discount_field.hide();
+        max_discount_field.hide();
+    }
 }
 
 function getEntityUrl(entity_type_id) {
@@ -458,12 +468,21 @@ function showEntities(entity_url) {
                 var str = '<div class="items">No data found</div>';
                 $(".popup-inner").append(str);
             } else {
+                var price_bar = '<div class="extra text" >' +
+                    '<span>{{price}}</span>' +
+                    '<span>{{discounted_price}}</span>' +
+                    '<span>{{discount_percent}}</span>' +
+                    '</div>';
+
                 var str = '<div class="items pop-up-item" >' +
                     '<div class="name text">' +
                     '<input class="entity_ids" name="entity_ids" value="{{item_id}}" type="checkbox">' +
                     '<a href="' + '/' + entity[entity_type_id] + '/view//{{item_id}}" target="_blank">{{item_name}}</a>' +
-                    '</div>' +
-                    '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="{{item_popover}}">' +
+                    '</div>';
+                if (entity_type_id == EntityType.PRODUCT) {
+                    str = str + price_bar;
+                }
+                str = str + '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="{{item_popover}}">' +
                     '<img src="{{item_image}}" class="pop-image-size"/>' +
                     '</div>' +
                     '</div>';
@@ -479,7 +498,17 @@ function showEntities(entity_url) {
                             .replace("/{{item_id}}", item.data[i].id)
                             .replace("{{item_name}}", item.data[i].name)
                             .replace("{{item_popover}}", popover_data)
-                            .replace("{{item_image}}", item.data[i].image);
+                            .replace("{{item_image}}", item.data[i].image)
+                            .replace("{{price}}", item.data[i].price);
+                        if (entity_type_id == EntityType.PRODUCT) {
+                            if (item.data[i].discounted_price > 0) {
+                                newstr = newstr.replace("{{discounted_price}}", item.data[i].discounted_price)
+                                    .replace("{{discount_percent}}", item.data[i].discount_percent);
+                            } else {
+                                newstr = newstr.replace("{{discounted_price}}", '')
+                                    .replace("{{discount_percent}}", '');
+                            }
+                        }
                     }
                     else {
                         var popover_data = "Name: " + item.data[i].name + "<br >" +

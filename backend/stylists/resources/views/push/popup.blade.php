@@ -36,6 +36,9 @@
                         <input type="text" name="max_price" value="" placeholder="Max Price"
                                class="form-control search">
                     @endif
+                    @if(!empty($show_discount_fields) && $show_discount_fields == true)
+                            @include('common.discountedprice')
+                    @endif
                     <input type="text" name="search" value="" placeholder="Search Text" class="form-control search">
                     <input class="btn" type="submit" value="Filter"> </input>
                     <a class="clearall">Clear All</a>
