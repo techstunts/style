@@ -64,14 +64,26 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
 
     $email = $_REQUEST['email'];
     $password = trim($_REQUEST['password']);
-    if (strlen($password) < 6) {
+    if(!isValidEmail($email))
+    {
+        $data = array('result' => 'fail', 'message' => 'Invalid email address');
+    }
+    else if (strlen($password) < 6)
+    {
         $data = array('result' => 'fail', 'message' => 'Invalid password');
-    } else {
+    }
+    else
+    {
         $gender = "";
         $gender_id = 3;
         if (!empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
             $gender = strtolower($_REQUEST['gender']);
             $gender_id = $gender == 'male' ? 2 : 1;
+        }
+        if ($gender_id == 1) {
+            $image = 'http://d36o0t9p57q98i.cloudfront.net/resources/images/android/female.png';
+        } else {
+            $image = 'http://d36o0t9p57q98i.cloudfront.net/resources/images/android/male.png';
         }
         $age = 18;
         $clubprice = 100;
@@ -79,8 +91,8 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
         $denimprice = 100;
         $footwearprice = 100;
         $pricerange = $clubprice + $ethicprice + $denimprice + $footwearprice;
-        $name = $_REQUEST['name'];
-        $regId = $_REQUEST['regid'];
+        $name = isset($_REQUEST['name']) ? $_REQUEST['name'] : substr($email, 0, strpos($email, '@'));
+        $regId = isset($_REQUEST['regid']) ? $_REQUEST['regid'] : "";
         $client = exec_sql("SELECT * from clients where clients.account_id=1 and email='$email'");
 
         if ($client) {
@@ -89,7 +101,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
         } else {
             $password_hashed = password_hash($_REQUEST['password'], PASSWORD_BCRYPT);
             $stylishid = getStylistId();
-            $sql = "INSERT INTO clients(email,password,gender,gender_id,stylist_id,name,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,signup_ip_address,created_at) VALUES('$email','$password_hashed','$gender','$gender_id','$stylishid','$name','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$user_signup_ip_address', '$current_date_time')";
+            $sql = "INSERT INTO clients(email,password,gender,gender_id,stylist_id,name,image,age,pricerange,clubprice,ethicprice,denimprice,footwearprice,regId,signup_ip_address,created_at) VALUES('$email','$password_hashed','$gender','$gender_id','$stylishid','$name','$image','$age','$pricerange','$clubprice','$ethicprice','$denimprice','$footwearprice','$regId','$user_signup_ip_address', '$current_date_time')";
             $insert = mysql_query($sql);
             $lastid = mysql_insert_id();
             if ($lastid) {
@@ -517,6 +529,10 @@ function map_guest_with_current_client($client_id, $email){
         }
     }
 
+}
+
+function isValidEmail($email){
+    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 }
 
 mysql_close($conn);
