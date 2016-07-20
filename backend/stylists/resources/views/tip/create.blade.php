@@ -7,7 +7,7 @@
     <div id="contentCntr">
         <div class="container">
             <ol class="selectable">
-                <li class="ui-state-default">
+                <li class="ui-state-default" style="width:100%;height:auto;margin-left: -7% ;width: 107%;">
                     <div class="resource_view">
                         @foreach($errors->all() as $e)
                             <span class="errorMsg">{{$e}}</span><br/>
