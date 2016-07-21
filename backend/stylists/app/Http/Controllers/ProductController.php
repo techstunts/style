@@ -75,6 +75,8 @@ class ProductController extends Controller
 
         $view_properties['min_price'] = $request->input('min_price');
         $view_properties['max_price'] = $request->input('max_price');
+        $view_properties['min_discount'] = $request->input('min_discount');
+        $view_properties['max_discount'] = $request->input('max_discount');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);

@@ -18,6 +18,7 @@
                     @include('common.search')
                     @include('common.daterange')
                     @include('common.pricerange')
+                    @include('common.discountedprice')
                     <input type="submit" name="filter" value="Filter"/>
                     <a href="{{url('product/list')}}" class="clearall">Clear All</a>
                 </form>
@@ -58,6 +59,10 @@
                             <span>{{$product->product_type}}</span>
                             <span>{{$product->category ? $product->category->name : ''}}</span>
                             <span>{{$product->price}}</span>
+                            @if(!empty($product->discounted_price) && $product->discounted_price > 0 && $product->discounted_price < $product->price)
+                                <span>{{$product->discounted_price}}</span>
+                                <span>{{' ' . round(($product->discounted_price *100) / $product->price) . '%'}} </span>
+                            @endif
                             <span>{{$genders_list[$product->gender_id]->name}}</span>
                             <span style="background-color:{{$product->primary_color->name}}">{{$product->primary_color->name}}
                                 {{$product->secondary_color->id != 0 ? "({$product->secondary_color->name})" : ""}}</span>
