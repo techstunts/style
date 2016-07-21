@@ -100,16 +100,8 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
         $client = exec_sql("SELECT * from clients where clients.account_id=1 and email='$email'");
 
         if ($client) {
-            if (empty($client['password']) && $_REQUEST['password']) {
-                $password_hashed = password_hash($_REQUEST['password'], PASSWORD_BCRYPT);
-                $response = updatePassword($client['id'], $password_hashed);
-            }
-            if (!empty($response) && $response['result'] == 'fail') {
-                $data = array('result' => 'fail', 'message' => $response['message']);
-            } else {
-                saveDeviceDetails($client['id'], $regId, $user_signup_ip_address, $current_date_time);
-                $data = login($email, $password, $gender, $gender_id);
-            }
+            saveDeviceDetails($client['id'], $regId, $user_signup_ip_address, $current_date_time);
+            $data = login($email, $password, $gender, $gender_id);
         } else {
             $password_hashed = password_hash($_REQUEST['password'], PASSWORD_BCRYPT);
             $stylishid = getStylistId();
@@ -490,13 +482,6 @@ function saveDeviceDetails($client_id, $regId, $ip, $current_date_time)
     if ($rows == 0) {
         $sql = "INSERT INTO client_device_registration_details(client_id, regId, os, os_version, ip, created_at, regId_status) VALUES('$client_id', '$regId', 'android', '', '$ip', '$current_date_time', TRUE )";
         mysql_query($sql);
-    }
-}
-
-function updatePassword($client_id, $password_hashed) {
-    $update_pass_sql = "update CLIENTS set password='$password_hashed' where id='{$client_id}'";
-    if(!mysql_query($update_pass_sql)){
-        return array('result' => 'fail', 'message' => 'Error in updating password');
     }
 }
 
