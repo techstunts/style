@@ -131,12 +131,21 @@ class RecommendationController extends Controller
                 $stylist_data = Auth::user();
             }
 
-            $regIds = array();
+            $regIdsAndroid = array();
+            $regIdsIOS = array();
+            $android_flag = false;
+            $ios_flag = false;
             foreach ($reg_ids as $reg_id) {
-                array_push($regIds, $reg_id->regId);
+                if ($reg_id->os == 'android') {
+                    array_push($regIdsAndroid, $reg_id->regId);
+                    $android_flag = true;
+                } elseif ($reg_id->os == 'ios') {
+                    array_push($regIdsIOS, $reg_id->regId);
+                    $ios_flag = true;
+                }
             }
 
-            if (count($regIds) > 0) {
+            if (count($reg_ids) > 0) {
                 $message_pushed = 0;
                 for ($j = 0; $j < $entity_count; $j++) {
                     $recommends_arr[$query_count] = array(
@@ -151,8 +160,6 @@ class RecommendationController extends Controller
                     $query_count++;
                     if ($message_pushed == 0) {
                         $params = array(
-                            "pushtype" => "android",
-                            "registration_id" => $regIds,
                             "message" => $stylist_data->name . " has sent you " . $entity_type_data->name,
                             "message_summery" => $stylist_data->name . " has sent you " . $entity_type_data->name,
                             "look_url" => $entity_type_id == EntityTypeId::PRODUCT ? $entity_data[$j]->image : env('IMAGE_BASE_URL') . $entity_data[$j]->image,
@@ -160,11 +167,21 @@ class RecommendationController extends Controller
                             'app_section' => $app_section,
                             "stylist" => Stylist::getExposableData($stylist_data)
                         );
-                        $response = $push->sendMessage($params);
-                        if ($response['result'] && $response['result']->failure > 0) {
-                            $inactive_reg_ids_query = $inactive_reg_ids_query . $this->getQueryForInactiveRegIds($reg_ids, $response['result']->results);
-                            if ($response['result']->failure == count($regIds)) {
-                                array_push($client_ids_inactive_device_status, $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->id : $client_data[$i]->id);
+                        if ($ios_flag) {
+                            $params['pushtype'] = "ios";
+                            $params['registration_id'] = $regIdsIOS;
+                            $response = $push->sendMessage($params);
+                        }
+                        if ($android_flag) {
+                            $params['pushtype'] = "android";
+                            $params['registration_id'] = $regIdsAndroid;
+
+                            $response = $push->sendMessage($params);
+                            if ($response['result'] && $response['result']->failure > 0) {
+                                $inactive_reg_ids_query = $inactive_reg_ids_query . $this->getQueryForInactiveRegIds($reg_ids, $response['result']->results);
+                                if ($response['result']->failure == count($regIdsAndroid)) {
+                                    array_push($client_ids_inactive_device_status, $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->id : $client_data[$i]->id);
+                                }
                             }
                         }
                         $message_pushed++;
