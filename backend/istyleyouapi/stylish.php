@@ -86,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
                 $res1 = mysql_query($query);
                 $list = array();
                 while ($data1 = mysql_fetch_array($res1)) {
+
                     $list[] = $data1;
                 }
                 $sql = "Select product_id from usersfav join products on usersfav.product_id=products.id where user_id='$userid'";
@@ -161,7 +162,7 @@ if($data['result'] == "success"){
             'title' =>'Dedicated chat',
             'description' => 'This allows you to live chat with ' . $data['stylish_name'] . '. No more waiting for the stylist to get back.',
             'currency' => 'INR',
-            'price' => '50',
+            'price' => '0',
             'action' => 'Book',
             'icon' => 'http://istyleyou.in/resources/images/android/chat.png'
         ],
@@ -170,37 +171,10 @@ if($data['result'] == "success"){
             'title' =>'Call',
             'description' => 'Resolve all your queries over a phone call with ' . $data['stylish_name'] . '.',
             'currency' => 'INR',
-            'price' => '200',
+            'price' => '0',
             'action' => 'Book',
             'icon' => 'http://istyleyou.in/resources/images/android/call.png'
         ],
-        [
-            'type' => 'video',
-            'title' =>'Video Call',
-            'description' => 'Resolve all your queries over a video call with ' . $data['stylish_name'] . '.',
-            'currency' => 'INR',
-            'price' => '500',
-            'action' => 'Book',
-            'icon' => 'http://istyleyou.in/resources/images/android/video.png'
-        ],
-        [
-            'type' => 'wardrobe',
-            'title' =>'Wardrobe Design',
-            'description' => 'Get a wardrobe revamp with the help of ' . $data['stylish_name'] . '.',
-            'currency' => 'INR',
-            'price' => '500',
-            'action' => 'Book',
-            'icon' => 'http://istyleyou.in/resources/images/android/wardrobe.png'
-        ],
-        [
-            'type' => 'lookbook',
-            'title' =>'Look book assistance',
-            'description' => 'Have a big day? Get all your looks right with lookbook assistance.',
-            'currency' => 'INR',
-            'price' => '500',
-            'action' => 'Book',
-            'icon' => 'http://istyleyou.in/resources/images/android/lookbook.png'
-        ]
     ];
 
     $data["services"] = $services;
