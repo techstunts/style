@@ -8,7 +8,7 @@
     <div class="container">
         <ol class="selectable" style="margin-left:0px;">
             <li style="width: 100%;margin: 0px;height: 1000px;" class="ui-state-default" id="{{$stylist->id}}">
-                <div class="resource_view">
+                <div class="resource_view_stylist">
                     <div class="image">
                         <img src="{!! strpos($stylist->image, "stylish") === 0 ? asset('images/' . $stylist->image) : $stylist->image !!}"/>
                     </div>

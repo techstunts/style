@@ -29,6 +29,10 @@ div.items {
     /*border:1px solid #d3d3d3;*/
 }
 
+div.items.pop-up-item{
+    border: 1px solid #d3d3d3;
+}
+
 div.items div {
     min-height: 10px;
 }
@@ -235,14 +239,14 @@ form.create_look input[type=text], textarea {
     font-size: 1.4em;
 }
 
-ol.selectable .ui-selecting {
-    background: #FECA40;
-}
+/*ol.selectable .ui-selecting {*/
+    /*background: #FECA40;*/
+/*}*/
 
-ol.selectable .ui-selected {
-    background: #F39814;
-    color: white;
-}
+/*ol.selectable .ui-selected {*/
+    /*background: #F39814;*/
+    /*color: white;*/
+/*}*/
 
 ol.selectable {
     list-style-type: none;
@@ -365,18 +369,19 @@ div.resource_view div.image img {
 
 div.resource_view table.info {
     float: left;
-    width: 500px;
+    /*width: 500px;*/
     margin-left: 5px;
+    width: auto;
 }
 
 div.resource_view tr.row {
     text-align: left;
-    padding: 5px
+    padding: 5px;
 }
 
-div.resource_view tr.row td {
-    max-width: 490px;
-}
+/*div.resource_view tr.row td {*/
+    /*max-width: 490px;*/
+/*}*/
 
 div.resource_view tr.row td.title, td.description {
     padding-bottom: 10px;
@@ -392,7 +397,13 @@ div.resource_view tr.row td.description {
 
 div.resource_view tr.row td.head {
     color: gray;
-    max-width: 100px
+    /*max-width: 100px;*/
+    width: 100%;
+}
+
+div.resource_view_stylist tr.row td.head{
+    width: 0%;
+    float: left;
 }
 
 div.resource_view tr.row td.content {
@@ -401,9 +412,11 @@ div.resource_view tr.row td.content {
 }
 
 div.resource_view tr.row td.content img {
-    max-width: 100px;
-    max-height: 100px;
-    margin-right: 5px;
+    /*max-width: 100px;*/
+    /*max-height: 100px;*/
+    /*margin-right: 5px;*/
+    width: 100%;
+    height: auto;
 }
 
 div.resource_view tr.row td.content img.icon {
@@ -720,4 +733,51 @@ body {
     width: 85%;
     margin: auto;
     margin-top:-45px;
+}
+
+.ui-state-default.collection.create{
+    width: 107%;
+    margin-left:-70px;
+}
+
+.form-control.collection.create{
+    width: 50%;
+}
+
+.info.collection.create{
+    width: 100%;
+}
+
+.ui-state-default.look.create{
+    margin-left:-7% !important;
+    margin-top:-35px;
+    width: 107%;
+    min-height: 1000px;
+}
+
+.btn.active.btn-primary.btn-xs.btn_add_entity.btn-create-section{
+    color: #fff;
+    margin-left:40%
+}
+
+.row.create.section{
+    float: left;
+    margin-left:25%;
+}
+
+
+.ui-state-default.tip.create{
+    margin-left:-7% !important;
+    margin-top:-20px;
+    width: 107%;
+    min-height: 1000px;
+}
+
+.error-not-found{
+    padding-top:20%;
+    margin:auto;
+    text-align: center;
+    font-size: 3em;
+    color:#000;
+    font-family: lato;
 }

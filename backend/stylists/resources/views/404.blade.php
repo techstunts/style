@@ -5,9 +5,12 @@
 @section('content')
     <div id="contentCntr">
         <div class="section">
-            {{$title}}
+            <div class="container">
+                <div class="error-not-found">
+                    {{$title}}
+                </div>
+            </div>
         </div>
-
     </div>
 
 @endsection

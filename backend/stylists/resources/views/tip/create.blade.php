@@ -7,7 +7,7 @@
     <div id="contentCntr">
         <div class="container">
             <ol class="selectable">
-                <li class="ui-state-default" style="width:100%;height:auto;margin-left: -7% ;width: 107%;">
+                <li class="ui-state-default tip create">
                     <div class="resource_view">
                         @foreach($errors->all() as $e)
                             <span class="errorMsg">{{$e}}</span><br/>
@@ -16,15 +16,12 @@
                         <form method="POST" action="{!! url('/tip/create/') !!}" enctype="multipart/form-data"
                               style="display: initial;">
                             {!! csrf_field() !!}
-                            <table class="info">
-                                <tr class="row">
+                            <table class="info collection create">
+                                <tr class="row" style="float: left;margin-left:25%;">
                                     <td class="title" colspan="2">
-                                        <input class="form-control" placeholder="Name" type="text" name="name"
+                                        <input style="width: 100% !important;" class="form-control" placeholder="Name" type="text" name="name"
                                                value="{{$name != "" ? $name: ''}}" validation="required">
                                     </td>
-                                </tr>
-
-                                <tr class="row">
                                     <td class="description" colspan="2">
                                         <textarea class="form-control" placeholder="Description" type="text"
                                                   name="description">{{$description != '' ? $description : ''}}</textarea>
@@ -32,38 +29,28 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="title" colspan="2">
+                                    <td class="title col s2" colspan="2">
                                         @include('common.gender.select')
                                     </td>
-                                </tr>
 
-                                <tr class="row">
-                                    <td class="title" colspan="2">
+                                    <td class="title col s2" colspan="2">
                                         @include('common.body_type.select')
                                     </td>
-                                </tr>
 
-                                <tr class="row">
-                                    <td class="title" colspan="2">
+                                    <td class="title col s2" colspan="2">
                                         @include('common.budget.select')
                                     </td>
-                                </tr>
 
-                                <tr class="row">
-                                    <td class="title" colspan="2">
+                                    <td class="title col s2" colspan="2">
                                         @include('common.age_group.select')
                                     </td>
-                                </tr>
 
-                                <tr class="row">
-                                    <td class="title" colspan="2">
+                                    <td class="title col s2" colspan="2">
                                         @include('common.occasion.select')
                                     </td>
-                                </tr>
 
                                 @if($is_admin)
-                                    <tr class="row">
-                                        <td class="title" colspan="2">
+                                        <td class="title col s2" colspan="2">
                                             @include('common.status.select')
                                         </td>
                                     </tr>
@@ -106,16 +93,23 @@
                                            data-popup-open="send-entities" href="#">Add Looks and Products</a>
                                     </td>
                                 </tr>
-                                <tr class="row">
+
+                                <tr>
                                     <td class="head">Products</td>
+                                </tr>
+
+                                <tr class="row">
                                     <input type="hidden" name="product_ids"
                                            value="{{old('product_ids') != "" ? old('product_ids') : ''}}"
                                            id="product_ids">
                                     <td class="content"></td>
                                 </tr>
 
-                                <tr class="row">
+                                <tr>
                                     <td class="head">Looks</td>
+                                </tr>
+
+                                <tr class="row">
                                     <input type="hidden" name="look_ids"
                                            value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
                                     <td class="content"></td>
