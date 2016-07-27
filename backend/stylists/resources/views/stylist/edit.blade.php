@@ -10,13 +10,14 @@
         @endforeach
 
         <ol class="selectable">
-            <li class="ui-state-default" id="{{$stylist->id}}">
+            <li class="ui-state-default edit-stylist" id="{{$stylist->id}}">
                 <div class="resource_view">
                     <div class="image">
                         <form method="POST" action="{!! url('/stylist/image/' . $stylist->id) !!}" enctype="multipart/form-data" style="display: initial;">
                             <img src="{!! strpos($stylist->image, "stylish") === 0 ? asset('images/' . $stylist->image) : $stylist->image !!}"/>
                             {!! csrf_field() !!}
-                            <input id="image" name="image" type="file" class="file-loading">
+                            <br>
+                            <input id="image" name="image" type="file" class="file-loading" style="float: left;">
                             @if($image_error = $errors->first('image'))
                                 <span class="errorMsg">{{$image_error}}</span>
                             @endif

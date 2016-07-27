@@ -41,6 +41,10 @@ div.items div.image {
     height: 230px;
 }
 
+.file-uploading{
+    float: left;
+}
+
 div.items img {
     max-height: 220px;
 }
@@ -780,4 +784,31 @@ body {
     font-size: 3em;
     color:#000;
     font-family: lato;
+}
+
+.profile-pic{
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    margin-top:5%;
+}
+
+.info.profile.border_bottom tr td{
+    border-bottom:1px solid #eee;
+    padding: 10px 10px;
+}
+
+.profile-name-size{
+    font-size: 2em;
+    margin-top:5%;
+}
+
+.info.profile.border_bottom{
+    margin-top:15%;
+}
+
+.ui-state-default.edit-stylist{
+    margin-left:-7% !important;
+    width: 107%;
+    margin-top: 0px;
 }
