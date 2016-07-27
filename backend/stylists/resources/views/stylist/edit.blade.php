@@ -11,22 +11,26 @@
 
         <ol class="selectable">
             <li class="ui-state-default edit-stylist" id="{{$stylist->id}}">
-                <div class="resource_view">
-                    <div class="image">
-                        <form method="POST" action="{!! url('/stylist/image/' . $stylist->id) !!}" enctype="multipart/form-data" style="display: initial;">
-                            <img src="{!! strpos($stylist->image, "stylish") === 0 ? asset('images/' . $stylist->image) : $stylist->image !!}"/>
-                            {!! csrf_field() !!}
-                            <br>
-                            <input id="image" name="image" type="file" class="file-loading" style="float: left;">
-                            @if($image_error = $errors->first('image'))
-                                <span class="errorMsg">{{$image_error}}</span>
-                            @endif
-                            <input style="display: block;" type="submit" class="btn btn-primary btn-lg" value="Upload">
-                        </form>
+                <div class="resource_view row edit-stylist">
+                    <div class="col s4 offset-s2">
+                        <div class="image">
+                            <form method="POST" action="{!! url('/stylist/image/' . $stylist->id) !!}" enctype="multipart/form-data" style="display: initial;">
+                                <img style="max-width: 300px !important;border-radius:50%;" src="{!! strpos($stylist->image, "stylish") === 0 ? asset('images/' . $stylist->image) : $stylist->image !!}"/>
+                                {!! csrf_field() !!}
+                                <br><br><br>
+                                <input id="image" name="image" type="file" class="file-loading" style="float: left;">
+                                @if($image_error = $errors->first('image'))
+                                    <span class="errorMsg">{{$image_error}}</span>
+                                @endif
+                                <br><br>
+                                <input style="display: block;margin: 0 auto;width: 100%;padding:0px 5px;" type="submit" class="btn btn-primary btn-lg" value="Upload">
+                            </form>
+                        </div>
                     </div>
+                    <div class="col s6">
                     <form method="POST" action="{!! url('/stylist/update/' . $stylist->id) !!}" style="display: initial;">
                         {!! csrf_field() !!}
-                        <table class="info">
+                        <table class="info edit-stylist">
                             <tr class="row">
                                 <td class="title" colspan="2">
                                     <input class="form-control" placeholder="Name" type="text" name="name" value="{{ old('name') != "" ? old('name') : $stylist->name }}">
@@ -175,6 +179,7 @@
 
                         </table>
                     </form>
+                    </div>
                 </div>
             </li>
         </ol>

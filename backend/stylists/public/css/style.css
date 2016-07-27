@@ -812,3 +812,21 @@ body {
     width: 107%;
     margin-top: 0px;
 }
+
+.resource_view.row.edit-stylist{
+    margin-top:5%;
+}
+
+.info.edit-stylist tr td{
+    padding-bottom: 0px !important;
+    padding: 3px 0px !important;
+}
+
+.info.edit-stylist input{
+    width: 100%;
+}
+
+.input-field input[type=text]:focus {
+    border-bottom: 1px solid #000 !important;
+    box-shadow: 0 1px 0 0 #000 !important;
+}
