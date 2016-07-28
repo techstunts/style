@@ -95,7 +95,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
         $denimprice = 100;
         $footwearprice = 100;
         $pricerange = $clubprice + $ethicprice + $denimprice + $footwearprice;
-        $name = isset($_REQUEST['name']) ? $_REQUEST['name'] : substr($email, 0, strpos($email, '@'));
+        $name = isset($_REQUEST['username']) ? $_REQUEST['username'] : substr($email, 0, strpos($email, '@'));
         $regId = isset($_REQUEST['regid']) ? $_REQUEST['regid'] : "";
         $client = exec_sql("SELECT * from clients where clients.account_id=1 and email='$email'");
 
