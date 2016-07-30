@@ -48,5 +48,14 @@ Route::group(['middleware' => 'auth'], function(){
     Route::any('tip/{action}/{id?}/{action_id?}', 'TipController@index');
 
     Route::any('upload/{action}/{id?}', 'UploadController@index');
+
+    Route::any('campaign/{action}/{id?}/', 'Campaign\CampaignController@index');
+    Route::any('campaign-mailer/{action}/{id?}/', 'Campaign\CampaignMailerController@index');
+    Route::any('campaign-tracker/{action}/{id?}/', 'Campaign\CampaignTrackerController@index');
+
 });
+
+Route::any('cr', 'Campaign\CampaignRedirectController@index');
+Route::any('image-open', 'Campaign\CampaignOpenTrackerController@index');
+Route::any('unsubscribe/{action?}', 'Campaign\UnsubscribeController@index');
 
