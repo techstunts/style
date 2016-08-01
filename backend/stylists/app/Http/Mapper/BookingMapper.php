@@ -43,4 +43,11 @@ class BookingMapper extends Controller
             return false;
         }
     }
+
+    public function userBookedStylist($client_id, $stylist_id, $booking_id)
+    {
+        return Booking::where(['id' => $booking_id, 'client_id' => $client_id, 'stylist_id' => $stylist_id])
+            ->where('status_id', 1)
+            ->exists();
+    }
 }

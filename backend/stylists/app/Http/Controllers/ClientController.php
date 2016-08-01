@@ -9,6 +9,7 @@ use App\Models\Enums\RecommendationType;
 use App\Models\Enums\StylistStatus;
 use App\Models\Lookups\AppSections;
 use App\Stylist;
+use App\Http\Mapper\BookingMapper;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -122,8 +123,17 @@ class ClientController extends Controller
 
     protected function authWhereClauses(){
         $where = "1=1";
-        if(!Auth::user()->hasRole('admin')){
-            $where .= " AND stylist_id = " . Auth::user()->id;
+        $stylist = Auth::user();
+        if(!$stylist->hasRole('admin')){
+            if (!empty($this->action_resource_id)) {
+                $bookingMapperObj = new BookingMapper();
+                $booking_exists = $bookingMapperObj->userBookedStylist($this->resource_id, $stylist->id, $this->action_resource_id);
+                if (!$booking_exists) {
+                    $where .= " AND stylist_id = " . Auth::user()->id;
+                }
+            } else {
+                $where .= " AND stylist_id = " . Auth::user()->id;
+            }
         }
         return $where;
     }
