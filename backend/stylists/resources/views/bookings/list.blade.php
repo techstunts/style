@@ -21,6 +21,7 @@
                             <th class="font-size-table-header">Profile Image</th>
                             <th class="font-size-table-header">Gender</th>
                             @if($is_admin)
+                                <th class="font-size-table-header">Email</th>
                                 <th class="font-size-table-header">Stylist</th>
                             @endif
                         </tr>
@@ -40,6 +41,7 @@
                                                 src="{{$booking->client ? $booking->client->image : ''}}"/></a></td>
                                 <td class="table-font-size"> {{$booking->client && $booking->client->genders ? $booking->client->genders->name : ''}} </td>
                                 @if($is_admin)
+                                    <td class="table-font-size"> {{$booking->client ? $booking->client->email : ''}} </td>
                                     <td class="table-font-size"><a href="{{url("stylist/view/".$booking->stylist_id)}}">
                                         {{$booking->stylist ? $booking->stylist->name : ''}}</a> </td>
                                 @endif

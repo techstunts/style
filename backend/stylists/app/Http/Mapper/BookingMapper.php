@@ -18,7 +18,7 @@ class BookingMapper extends Controller
 
         $client = function ($query) {
             $query->with('genders');
-            $query->select('id', 'name','image', 'gender_id');
+            $query->select('id', 'name','image', 'email', 'gender_id');
         };
 
         $stylist = function ($query) {
