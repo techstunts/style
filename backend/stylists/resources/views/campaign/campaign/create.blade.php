@@ -83,10 +83,6 @@
                     </form>
                 </div>
     </div>
-
-
-    @include('look.create')
-
 </div>
 
 @endsection
