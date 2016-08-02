@@ -18,7 +18,7 @@ class BookingMapper extends Controller
 
         $client = function ($query) {
             $query->with('genders');
-            $query->select('id', 'name','image', 'gender_id');
+            $query->select('id', 'name','image', 'email', 'gender_id');
         };
 
         $stylist = function ($query) {
@@ -42,5 +42,12 @@ class BookingMapper extends Controller
         } else {
             return false;
         }
+    }
+
+    public function userBookedStylist($client_id, $stylist_id, $booking_id)
+    {
+        return Booking::where(['id' => $booking_id, 'client_id' => $client_id, 'stylist_id' => $stylist_id])
+            ->where('status_id', 1)
+            ->exists();
     }
 }

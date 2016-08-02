@@ -21,6 +21,7 @@
                             <th class="font-size-table-header">Profile Image</th>
                             <th class="font-size-table-header">Gender</th>
                             @if($is_admin)
+                                <th class="font-size-table-header">Email</th>
                                 <th class="font-size-table-header">Stylist</th>
                             @endif
                         </tr>
@@ -34,12 +35,13 @@
                                 <td class="table-font-size">{{$booking->slot ? $booking->slot->name : ''}}</td>
                                 <td class="table-font-size"> {{$booking->service}} </td>
                                 <td class="table-font-size"> {{$booking->created_at}} </td>
-                                <td class="table-font-size"><a href="{{url("client/view/".$booking->client_id)}}">
+                                <td class="table-font-size"><a href="{{url("client/view/".$booking->client_id . "?booking_id=" . $booking->id)}}">
                                     {{$booking->client ? $booking->client->name : ''}}</a> </td>
-                                <td class="image image-width"><a href="{{url("client/view/".$booking->client_id)}}"><img
+                                <td class="image image-width"><a href="{{url("client/view/".$booking->client_id . "?booking_id=" . $booking->id)}}"><img
                                                 src="{{$booking->client ? $booking->client->image : ''}}"/></a></td>
                                 <td class="table-font-size"> {{$booking->client && $booking->client->genders ? $booking->client->genders->name : ''}} </td>
                                 @if($is_admin)
+                                    <td class="table-font-size"> {{$booking->client ? $booking->client->email : ''}} </td>
                                     <td class="table-font-size"><a href="{{url("stylist/view/".$booking->stylist_id)}}">
                                         {{$booking->stylist ? $booking->stylist->name : ''}}</a> </td>
                                 @endif
