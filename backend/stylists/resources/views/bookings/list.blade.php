@@ -35,9 +35,9 @@
                                 <td class="table-font-size">{{$booking->slot ? $booking->slot->name : ''}}</td>
                                 <td class="table-font-size"> {{$booking->service}} </td>
                                 <td class="table-font-size"> {{$booking->created_at}} </td>
-                                <td class="table-font-size"><a href="{{url("client/view/".$booking->client_id . "/" . $booking->id)}}">
+                                <td class="table-font-size"><a href="{{url("client/view/".$booking->client_id . "?booking_id=" . $booking->id)}}">
                                     {{$booking->client ? $booking->client->name : ''}}</a> </td>
-                                <td class="image image-width"><a href="{{url("client/view/".$booking->client_id . "/" . $booking->id)}}"><img
+                                <td class="image image-width"><a href="{{url("client/view/".$booking->client_id . "?booking_id=" . $booking->id)}}"><img
                                                 src="{{$booking->client ? $booking->client->image : ''}}"/></a></td>
                                 <td class="table-font-size"> {{$booking->client && $booking->client->genders ? $booking->client->genders->name : ''}} </td>
                                 @if($is_admin)

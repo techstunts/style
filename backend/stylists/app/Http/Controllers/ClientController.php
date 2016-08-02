@@ -105,9 +105,9 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getView()
+    public function getView(Request $request)
     {
-        $authWhereClauses = $this->authWhereClauses();
+        $authWhereClauses = $this->authWhereClauses($request);
         $client = Client::with('genders')
                 ->whereRaw($authWhereClauses)
                 ->find($this->resource_id);
@@ -121,18 +121,19 @@ class ClientController extends Controller
         return view('client.view', $view_properties);
     }
 
-    protected function authWhereClauses(){
+    protected function authWhereClauses($request = null){
         $where = "1=1";
         $stylist = Auth::user();
+        $booking_id = $request ? $request->input('booking_id') : '';
         if(!$stylist->hasRole('admin')){
-            if (!empty($this->action_resource_id)) {
+            if (!empty($booking_id)) {
                 $bookingMapperObj = new BookingMapper();
-                $booking_exists = $bookingMapperObj->userBookedStylist($this->resource_id, $stylist->id, $this->action_resource_id);
+                $booking_exists = $bookingMapperObj->userBookedStylist($this->resource_id, $stylist->id, $booking_id);
                 if (!$booking_exists) {
-                    $where .= " AND stylist_id = " . Auth::user()->id;
+                    $where .= " AND stylist_id = " . $stylist->id;
                 }
             } else {
-                $where .= " AND stylist_id = " . Auth::user()->id;
+                $where .= " AND stylist_id = " . $stylist->id;
             }
         }
         return $where;
