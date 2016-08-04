@@ -55,6 +55,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::any('campaign-mailer/{action}/{id?}/', 'Campaign\CampaignMailerController@index');
     Route::any('campaign-tracker/{action}/{id?}/', 'Campaign\CampaignTrackerController@index');
 
+    Route::any('scripts/regenerate-images', 'Scripts\RegenerateImagesController@index');
 });
 
 Route::any('cr', 'Campaign\CampaignRedirectController@index');
