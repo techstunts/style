@@ -156,24 +156,31 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
 }
 
 if($data['result'] == "success"){
+
     $services = [
         [
             'type' => 'chat',
             'title' =>'Dedicated chat',
             'description' => 'This allows you to live chat with ' . $data['stylish_name'] . '. No more waiting for the stylist to get back.',
             'currency' => 'INR',
-            'price' => '0',
+            'price' => '75.00',
             'action' => 'Book',
-            'icon' => 'http://istyleyou.in/resources/images/android/chat.png'
+            'icon' => 'http://istyleyou.in/resources/images/android/chat.png',
+            'extra_info' => array(
+                'payment_terms' => array('Payment would be collected post service completion')
+            ),
         ],
         [
             'type' => 'call',
             'title' =>'Call',
             'description' => 'Resolve all your queries over a phone call with ' . $data['stylish_name'] . '.',
             'currency' => 'INR',
-            'price' => '0',
+            'price' => '125.00',
             'action' => 'Book',
-            'icon' => 'http://istyleyou.in/resources/images/android/call.png'
+            'icon' => 'http://istyleyou.in/resources/images/android/call.png',
+            'extra_info' => array(
+                'payment_terms' => array('Payment would be collected post service completion')
+            ),
         ],
     ];
 
