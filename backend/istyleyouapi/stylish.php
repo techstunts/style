@@ -4,8 +4,8 @@ include("ProductLink.php");
 include("Lookup.php");
 
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty($_GET['stylish_id'])) {
-    $userid = $_GET['stylish_id'];
-    $gender = !empty($_GET['gender']) ? $_GET['gender'] : "";
+    $userid = mysql_real_escape_string($_GET['stylish_id']);
+    $gender = !empty($_GET['gender']) ? mysql_real_escape_string($_GET['gender']) : "";
     $sql = "SELECT s.id as stylist_id, s.name, description, image, code, d.name as designation, blog_url, facebook_id, twitter_id, pinterest_id, instagram_id, icon
             FROM stylists s
             JOIN lu_designation d on s.designation_id = d.id

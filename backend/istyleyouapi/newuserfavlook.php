@@ -3,7 +3,7 @@ include("db_config.php");
 include("ProductLink.php");
 
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GET['userid'])) {
-    $userid = $_GET['userid'];
+    $userid = mysql_real_escape_string($_GET['userid']);
 
     $page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
     $records_per_page = 20;

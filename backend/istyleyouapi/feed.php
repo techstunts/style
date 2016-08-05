@@ -2,7 +2,7 @@
 include("db_config.php");
 include("ProductLink.php");
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])) {
-    $userid = $_REQUEST['userid'];
+    $userid = mysql_real_escape_string($_REQUEST['userid']);
 
     $page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
     $records_count = 10;

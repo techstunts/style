@@ -1,8 +1,8 @@
 <?php
 include("db_config.php");
 if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['userid']) && !empty($_POST['lookid'])) {
-    $userid = $_POST['userid'];
-    $lookid = $_POST['lookid'];
+    $userid = mysql_real_escape_string($_POST['userid']);
+    $lookid = mysql_real_escape_string($_POST['lookid']);
     $query = "SELECT * from looks where looks.id='$lookid'";
     $res = mysql_query($query);
     $row = mysql_num_rows($res);

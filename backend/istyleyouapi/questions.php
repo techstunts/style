@@ -3,7 +3,7 @@ include("db_config.php");
 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset($_REQUEST['bodytype']) && isset($_REQUEST['bodyshape']) && isset($_REQUEST['height']) && isset($_REQUEST['age']) && isset($_REQUEST['skintype']) && isset($_REQUEST['styletype']) && isset($_REQUEST['clubprice']) && isset($_REQUEST['ethicprice']) && isset($_REQUEST['denimprice']) && isset($_REQUEST['footwearprice'])) {
 
     $gender_ids = [1, 2];
-    $userid = $_REQUEST['userid'];
+    $userid = mysql_real_escape_string($_REQUEST['userid']);
     $sql = "SELECT gender_id FROM clients where clients.id='$userid'";
 
     $select = mysql_query($sql);
@@ -14,28 +14,28 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
         $gender = "";
         $req_gender_id = 3;
         if (!empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
-            $gender = strtolower($_REQUEST['gender']);
+            $gender = strtolower(mysql_real_escape_string($_REQUEST['gender']));
             $req_gender_id = $gender == 'male' ? 2 : 1;
         }
         $request_gender = in_array($req_gender_id, $gender_ids);
         if ($db_gender || $request_gender) {
 
             $gender_id = $db_gender ? $client_data['gender_id'] : $req_gender_id;
-            $bodytype = $_REQUEST['bodytype'];
-            $bodyshape = $_REQUEST['bodyshape'];
-            $height = $_REQUEST['height'];
-            $age = $_REQUEST['age'];
-            $skintype = $_REQUEST['skintype'];
-            $styletype = $_REQUEST['styletype'];
-            $clubprice = $_REQUEST['clubprice'];
-            $ethicprice = $_REQUEST['ethicprice'];
-            $denimprice = $_REQUEST['denimprice'];
-            $footwearprice = $_REQUEST['footwearprice'];
+            $bodytype = mysql_real_escape_string($_REQUEST['bodytype']);
+            $bodyshape = mysql_real_escape_string($_REQUEST['bodyshape']);
+            $height = mysql_real_escape_string($_REQUEST['height']);
+            $age = mysql_real_escape_string($_REQUEST['age']);
+            $skintype = mysql_real_escape_string($_REQUEST['skintype']);
+            $styletype = mysql_real_escape_string($_REQUEST['styletype']);
+            $clubprice = mysql_real_escape_string($_REQUEST['clubprice']);
+            $ethicprice = mysql_real_escape_string($_REQUEST['ethicprice']);
+            $denimprice = mysql_real_escape_string($_REQUEST['denimprice']);
+            $footwearprice = mysql_real_escape_string($_REQUEST['footwearprice']);
             $pricerange = $clubprice + $ethicprice + $denimprice + $footwearprice;
             $update_stylist_id = "";
 
             if (isset($_REQUEST['stylist_code']) && !empty($_REQUEST['stylist_code'])) {
-                $stylist_code = $_REQUEST['stylist_code'];
+                $stylist_code = mysql_real_escape_string($_REQUEST['stylist_code']);
                 $query = "SELECT id as stylist_id FROM stylists WHERE code='$stylist_code' and status_id NOT IN (3,4)";
 
                 $res = mysql_query($query);

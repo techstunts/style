@@ -18,7 +18,7 @@ $signup_successful = false;
 
 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['client_id']) && !empty($_REQUEST['client_id']) && isset($_REQUEST['email']) && !empty($_REQUEST['email'])) {
 
-    $data = map_guest_with_current_client($_REQUEST['client_id'], $_REQUEST['email']);
+    $data = map_guest_with_current_client(mysql_real_escape_string($_REQUEST['client_id']), mysql_real_escape_string($_REQUEST['email']));
     if($data['result'] == 'fail'){
         mysql_close($conn);
         /* JSON Response */
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['gender']) && !empt
     $gender = "";
     $gender_id = 3;
     if (!empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
-        $gender = strtolower($_REQUEST['gender']);
+        $gender = strtolower(mysql_real_escape_string($_REQUEST['gender']));
         $gender_id = $gender == 'male' ? 2 : 1;
     }
     if ($gender_id == 1) {
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['gender']) && !empt
 }
 elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && !empty($_REQUEST['password']) && isset($_REQUEST['password'])) {
 
-    $email = $_REQUEST['email'];
+    $email = mysql_real_escape_string($_REQUEST['email']);
     $password = trim($_REQUEST['password']);
     if(!isValidEmail($email))
     {
@@ -77,7 +77,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
         $gender = "";
         $gender_id = 3;
         if (!empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
-            $gender = strtolower($_REQUEST['gender']);
+            $gender = strtolower(mysql_real_escape_string($_REQUEST['gender']));
             $gender_id = $gender == 'male' ? 2 : 1;
         }
         if ($gender_id == 1) {
@@ -95,7 +95,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
         $denimprice = 100;
         $footwearprice = 100;
         $pricerange = $clubprice + $ethicprice + $denimprice + $footwearprice;
-        $name = isset($_REQUEST['username']) ? $_REQUEST['username'] : substr($email, 0, strpos($email, '@'));
+        $name = isset($_REQUEST['username']) ? mysql_real_escape_string($_REQUEST['username']) : substr($email, 0, strpos($email, '@'));
         $regId = isset($_REQUEST['regid']) ? $_REQUEST['regid'] : "";
         $client = exec_sql("SELECT * from clients where clients.account_id=1 and email='$email'");
 
@@ -119,15 +119,15 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
     }
 }
 elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && isset($_REQUEST['facebook_id']) && !empty($_REQUEST['facebook_id']) && isset($_REQUEST['username']) && !empty($_REQUEST['username'])) {
-    $email = $_REQUEST['email'];
-    $facebookid = $_REQUEST['facebook_id'];
+    $email = mysql_real_escape_string($_REQUEST['email']);
+    $facebookid = mysql_real_escape_string($_REQUEST['facebook_id']);
     $gender = "";
     $gender_id = 3;
     if (!empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
-        $gender = strtolower($_REQUEST['gender']);
+        $gender = strtolower(mysql_real_escape_string($_REQUEST['gender']));
         $gender_id = $gender == 'male' ? 2 : 1;
     }
-    $name = $_REQUEST['username'];
+    $name = mysql_real_escape_string($_REQUEST['username']);
     $regId = $_REQUEST['regid'];
     $image = 'http://graph.facebook.com/' . $facebookid . '/picture?type=square';
     $bodytype = "";
@@ -205,16 +205,16 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
 }
 elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !empty($_REQUEST['email']) && isset($_REQUEST['google_id']) && !empty($_REQUEST['google_id']) && isset($_REQUEST['username']) && !empty($_REQUEST['username'])) {
 
-    $email = $_REQUEST['email'];
-    $googleid = $_REQUEST['google_id'];
-    $gender = strtolower($_REQUEST['gender']);
+    $email = mysql_real_escape_string($_REQUEST['email']);
+    $googleid = mysql_real_escape_string($_REQUEST['google_id']);
+    $gender = strtolower(mysql_real_escape_string($_REQUEST['gender']));
     $gender = "";
     $gender_id = 3;
     if (!empty($_REQUEST['gender']) && isset($_REQUEST['gender'])) {
-        $gender = strtolower($_REQUEST['gender']);
+        $gender = strtolower(mysql_real_escape_string($_REQUEST['gender']));
         $gender_id = $gender == 'male' ? 2 : 1;
     }
-    $name = $_REQUEST['username'];
+    $name = mysql_real_escape_string($_REQUEST['username']);
     $bodytype = "";
     $bodyshape = "";
     $height = "";
@@ -231,7 +231,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
     $facebookid = "";
     $password = "";
     $linkedid = "";
-    $image = $_REQUEST['userimage'];
+    $image = mysql_real_escape_string($_REQUEST['userimage']);
     $checkuser = "SELECT * from clients where clients.account_id=1 and email='$email'";
     $result1 = mysql_query($checkuser);
 

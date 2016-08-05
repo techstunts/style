@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['userid']) )
 {
     $occasion = '';
     if(isset($_REQUEST['occasion']) && !empty($_REQUEST['occasion'])){
-        $occasion = Lookup::getId('occasion', $_REQUEST['occasion']);
+        $occasion = Lookup::getId('occasion', mysql_real_escape_string($_REQUEST['occasion']));
 
         $app_occasions['Casuals'] = 1;
         $app_occasions['Ethnic'] = 3;
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['userid']) )
 
     $budget = '';
     if(isset($_REQUEST['occasion']) && !empty($_REQUEST['budget'])){
-        $budget = Lookup::getId('budget', $_REQUEST['budget']);
+        $budget = Lookup::getId('budget', mysql_real_escape_string($_REQUEST['budget']));
 
         $app_budgets['Low'] = 1;
         $app_budgets['Medium'] = 2;
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['userid']) )
     if(!isset($entity_type)){
         $entity_type = 0;
         if(isset($_REQUEST['style_request_type']) && !empty($_REQUEST['style_request_type'])){
-            $entity_type = Lookup::getId('entity_type', $_REQUEST['style_request_type']);
+            $entity_type = Lookup::getId('entity_type', mysql_real_escape_string($_REQUEST['style_request_type']));
         }
     }
 
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_REQUEST['userid']) )
         $data = array('result' => 'fail', 'message' => 'Some parameter missing');
     }
     else {
-        $userid = $_REQUEST['userid'];
+        $userid = mysql_real_escape_string($_REQUEST['userid']);
         $date = date('Y-m-d H:i:s');
         $asklookimage = "";
         if (!empty($_FILES['askimage']['name'])) {

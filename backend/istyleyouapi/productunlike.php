@@ -1,8 +1,8 @@
 <?php
 include("db_config.php");
 if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['userid']) && !empty($_POST['productid'])) {
-    $userid = $_POST['userid'];
-    $productid = $_POST['productid'];
+    $userid = mysql_real_escape_string($_POST['userid']);
+    $productid = mysql_real_escape_string($_POST['productid']);
     $check = "Select * from users_unlike where user_id='$userid' AND product_id='$productid'";
     $res = mysql_query($check);
     $row = mysql_num_rows($res);
