@@ -97,6 +97,10 @@ class SelectOptions{
         return $this->get_lookup_data_with_count('device_status', 'device_status');
     }
 
+    public function bookingStatuses(){
+        return $this->get_lookup_data_with_count('booking_status', 'status_id');
+    }
+
     //To be cached
     protected function get_lookup_data_with_count($lookup_type, $count_table_fk=""){
         $whereClauses = $this->whereClauses;

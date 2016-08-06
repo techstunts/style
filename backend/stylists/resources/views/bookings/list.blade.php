@@ -6,7 +6,21 @@
     <div id="contentCntr">
         <div class="section">
             <div class="container">
-                {!! $bookings->render() !!}
+                <div class="filters">
+                    <form method="get" action="">
+                            @if($is_admin)
+                                @include('stylist.select')
+                            @endif
+                            @include('common.status.bookingStatus')
+                            <input type="text" id="book_date" name="book_date" value="{{$book_date}}" placeholder="Book Date" class="form-control search">
+                            @include('common.daterange')
+                            <input type="submit" name="filter" value="Filter"/>
+                            <a href="{{url('bookings/list')}}" class="clearall">Clear All</a>
+                        </form>
+                    {!! $bookings->render() !!}
+                </div>
+                <div class="clear"></div>
+
                 <form name="frm-datatable" id="frm-datatable" method="POST" action="">
                     <table id="datatable" class="display select datatable" cellspacing="0" width="100%">
                         <thead>
@@ -59,10 +73,12 @@
         $(document).ready(function () {
             $('#example').DataTable();
         });
+        $('#book_date').pickadate({
+            format: 'dd mmm yyyy',
+        });
     </script>
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.css">
     <script src="/js/datatable.js"></script>
 
 @endsection
-

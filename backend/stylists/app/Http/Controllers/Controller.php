@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\SelectOptions;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -25,11 +26,13 @@ abstract class Controller extends BaseController
     protected $genders = [];
     protected $stylists = [];
     protected $statuses = [];
+    protected $bookingStatuses = [];
     protected $occasions = [];
     protected $body_types = [];
     protected $budgets = [];
     protected $age_groups = [];
 
+    protected $stylist_condition = false;
     protected $resource_id;
     protected $action_resource_id;
 
@@ -40,6 +43,10 @@ abstract class Controller extends BaseController
             }
         }
         $where_raw = [];
+
+        if($this->stylist_condition){
+            $where_raw[] = "({$this->base_table}.stylist_id = '" . Auth::user()->id . "')";
+        }
 
         if ($this->base_table == 'merchant_products') {
             $name = $this->base_table . '.m_product_name';
@@ -73,6 +80,10 @@ abstract class Controller extends BaseController
 
         if($request->input('to_date') != ""){
             $where_raw[] = "({$this->base_table}.created_at <= '" . date("Y-m-d 23:59:59",strtotime($request->input('to_date'))) . "')";
+        }
+
+        if ($request->has('book_date') && !empty($request->input('book_date'))) {
+            $where_raw[] = "({$this->base_table}.date = '" . date("Y-m-d",strtotime($request->input('book_date'))) . "')";
         }
 
         if($request->input('min_price') != ""){
@@ -116,4 +127,7 @@ abstract class Controller extends BaseController
         }
     }
 
+    public function setStylistCondition(){
+        $this->stylist_condition = Auth::user()->hasRole('admin') ? false : true;
+    }
 }
