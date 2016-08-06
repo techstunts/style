@@ -7,12 +7,8 @@ use App\Models\Bookings\Booking;
 
 class BookingMapper extends Controller
 {
-    public function getList($request)
+    public function getList($request, $where_conditions = [], $where_raw = "1=1")
     {
-        if(Auth::user()->hasRole('stylist')){
-            $this->where_raw = $this->where_raw. " AND (stylist_id = ".Auth::user()->id.")";
-        }
-
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
@@ -26,13 +22,12 @@ class BookingMapper extends Controller
         };
 
         $bookings = Booking::with(['client' => $client, 'slot', 'stylist' => $stylist])
-            ->whereRaw($this->where_raw)
+            ->where($where_conditions)
+            ->whereRaw($where_raw)
             ->orderBy('id', 'desc')
             ->simplePaginate($this->records_per_page)
             ->appends($paginate_qs);
         return $bookings;
-
-
     }
 
     public function isAdmin()
