@@ -13,11 +13,28 @@
                             @endif
                             @include('common.status.bookingStatus')
                             <input type="text" id="book_date" name="book_date" value="{{$book_date}}" placeholder="Book Date" class="form-control search">
-                            @include('common.daterange')
-                            <input type="submit" name="filter" value="Filter"/>
-                            <a href="{{url('bookings/list')}}" class="clearall">Clear All</a>
-                        </form>
+                                @include('common.daterange')
+                                <input type="submit" name="filter" value="Filter"/>
+                                <a href="{{url('bookings/list')}}" class="clearall">Clear All</a>
+                    </form>
                     {!! $bookings->render() !!}
+                </div>
+                <div class="clear"></div>
+
+                <div class="filters">
+                    <form method="post" action="/bookings/updatestatus" class="booking_status">
+                        @include('common.status.bookingStatus', array('bookingStatuses' => $booking_statuses_list))
+                        <input type="text" placeholder="Describe the reason" name="reason" value="{{old('reason') != "" ? old('reason') : ''}}"/>
+                        <input type="submit" title="Change" value="Change Status"/>
+                        <input type="hidden" id="change_status_only_one" value="{{$change_status_only_one}}"/>
+                        <input type="hidden" name="booking_id" id="selected_booking_id" value=""/>
+                        @if(!empty(Session::get('successMsg')) || !empty(Session::get('errorMsg')))
+                            <div class="message-position wysiwyg-color-green">{{Session::get('successMsg')}}</div>
+                            <div class="message-position wysiwyg-color-red">{{Session::get('errorMsg')}}</div>
+                            <div class="clear"></div>
+                        @endif
+                        {!! csrf_field() !!}
+                    </form>
                 </div>
                 <div class="clear"></div>
 
@@ -34,6 +51,7 @@
                             <th class="font-size-table-header">Client name</th>
                             <th class="font-size-table-header">Profile Image</th>
                             <th class="font-size-table-header">Gender</th>
+                            <th class="font-size-table-header">Status</th>
                             @if($is_admin)
                                 <th class="font-size-table-header">Email</th>
                                 <th class="font-size-table-header">Stylist</th>
@@ -54,6 +72,7 @@
                                 <td class="image image-width"><a href="{{url("client/view/".$booking->client_id . "?booking_id=" . $booking->id)}}"><img
                                                 src="{{$booking->client ? $booking->client->image : ''}}"/></a></td>
                                 <td class="table-font-size"> {{$booking->client && $booking->client->genders ? $booking->client->genders->name : ''}} </td>
+                                <td class="table-font-size"> {{$booking->status ? $booking->status->name : ''}}</td>
                                 @if($is_admin)
                                     <td class="table-font-size"> {{$booking->client ? $booking->client->email : ''}} </td>
                                     <td class="table-font-size"><a href="{{url("stylist/view/".$booking->stylist_id)}}">

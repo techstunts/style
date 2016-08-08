@@ -21,4 +21,7 @@ class Booking extends Model
     public function stylist(){
         return $this->belongsTo('App\Stylist', 'stylist_id');
     }
+    public function status(){
+        return $this->belongsTo('App\Models\Lookups\BookingStatus', 'status_id');
+    }
 }
