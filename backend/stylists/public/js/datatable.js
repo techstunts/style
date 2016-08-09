@@ -106,6 +106,10 @@ $(document).ready(function () {
 
         // If checkbox is checked and row ID is not in list of selected row IDs
         if (this.checked && index === -1) {
+            if ($('#change_status_only_one').length > 0 && rows_selected > 0) {
+                alert('One booking already seleted!!');
+                return false;
+            }
             rows_selected.push(rowId);
 
             // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
@@ -342,6 +346,18 @@ $(document).ready(function () {
         var reader = new FileReader();
         reader.onload = showImage;
         reader.readAsDataURL(this.files[0]);
+    });
+
+
+    if ($('#change_status_only_one').length > 0) {
+        $('input[name=select_all]').hide();
+    }
+    $('.booking_status').find('input:submit').on('click', function(){
+        if (rows_selected.length <= 0) {
+            alert('No booking selected yet');
+            return false;
+        }
+        $('#selected_booking_id').attr('value', rows_selected);
     });
 });
 
