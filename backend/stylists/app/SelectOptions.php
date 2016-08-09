@@ -101,6 +101,13 @@ class SelectOptions{
         return $this->get_lookup_data_with_count('booking_status', 'status_id');
     }
 
+    public function inStock(){
+        $columnName = 'in_stock';
+        if ($this->table == 'merchant_products') {
+            $columnName = 'm_in_stock';
+        }
+        return $this->get_lookup_data_with_count('in_stock', $columnName);
+    }
     //To be cached
     protected function get_lookup_data_with_count($lookup_type, $count_table_fk=""){
         $whereClauses = $this->whereClauses;
@@ -143,7 +150,7 @@ class SelectOptions{
 
         return $this->getStylistsList('approved_by');
     }
-    
+
     public function getStylistsList($columnName) {
          $whereClauses = $this->whereClauses;
         unset($whereClauses[$columnName]);

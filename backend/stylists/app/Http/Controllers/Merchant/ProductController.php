@@ -22,8 +22,8 @@ use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id'];
-    protected $filters = ['merchants', 'brands', 'categories', 'genders', 'colors', 'ratings'];
+    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id', 'in_stock'];
+    protected $filters = ['merchants', 'brands', 'categories', 'genders', 'colors', 'inStock'];
 
     /**
      * Display a listing of the resource.
@@ -92,6 +92,7 @@ class ProductController extends Controller
             'colors' => $this->colors,
             'genders' => $this->genders,
             'ratings' => $this->ratings,
+            'inStock' => $this->inStock,
             'category_tree' => $category_obj->getCategoryTree(),
             'gender_list' => $lookup->type('gender')->get(),
             'color_list' => $lookup->type('color')->get(),

@@ -34,6 +34,7 @@ abstract class Controller extends BaseController
     protected $colors = [];
     protected $ratings = [];
     protected $approvedBy = [];
+    protected $inStock = [];
 
     protected $stylist_condition = false;
     protected $resource_id;
