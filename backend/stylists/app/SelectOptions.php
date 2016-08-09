@@ -139,6 +139,10 @@ class SelectOptions{
        
         return $this->getStylistsList('created_by');
     }
+    public function approvedBy(){
+
+        return $this->getStylistsList('approved_by');
+    }
     
     public function getStylistsList($columnName) {
          $whereClauses = $this->whereClauses;

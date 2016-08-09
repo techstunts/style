@@ -14,6 +14,7 @@ use App\Merchant;
 use App\Models\Lookups\Lookup;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Mapper\ProductMapper;
 
@@ -23,8 +24,8 @@ use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id'];
-    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders', 'colors', 'ratings'];
+    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id', 'approved_by'];
+    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders', 'colors', 'ratings', 'approvedBy'];
 
     /**
      * Display a listing of the resource.
@@ -57,12 +58,12 @@ class ProductController extends Controller
             'genders' => $this->genders,
             'colors' => $this->colors,
             'ratings' => $this->ratings,
+            'approvedBy' => $this->approvedBy,
             'category_tree' => $category_obj->getCategoryTree(),
             'gender_list' => $lookup->type('gender')->get(),
             'color_list' => $lookup->type('color')->get(),
             'ratings_list' => $lookup->type('rating')->where('status_id', true)->get(),
         );
-
 
         foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";

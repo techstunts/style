@@ -15,6 +15,7 @@
                     @include('common.gender.select')
                     @include('common.color.select')
                     @include('common.rating.product')
+                    @include('common.approved_by.select')
                     @include('common.search')
                     @include('common.daterange')
                     @include('common.pricerange')

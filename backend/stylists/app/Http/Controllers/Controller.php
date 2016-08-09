@@ -31,6 +31,9 @@ abstract class Controller extends BaseController
     protected $body_types = [];
     protected $budgets = [];
     protected $age_groups = [];
+    protected $colors = [];
+    protected $ratings = [];
+    protected $approvedBy = [];
 
     protected $stylist_condition = false;
     protected $resource_id;
