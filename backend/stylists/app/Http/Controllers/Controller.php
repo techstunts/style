@@ -34,7 +34,6 @@ abstract class Controller extends BaseController
     protected $colors = [];
     protected $ratings = [];
     protected $approvedBy = [];
-    protected $inStock = [];
 
     protected $stylist_condition = false;
     protected $resource_id;
@@ -133,5 +132,14 @@ abstract class Controller extends BaseController
 
     public function setStylistCondition(){
         $this->stylist_condition = Auth::user()->hasRole('admin') ? false : true;
+    }
+
+    public function setInStockCondition($in_stock)
+    {
+        $columnName = 'in_stock';
+        if ($this->base_table == 'merchant_products') {
+            $columnName = 'm_in_stock';
+        }
+        $this->where_conditions[$this->base_table . '.' . $columnName] = $in_stock;
     }
 }

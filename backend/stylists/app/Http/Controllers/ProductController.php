@@ -24,8 +24,8 @@ use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id', 'approved_by', 'in_stock'];
-    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders', 'colors', 'ratings', 'approvedBy', 'inStock'];
+    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id', 'approved_by'];
+    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders', 'colors', 'ratings', 'approvedBy'];
 
     /**
      * Display a listing of the resource.
@@ -45,6 +45,9 @@ class ProductController extends Controller
     {
         $this->base_table = 'products';
         $this->initWhereConditions($request);
+        if ($request->input('in_stock') != "") {
+            $this->setInStockCondition($request->input('in_stock'));
+        }
         $this->initFilters();
 
         $lookup = new Lookup();
@@ -59,7 +62,6 @@ class ProductController extends Controller
             'colors' => $this->colors,
             'ratings' => $this->ratings,
             'approvedBy' => $this->approvedBy,
-            'inStock' => $this->inStock,
             'category_tree' => $category_obj->getCategoryTree(),
             'gender_list' => $lookup->type('gender')->get(),
             'color_list' => $lookup->type('color')->get(),
@@ -71,6 +73,7 @@ class ProductController extends Controller
         }
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
+        $view_properties['in_stock'] = $request->input('in_stock');
 
         $view_properties['from_date'] = $request->input('from_date');
         $view_properties['to_date'] = $request->input('to_date');

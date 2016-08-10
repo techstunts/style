@@ -22,8 +22,8 @@ use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id', 'in_stock'];
-    protected $filters = ['merchants', 'brands', 'categories', 'genders', 'colors', 'inStock'];
+    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id'];
+    protected $filters = ['merchants', 'brands', 'categories', 'genders', 'colors', 'ratings'];
 
     /**
      * Display a listing of the resource.
@@ -80,6 +80,9 @@ class ProductController extends Controller
     {
         $this->base_table = 'merchant_products';
         $this->initWhereConditions($request);
+        if ($request->input('in_stock') != "") {
+            $this->setInStockCondition($request->input('in_stock'));
+        }
         $this->initFilters();
 
         $lookup = new Lookup();
@@ -92,7 +95,6 @@ class ProductController extends Controller
             'colors' => $this->colors,
             'genders' => $this->genders,
             'ratings' => $this->ratings,
-            'inStock' => $this->inStock,
             'category_tree' => $category_obj->getCategoryTree(),
             'gender_list' => $lookup->type('gender')->get(),
             'color_list' => $lookup->type('color')->get(),
@@ -108,6 +110,7 @@ class ProductController extends Controller
 
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
+        $view_properties['in_stock'] = $request->input('in_stock');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
