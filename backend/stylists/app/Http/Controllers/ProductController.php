@@ -45,6 +45,9 @@ class ProductController extends Controller
     {
         $this->base_table = 'products';
         $this->initWhereConditions($request);
+        if ($request->input('in_stock') != "") {
+            $this->setInStockCondition($request->input('in_stock'));
+        }
         $this->initFilters();
 
         $lookup = new Lookup();
@@ -70,6 +73,7 @@ class ProductController extends Controller
         }
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
+        $view_properties['in_stock'] = $request->input('in_stock');
 
         $view_properties['from_date'] = $request->input('from_date');
         $view_properties['to_date'] = $request->input('to_date');

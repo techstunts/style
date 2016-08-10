@@ -143,7 +143,7 @@ class SelectOptions{
 
         return $this->getStylistsList('approved_by');
     }
-    
+
     public function getStylistsList($columnName) {
          $whereClauses = $this->whereClauses;
         unset($whereClauses[$columnName]);
