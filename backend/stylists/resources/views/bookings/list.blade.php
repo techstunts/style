@@ -53,9 +53,11 @@
                             <th class="font-size-table-header">Gender</th>
                             <th class="font-size-table-header">Status</th>
                             @if($is_admin)
+                                <th class="font-size-table-header">Mobile</th>
                                 <th class="font-size-table-header">Email</th>
                                 <th class="font-size-table-header">Stylist</th>
                             @endif
+                            <th class="font-size-table-header">Reason</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -74,10 +76,12 @@
                                 <td class="table-font-size"> {{$booking->client && $booking->client->genders ? $booking->client->genders->name : ''}} </td>
                                 <td class="table-font-size"> {{$booking->status ? $booking->status->name : ''}}</td>
                                 @if($is_admin)
+                                    <td class="table-font-size"> {{!empty($booking->mobile) ? $booking->mobile : ''}} </td>
                                     <td class="table-font-size"> {{$booking->client ? $booking->client->email : ''}} </td>
                                     <td class="table-font-size"><a href="{{url("stylist/view/".$booking->stylist_id)}}">
                                         {{$booking->stylist ? $booking->stylist->name : ''}}</a> </td>
                                 @endif
+                                <td class="table-font-size"> {{!empty($booking->reason) ? $booking->reason : ''}} </td>
                             </tr>
                         @endforeach
                         </tbody>
