@@ -39,7 +39,7 @@
                     <span class="errorMsg">{{$e}}</span><br/>
                 @endforeach
 
-                @if(Auth::user()->hasRole('admin') )
+                @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('catalog') )
                     <div class="filters">
                         @include('product.bulk_update')
                     </div>

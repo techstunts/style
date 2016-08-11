@@ -249,7 +249,7 @@ class ProductController extends Controller
     public function postBulkUpdate(Request $request)
     {
 
-        if (!Auth::user()->hasRole('admin')) {
+        if (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('catalog')) {
             return Redirect::back()
                 ->withErrors(['You do not have permission to do bulk update'])
                 ->withInput();

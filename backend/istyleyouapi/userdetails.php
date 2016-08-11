@@ -81,9 +81,9 @@ elseif ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['email']) && !em
             $gender_id = $gender == 'male' ? 2 : 1;
         }
         if ($gender_id == 1) {
-            $image = 'http://d36o0t9p57q98i.cloudfront.net/resources/images/android/female.png';
+            $image = 'http://d36o0t9p57q98i.cloudfront.net/resources/images/android/female-v2.png';
         } else {
-            $image = 'http://d36o0t9p57q98i.cloudfront.net/resources/images/android/male.png';
+            $image = 'http://d36o0t9p57q98i.cloudfront.net/resources/images/android/male-v2.png';
         }
         $bodytype = "";
         $bodyshape = "";

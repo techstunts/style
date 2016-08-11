@@ -156,7 +156,7 @@ class ClientController extends Controller
         }
 
         if($is_admin || $is_authorised_for_chat_as_admin){
-            $stylists = Stylist::whereIn('status_id',[StylistStatus::Active, StylistStatus::Inactive])
+            $stylists = Stylist::whereIn('status_id',[StylistStatus::Active])
                 ->orderBy('name')->get();
             $stylist_id_to_chat = $request->input('stylist_id') ? $request->input('stylist_id') : $stylist_id_to_chat;
         }
