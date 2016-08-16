@@ -192,6 +192,7 @@ class ScraperMapper
         $index = $this->start;
         $query = '';
         $products = array();
+        $updated_status = false;
 
         foreach ($product_array as $item) {
             if (!is_integer($item))
@@ -229,16 +230,19 @@ class ScraperMapper
             if (in_array($product_array[$count]->sku, array_keys($existing_product_sku))) {
                 $productObj = $existing_product_sku[$product_array[$count]->sku];
                 $discounted_price = !empty($product_array[$count]->discounted_price) ? $product_array[$count]->discounted_price : $this->none;
+                $in_stock = !empty($product_array[$count]->sold_out) ? $this->getInStockId($product_array[$count]->sold_out) : true;
                 if ($productObj->mrp != $product_array[$count]->mrp ||
-                    ($productObj->discounted_price != $discounted_price)
+                    ($productObj->discounted_price != $discounted_price) ||
+                    ($productObj->in_stock != $in_stock)
                 ) {
 
                     if (!$productObj->where('sku', $product_array[$count]->sku)
-                        ->update(['mrp' => $product_array[$count]->mrp, 'discounted_price' => $discounted_price])
+                        ->update(['mrp' => $product_array[$count]->mrp, 'discounted_price' => $discounted_price, 'in_stock' => $in_stock])
                     ) {
                         continue;
                     }
                     array_push($products, $this->formatDataForApi($product_array[$count], $merchant_id, ProductStatus::Updated));
+                    $updated_status = true;
                 }
             } else {
                 array_push($products, $this->formatDataForApi($product_array[$count], $merchant_id, ProductStatus::NewProduct));
@@ -260,7 +264,9 @@ class ScraperMapper
                 DB::rollback();
                 return false;
             }
-        }else {
+        } elseif ($updated_status) {
+            return $products;
+        } else {
             return array();
         }
     }
