@@ -110,7 +110,7 @@ class LookController extends Controller
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereRaw($remove_deleted_looks)
-                ->orderBy('id', 'desc')
+                ->orderBy('updated_at', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
