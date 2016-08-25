@@ -24,7 +24,7 @@
             <div>
                 {!! csrf_field() !!}
                 <input name="product_id" type="hidden" value="{{$product->id}}">
-                <input class="input-tag" >
+                <input class="input-tag" placeholder="Tag here">
             </div>
         </div>
     </div>

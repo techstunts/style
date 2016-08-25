@@ -350,7 +350,7 @@ class ProductController extends Controller
         $tags = $lookup->type('tags')->get();
         return $tags;
     }
-    public function PostAddTag(Request $request) {
+    public function postAddTag(Request $request) {
         $validator = Validator::make($request->all(), [
             'product_id' => 'required|numeric',
             'tag' => 'required|min:2',

@@ -152,23 +152,15 @@ abstract class Controller extends BaseController
 
     public function setTagCondition($tags)
     {
-        $tags_array = explode(',', $tags);
-        $tags_query = '';
-
-        foreach ($tags_array as $value) {
-            $value = trim($value);
-            $tags_query .= " OR (name LIKE '$value')";
+        $tags_array = array();
+        foreach (explode(',', $tags) as $value) {
+            $tags_array[] = trim($value);
         }
-
-        $lu_tags = DB::table('lu_tags')->select('id')->whereRaw(substr($tags_query, 4))->get();
-        if (count($lu_tags) <= 0) {
-            return '';
-        }
-        $tag_ids = array();
-        foreach ($lu_tags as $lu_tag) {
-            array_push($tag_ids, $lu_tag->id);
-        }
-        $tagged_products = DB::table('product_tags')->select('product_id')->whereIn('tag_id', $tag_ids)->get();
+        $tagged_products = DB::table('product_tags')
+            ->select(DB::raw('DISTINCT product_id'))
+            ->join('lu_tags', 'lu_tags.id', '=', 'product_tags.tag_id')
+            ->whereIn('lu_tags.name', $tags_array)
+            ->get();
         if (count($tagged_products) <= 0) {
            return '';
         }
