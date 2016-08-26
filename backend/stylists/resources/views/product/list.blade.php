@@ -69,6 +69,7 @@
                             <span style="background-color:{{$product->primary_color->name}}">{{$product->primary_color->name}}
                                 {{$product->secondary_color->id != 0 ? "({$product->secondary_color->name})" : ""}}</span>
                         </div>
+                        @include('common.tag')
                     </div>
                 </li>
             @endforeach

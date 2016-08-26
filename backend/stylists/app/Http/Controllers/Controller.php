@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use Illuminate\Support\Facades\DB;
 use App\SelectOptions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -61,7 +62,12 @@ abstract class Controller extends BaseController
 
         if($request->input('search') != "" and strlen(trim($request->input('search')))>0){
             $search_term  = trim($request->input('search'));
-            $search_query = $desc_condition = "";
+            $search_query = $desc_condition = $tag_condition = "";
+
+            if ($this->base_table == 'products') {
+                $tag_condition = $this->setTagCondition($search_term);
+            }
+
             if($request->input('exact_word') == "search exact word"){
                 $search_query = "({$name} REGEXP '[[:<:]]{$search_term}[[:>:]]' {{desc}} )";
                 if($this->base_table != 'clients'){
@@ -74,6 +80,7 @@ abstract class Controller extends BaseController
                     $desc_condition = " OR {$description} like '%{$search_term}%' ";
                 }
             }
+            $search_query .= $tag_condition;
             $where_raw[] = str_replace("{{desc}}", $desc_condition, $search_query);
         }
 
@@ -141,5 +148,26 @@ abstract class Controller extends BaseController
             $columnName = 'm_in_stock';
         }
         $this->where_conditions[$this->base_table . '.' . $columnName] = $in_stock;
+    }
+
+    public function setTagCondition($tags)
+    {
+        $tags_array = array();
+        foreach (explode(',', $tags) as $value) {
+            $tags_array[] = trim($value);
+        }
+        $tagged_products = DB::table('product_tags')
+            ->select(DB::raw('DISTINCT product_id'))
+            ->join('lu_tags', 'lu_tags.id', '=', 'product_tags.tag_id')
+            ->whereIn('lu_tags.name', $tags_array)
+            ->get();
+        if (count($tagged_products) <= 0) {
+           return '';
+        }
+        $product_ids = array();
+        foreach ($tagged_products as $tagged_product) {
+            array_push($product_ids, $tagged_product->product_id);
+        }
+        return " OR {$this->base_table}.id IN(". implode(", ", $product_ids) . ")";
     }
 }

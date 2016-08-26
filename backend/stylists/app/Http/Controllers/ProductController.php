@@ -13,8 +13,8 @@ use App\Models\Lookups\AppSections;
 use App\Merchant;
 use App\Models\Lookups\Lookup;
 use App\Product;
+use App\ProductTag;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Mapper\ProductMapper;
 
@@ -100,7 +100,7 @@ class ProductController extends Controller
         $genders_list[0] = new Gender();
 
         $products =
-            Product::with('category', 'primary_color', 'secondary_color')
+            Product::with('category', 'primary_color', 'secondary_color', 'product_tags.tag')
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->orderBy('created_at', 'desc')
@@ -343,5 +343,52 @@ class ProductController extends Controller
                 ->withErrors(['Error updating data'])
                 ->withInput();
         }
+    }
+
+    public function getTags() {
+        $lookup = new Lookup();
+        $tags = $lookup->type('tags')->get();
+        return $tags;
+    }
+    public function postAddTag(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|numeric',
+            'tag' => 'required|min:2',
+        ]);
+
+        $validator_err_msg = '';
+        if ($validator->fails()) {
+            foreach ($validator->errors()->getMessages() as $k => $v) {
+                $validator_err_msg.= $v[0] . PHP_EOL;
+            }
+            return array('status' => false, 'message' => $validator_err_msg);
+        }
+
+        $tagName = $request->input('tag');
+        $lookup = new Lookup();
+        $tagObj = $lookup->type('tags')->where(['name' => $tagName])->first();
+
+        if (!$tagObj) {
+            return array('status' => false, 'message' => 'Undefined tag');
+        }
+        $product_id = $request->input('product_id');
+        $productTagExists = ProductTag::where(['product_id' => $product_id, 'tag_id' => $tagObj->id])->exists();
+
+        if ($productTagExists) {
+            return array('status' => false, 'message' => 'Already tagged');
+        }
+
+        try {
+            $newProductTag = new ProductTag();
+            $newProductTag->product_id = $product_id;
+            $newProductTag->tag_id = $tagObj->id;
+            $newProductTag->save();
+            $status = true;
+            $message = 'Tagged successfully';
+        } catch (\Exception $e) {
+            $status = false;
+            $message = 'Tagging error' . $e->getMessage();
+        }
+        return array('status' => $status, 'message' => $message);
     }
 }
