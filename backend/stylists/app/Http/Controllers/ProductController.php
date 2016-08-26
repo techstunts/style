@@ -351,17 +351,10 @@ class ProductController extends Controller
         return $tags;
     }
     public function postAddTag(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'product_id' => 'required|numeric',
-            'tag' => 'required|min:2',
-        ]);
 
-        $validator_err_msg = '';
-        if ($validator->fails()) {
-            foreach ($validator->errors()->getMessages() as $k => $v) {
-                $validator_err_msg.= $v[0] . PHP_EOL;
-            }
-            return array('status' => false, 'message' => $validator_err_msg);
+        $responseValidate = $this->validateInput($request);
+        if (!$responseValidate['status']) {
+            return array('status' => false, 'message' => $responseValidate['message']);
         }
 
         $tagName = $request->input('tag');
@@ -390,5 +383,52 @@ class ProductController extends Controller
             $message = 'Tagging error' . $e->getMessage();
         }
         return array('status' => $status, 'message' => $message);
+    }
+    public function postRemoveTag(Request $request) {
+        $responseValidate = $this->validateInput($request);
+        if (!$responseValidate['status']) {
+            return array('status' => false, 'message' => $responseValidate['message']);
+        }
+
+        $tagName = trim($request->input('tag'));
+        $lookup = new Lookup();
+        $tagObj = $lookup->type('tags')->where(['name' => $tagName])->first();
+
+        if (!$tagObj) {
+            return array('status' => false, 'message' => 'Undefined tag');
+        }
+
+        $product_id = $request->input('product_id');
+        $productTagExists = ProductTag::where(['product_id' => $product_id, 'tag_id' => $tagObj->id])->first();
+
+        if (!$productTagExists) {
+            return array('status' => false, 'message' => 'Tag does not exist for this product');
+        }
+
+        try {
+            ProductTag::where(['product_id' => $product_id, 'tag_id' => $productTagExists->tag_id])->delete();
+            $status = true;
+            $message = 'Tag removed successfully';
+        } catch (\Exception $e) {
+            $status = false;
+            $message = 'Error removing tag' . $e->getMessage();
+        }
+        return array('status' => $status, 'message' => $message);
+    }
+
+    public function validateInput($request) {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|numeric',
+            'tag' => 'required|min:2',
+        ]);
+
+        $validator_err_msg = '';
+        if ($validator->fails()) {
+            foreach ($validator->errors()->getMessages() as $k => $v) {
+                $validator_err_msg.= $v[0] . PHP_EOL;
+            }
+            return array('status' => false, 'message' => $validator_err_msg);
+        }
+        return array('status' => true, 'message' => '');
     }
 }
