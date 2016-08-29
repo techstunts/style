@@ -39,6 +39,9 @@
                 <div class="filters">
                     @include('product.bulk_update')
                 </div>
+                <div class="tag">
+                    @include('product.create_tag')
+                </div>
 
                 <div class="clear"></div>
             @endif

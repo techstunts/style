@@ -6,6 +6,7 @@ use App\Brand;
 use App\Category;
 use App\Models\Lookups\Gender;
 use App\Models\Lookups\Color;
+use App\Models\Lookups\Tag;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\RecommendationType;
@@ -452,5 +453,46 @@ class ProductController extends Controller
             return array('status' => false, 'message' => $validator_err_msg);
         }
         return array('status' => true, 'message' => '');
+    }
+    public function postCreateTag(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'tags_name' => 'required|min:2',
+        ]);
+
+        if ($validator->fails()) {
+            foreach ($validator->errors()->getMessages() as $k => $v) {
+                echo $v[0] . "<br/>";
+            }
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $tagNameStr = $request->input('tags_name');
+        $tagNameArr = explode(',', $tagNameStr);
+        $createTagsArr = array();
+        $lookup = new Lookup();
+        $tagsLookUp = $lookup->type('tags');
+        foreach ($tagNameArr as $item) {
+            $tagName = trim($item);
+            $tagExists = $tagsLookUp->where(['name' => $tagName])->exists();
+            if (!$tagExists) {
+                $createTagsArr[] = ['name' => $tagName];
+            }
+        }
+        if (count($createTagsArr) > 0) {
+            try{
+                Tag::insert($createTagsArr);
+                $message = 'Tags created successfully';
+            } catch (\Exception $e) {
+                $message = $e->getMessage();
+            }
+        } else {
+            $message = 'No new tags to create';
+        }
+
+        return Redirect::back()
+            ->withErrors([$message])
+            ->withInput();
     }
 }
