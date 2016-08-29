@@ -15,7 +15,7 @@
                         <li><a href="/requests/list">Requests</a></li>
                         <li><a href="/bookings/list">Bookings</a></li>
                         <li><a href="/client/list">Clients</a></li>
-                        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('catalog')))
+                        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('catalog'))
                             <li><a href="/merchant/product/list">Merchant Products</a></li>
                         @endif
                         <li><a href="/product/list">Products</a></li>
