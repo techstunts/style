@@ -4,6 +4,8 @@ namespace App\Http\Mapper;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use App\AgencyMerchantProgramme;
+use App\Models\Enums\AgencyMerchantProgrammeStatus;
 
 class ProductMapper extends Controller
 {
@@ -55,6 +57,39 @@ class ProductMapper extends Controller
         }
 
         return $update_clauses;
+    }
+
+    static $agency_programme_ids = [];
+    static $affiliate_id = 872525;
+    static $omg_url_pattern = 'http://clk.omgt5.com/?AID={aid}&PID={pid}&Type=12&r={url}';
+
+    public static function init()
+    {
+        $agency_merchant_programmes =
+            AgencyMerchantProgramme::where('status_id', AgencyMerchantProgrammeStatus::Active)
+                ->select('merchant_id', 'agency_programme_id')
+                ->get();
+
+        foreach ($agency_merchant_programmes as $agency_merchant_programme) {
+            self::$agency_programme_ids[$agency_merchant_programme->merchant_id] = $agency_merchant_programme->agency_programme_id;
+        }
+    }
+
+    public static function getDeepLink($merchant_id = 0, $product_link)
+    {
+        if (self::$agency_programme_ids == []) {
+            self::init();
+        }
+
+        if ($merchant_id == 0 || !isset(self::$agency_programme_ids[$merchant_id])) {
+            return $product_link;
+        }
+
+        $deep_link = str_replace("{aid}", self::$affiliate_id, self::$omg_url_pattern);
+        $deep_link = str_replace("{pid}", self::$agency_programme_ids[$merchant_id], $deep_link);
+        $deep_link = str_replace("{url}", $product_link, $deep_link);
+
+        return $deep_link;
     }
 
 }

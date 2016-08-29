@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Mapper\ProductMapper;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Validator;
 use App\Recommendation;
 use App\Push;
@@ -121,14 +123,21 @@ class RecommendationController extends Controller
                 }
                 $stylist_data = $stylists[$client_data[$i]->client->stylist_id];
                 $reg_ids = $client_data[$i]->client->client_reg_details;
+                $client = $client_data[$i]->client;
             }
             else{
                 $stylist_data = $client_data[$i]->stylist;
                 $reg_ids = $client_data[$i]->client_reg_details;
+                $client = $client_data[$i];
             }
 
             if(!$stylist_data){
                 $stylist_data = Auth::user();
+            }
+
+            if ($entity_type_id == EntityTypeId::PRODUCT) {
+                $stylist_data = Stylist::find(52);
+                $this->sendMail($client, $stylist_data, $entity_data);
             }
 
             $regIdsAndroid = array();
@@ -188,6 +197,7 @@ class RecommendationController extends Controller
                     }
                 }
             }
+
         }
         $error_message = '';
         $success_message = '';
@@ -234,4 +244,18 @@ class RecommendationController extends Controller
         }
         return $query;
     }
+
+    public function sendMail($client, $stylist, $entity_data){
+        foreach ($entity_data as $product) {
+            $product->product_link = ProductMapper::getDeepLink($product->merchant_id, $product->product_link);
+        }
+
+        Mail::send('emails.recommendations',
+            ['client' => $client, 'stylist' => $stylist, 'products' => $entity_data],
+            function ($mail) use ($client) {
+                $mail->from('stylist@istyleyou.in', 'IStyleYou stylist');
+                $mail->to($client->email, $client->name)->subject('IStyleYou : Style recommendations for you!');
+        });
+    }
+
 }
