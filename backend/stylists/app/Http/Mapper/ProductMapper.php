@@ -4,6 +4,7 @@ namespace App\Http\Mapper;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use App\ProductTag;
 use App\AgencyMerchantProgramme;
 use App\Models\Enums\AgencyMerchantProgrammeStatus;
 
@@ -57,6 +58,37 @@ class ProductMapper extends Controller
         }
 
         return $update_clauses;
+    }
+
+    public function addTagToProducts($product_ids, $tag_id)
+    {
+        $all_tags = array();
+        $query = '';
+
+        foreach ($product_ids as $product_id) {
+            $query .= " OR (product_id=$product_id AND tag_id=$tag_id)";
+        }
+        $existingTaggedProducts = ProductTag::whereRaw(substr($query, 4))->get();
+        $existingTaggedProductIds = array();
+        if (count($existingTaggedProducts) > 0) {
+            foreach ($existingTaggedProducts as $existingTaggedProduct) {
+                array_push($existingTaggedProductIds, $existingTaggedProduct->product_id);
+            }
+            $product_ids = array_diff(array_values($product_ids), array_values($existingTaggedProductIds));
+        }
+
+        foreach ($product_ids as $product_id) {
+            $all_tags[] = array('product_id' => $product_id, 'tag_id' => $tag_id);
+        }
+
+        try {
+            ProductTag::insert($all_tags);
+            $status = true;
+        } catch (\Exception $e) {
+            $status = false;
+        }
+
+        return $status;
     }
 
     static $agency_programme_ids = [];

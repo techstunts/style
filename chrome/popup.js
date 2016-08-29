@@ -29,7 +29,10 @@ document.addEventListener('DOMContentLoaded', function() {
 							var rel = a_tags[i].rel.replace(/\",\"/g,", ");\
 							img_links.push(rel.split(\',\')[0].split(\'\":\"\')[1]);\
 						}\
-						colors.push(document.getElementById(\'selected_color_label\').innerText);\
+						var koovs_color = document.getElementById(\'selected_color_label\');\
+						if(koovs_color != null){\
+							colors.push(koovs_color.innerText);\
+						}\
 					}\
 					else if(merchant == \'indianroots\'){\
 						prod_name = document.getElementsByTagName(\'h1\')[0].innerText;\
@@ -82,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						}\
 						category_tags = document.getElementsByClassName(\'zg_hrsr_ladder\')[0].getElementsByTagName(\'a\');\
 						category = category_tags[category_tags.length - 1].innerHTML;\
-						brand = document.getElementById(\'brand\').innerHTML;\
+						brand = document.getElementById(\'brand\').innerHTML.trim();\
 						for(i=0; i<category_tags .length; i++){\
 							gender_text = category_tags[i].innerHTML.trim();\
 							if(gender_text == \'Men\' || gender_text == \'Women\' || gender_text == \'Boys\' || gender_text == \'Girls\'){\
