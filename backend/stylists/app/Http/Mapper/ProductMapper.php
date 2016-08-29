@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProductMapper extends Controller
 {
-    protected $bulk_update_fields = ['category_id', 'gender_id', 'primary_color_id'];
+    protected $bulk_update_fields = ['category_id', 'gender_id', 'primary_color_id', 'rating_id'];
 
     public function validationRules()
     {

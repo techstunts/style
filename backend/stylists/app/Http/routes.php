@@ -37,6 +37,8 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::any('requests/{action}/{id?}/', 'StyleRequestsController@index');
 
+    Route::any('bookings/{action}/', 'BookingsController@index');
+
     Route::any('scraper/{action}/', 'ScraperController@index');
 
     Route::any('recommendation/{action}/{id?}/', 'RecommendationController@index');
@@ -47,5 +49,16 @@ Route::group(['middleware' => 'auth'], function(){
     
     Route::any('tip/{action}/{id?}/{action_id?}', 'TipController@index');
 
+    Route::any('upload/{action}/{id?}', 'UploadController@index');
+
+    Route::any('campaign/{action}/{id?}/', 'Campaign\CampaignController@index');
+    Route::any('campaign-mailer/{action}/{id?}/', 'Campaign\CampaignMailerController@index');
+    Route::any('campaign-tracker/{action}/{id?}/', 'Campaign\CampaignTrackerController@index');
+
+    Route::any('scripts/regenerate-images', 'Scripts\RegenerateImagesController@index');
 });
+
+Route::any('cr', 'Campaign\CampaignRedirectController@index');
+Route::any('image-open', 'Campaign\CampaignOpenTrackerController@index');
+Route::any('unsubscribe/{action?}', 'Campaign\UnsubscribeController@index');
 

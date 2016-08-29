@@ -3,7 +3,7 @@ include("db_config.php");
 include("ProductLink.php");
 
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])) {
-    $userid = $_REQUEST['userid'];
+    $userid = mysql_real_escape_string($_REQUEST['userid']);
 
     $page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
     $records_per_page = 5;
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
             $id = $ids[$i][0];
 
             $query = "select p.id,p.name,upload_image,p.price,product_type,product_link, p.agency_id, p.merchant_id,
-					   m.name merchant_name, b.name brand_name, b.id as brand_id
+					   m.name merchant_name, b.name brand_name, b.id as brand_id, p.discounted_price
 				from looks l
 				join looks_products lp ON l.id = lp.look_id
 				join products p ON lp.product_id = p.id
@@ -83,6 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                 'merchant' => $list[$j]['merchant_name'],
                 'brand' => $list[$j]['brand_name'],
                 'brand_id' => $list[$j]['brand_id'],
+                'discounted_price' => ($list[$j]['discounted_price'] > 0
+                    && $list[$j][3] > $list[$j]['discounted_price'] )
+                    ? $list[$j]['discounted_price']
+                    : ''
             );
 
         }

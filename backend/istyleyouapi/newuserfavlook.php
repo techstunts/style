@@ -3,7 +3,7 @@ include("db_config.php");
 include("ProductLink.php");
 
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GET['userid'])) {
-    $userid = $_GET['userid'];
+    $userid = mysql_real_escape_string($_GET['userid']);
 
     $page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
     $records_per_page = 20;
@@ -28,11 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
         }
         for ($i = 0; $i < $row; $i++) {
             $id = $ids[$i][0];
-            $stylish = "select s.id as stylist_id, s.name as stylish_name, s.image as stylish_image
+            $stylish = "select s.id as stylist_id, s.name as stylish_name, s.image as stylish_image, s.icon as stylist_icon
                         from stylists s
                         join looks l on s.id = l.stylist_id
                         where l.id='$id'
-				        and l.status_id = 1
+                        and l.status_id = 1
                         ";
             $res2 = mysql_query($stylish);
             while ($data2 = mysql_fetch_array($res2)) {
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
             }
 
             $query = "select p.id, p.name, upload_image, p.price, product_type, product_link, p.agency_id, p.merchant_id,
-                            m.name merchant_name, b.name brand_name, b.id as brand_id
+                            m.name merchant_name, b.name brand_name, b.id as brand_id, p.discounted_price
                         from looks l
                         join looks_products lp ON l.id = lp.look_id
                         join products p ON lp.product_id = p.id
@@ -49,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
                         where l.id='$id'
 				        and l.status_id = 1
                         ";
-
             $res1 = mysql_query($query);
             if(mysql_num_rows($res1)<=0){
                 continue;
@@ -93,9 +92,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
                     'merchant' => $list[$j]['merchant_name'],
                     'brand' => $list[$j]['brand_name'],
                     'brand_id' => $list[$j]['brand_id'],
+                    'discounted_price' => ($list[$j]['discounted_price'] > 0
+                        && $list[$j][3] > $list[$j]['discounted_price'] )
+                        ? $list[$j]['discounted_price']
+                        : ''
                 );
                 $productarray[] = $product;
             }
+
             $data = array('lookdetails' => array('fav' => 'yes', 'lookid' => $ids[$i][0], 'lookdescription' => $ids[$i][1], 'lookimage' => $ids[$i][2], 'lookprice' => $ids[$i][3], 'lookname' => $ids[$i][4], 'productdetails' => $productarray, 'stylish_details' => $stylish_details));
             $abc[] = $data;
             //$total[]=$abc;
@@ -105,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
         }
         $data = array('result' => 'success', 'myfav' => $abc);
     } else {
-        $data = array('result' => 'success', 'myfav' => 'No fav looks');
+        $data = array('result' => 'success', 'myfav' => []);
 
     }
 

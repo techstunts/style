@@ -1,7 +1,11 @@
 <?php
 include_once("ProductLink.php");
 
+$images_origin = 'http://d36o0t9p57q98i.cloudfront.net/backend';
+
 function getLooksDetails($looks, $userid){
+    global $images_origin;
+
     $looks_count = count($looks);
     $looks_and_products = array();
 
@@ -24,7 +28,7 @@ function getLooksDetails($looks, $userid){
         //Get products info for current look
         $current_look_products_query =
             "select p.id, p.name, upload_image, p.price, product_type, product_link, p.agency_id, p.merchant_id,
-                            m.name merchant_name, b.name brand_name, b.id as brand_id
+                            m.name merchant_name, b.name brand_name, b.id as brand_id, p.discounted_price
 						from looks l
 						join looks_products lp ON l.id = lp.look_id
 						join products p ON lp.product_id = p.id
@@ -65,6 +69,10 @@ function getLooksDetails($looks, $userid){
                 'merchant' => $current_look_products[$j]['merchant_name'],
                 'brand' => $current_look_products[$j]['brand_name'],
                 'brand_id' => $current_look_products[$j]['brand_id'],
+                'discounted_price' => ($current_look_products[$j]['discounted_price'] > 0
+                    && $current_look_products[$j][3] > $current_look_products[$j]['discounted_price'] )
+                    ? $current_look_products[$j]['discounted_price']
+                    : ''
             );
 
         }
@@ -92,7 +100,9 @@ function getLooksDetails($looks, $userid){
                         'occasion' => $looks[$i][4],
                         'lookname' => mb_convert_encoding($looks[$i][5], "UTF-8", "Windows-1252"),
                         'productdetails' => $productarray,
-                        'stylish_details' => $stylist_details
+                        'stylish_details' => $stylist_details,
+                        'is_collage' => isset($looks[$i]['is_collage']) ? $looks[$i]['is_collage'] : '',
+                        'look_url' => $images_origin . '/' . $looks[$i][2]
                     )
             );
         $looks_and_products[] = $current_look_details;

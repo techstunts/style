@@ -1,0 +1,41 @@
+@charset "utf-8";
+
+body{font-family:Arial, sans-serif!important;font-size:14px;background-color:#ccc!important}
+
+a, input{outline:none!important;}
+input, textarea{font-family:Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif; box-sizing:border-box;}
+
+.clearBoth{clear:both;}
+.unsubscribeContent{border-radius:10px;border:1px solid #d6d4d4;background-color:#ffffff;padding:45px 60px;width:920px;box-sizing:border-box;text-align:center;margin:25px auto}
+.mailSubscribe{font-size:18px;line-height:31px;border-bottom:1px solid #dbdedf;padding-bottom:30px;margin-bottom:30px;}
+.mailSubscribe strong{font-size:24px;font-weight:bold;color:#000000;display:inline-block;}
+
+.errorMsg{color:#e11414;font-size:12px;line-height:24px;}
+.primaryBtn{background-color:#f15a29;font-size:25px;color:#ffffff;padding:10px 24px;text-align:center;border-radius:5px;display:inline-block; text-decoration:none;border:none;}
+.primaryBtn:hover{background-color:#283545}
+
+.subsInnerContent{font-size:16px;line-height:25px;}
+.subsInnerContent span.msgTxt{font-size:24px;line-height:35px;}
+.msgTitle{color:#ff3f12;font-size:36px;display:inline-block;margin-bottom:24px;}
+.selectReason{width:430px;text-align:left;margin:0 auto;margin-top:35px;}
+.inputType{border:1px solid #b3baba;padding:10px 7px;width:100%;font-size:15px;border-radius:6px;overflow:hidden;}
+
+select {
+    background-image:url(../images/dropDownArrow.png);
+    background-repeat:no-repeat;
+    background-position:right 0;
+    border-radius:5px;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    -o-appearance:none;
+    -ms-appearance:none;
+    outline:none;
+}
+option{border-bottom:3px solid #ffffff;}
+.cancel{
+    color: #00a8e1;
+    outline: medium none;
+    text-decoration: none;
+    cursor:pointer;
+}
+

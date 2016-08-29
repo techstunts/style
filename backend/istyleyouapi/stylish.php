@@ -4,9 +4,9 @@ include("ProductLink.php");
 include("Lookup.php");
 
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty($_GET['stylish_id'])) {
-    $userid = $_GET['stylish_id'];
-    $gender = !empty($_GET['gender']) ? $_GET['gender'] : "";
-    $sql = "SELECT s.id as stylist_id, s.name, description, image, code, d.name as designation, blog_url, facebook_id, twitter_id, pinterest_id, instagram_id
+    $userid = mysql_real_escape_string($_GET['stylish_id']);
+    $gender = !empty($_GET['gender']) ? mysql_real_escape_string($_GET['gender']) : "";
+    $sql = "SELECT s.id as stylist_id, s.name, description, image, code, d.name as designation, blog_url, facebook_id, twitter_id, pinterest_id, instagram_id, icon
             FROM stylists s
             JOIN lu_designation d on s.designation_id = d.id
             WHERE s.id='$userid'";
@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
             $stylishname = $data['name'];
             $description = mb_convert_encoding($data['description'], "UTF-8", "Windows-1252");
             $stylishimage[] = $data['image'];
+            $stylisticon = $data['icon'];
             $stylishcode = $data['code'];
             $designation = $data['designation'];
             $blog_url = $data['blog_url'];
@@ -74,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
                     }
                 }
                 $query = "select p.id, p.name, upload_image, p.price, product_type, product_link, p.agency_id, p.merchant_id,
-                                 m.name merchant_name, b.name brand_name, b.id as brand_id
+                                 m.name merchant_name, b.name brand_name, b.id as brand_id, p.discounted_price
                             from looks l
                             join looks_products lp ON l.id = lp.look_id
                             join products p ON lp.product_id = p.id
@@ -85,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
                 $res1 = mysql_query($query);
                 $list = array();
                 while ($data1 = mysql_fetch_array($res1)) {
+
                     $list[] = $data1;
                 }
                 $sql = "Select product_id from usersfav join products on usersfav.product_id=products.id where user_id='$userid'";
@@ -122,6 +124,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
                         'merchant' => $list[$j]['merchant_name'],
                         'brand' => $list[$j]['brand_name'],
                         'brand_id' => $list[$j]['brand_id'],
+                        'discounted_price' => ($list[$j]['discounted_price'] > 0
+                            && $list[$j][3] > $list[$j]['discounted_price'] )
+                            ? $list[$j]['discounted_price']
+                            : ''
                     );
                    $productarray[] = $product;
                 }
@@ -134,13 +140,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
 
             $data = array('result' => 'success', 'Stylish Images' => $stylishimage, 'stylist_id' => $stylishid, 'stylish_id' => $stylishid, 'stylish_name' => $stylishname, 'description' => $description, 'stylish_code' => $stylishcode,
                 'designation' => $designation, 'blog_url' => $blog_url, 'facebook_url' => $facebook_url, 'twitter_url' => $twitter_url, 'pinterest_url' => $pinterest_url, 'instagram_url' => $instagram_url,
-                'Look Details' => $abc);
+                'Look Details' => $abc, 'stylist_icon' => $stylisticon);
         } else {
             $abc = array();
 
             $data = array('result' => 'success', 'Stylish Images' => $stylishimage, 'stylist_id' => $stylishid, 'stylish_id' => $stylishid, 'stylish_name' => $stylishname, 'description' => $description, 'stylish_code' => $stylishcode,
                 'designation' => $designation, 'blog_url' => $blog_url, 'facebook_url' => $facebook_url, 'twitter_url' => $twitter_url, 'pinterest_url' => $pinterest_url, 'instagram_url' => $instagram_url,
-                'Look Details' => $abc);
+                'Look Details' => $abc, 'stylist_icon' => $stylisticon);
         }
     } else {
         $data = array('result' => 'fail', 'message' => 'User ID is wrong');
@@ -150,52 +156,32 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
 }
 
 if($data['result'] == "success"){
+
     $services = [
         [
             'type' => 'chat',
             'title' =>'Dedicated chat',
             'description' => 'This allows you to live chat with ' . $data['stylish_name'] . '. No more waiting for the stylist to get back.',
             'currency' => 'INR',
-            'price' => '50',
+            'price' => '75.00',
             'action' => 'Book',
-            'icon' => 'http://istyleyou.in/resources/images/android/chat.png'
+            'icon' => 'http://istyleyou.in/resources/images/android/chat.png',
+            'extra_info' => array(
+                'payment_terms' => array('Payment would be collected post service completion')
+            ),
         ],
         [
             'type' => 'call',
             'title' =>'Call',
             'description' => 'Resolve all your queries over a phone call with ' . $data['stylish_name'] . '.',
             'currency' => 'INR',
-            'price' => '200',
+            'price' => '125.00',
             'action' => 'Book',
-            'icon' => 'http://istyleyou.in/resources/images/android/call.png'
+            'icon' => 'http://istyleyou.in/resources/images/android/call.png',
+            'extra_info' => array(
+                'payment_terms' => array('Payment would be collected post service completion')
+            ),
         ],
-        [
-            'type' => 'video',
-            'title' =>'Video Call',
-            'description' => 'Resolve all your queries over a video call with ' . $data['stylish_name'] . '.',
-            'currency' => 'INR',
-            'price' => '500',
-            'action' => 'Book',
-            'icon' => 'http://istyleyou.in/resources/images/android/video.png'
-        ],
-        [
-            'type' => 'wardrobe',
-            'title' =>'Wardrobe Design',
-            'description' => 'Get a wardrobe revamp with the help of ' . $data['stylish_name'] . '.',
-            'currency' => 'INR',
-            'price' => '500',
-            'action' => 'Book',
-            'icon' => 'http://istyleyou.in/resources/images/android/wardrobe.png'
-        ],
-        [
-            'type' => 'lookbook',
-            'title' =>'Look book assistance',
-            'description' => 'Have a big day? Get all your looks right with lookbook assistance.',
-            'currency' => 'INR',
-            'price' => '500',
-            'action' => 'Book',
-            'icon' => 'http://istyleyou.in/resources/images/android/lookbook.png'
-        ]
     ];
 
     $data["services"] = $services;

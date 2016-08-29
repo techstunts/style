@@ -63,6 +63,9 @@ class StyleRequestsController extends Controller
 
         $view_properties['from_date'] = $request->input('from_date');
         $view_properties['to_date'] = $request->input('to_date');
+        $view_properties['min_discount'] = $request->input('min_discount');
+        $view_properties['max_discount'] = $request->input('max_discount');
+        $view_properties['show_discount_fields'] = true;
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);

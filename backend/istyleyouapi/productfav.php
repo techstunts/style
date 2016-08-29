@@ -1,8 +1,8 @@
 <?php
 include("db_config.php");
 if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['userid']) && !empty($_POST['productid'])) {
-    $userid = $_POST['userid'];
-    $productid = $_POST['productid'];
+    $userid = mysql_real_escape_string($_POST['userid']);
+    $productid = mysql_real_escape_string($_POST['productid']);
     $query = "SELECT * from products where id='$productid'";
     $res = mysql_query($query);
     $row = mysql_num_rows($res);

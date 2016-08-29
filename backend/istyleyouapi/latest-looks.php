@@ -39,7 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
         foreach ($occasions as $occasion) {
             $occasion_id = Lookup::getId('occasion', $occasion);
             $latest_looks_sql =
-                "Select cl.id as look_id, cl.description, cl.image, cl.price, o.name as occasion, cl.name, uf.fav_id, s.id as stylist_id, s.name as stylist_name, s.image as stylist_image, s.icon as stylist_icon
+                "Select cl.id as look_id, cl.description, cl.image, cl.price, o.name as occasion, cl.name, uf.fav_id, s.id as stylist_id,
+                  s.name as stylist_name, s.image as stylist_image, s.icon as stylist_icon, cl.is_collage, cl.updated_at
 			from looks cl
 		  	join lu_occasion o on cl.occasion_id = o.id
 			LEFT JOIN usersfav uf ON cl.id = uf.look_id and uf.user_id = '$userid'
@@ -52,14 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
 					(Select look_id
 					from users_unlike
 					where user_id='$userid')
-			ORDER BY cl.created_at DESC
+			ORDER BY cl.updated_at DESC
 			LIMIT $record_start, $records_count ";
             //echo $latest_looks_sql . "<br /><br />";
 
             $latest_looks_res = mysql_query($latest_looks_sql);
 
             while ($data = mysql_fetch_array($latest_looks_res)) {
-                $latest_looks[$data[0]] = $data;
+                $latest_looks[$data[12]] = $data;
             }
             unset($latest_looks_res);
         }

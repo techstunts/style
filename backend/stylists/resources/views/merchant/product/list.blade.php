@@ -13,6 +13,8 @@
                         @include('category.select')
                         @include('common.color.select')
                         @include('common.gender.select')
+                        @include('common.rating.product')
+                        @include('common.status.instockselect')
                         @include('common.search')
                         <input type="submit" name="filter" value="Filter"/>
                         <a href="{{url('merchant/product/list')}}" class="clearall">Clear All</a>
@@ -37,7 +39,7 @@
                     <span class="errorMsg">{{$e}}</span><br/>
                 @endforeach
 
-                @if(Auth::user()->hasRole('admin') )
+                @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('catalog') )
                     <div class="filters">
                         @include('product.bulk_update')
                     </div>

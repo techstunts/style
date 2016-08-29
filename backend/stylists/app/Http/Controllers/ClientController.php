@@ -9,6 +9,7 @@ use App\Models\Enums\RecommendationType;
 use App\Models\Enums\StylistStatus;
 use App\Models\Lookups\AppSections;
 use App\Stylist;
+use App\Http\Mapper\BookingMapper;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -17,8 +18,8 @@ use Illuminate\Support\Facades\Auth;
 class ClientController extends Controller
 {
     protected $records_per_page=100;
-    protected $filter_ids = ['stylist_id',];
-    protected $filters = ['stylists',];
+    protected $filter_ids = ['stylist_id', 'device_status', 'gender_id', 'body_type_id', 'age_group_id'];
+    protected $filters = ['stylists', 'devicesStatuses', 'genders', 'body_types', 'age_groups'];
     /**
      * Display a listing of the resource.
      *
@@ -44,6 +45,10 @@ class ClientController extends Controller
 
         $view_properties = array(
             'stylists' => $this->stylists,
+            'devicesStatuses' => $this->devicesStatuses,
+            'genders' => $this->genders,
+            'body_types' => $this->body_types,
+            'age_groups' => $this->age_groups
         );
 
         $view_properties['popup_entity_type_ids'] = array(
@@ -66,6 +71,9 @@ class ClientController extends Controller
 
         $view_properties['from_date'] = $request->input('from_date');
         $view_properties['to_date'] = $request->input('to_date');
+        $view_properties['min_discount'] = $request->input('min_discount');
+        $view_properties['max_discount'] = $request->input('max_discount');
+        $view_properties['show_discount_fields'] = true;
 
         foreach($this->filter_ids as $filter){
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
@@ -97,9 +105,9 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getView()
+    public function getView(Request $request)
     {
-        $authWhereClauses = $this->authWhereClauses();
+        $authWhereClauses = $this->authWhereClauses($request);
         $client = Client::with('genders')
                 ->whereRaw($authWhereClauses)
                 ->find($this->resource_id);
@@ -113,32 +121,42 @@ class ClientController extends Controller
         return view('client.view', $view_properties);
     }
 
-    protected function authWhereClauses(){
+    protected function authWhereClauses($request = null){
         $where = "1=1";
-        if(!Auth::user()->hasRole('admin')){
-            $where .= " AND stylist_id = " . Auth::user()->id;
+        $stylist = Auth::user();
+        $booking_id = $request ? $request->input('booking_id') : '';
+        if(!$stylist->hasRole('admin')){
+            if (!empty($booking_id)) {
+                $bookingMapperObj = new BookingMapper();
+                $booking_exists = $bookingMapperObj->userBookedStylist($this->resource_id, $stylist->id, $booking_id);
+                if (!$booking_exists) {
+                    $where .= " AND stylist_id = " . $stylist->id;
+                }
+            } else {
+                $where .= " AND stylist_id = " . $stylist->id;
+            }
         }
         return $where;
     }
 
     public function getChat(Request $request)
     {
-        $authorised_stylists_for_chat = [36, 49, 66];
-        $authorised_stylists_for_chat_as_admin = [89];
+        $authorised_stylists_for_chat_as_admin = [63, 76];
 
         $stylists=[];
-        $stylist_id_to_chat = Auth::user()->id;
+        $stylist = Auth::user();
+        $stylist_id_to_chat = $stylist->id;
 
-        $is_admin = Auth::user()->hasRole('admin');
+        $is_admin = $stylist->hasRole('admin');
 
         $is_authorised_for_chat_as_admin = in_array($stylist_id_to_chat, $authorised_stylists_for_chat_as_admin);
-        if(!$is_admin && !in_array($stylist_id_to_chat, $authorised_stylists_for_chat)
+        if(!$is_admin && $stylist->status_id != StylistStatus::Active
             && !$is_authorised_for_chat_as_admin){
             return redirect('look/list')->withError('Chat access denied!');
         }
 
         if($is_admin || $is_authorised_for_chat_as_admin){
-            $stylists = Stylist::whereIn('status_id',[StylistStatus::Active, StylistStatus::Inactive])
+            $stylists = Stylist::whereIn('status_id',[StylistStatus::Active])
                 ->orderBy('name')->get();
             $stylist_id_to_chat = $request->input('stylist_id') ? $request->input('stylist_id') : $stylist_id_to_chat;
         }

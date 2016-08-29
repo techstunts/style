@@ -8,8 +8,6 @@
             {{$title}}
         </div>
 
-        @include('look.create')
-
     </div>
 
 @endsection

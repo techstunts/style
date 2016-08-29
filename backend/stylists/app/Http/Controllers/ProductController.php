@@ -13,6 +13,7 @@ use App\Models\Lookups\AppSections;
 use App\Merchant;
 use App\Models\Lookups\Lookup;
 use App\Product;
+use App\ProductTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Mapper\ProductMapper;
@@ -23,8 +24,8 @@ use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id'];
-    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders', 'colors'];
+    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id', 'approved_by'];
+    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders', 'colors', 'ratings', 'approvedBy'];
 
     /**
      * Display a listing of the resource.
@@ -44,6 +45,9 @@ class ProductController extends Controller
     {
         $this->base_table = 'products';
         $this->initWhereConditions($request);
+        if ($request->input('in_stock') != "") {
+            $this->setInStockCondition($request->input('in_stock'));
+        }
         $this->initFilters();
 
         $lookup = new Lookup();
@@ -56,9 +60,12 @@ class ProductController extends Controller
             'categories' => $this->categories,
             'genders' => $this->genders,
             'colors' => $this->colors,
+            'ratings' => $this->ratings,
+            'approvedBy' => $this->approvedBy,
             'category_tree' => $category_obj->getCategoryTree(),
             'gender_list' => $lookup->type('gender')->get(),
             'color_list' => $lookup->type('color')->get(),
+            'ratings_list' => $lookup->type('rating')->where('status_id', true)->get(),
         );
 
         foreach ($this->filter_ids as $filter) {
@@ -66,12 +73,15 @@ class ProductController extends Controller
         }
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
+        $view_properties['in_stock'] = $request->input('in_stock');
 
         $view_properties['from_date'] = $request->input('from_date');
         $view_properties['to_date'] = $request->input('to_date');
 
         $view_properties['min_price'] = $request->input('min_price');
         $view_properties['max_price'] = $request->input('max_price');
+        $view_properties['min_discount'] = $request->input('min_discount');
+        $view_properties['max_discount'] = $request->input('max_discount');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -90,10 +100,10 @@ class ProductController extends Controller
         $genders_list[0] = new Gender();
 
         $products =
-            Product::with('category', 'primary_color', 'secondary_color')
+            Product::with('category', 'primary_color', 'secondary_color', 'product_tags.tag')
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
-                ->orderBy('id', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
@@ -143,8 +153,11 @@ class ProductController extends Controller
             return;
         }
 
+        $brand_name = preg_replace('/[^a-zA-Z0-9_&-@\' \']/', null, $request->input('brand'));
+        $brand_name = trim($brand_name);
+
         $merchant = Merchant::where('name', $request->input('merchant'))->first();
-        $brand = Brand::firstOrCreate(['name' => $request->input('brand')]);
+        $brand = Brand::firstOrCreate(['name' => $brand_name]);
         $category = Category::where(['name' => $request->input('category')])->first();
         $gender = Gender::where(['name' => $request->input('gender')])->first();
         $primary_color = Color::where(['name' => $request->input('color1')])->first();
@@ -330,5 +343,52 @@ class ProductController extends Controller
                 ->withErrors(['Error updating data'])
                 ->withInput();
         }
+    }
+
+    public function getTags() {
+        $lookup = new Lookup();
+        $tags = $lookup->type('tags')->get();
+        return $tags;
+    }
+    public function postAddTag(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|numeric',
+            'tag' => 'required|min:2',
+        ]);
+
+        $validator_err_msg = '';
+        if ($validator->fails()) {
+            foreach ($validator->errors()->getMessages() as $k => $v) {
+                $validator_err_msg.= $v[0] . PHP_EOL;
+            }
+            return array('status' => false, 'message' => $validator_err_msg);
+        }
+
+        $tagName = $request->input('tag');
+        $lookup = new Lookup();
+        $tagObj = $lookup->type('tags')->where(['name' => $tagName])->first();
+
+        if (!$tagObj) {
+            return array('status' => false, 'message' => 'Undefined tag');
+        }
+        $product_id = $request->input('product_id');
+        $productTagExists = ProductTag::where(['product_id' => $product_id, 'tag_id' => $tagObj->id])->exists();
+
+        if ($productTagExists) {
+            return array('status' => false, 'message' => 'Already tagged');
+        }
+
+        try {
+            $newProductTag = new ProductTag();
+            $newProductTag->product_id = $product_id;
+            $newProductTag->tag_id = $tagObj->id;
+            $newProductTag->save();
+            $status = true;
+            $message = 'Tagged successfully';
+        } catch (\Exception $e) {
+            $status = false;
+            $message = 'Tagging error' . $e->getMessage();
+        }
+        return array('status' => $status, 'message' => $message);
     }
 }

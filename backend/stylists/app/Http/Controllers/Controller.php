@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 
+use Illuminate\Support\Facades\DB;
 use App\SelectOptions;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -25,11 +27,16 @@ abstract class Controller extends BaseController
     protected $genders = [];
     protected $stylists = [];
     protected $statuses = [];
+    protected $bookingStatuses = [];
     protected $occasions = [];
     protected $body_types = [];
     protected $budgets = [];
     protected $age_groups = [];
+    protected $colors = [];
+    protected $ratings = [];
+    protected $approvedBy = [];
 
+    protected $stylist_condition = false;
     protected $resource_id;
     protected $action_resource_id;
 
@@ -41,6 +48,10 @@ abstract class Controller extends BaseController
         }
         $where_raw = [];
 
+        if($this->stylist_condition){
+            $where_raw[] = "({$this->base_table}.stylist_id = '" . Auth::user()->id . "')";
+        }
+
         if ($this->base_table == 'merchant_products') {
             $name = $this->base_table . '.m_product_name';
             $description = $this->base_table . '.m_product_description';
@@ -51,7 +62,12 @@ abstract class Controller extends BaseController
 
         if($request->input('search') != "" and strlen(trim($request->input('search')))>0){
             $search_term  = trim($request->input('search'));
-            $search_query = $desc_condition = "";
+            $search_query = $desc_condition = $tag_condition = "";
+
+            if ($this->base_table == 'products') {
+                $tag_condition = $this->setTagCondition($search_term);
+            }
+
             if($request->input('exact_word') == "search exact word"){
                 $search_query = "({$name} REGEXP '[[:<:]]{$search_term}[[:>:]]' {{desc}} )";
                 if($this->base_table != 'clients'){
@@ -64,6 +80,7 @@ abstract class Controller extends BaseController
                     $desc_condition = " OR {$description} like '%{$search_term}%' ";
                 }
             }
+            $search_query .= $tag_condition;
             $where_raw[] = str_replace("{{desc}}", $desc_condition, $search_query);
         }
 
@@ -75,12 +92,29 @@ abstract class Controller extends BaseController
             $where_raw[] = "({$this->base_table}.created_at <= '" . date("Y-m-d 23:59:59",strtotime($request->input('to_date'))) . "')";
         }
 
+        if ($request->has('book_date') && !empty($request->input('book_date'))) {
+            $where_raw[] = "({$this->base_table}.date = '" . date("Y-m-d",strtotime($request->input('book_date'))) . "')";
+        }
+
         if($request->input('min_price') != ""){
             $where_raw[] = "({$this->base_table}.price >= '{$request->input('min_price')}')";
         }
 
         if($request->input('max_price') != ""){
             $where_raw[] = "({$this->base_table}.price <= '{$request->input('max_price')}')";
+        }
+
+        $discounted_price_condition = " AND {$this->base_table}.discounted_price > 0";
+        $decimal_points = 3;
+
+        if($request->has('min_discount') != "" && intval($request->input('min_discount')) > 0){
+            $min_discount = intval($request->input('min_discount')) / 100;
+            $where_raw[] = "(TRUNCATE({$this->base_table}.discounted_price / {$this->base_table}.price, $decimal_points) >= {$min_discount} $discounted_price_condition)";
+        }
+
+        if($request->has('max_discount') != "" && intval($request->input('max_discount')) > 0){
+            $max_discount = intval($request->input('max_discount')) / 100;
+            $where_raw[] = "(TRUNCATE({$this->base_table}.discounted_price / {$this->base_table}.price, $decimal_points) <= {$max_discount} $discounted_price_condition)";
         }
 
         if($request->input('product_id') != ""){
@@ -103,4 +137,37 @@ abstract class Controller extends BaseController
         }
     }
 
+    public function setStylistCondition(){
+        $this->stylist_condition = Auth::user()->hasRole('admin') ? false : true;
+    }
+
+    public function setInStockCondition($in_stock)
+    {
+        $columnName = 'in_stock';
+        if ($this->base_table == 'merchant_products') {
+            $columnName = 'm_in_stock';
+        }
+        $this->where_conditions[$this->base_table . '.' . $columnName] = $in_stock;
+    }
+
+    public function setTagCondition($tags)
+    {
+        $tags_array = array();
+        foreach (explode(',', $tags) as $value) {
+            $tags_array[] = trim($value);
+        }
+        $tagged_products = DB::table('product_tags')
+            ->select(DB::raw('DISTINCT product_id'))
+            ->join('lu_tags', 'lu_tags.id', '=', 'product_tags.tag_id')
+            ->whereIn('lu_tags.name', $tags_array)
+            ->get();
+        if (count($tagged_products) <= 0) {
+           return '';
+        }
+        $product_ids = array();
+        foreach ($tagged_products as $tagged_product) {
+            array_push($product_ids, $tagged_product->product_id);
+        }
+        return " OR {$this->base_table}.id IN(". implode(", ", $product_ids) . ")";
+    }
 }

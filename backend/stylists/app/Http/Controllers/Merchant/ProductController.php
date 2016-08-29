@@ -22,8 +22,8 @@ use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id'];
-    protected $filters = ['merchants', 'brands', 'categories', 'genders', 'colors'];
+    protected $filter_ids = ['merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id'];
+    protected $filters = ['merchants', 'brands', 'categories', 'genders', 'colors', 'ratings'];
 
     /**
      * Display a listing of the resource.
@@ -80,6 +80,9 @@ class ProductController extends Controller
     {
         $this->base_table = 'merchant_products';
         $this->initWhereConditions($request);
+        if ($request->input('in_stock') != "") {
+            $this->setInStockCondition($request->input('in_stock'));
+        }
         $this->initFilters();
 
         $lookup = new Lookup();
@@ -91,9 +94,11 @@ class ProductController extends Controller
             'categories' => $this->categories,
             'colors' => $this->colors,
             'genders' => $this->genders,
+            'ratings' => $this->ratings,
             'category_tree' => $category_obj->getCategoryTree(),
             'gender_list' => $lookup->type('gender')->get(),
             'color_list' => $lookup->type('color')->get(),
+            'ratings_list' => $lookup->type('rating')->where('status_id', true)->get(),
         );
 
         foreach ($this->filter_ids as $filter) {
@@ -105,6 +110,7 @@ class ProductController extends Controller
 
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
+        $view_properties['in_stock'] = $request->input('in_stock');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -200,8 +206,9 @@ class ProductController extends Controller
             'brand_id' => $m_product->brand_id,
             'category_id' => $m_product->category_id,
             'gender_id' => $m_product->gender_id,
-            'primary_color_id' => $m_product->m_color,
+            'primary_color_id' => $m_product->primary_color_id,
             'in_stock' => $m_product->m_in_stock,
+            'rating_id' => $m_product->rating_id,
             'stylist_id' => Stylist::Scraper,
             'approved_by' => Auth::user()->id,
         );
@@ -242,7 +249,7 @@ class ProductController extends Controller
     public function postBulkUpdate(Request $request)
     {
 
-        if (!Auth::user()->hasRole('admin')) {
+        if (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('catalog')) {
             return Redirect::back()
                 ->withErrors(['You do not have permission to do bulk update'])
                 ->withInput();

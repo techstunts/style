@@ -2,14 +2,14 @@
 include("db_config.php");
 include("ProductLink.php");
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty($_REQUEST['userid'])) {
-    $userid = $_REQUEST['userid'];
+    $userid = mysql_real_escape_string($_REQUEST['userid']);
 
     $page = isset($_GET['page']) && $_GET['page'] != '' ? mysql_real_escape_string($_GET['page']) : 0;
     $records_count = 10;
     $record_start = intval($page * $records_count);
 
     $sql = "Select distinct l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name,
-                    s.id as stylist_id, s.name as stylish_name, s.image as stylish_image
+                    s.id as stylist_id, s.name as stylish_name, s.image as stylish_image, s.icon as stylish_icon
 				  from recommendations r
 				  join looks l on r.entity_id=l.id and r.entity_type_id = 2
 				  join lu_occasion o on l.occasion_id = o.id
@@ -41,10 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                 'stylist_id' => $ids[$i][6],
                 'stylish_name' => $ids[$i][7],
                 'stylish_image' => $ids[$i][8],
+                'stylist_icon' => $ids[$i][9],
             );
 
             $query = "select p.id,p.name,upload_image,p.price,product_type,product_link, p.agency_id, p.merchant_id,
-					         m.name merchant_name, b.name brand_name, b.id as brand_id
+					         m.name merchant_name, b.name brand_name, b.id as brand_id, p.discounted_price
                         from looks l
                         join looks_products lp ON l.id = lp.look_id
                         join products p ON lp.product_id = p.id
@@ -95,6 +96,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                     'merchant' => $list[$j]['merchant_name'],
                     'brand' => $list[$j]['brand_name'],
                     'brand_id' => $list[$j]['brand_id'],
+                    'discounted_price' => ($list[$j]['discounted_price'] > 0
+                        && $list[$j][3] > $list[$j]['discounted_price'] )
+                        ? $list[$j]['discounted_price']
+                        : ''
                 );
                 $productarray[] = $product;
             }
@@ -139,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
         );
 
         $query = "select p.id,p.name,upload_image,p.price,product_type,product_link, p.agency_id, p.merchant_id,
-                         m.name merchant_name, b.name brand_name, b.id as brand_id
+                         m.name merchant_name, b.name brand_name, b.id as brand_id, p.discounted_price
                         from looks l
                         join looks_products lp ON l.id = lp.look_id
                         join products p ON lp.product_id = p.id
@@ -190,6 +195,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
                 'merchant' => $list[$j]['merchant_name'],
                 'brand' => $list[$j]['brand_name'],
                 'brand_id' => $list[$j]['brand_id'],
+                'discounted_price' => ($list[$j]['discounted_price'] > 0
+                    && $list[$j][3] > $list[$j]['discounted_price'] )
+                    ? $list[$j]['discounted_price']
+                    : ''
             );
             $productarray[] = $product;
         }

@@ -64,7 +64,6 @@
 
                 {!! $requests->render() !!}
 
-                @include('look.create')
                 @include('push.popup')
             </div>
         </div>

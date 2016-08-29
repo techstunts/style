@@ -2,22 +2,26 @@
 namespace App;
 
 use App\Models\Enums\AppSections;
+use Illuminate\Support\Facades\Log;
 
 class Push
 {
+    protected $timeout = 60;
+
     private function sendMessageAndroid($registration_id, $params)
     {
 
         ## data is different from what your app is programmed
         $data = array(
-            'registration_ids' => array($registration_id),
+            'registration_ids' => $registration_id,
 
             'data' => array(
                 'message' => $params["message"],
                 'message_summery' => $params["message_summery"],
                 'look_url' => $params["look_url"],
                 'url' => $params["url"],
-                'app_section' => ((isset($params["app_section"]) && $params["app_section"] != "") ? $params["app_section"] : AppSections::MY_REQUESTS)
+                'app_section' => ((isset($params["app_section"]) && $params["app_section"] != "") ? $params["app_section"] : AppSections::MY_REQUESTS),
+                'stylist' => $params['stylist']
             )
         );
 
@@ -40,7 +44,43 @@ class Push
 
         $rtn["code"] = "000";//means result OK
         $rtn["message"] = "OK";
-        $rtn["result"] = $result;
+        $rtn["result"] = json_decode($result);
+
+        Log::info('GCM send data: ', $data);
+        Log::info('GCM response: ', $rtn);
+
+        return $rtn;
+    }
+
+    private function sendMessageIos($registration_ids, $params) {
+
+        $ssl_url = 'ssl://gateway.sandbox.push.apple.com:2195';
+
+        $payload = array();
+        $payload['aps'] = array('alert' => $params["message"], 'badge' => 0, 'sound' => 'default');
+
+        $payload['extra_info'] = array('apns_msg' => $params["message"]);
+        $push = json_encode($payload);
+
+        $streamContext = stream_context_create();
+        stream_context_set_option($streamContext, 'ssl', 'local_cert', env('IOS_CERTIFICATE'));
+
+        $apns = stream_socket_client($ssl_url, $error, $errorString, $this->timeout, STREAM_CLIENT_CONNECT, $streamContext);
+        if (!$apns) {
+            $rtn["code"] = "001";
+            $rtn["message"] = "Failed to connect ".$error." ".$errorString;
+            return $rtn;
+        }
+        foreach ($registration_ids as $registration_id) {
+            $t_registration_id = str_replace('%20', '', $registration_id);
+            $t_registration_id = str_replace(' ', '', $t_registration_id);
+            $apnsMessage = chr(0) . chr(0) . chr(32) . pack('H*', str_replace(' ', '', $t_registration_id)) . chr(0) . chr(strlen($push)) . $push;
+            $writeResult = fwrite($apns, $apnsMessage, strlen($apnsMessage));
+        }
+        fclose($apns);
+
+        $rtn["code"] = "000";//means result OK
+        $rtn["message"] = "OK";
         return $rtn;
     }
 
@@ -57,7 +97,11 @@ class Push
             switch ($params["pushtype"]) {
                 case "android":
 
-                    $this->sendMessageAndroid($params["registration_id"], $params);
+                    return $this->sendMessageAndroid($params["registration_id"], $params);
+                    break;
+                case "ios":
+
+                    return $this->sendMessageIos($params["registration_id"], $params);
                     break;
             }
         }

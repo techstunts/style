@@ -1,8 +1,8 @@
 <?php
 include("db_config.php");
 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset($_REQUEST['name']) && isset($_REQUEST['bodytype']) && isset($_REQUEST['bodyshape']) && isset($_REQUEST['height']) && isset($_REQUEST['age']) && isset($_REQUEST['skintype']) && isset($_REQUEST['clubprice']) && isset($_REQUEST['ethicprice']) && isset($_REQUEST['denimprice']) && isset($_REQUEST['footwearprice']) ) {
-    $userid = $_REQUEST['userid'];
-    $name = $_REQUEST['name'];
+    $userid = mysql_real_escape_string($_REQUEST['userid']);
+    $name = mysql_real_escape_string($_REQUEST['name']);
     if (!empty($_FILES['image']['name'])) {
 
         $ext = explode('.', $_FILES['image']['name']);
@@ -21,15 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_REQUEST['userid']) && isset(
         }
     }
 
-    $bodytype = $_REQUEST['bodytype'];
-    $bodyshape = $_REQUEST['bodyshape'];
-    $height = $_REQUEST['height'];
-    $age = $_REQUEST['age'];
-    $skintype = $_REQUEST['skintype'];
-    $clubprice = $_REQUEST['clubprice'];
-    $ethicprice = $_REQUEST['ethicprice'];
-    $denimprice = $_REQUEST['denimprice'];
-    $footwearprice = $_REQUEST['footwearprice'];
+    $bodytype = mysql_real_escape_string($_REQUEST['bodytype']);
+    $bodyshape = mysql_real_escape_string($_REQUEST['bodyshape']);
+    $height = mysql_real_escape_string($_REQUEST['height']);
+    $age = mysql_real_escape_string($_REQUEST['age']);
+    $skintype = mysql_real_escape_string($_REQUEST['skintype']);
+    $clubprice = mysql_real_escape_string($_REQUEST['clubprice']);
+    $ethicprice = mysql_real_escape_string($_REQUEST['ethicprice']);
+    $denimprice = mysql_real_escape_string($_REQUEST['denimprice']);
+    $footwearprice = mysql_real_escape_string($_REQUEST['footwearprice']);
     $pricerange = $clubprice + $ethicprice + $denimprice + $footwearprice;
     $sql = "Update clients SET name='$name',image='$image',bodyshape='$bodyshape',bodytype='$bodytype',skintype='$skintype',age='$age',pricerange='$pricerange',clubprice='$clubprice',ethicprice='$ethicprice',denimprice='$denimprice',footwearprice='$footwearprice',height='$height' where id='$userid'";
 

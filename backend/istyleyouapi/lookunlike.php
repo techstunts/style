@@ -1,8 +1,8 @@
 <?php
 include("db_config.php");
 if ($_SERVER['REQUEST_METHOD'] == "POST" && !empty($_POST['userid']) && !empty($_POST['lookid'])) {
-    $userid = $_POST['userid'];
-    $lookid = $_POST['lookid'];
+    $userid = mysql_real_escape_string($_POST['userid']);
+    $lookid = mysql_real_escape_string($_POST['lookid']);
     $check = "Select * from users_unlike where user_id='$userid' AND look_id='$lookid'";
     $res = mysql_query($check);
     $row = mysql_num_rows($res);

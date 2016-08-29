@@ -71,8 +71,7 @@ return [
             'connection' => 'default',
             'queue'      => 'default',
             'expire'     => 60,
-        ],
-
+        ]
     ],
 
     /*

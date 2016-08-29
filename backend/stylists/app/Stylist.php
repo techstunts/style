@@ -62,4 +62,17 @@ class Stylist extends Model implements AuthenticatableContract,
         return $this->belongsTo('App\Models\Lookups\Expertise', 'expertise_id');
     }
 
+    public static function getExposableData($stylist)
+    {
+        $data['id'] = $stylist->id;
+        $data['name'] = $stylist->name;
+        $data['description'] = $stylist->description;
+        $data['code'] = $stylist->code;
+        $data['designation'] = $stylist->designation->name;
+        $data['image'] = strpos($stylist->image, 'http') === false ? env('IMAGE_BASE_URL') . '/' . $stylist->image : $stylist->image;
+        $data['icon'] = strpos($stylist->icon, 'http') === false ? env('IMAGE_BASE_URL') . '/' . $stylist->icon : $stylist->icon;
+
+        return $data;
+    }
+
 }

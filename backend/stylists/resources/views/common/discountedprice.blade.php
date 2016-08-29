@@ -1,0 +1,2 @@
+<input type="text" name="min_discount" value="{{$min_discount}}" placeholder="Min Discount %" class="form-control search">-
+<input type="text" name="max_discount" value="{{$max_discount}}" placeholder="Max Discount %" class="form-control search">

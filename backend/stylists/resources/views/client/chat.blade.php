@@ -146,10 +146,16 @@
                 <ul class="feed" on-scroll="scroll(y, h)" to-top="top">
                     <li ng-repeat="message in feed" ng-class="[message.data.user.type, message.data.type]">
                         <img class="user" icon ng-src="@{{message.data.user.image}}">
-                        <pre ng-bind="message.data.message"></pre>
-                        <article>
-                            <img ng-src="@{{image(message.data.extra)}}">
-                            <i ng-bind="name(message.data.extra)"></i>
+                        <pre ng-if="!message.data.extra" ng-bind="message.data.message"></pre>
+                        <article ng-if="message.data.extra">
+                            <div class="extra">
+                                <img ng-src="@{{image(message.data.extra)}}">
+                                <p>
+                                    <a ng-href="@{{link(message.data.extra)}}" target="_blank" ng-bind="name(message.data.extra)"></a>
+                                    <i ng-bind="'Rs.' + price(message.data.extra)"></i>
+                                </p>
+                                <a class="button" ng-href="@{{message.data.extra.productlink}}" target="_blank">Buy</a>
+                            </div>
                         </article>
                         <span ng-bind="message.data.time | time"></span>
                     </li>
@@ -161,6 +167,9 @@
                         <a class="button icon open" ng-click="text()"></a>
                         <a class="button icon look" ng-click="share('look')"></a>
                         <a class="button icon product" ng-click="share('product')"></a>
+                        <div class="button icon file">
+                            <input type="file" accept="image/*" fileread="upload(data)" client="client">
+                        </div>
                     </div>
                 </div>
 
