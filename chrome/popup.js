@@ -163,6 +163,23 @@ document.addEventListener('DOMContentLoaded', function() {
 						img_links.push(document.getElementsByClassName(\'MagicZoomPlus\')[0].getElementsByTagName(\'img\')[0].src);\
 						sku_id = document.getElementsByClassName(\'product-view\')[0].getElementsByTagName(\'p\')[0].innerText.slice(5);\
 					}\
+					else if(merchant == \'ajio\'){\
+						prod_name = document.getElementsByTagName(\'h2\')[0].innerText;\
+						prod_price = document.getElementsByClassName(\'fnl-pdp-prize\')[0].getElementsByTagName(\'span\')[0].innerText.slice(3).trim();\
+						var prod_desc_list = document.getElementsByClassName(\'fnl-pdp-productspecifications\')[0].getElementsByTagName(\'li\');\
+						for (var i = 0; i < (prod_desc_list.length - 1); i++) {\
+							prod_desc = prod_desc + \' \' + prod_desc_list[i].getElementsByTagName(\'h3\')[0].innerText;\
+						}\
+						var breadcrumb = document.getElementsByClassName(\'fnl-plp-searchcat\')[1].getElementsByTagName(\'li\');\
+						gender = breadcrumb[1].getElementsByTagName(\'span\')[0].innerText.trim();\
+						category = breadcrumb[3].getElementsByTagName(\'span\')[0].innerText.split(\'&\')[0].trim();\
+						var temp_color = document.querySelectorAll(\'div[itemprop=\"color\"]\')[0].getElementsByTagName(\'span\')[0].innerText.toLowerCase();\
+						colors.push(temp_color.charAt(0).toUpperCase() + temp_color.slice(1));\
+						brand = document.getElementsByTagName(\'h1\')[0].innerText.toLowerCase();\
+						img_links.push(document.getElementsByClassName(\'product-Image slick-slide slick-active\')[0].getElementsByTagName(\'img\')[0].src);\
+						\
+						sku_id = prod_desc_list[prod_desc_list.length - 1].getElementsByTagName(\'span\')[0].innerText;\
+					}\
 					gender = gender.toLowerCase();\
 					if(gender == "women" || gender == "girls"){\
 						gender = "Female";\
