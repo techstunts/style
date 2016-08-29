@@ -171,7 +171,6 @@ function unselectProduct(e){
     });
     updateSelectedProductSnapshotView();
 }
-
 $(document).ready(function(){
     if($('#selectable').length){
         $( "#selectable" ).selectable({
@@ -239,6 +238,7 @@ $(document).ready(function(){
                                 modal_body.children('span').remove();
                             }
                             modal_body.append('<span>' + tag_name + cross_mark + '</span>');
+                            modal_body.children('span:last-child').children('.cross_mark').on('click', deleteTag);
                             this_var.val('');
                         }
                     },
@@ -246,4 +246,41 @@ $(document).ready(function(){
             },
         });
     });
+
+    $('.modal-body').each(function(){
+        var product_id = $(this).data('product_id');
+        var all_tags = $(this).children('span');
+        all_tags.each(function(){
+            $(this).children('.cross_mark').on('click', deleteTag);
+        });
+    });
 });
+
+
+function deleteTag(){
+    var modal_body = $(this).parents('.modal-body');
+    var par_span = $(this).parents('span');
+    var tag_name = par_span.clone().children('span').remove().end().text();
+    var product_id = modal_body.data('product_id');
+    $.ajax({
+        type : "POST",
+        url : "/product/removeTag",
+        data : {
+            product_id : product_id,
+            tag : tag_name,
+            _token: $(this).parents('.modal-dialog').find("input[name='_token']").val(),
+        },
+        success : function(response) {
+            if (response.status == false) {
+                alert(response.message);
+                return false;
+            } else {
+                alert(response.message);
+                par_span.remove();
+                if (modal_body.children('span').length == 0) {
+                    modal_body.append('<span>No tags for this product</span>');
+                }
+            }
+        },
+    });
+}

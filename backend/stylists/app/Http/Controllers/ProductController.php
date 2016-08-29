@@ -6,6 +6,7 @@ use App\Brand;
 use App\Category;
 use App\Models\Lookups\Gender;
 use App\Models\Lookups\Color;
+use App\Models\Lookups\Tag;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\RecommendationType;
@@ -15,6 +16,7 @@ use App\Models\Lookups\Lookup;
 use App\Product;
 use App\ProductTag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Mapper\ProductMapper;
 
@@ -66,11 +68,13 @@ class ProductController extends Controller
             'gender_list' => $lookup->type('gender')->get(),
             'color_list' => $lookup->type('color')->get(),
             'ratings_list' => $lookup->type('rating')->where('status_id', true)->get(),
+            'tags_list' => $lookup->type('tags')->get(),
         );
 
         foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
+        $view_properties['tag_id'] = $request->has('tag_id') && $request->input('tag_id') !== "" ? intval($request->input('tag_id')) : "";
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
         $view_properties['in_stock'] = $request->input('in_stock');
@@ -328,40 +332,49 @@ class ProductController extends Controller
         $product_ids = explode(',', $request->input('product_id'));
 
         $update_clauses = $productMapperObj->getUpdateClauses($request);
-        if (count($update_clauses) == 0) {
+        if (count($update_clauses) == 0 and empty($request->input('tag_id'))) {
             return Redirect::back()
                 ->withErrors(['Please specify at least 1 field to update'])
                 ->withInput();
         }
 
-        if ($productMapperObj->updateData($this->base_table, $this->where_conditions, $this->where_raw, $product_ids, $update_clauses)) {
-            return Redirect::back()
-                ->withErrors(['Records updated'])
-                ->withInput();
-        } else {
+        DB::beginTransaction();
+        $addTagStatus = true;
+        if (!empty($request->input('tag_id'))) {
+            if (!$productMapperObj->addTagToProducts($product_ids, $request->input('tag_id'))) {
+                $addTagStatus = false;
+            }
+        }
+        $update_clauses_status = true;
+        if (!$productMapperObj->updateData($this->base_table, $this->where_conditions, $this->where_raw, $product_ids, $update_clauses)) {
+            $update_clauses_status = false;
+        }
+
+        if ((!empty($request->input('tag_id')) && !$addTagStatus) || !$update_clauses_status) {
+            DB::rollback();
             return Redirect::back()
                 ->withErrors(['Error updating data'])
+                ->withInput();
+        } else {
+            DB::commit();
+            return Redirect::back()
+                ->withErrors(['Records updated'])
                 ->withInput();
         }
     }
 
-    public function getTags() {
+    public function getTags()
+    {
         $lookup = new Lookup();
         $tags = $lookup->type('tags')->get();
         return $tags;
     }
-    public function postAddTag(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'product_id' => 'required|numeric',
-            'tag' => 'required|min:2',
-        ]);
 
-        $validator_err_msg = '';
-        if ($validator->fails()) {
-            foreach ($validator->errors()->getMessages() as $k => $v) {
-                $validator_err_msg.= $v[0] . PHP_EOL;
-            }
-            return array('status' => false, 'message' => $validator_err_msg);
+    public function postAddTag(Request $request)
+    {
+        $responseValidate = $this->validateInput($request);
+        if (!$responseValidate['status']) {
+            return array('status' => false, 'message' => $responseValidate['message']);
         }
 
         $tagName = $request->input('tag');
@@ -390,5 +403,96 @@ class ProductController extends Controller
             $message = 'Tagging error' . $e->getMessage();
         }
         return array('status' => $status, 'message' => $message);
+    }
+
+    public function postRemoveTag(Request $request)
+    {
+        $responseValidate = $this->validateInput($request);
+        if (!$responseValidate['status']) {
+            return array('status' => false, 'message' => $responseValidate['message']);
+        }
+
+        $tagName = trim($request->input('tag'));
+        $lookup = new Lookup();
+        $tagObj = $lookup->type('tags')->where(['name' => $tagName])->first();
+
+        if (!$tagObj) {
+            return array('status' => false, 'message' => 'Undefined tag');
+        }
+
+        $product_id = $request->input('product_id');
+        $productTagExists = ProductTag::where(['product_id' => $product_id, 'tag_id' => $tagObj->id])->first();
+
+        if (!$productTagExists) {
+            return array('status' => false, 'message' => 'Tag does not exist for this product');
+        }
+
+        try {
+            ProductTag::where(['product_id' => $product_id, 'tag_id' => $productTagExists->tag_id])->delete();
+            $status = true;
+            $message = 'Tag removed successfully';
+        } catch (\Exception $e) {
+            $status = false;
+            $message = 'Error removing tag' . $e->getMessage();
+        }
+        return array('status' => $status, 'message' => $message);
+    }
+
+    public function validateInput($request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|numeric',
+            'tag' => 'required|min:2',
+        ]);
+
+        $validator_err_msg = '';
+        if ($validator->fails()) {
+            foreach ($validator->errors()->getMessages() as $k => $v) {
+                $validator_err_msg .= $v[0] . PHP_EOL;
+            }
+            return array('status' => false, 'message' => $validator_err_msg);
+        }
+        return array('status' => true, 'message' => '');
+    }
+    public function postCreateTag(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'tags_name' => 'required|min:2',
+        ]);
+
+        if ($validator->fails()) {
+            foreach ($validator->errors()->getMessages() as $k => $v) {
+                echo $v[0] . "<br/>";
+            }
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $tagNameStr = $request->input('tags_name');
+        $tagNameArr = explode(',', $tagNameStr);
+        $createTagsArr = array();
+        $lookup = new Lookup();
+        $tagsLookUp = $lookup->type('tags');
+        foreach ($tagNameArr as $item) {
+            $tagName = trim($item);
+            $tagExists = $tagsLookUp->where(['name' => $tagName])->exists();
+            if (!$tagExists) {
+                $createTagsArr[] = ['name' => $tagName];
+            }
+        }
+        if (count($createTagsArr) > 0) {
+            try{
+                Tag::insert($createTagsArr);
+                $message = 'Tags created successfully';
+            } catch (\Exception $e) {
+                $message = $e->getMessage();
+            }
+        } else {
+            $message = 'No new tags to create';
+        }
+
+        return Redirect::back()
+            ->withErrors([$message])
+            ->withInput();
     }
 }
