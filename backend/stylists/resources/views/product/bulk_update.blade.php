@@ -4,7 +4,9 @@
     @include('common.gender.select', array('genders' => $gender_list))
     @include('common.color.select', array('colors' => $color_list))
     @include('common.rating.product', array('ratings' => $ratings_list))
-    @include('product.tags_list', array('tags' => $tags_list))
+    @if (!empty($tag_list))
+        @include('product.tags_list', array('tags' => $tags_list))
+    @endif
     <input type="submit" id="bulk_update" name="update" value="Bulk update" />
     <input type="submit" id="update_selected" name="update_selected" value="Update Selected" action_url="{!! url($url.'bulkUpdate') !!}" />
     <input type="hidden" name="merchant_id" value="{{$merchant_id}}"/>
