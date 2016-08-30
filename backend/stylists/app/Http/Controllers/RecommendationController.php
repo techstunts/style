@@ -246,15 +246,17 @@ class RecommendationController extends Controller
     }
 
     public function sendMail($client, $stylist, $entity_data){
+        $product_mapper = new ProductMapper();
         foreach ($entity_data as $product) {
-            $product->product_link = ProductMapper::getDeepLink($product->merchant_id, $product->product_link);
+            $product->product_link = $product_mapper->getDeepLink($product->merchant_id, $product->product_link);
         }
 
         Mail::send('emails.recommendations',
             ['client' => $client, 'stylist' => $stylist, 'products' => $entity_data],
-            function ($mail) use ($client) {
-                $mail->from('stylist@istyleyou.in', 'IStyleYou stylist');
-                $mail->to($client->email, $client->name)->subject('IStyleYou : Style recommendations for you!');
+            function ($mail) use ($client, $stylist) {
+                $mail->from('stylist@istyleyou.in', 'IStyleYou');
+                $mail->to($client->email, $client->name)
+                    ->subject($stylist->name . ', your stylist have sent you recommendations!');
         });
     }
 

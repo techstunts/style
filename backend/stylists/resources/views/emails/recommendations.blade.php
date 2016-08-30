@@ -122,7 +122,7 @@
 
                                                                     <strong>Dear {{$client->name}},</strong><br>
                                                                     <br>
-                                                                    Following recommendation have been created and sent by {{$stylist->name}}, your personal stylist. Check out her suggestions.
+                                                                    Following recommendations have been created and sent by {{$stylist->name}}, your personal stylist. Check out her suggestions.
                                                                 </td>
                                                             </tr>
                                                             </tbody>
@@ -197,7 +197,7 @@
                                     <tr>
                                         <td valign="top">
 
-                                            <table align="left" border="0" cellpadding="0" cellspacing="0" width="200"
+                                            <table align="left" border="0" cellpadding="0" cellspacing="0"
                                                    style="border-collapse:collapse">
                                                 <tbody>
                                                 <tr>
@@ -206,12 +206,12 @@
 
                                                         @foreach($products as $product)
                                                         <table align="left" border="0" cellpadding="0"
-                                                               cellspacing="0" width="100%"
+                                                               cellspacing="0" width="30%"
                                                                style="border-collapse:collapse">
                                                             <tbody>
                                                             <tr>
                                                                 <td align="left" valign="top"
-                                                                    style="padding-top:0px;padding-right:0px;padding-bottom:0;padding-left:0px">
+                                                                    style="padding-top:0px;padding-right:0px;padding-bottom:0;padding-left:0px;height:250px;">
 
 
                                                                     <a href="{{$product->product_link}}" title="" >
@@ -219,8 +219,7 @@
 
                                                                         <img alt=""
                                                                              src="{{$product->upload_image}}"
-                                                                             width="164"
-                                                                             style="max-width:440px;border:0;min-height:auto;outline:none;text-decoration:none;vertical-align:bottom"
+                                                                             style="max-width:190px;border:0;min-height:auto;outline:none;text-decoration:none;vertical-align:bottom;max-height:240px;"
                                                                              class="CToWUd">
                                                                     </a>
 

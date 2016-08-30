@@ -61,6 +61,7 @@
                         <div class="image"><img src="{!! strpos($product->upload_image, "uploadfile") === 0 ? asset('images/' . $product->upload_image) : $product->upload_image !!}" /></div>
                         <div class="extra text">
                             <span><a href="{{$product->product_link}}">View</a></span>
+                            <span><a href="{{$product->omg_product_link}}">Omg</a></span>
                             <span>{{$product->product_type}}</span>
                             <span>{{$product->category ? $product->category->name : ''}}</span>
                             <span>{{$product->price}}</span>

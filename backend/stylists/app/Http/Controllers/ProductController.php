@@ -111,6 +111,11 @@ class ProductController extends Controller
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
+        $product_mapper = new ProductMapper();
+        foreach ($products as $product) {
+            $product->omg_product_link = $product_mapper->getDeepLink($product->merchant_id, $product->product_link);
+        }
+
         $view_properties['products'] = $products;
         $view_properties['genders_list'] = $genders_list;
         $view_properties['logged_in_stylist_id'] = Auth::user()->id;
