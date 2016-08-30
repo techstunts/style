@@ -346,7 +346,7 @@ class ProductController extends Controller
             }
         }
         $update_clauses_status = true;
-        if (!$productMapperObj->updateData($this->base_table, $this->where_conditions, $this->where_raw, $product_ids, $update_clauses)) {
+        if (!empty($update_clauses) && !$productMapperObj->updateData($this->base_table, $this->where_conditions, $this->where_raw, $product_ids, $update_clauses)) {
             $update_clauses_status = false;
         }
 
