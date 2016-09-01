@@ -4,7 +4,7 @@
     @include('common.gender.select', array('genders' => $gender_list))
     @include('common.color.select', array('colors' => $color_list))
     @include('common.rating.product', array('ratings' => $ratings_list))
-    @if (!empty($tag_list))
+    @if (!empty($tags_list))
         @include('product.tags_list', array('tags' => $tags_list))
     @endif
     <input type="submit" id="bulk_update" name="update" value="Bulk update" />
