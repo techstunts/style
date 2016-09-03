@@ -96,13 +96,22 @@
                                     None
                                 @endif
                             </td>
-                        </tr>
                         <tr class="row">
                             <td class="head">Clients</td>
                             <td class="content">
                                 <a class="product_link" href="{{url('client/list?stylist_id=' . $stylist->id)}}">View All</a>
                             </td>
                         </tr>
+                        @foreach($stylist->upload_images as $upload_image)
+                            @if ($upload_image->type && in_array($upload_image->type->name, $image_type_names))
+                                <tr class="row">
+                                    <td class="head">{{$upload_image->type->name}}</td>
+                                    <td class="content">
+                                        <img class="entity" src="{{env('API_ORIGIN') .'/'. $upload_image->path .'/'.$upload_image->name}}"/>
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach
                     </table>
 
                 </div>

@@ -254,8 +254,39 @@ $(document).ready(function(){
             $(this).children('.cross_mark').on('click', deleteTag);
         });
     });
-});
 
+    $('#UploadImageForm').submit(function(){
+        var form = $(this);
+        var url = form.find('input[name="url"]').val();
+        var image = form.find('input[name="image"]');
+        var image_type = form.find('select[name="image_type"]');
+
+        var form_data = new FormData(form[0]);
+        form_data.append("image", image.prop('files')[0]);
+        form_data.append("entity_type_id", form.find('input[name="entity_type_id"]').val());
+        form_data.append("entity_id", form.find('input[name="entity_id"]').val());
+        form_data.append("image_type", image_type.val());
+        form_data.append("_token", form.find('select[name="_token"]').val());
+        $.ajax({
+            type : "POST",
+            url : url,
+            data : form_data,
+            contentType: false,
+            processData : false,
+            success : function(response){
+                var data = JSON.parse(response);
+                if (data.status != undefined && data.status == 'success') {
+                    image_type[0].selectedIndex = 0;
+                    image.val('');
+                    alert('Image uploaded successfully');
+                } else {
+                    alert(data.error.message);
+                }
+            },
+        });
+        return false;
+    });
+});
 
 function deleteTag(){
     var modal_body = $(this).parents('.modal-body');
