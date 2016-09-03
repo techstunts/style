@@ -30,7 +30,6 @@
                             <input name="entity_id" type="hidden" value="{{$stylist->id}}">
                             <input name="url" type="hidden" value="{{env('API_ORIGIN')}}/file/upload">
                             <input name="entity_type_id" type="hidden" value="{{App\Models\Enums\EntityType::STYLIST}}">
-                            <input name="redirect_back" type="hidden" value="{{true}}">
                             @include('common.image_type.select')
                             <input type="submit" style="display: block;" class="btn btn-primary btn-lg" value="Upload Image">
                         </form>
