@@ -132,7 +132,7 @@ class StylistController extends Controller
             $view_properties['designation_id'] = intval($stylist->designation_id);
             $view_properties['designations'] = $lookup->type('designation')->get();
             $view_properties['is_admin'] = $is_admin;
-            $view_properties['image_types'] = $lookup->type('image_type')->where('entity_type_id', EntityType::STYLIST)->get();
+            $view_properties['image_types'] = $lookup->type('image_type')->where(['entity_type_id' => EntityType::STYLIST, 'is_profile_image' => true])->get();
 
         }
         else{
