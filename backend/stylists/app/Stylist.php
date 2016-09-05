@@ -62,6 +62,10 @@ class Stylist extends Model implements AuthenticatableContract,
         return $this->belongsTo('App\Models\Lookups\Expertise', 'expertise_id');
     }
 
+    public function upload_images(){
+        return $this->hasMany('App\UploadImages', 'uploaded_by_entity_id');
+    }
+
     public static function getExposableData($stylist)
     {
         $data['id'] = $stylist->id;

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Lookups\Lookup;
 use App\Models\Lookups\StylistStatus;
+use App\Models\Enums\EntityType;
+use App\Models\Enums\ProfileImageStatus;
 use App\Stylist;
 use Illuminate\Http\Request;
 
@@ -66,27 +68,37 @@ class StylistController extends Controller
      */
     public function getView()
     {
+        $upload_images = function ($query) {
+            $query->with('type');
+            $query->where('uploaded_by_entity_type_id', EntityType::STYLIST);
+            $query->where('status_id', ProfileImageStatus::Active);
+        };
         $stylist = Stylist::with(['looks' => function ($query) {
             $query->orderBy('id', 'desc')->limit(3);
+            },
+            'upload_images' => $upload_images,
+        ])->find($this->resource_id);
 
-        }])->find($this->resource_id);
-
+        $lookup = new Lookup();
+        $image_types = $lookup->type('image_type')->where('entity_type_id', EntityType::STYLIST)->get();
+        $image_type_names = array();
+        foreach ($image_types as $image_type) {
+            $image_type_names[] = $image_type->name;
+        }
         $view_properties = null;
-        if($stylist){
+        if ($stylist) {
             $status_list = StylistStatus::all()->keyBy('id');
             $status_list[0] = new StylistStatus();
 
             $view_properties['stylist'] = $stylist;
             $view_properties['status_list'] = $status_list;
             $view_properties['looks'] = $stylist->looks;
+            $view_properties['image_type_names'] = $image_type_names;
             $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $stylist->id == Auth::user()->id;
             $view_properties['profile_images'] = Storage::disk('public_images')->files('stylish/profile/' . $stylist->id);
-
-        }
-        else{
+        } else {
             return view('404', array('title' => 'Stylist not found'));
         }
-
         return view('stylist.view', $view_properties);
     }
 
@@ -120,6 +132,8 @@ class StylistController extends Controller
             $view_properties['designation_id'] = intval($stylist->designation_id);
             $view_properties['designations'] = $lookup->type('designation')->get();
             $view_properties['is_admin'] = $is_admin;
+            $view_properties['image_types'] = $lookup->type('image_type')->where(['entity_type_id' => EntityType::STYLIST, 'is_profile_image' => true])->get();
+
         }
         else{
             return view('404', array('title' => 'Stylist not found'));

@@ -23,6 +23,17 @@
                             <input style="display: block;" type="submit" class="btn btn-primary btn-lg" value="Upload">
                         </form>
                     </div>
+                    <div class="image">
+                        <form id="UploadImageForm" action="{{env('API_ORIGIN')}}/file/upload" enctype="multipart/form-data" style="display: initial;">
+                            {!! csrf_field() !!}
+                            <input name="image" type="file" class="file-loading">
+                            <input name="entity_id" type="hidden" value="{{$stylist->id}}">
+                            <input name="url" type="hidden" value="{{env('API_ORIGIN')}}/file/upload">
+                            <input name="entity_type_id" type="hidden" value="{{App\Models\Enums\EntityType::STYLIST}}">
+                            @include('common.image_type.select')
+                            <input type="submit" style="display: block;" class="btn btn-primary btn-lg" value="Upload Image">
+                        </form>
+                    </div>
                     <form method="POST" action="{!! url('/stylist/update/' . $stylist->id) !!}" style="display: initial;">
                         {!! csrf_field() !!}
                         <table class="info">
