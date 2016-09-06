@@ -571,3 +571,5 @@ function showEntities(entity_url) {
 function toggleLoader() {
     $('.mobile-app-send img').toggle();
 }
+
+//branch made for Jim
