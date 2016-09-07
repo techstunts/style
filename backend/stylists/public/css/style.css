@@ -509,7 +509,7 @@ div.resource_view tr.row a.product_link {
     padding: 2px;
 }
 
-.mobile-app-send select{
+.mobile-app-send select, .mobile-app-send input{
     padding: 2px 0 1px 1px;
     color: grey;
     background-color: white;

@@ -202,6 +202,8 @@ $(document).ready(function () {
         }
 
         var app_section = $("#app_section").val();
+        var custom_message = $("#custom_message").val();
+        var product_list_heading = $("#product_list_heading").val();
 
         if ($(".entity-type-to-send").length > 0) {
             entity_type_to_send = $(".entity-type-to-send").val();
@@ -227,6 +229,8 @@ $(document).ready(function () {
                 entity_type_id: entity_type_to_send,
                 client_ids: rows_selected,
                 app_section: app_section,
+                custom_message: custom_message,
+                product_list_heading: product_list_heading,
                 recommendation_type_id: recommendation_type_id,
                 style_request_ids: request_ids,
                 _token: $(this).parent().children('input[name="_token"]').val()
@@ -245,6 +249,8 @@ $(document).ready(function () {
                     }
                     entity_sent_once = EntitySent.YES;
                 }
+                $("#custom_message").val("");
+                $("#product_list_heading").val("");
             },
             complete: toggleLoader
         });

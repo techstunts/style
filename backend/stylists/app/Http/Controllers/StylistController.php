@@ -121,6 +121,12 @@ class StylistController extends Controller
         $view_properties = null;
         if($stylist){
             $lookup = new Lookup();
+            $image_types = $lookup->type('image_type')->where(['entity_type_id' => EntityType::STYLIST, 'is_profile_image' => true])->get();
+            $image_type_names = array();
+            foreach ($image_types as $image_type) {
+                $image_type_names[] = $image_type->name;
+            }
+
 
             $view_properties['stylist'] = $stylist;
             $view_properties['gender_id'] = intval($stylist->gender_id);
@@ -132,7 +138,9 @@ class StylistController extends Controller
             $view_properties['designation_id'] = intval($stylist->designation_id);
             $view_properties['designations'] = $lookup->type('designation')->get();
             $view_properties['is_admin'] = $is_admin;
-            $view_properties['image_types'] = $lookup->type('image_type')->where(['entity_type_id' => EntityType::STYLIST, 'is_profile_image' => true])->get();
+            $view_properties['image_types'] = $image_types;
+            $view_properties['image_type_names'] = $image_type_names;
+            $view_properties['profile_images'] = Storage::disk('public_images')->files('stylish/profile/' . $stylist->id);
 
         }
         else{

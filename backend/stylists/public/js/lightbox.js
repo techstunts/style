@@ -279,6 +279,7 @@ $(document).ready(function(){
                     image_type[0].selectedIndex = 0;
                     image.val('');
                     alert('Image uploaded successfully');
+                    location.reload();
                 } else {
                     alert(data.error.message);
                 }

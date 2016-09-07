@@ -56,6 +56,8 @@
                 <input type="hidden" value="{{$add_entity}}" id="add_entity_btn">
             @else
                 @include('common.app_section.select')
+                <input type="text" name="custom_message"  id="custom_message" value="" placeholder="Custom Message">
+                <input type="text" name="product_list_heading" id="product_list_heading" value="" placeholder="Product List Heading">
                 <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
             @endif
             <img class="loader" src="/images/popup-loader.gif"/>
