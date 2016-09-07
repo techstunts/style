@@ -253,7 +253,7 @@ class RecommendationController extends Controller
             ->where('image_type_id', ImageType::Banner)
             ->where('status_id', Status::Active)->first();
 
-        $banner_image_path = env('API_ORIGIN') .'/'. $banner_image->path . '/' . $banner_image->name;
+        $banner_image_path = $banner_image ? env('API_ORIGIN') .'/'. $banner_image->path . '/' . $banner_image->name : "";
 
         $product_mapper = new ProductMapper();
         foreach ($entity_data as $product) {
