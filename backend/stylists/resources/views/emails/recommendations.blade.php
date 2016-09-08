@@ -283,6 +283,7 @@
                                                                     <br>
                                                                     <strong>Our mailing address is:</strong><br>
                                                                     *stylist@istyleyou.in*<br>
+                                                                    Call us at :-0124 -4372446<br />
                                                                     Want to change how you receive these emails?<br>
                                                                     You can <a
                                                                             style="color:#656565;font-weight:normal;text-decoration:underline">update

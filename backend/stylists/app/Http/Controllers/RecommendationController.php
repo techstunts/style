@@ -280,7 +280,8 @@ class RecommendationController extends Controller
             function ($mail) use ($client, $stylist) {
                 $mail->from('stylist@istyleyou.in', 'IStyleYou');
                 $mail->to($client->email, $client->name)
-                    ->subject($stylist->name . ', your stylist have sent you recommendations!');
+                    ->bcc('stylist@istyleyou.in')
+                    ->subject($stylist->name . ', your stylist has sent you recommendations!');
         });
     }
 
