@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Mapper\ProductMapper;
+use App\Models\Enums\ImageType;
+use App\Models\Enums\Status;
+use App\UploadImages;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -126,7 +129,7 @@ class RecommendationController extends Controller
                 $client = $client_data[$i]->client;
             }
             else{
-                $stylist_data = $client_data[$i]->stylist;
+                $stylist_data = Auth::user();
                 $reg_ids = $client_data[$i]->client_reg_details;
                 $client = $client_data[$i];
             }
@@ -136,8 +139,7 @@ class RecommendationController extends Controller
             }
 
             if ($entity_type_id == EntityTypeId::PRODUCT) {
-                $stylist_data = Stylist::find(52);
-                $this->sendMail($client, $stylist_data, $entity_data);
+                $this->sendMail($request, $client, $stylist_data, $entity_data);
             }
 
             $regIdsAndroid = array();
@@ -245,18 +247,41 @@ class RecommendationController extends Controller
         return $query;
     }
 
-    public function sendMail($client, $stylist, $entity_data){
+    public function sendMail(Request $request, $client, $stylist, $entity_data){
+        $banner_image = UploadImages::where('uploaded_by_entity_id', $stylist->id)
+            ->where('uploaded_by_entity_type_id', \App\Models\Enums\EntityType::STYLIST)
+            ->where('image_type_id', ImageType::Banner)
+            ->where('status_id', Status::Active)->first();
+
+        $banner_image_path = $banner_image ? env('API_ORIGIN') .'/'. $banner_image->path . '/' . $banner_image->name : "";
+
         $product_mapper = new ProductMapper();
         foreach ($entity_data as $product) {
             $product->product_link = $product_mapper->getDeepLink($product->merchant_id, $product->product_link);
         }
 
+        $words = explode(" ", $stylist->name);
+        $stylist_first_name = $words[0];
+
+        $words = explode(" ", $client->name);
+        $client_first_name = $words[0];
+
+        $custom_message = str_replace("{stylist_name}", $stylist_first_name, env('RECOMMENDATION_EMAIL_MESSAGE'));
+        $custom_message = $request->input('custom_message') && trim($request->input('custom_message')) != "" ? $request->input('custom_message') : $custom_message;
+
+        $product_list_heading = env('RECOMMENDATION_EMAIL_PRODUCTLIST_HEADING');
+        $product_list_heading = $request->input('product_list_heading') && trim($request->input('product_list_heading')) != "" ? $request->input('product_list_heading') : $product_list_heading;
+
         Mail::send('emails.recommendations',
-            ['client' => $client, 'stylist' => $stylist, 'products' => $entity_data],
+            ['client' => $client, 'stylist' => $stylist, 'products' => $entity_data,
+                'banner_image_path' => $banner_image_path, 'stylist_first_name' => $stylist_first_name,
+                'client_first_name' => $client_first_name, 'custom_message' => $custom_message,
+                'product_list_heading' => $product_list_heading],
             function ($mail) use ($client, $stylist) {
                 $mail->from('stylist@istyleyou.in', 'IStyleYou');
                 $mail->to($client->email, $client->name)
-                    ->subject($stylist->name . ', your stylist have sent you recommendations!');
+                    ->bcc('stylist@istyleyou.in')
+                    ->subject($stylist->name . ', your stylist has sent you recommendations!');
         });
     }
 

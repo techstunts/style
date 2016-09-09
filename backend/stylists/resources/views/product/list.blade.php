@@ -11,7 +11,7 @@
                     @include('merchant.select')
                     @include('stylist.select')
                     @include('brand.select')
-                    @include('category.select')
+                    @include('common.autosuggest')
                     @include('common.gender.select')
                     @include('common.color.select')
                     @include('common.rating.product')
