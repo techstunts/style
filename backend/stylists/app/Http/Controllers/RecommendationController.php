@@ -167,47 +167,45 @@ class RecommendationController extends Controller
                 }
             }
 
-            if (count($reg_ids) > 0) {
-                $message_pushed = 0;
-                for ($j = 0; $j < $entity_count; $j++) {
-                    $recommends_arr[$query_count] = array(
-                        'user_id' => $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->id : $client_data[$i]->id,
-                        'recommendation_type_id' => $recommendation_type_id,
-                        'created_by' => Auth::user()->id,
-                        'entity_type_id' => $entity_type_id,
-                        'entity_id' => $entity_data[$j]->id,
-                        'style_request_id' => $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->id : 0,
-                        'created_at' => date("Y-m-d H:i:s")
+            $message_pushed = 0;
+            for ($j = 0; $j < $entity_count; $j++) {
+                $recommends_arr[$query_count] = array(
+                    'user_id' => $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->id : $client_data[$i]->id,
+                    'recommendation_type_id' => $recommendation_type_id,
+                    'created_by' => Auth::user()->id,
+                    'entity_type_id' => $entity_type_id,
+                    'entity_id' => $entity_data[$j]->id,
+                    'style_request_id' => $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->id : 0,
+                    'created_at' => date("Y-m-d H:i:s")
+                );
+                $query_count++;
+                if (count($reg_ids) > 0 && $message_pushed == 0) {
+                    $params = array(
+                        "message" => $stylist_data->name . " has sent you " . $entity_type_data->name,
+                        "message_summery" => $stylist_data->name . " has sent you " . $entity_type_data->name,
+                        "look_url" => $entity_type_id == EntityTypeId::PRODUCT ? $entity_data[$j]->image : env('IMAGE_BASE_URL') . $entity_data[$j]->image,
+                        "url" => $entity_type_id == EntityTypeId::PRODUCT ? $entity_data[$j]->image : env('IMAGE_BASE_URL') . $entity_data[$j]->image,
+                        'app_section' => $app_section,
+                        "stylist" => Stylist::getExposableData($stylist_data)
                     );
-                    $query_count++;
-                    if ($message_pushed == 0) {
-                        $params = array(
-                            "message" => $stylist_data->name . " has sent you " . $entity_type_data->name,
-                            "message_summery" => $stylist_data->name . " has sent you " . $entity_type_data->name,
-                            "look_url" => $entity_type_id == EntityTypeId::PRODUCT ? $entity_data[$j]->image : env('IMAGE_BASE_URL') . $entity_data[$j]->image,
-                            "url" => $entity_type_id == EntityTypeId::PRODUCT ? $entity_data[$j]->image : env('IMAGE_BASE_URL') . $entity_data[$j]->image,
-                            'app_section' => $app_section,
-                            "stylist" => Stylist::getExposableData($stylist_data)
-                        );
-                        if ($ios_flag) {
-                            $params['pushtype'] = "ios";
-                            $params['registration_id'] = $regIdsIOS;
-                            $response = $push->sendMessage($params);
-                        }
-                        if ($android_flag) {
-                            $params['pushtype'] = "android";
-                            $params['registration_id'] = $regIdsAndroid;
+                    if ($ios_flag) {
+                        $params['pushtype'] = "ios";
+                        $params['registration_id'] = $regIdsIOS;
+                        $response = $push->sendMessage($params);
+                    }
+                    if ($android_flag) {
+                        $params['pushtype'] = "android";
+                        $params['registration_id'] = $regIdsAndroid;
 
-                            $response = $push->sendMessage($params);
-                            if ($response['result'] && $response['result']->failure > 0) {
-                                $inactive_reg_ids_query = $inactive_reg_ids_query . $this->getQueryForInactiveRegIds($reg_ids, $response['result']->results);
-                                if ($response['result']->failure == count($regIdsAndroid)) {
-                                    array_push($client_ids_inactive_device_status, $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->id : $client_data[$i]->id);
-                                }
+                        $response = $push->sendMessage($params);
+                        if ($response['result'] && $response['result']->failure > 0) {
+                            $inactive_reg_ids_query = $inactive_reg_ids_query . $this->getQueryForInactiveRegIds($reg_ids, $response['result']->results);
+                            if ($response['result']->failure == count($regIdsAndroid)) {
+                                array_push($client_ids_inactive_device_status, $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->id : $client_data[$i]->id);
                             }
                         }
-                        $message_pushed++;
                     }
+                    $message_pushed++;
                 }
             }
 
