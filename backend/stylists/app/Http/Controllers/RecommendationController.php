@@ -93,14 +93,24 @@ class RecommendationController extends Controller
             );
         }
         $entity_data = '';
+        $productEntityTypeId = EntityTypeId::PRODUCT;
         if ($entity_type_id == EntityTypeId::PRODUCT) {
             $entity_data = Product::whereIn('id', $entity_ids)->get();
-        } elseif ($entity_type_id == EntityTypeId::LOOK) {
-            $entity_data = Look::whereIn('id', $entity_ids)->get();
-        } elseif ($entity_type_id == EntityTypeId::TIP) {
-            $entity_data = Tip::whereIn('id', $entity_ids)->get();
-        } elseif ($entity_type_id == EntityTypeId::COLLECTION) {
-            $entity_data = Collection::whereIn('id', $entity_ids)->get();
+        }
+        elseif ($entity_type_id == EntityTypeId::LOOK) {
+            $entity_data = Look::with('products')->whereIn('id', $entity_ids)->get();
+        }
+        elseif ($entity_type_id == EntityTypeId::TIP) {
+            $entity_data = Tip::with([('product_entities') => function ($query) use ($productEntityTypeId) {
+                $query->with(['product'])
+                    ->where('entity_type_id', $productEntityTypeId);
+            }])->whereIn('id', $entity_ids)->get();
+        }
+        elseif ($entity_type_id == EntityTypeId::COLLECTION) {
+            $entity_data = Collection::with([('product_entities') => function ($query) use ($productEntityTypeId) {
+                $query->with(['product'])
+                    ->where('entity_type_id', $productEntityTypeId);
+            }])->whereIn('id', $entity_ids)->get();
         }
         if (empty($entity_data)) {
             return response()->json(
@@ -109,6 +119,7 @@ class RecommendationController extends Controller
                 ), 200
             );
         }
+        $entity_products = $this->getEntityProducts($entity_type_id, $entity_data);
         $clients_count = count($client_data);
         $entity_count = count($entity_data);
 
@@ -138,8 +149,8 @@ class RecommendationController extends Controller
                 $stylist_data = Auth::user();
             }
 
-            if ($entity_type_id == EntityTypeId::PRODUCT) {
-                $this->sendMail($request, $client, $stylist_data, $entity_data);
+            if (!empty($entity_products)) {
+                $this->sendMail($request, $client, $stylist_data, $entity_products);
             }
 
             $regIdsAndroid = array();
@@ -283,6 +294,44 @@ class RecommendationController extends Controller
                     ->bcc('stylist@istyleyou.in')
                     ->subject($stylist->name . ', your stylist has sent you recommendations!');
         });
+    }
+
+    public function getEntityProducts($entity_type_id, $entity_data) {
+        $entity_products = array();
+        if ($entity_type_id == EntityTypeId::PRODUCT) {
+            foreach ($entity_data as $product) {
+                $entity_products[] = $product;
+            }
+        } elseif ($entity_type_id == EntityTypeId::LOOK) {
+            foreach ($entity_data as $look) {
+                if ($look->products) {
+                    foreach ($look->products as $product) {
+                        $entity_products[] = $product;
+                    }
+                }
+            }
+        } elseif ($entity_type_id == EntityTypeId::TIP) {
+            foreach ($entity_data as $tips) {
+                if ($tips->product_entities) {
+                    foreach ($tips->product_entities as $tipEntity) {
+                        if ($tipEntity->product) {
+                            $entity_products[] = $tipEntity->product;
+                        }
+                    }
+                }
+            }
+        } elseif ($entity_type_id == EntityTypeId::COLLECTION) {
+            foreach ($entity_data as $collection) {
+                if ($collection->product_entities) {
+                    foreach ($collection->product_entities as $collectionEntity) {
+                        if ($collectionEntity->product) {
+                            $entity_products[] = $collectionEntity->product;
+                        }
+                    }
+                }
+            }
+        }
+        return $entity_products;
     }
 
 }
