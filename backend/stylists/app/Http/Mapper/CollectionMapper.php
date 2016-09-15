@@ -276,4 +276,14 @@ class CollectionMapper extends Controller
 
         return $result;
     }
+
+    public function updateStatus($collection_id, $status_id)
+    {
+        try{
+            Collection::where(['id' => $collection_id])->update(['status_id' => $status_id]);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
+    }
 }

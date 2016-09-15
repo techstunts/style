@@ -268,6 +268,11 @@ class LookController extends Controller
             Redirect::back()->withError('Look Not Found');
         }
         $lookMapperObj = new LookMapper();
+
+        if (!empty($request->input('is_recommended'))) {
+            $lookMapperObj->updateStatus($this->resource_id, $request->input('status_id'));
+            return redirect('look/view/' . $this->resource_id);
+        }
         $validator = $lookMapperObj->inputValidator($request);
 
         if ($validator->fails()) {

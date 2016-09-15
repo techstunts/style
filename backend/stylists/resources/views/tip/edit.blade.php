@@ -203,6 +203,7 @@
 
                                 <tr class="row">
                                     <td class="title" colspan="2">
+                                        <input type="hidden" name="is_recommended" value="{{$is_recommended ? true : false}}">
                                         <input type="submit" class="btn btn-primary btn-lg" value="Save">
                                         <a href="{!! url('tip/view/' . $tip->id) !!}">Cancel</a>
                                     </td>

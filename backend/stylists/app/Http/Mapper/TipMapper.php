@@ -286,4 +286,14 @@ class TipMapper extends Controller
 
         return $result;
     }
+
+    public function updateStatus($tip_id, $status_id)
+    {
+        try{
+            Tip::where(['id' => $tip_id])->update(['status_id' => $status_id]);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
+    }
 }

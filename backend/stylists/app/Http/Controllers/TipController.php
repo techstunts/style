@@ -204,6 +204,10 @@ class TipController extends Controller
             Redirect::back()->withError('Tip Not Found');
         }
         $tipMapperObj = new TipMapper();
+        if (!empty($request->input('is_recommended'))) {
+            $tipMapperObj->updateStatus($this->resource_id, $request->input('status_id'));
+            return redirect('tip/view/' . $this->resource_id);
+        }
         $validator = $tipMapperObj->inputValidator($request);
 
         if ($validator->fails()) {
