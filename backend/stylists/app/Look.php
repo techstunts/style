@@ -61,4 +61,8 @@ class Look extends Model
     public function look_products(){
         return $this->hasMany('App\LookProduct');
     }
+    public function recommendation(){
+        return $this->hasMany('App\Recommendation', 'entity_id');
+    }
+
 }

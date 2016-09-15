@@ -151,6 +151,10 @@ class CollectionController extends Controller
         }
 
         $collectionMapperObj = new CollectionMapper();
+        if (!empty($request->input('is_recommended'))) {
+            $collectionMapperObj->updateStatus($this->resource_id, $request->input('status_id'));
+            return redirect('collection/view/' . $this->resource_id);
+        }
         $validator = $collectionMapperObj->inputValidator($request);
 
         if ($validator->fails()) {

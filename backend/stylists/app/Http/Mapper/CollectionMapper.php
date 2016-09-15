@@ -13,6 +13,7 @@ use App\Models\Lookups\AppSections;
 use App\Models\Enums\RecommendationType;
 use Validator;
 use App\Collection;
+use App\Recommendation;
 use App\CollectionEntity;
 
 class CollectionMapper extends Controller
@@ -46,6 +47,7 @@ class CollectionMapper extends Controller
             foreach ($this->dropdown_fields as $dropdown_field) {
                 $values_array[$dropdown_field] = isset($old_values[$dropdown_field]) && $old_values[$dropdown_field] != '' ? intval($old_values[$dropdown_field]) : $collection->$dropdown_field;
             }
+            $values_array['is_recommended'] = Recommendation::checkRecommended($collection);
         } else {
             foreach ($this->dropdown_fields as $dropdown_field) {
                 $values_array[$dropdown_field] = isset($old_values[$dropdown_field]) && $old_values[$dropdown_field] != '' ? intval($old_values[$dropdown_field]) : '';
@@ -159,6 +161,7 @@ class CollectionMapper extends Controller
     {
         $entity_type_look = EntityType::LOOK;
         $entity_type_product = EntityType::PRODUCT;
+        $entity_type_id = EntityType::COLLECTION;
 
         $look = function ($query) {
             $query->with('gender', 'status', 'occasion', 'body_type')
@@ -181,6 +184,10 @@ class CollectionMapper extends Controller
             ->with([('look_entities') => function ($query) use ($look, $entity_type_look) {
                 $query->with(['look' => $look])
                     ->where('entity_type_id', $entity_type_look);
+            }])
+            ->with(['recommendation' => function($query) use ($entity_type_id) {
+                $query->where('entity_type_id', $entity_type_id);
+                $query->first();
             }])
             ->with($this->with_array)
             ->select($this->fields)
@@ -229,7 +236,7 @@ class CollectionMapper extends Controller
         if ($collection->status_id !== Status::Active && !empty($request->status_id) && $request->status_id == Status::Active && empty($collection->image)) {
             return array(
                 'status' => false,
-                'message' => 'Upload image first for this collection',
+                'message' => 'Upload image to make status Active',
             );
         }
 
@@ -268,5 +275,15 @@ class CollectionMapper extends Controller
         }
 
         return $result;
+    }
+
+    public function updateStatus($collection_id, $status_id)
+    {
+        try{
+            Collection::where(['id' => $collection_id])->update(['status_id' => $status_id]);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 }
