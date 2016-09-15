@@ -1,4 +1,4 @@
-<select class="form-control" name="body_type_id">
+<select  {{!empty($is_recommended) ? "disabled" : ""}} class="form-control" name="body_type_id">
     <option value="">Body Types</option>
     @foreach($body_types as $body_type)
         <option value="{{$body_type->id}}" {{$body_type_id === intval($body_type->id) ? "selected" : ""}}>

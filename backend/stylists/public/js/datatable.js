@@ -47,6 +47,7 @@ var entity_fields_ids = [
 var api_origin = '';
 var stylist_id = '';
 var role_admin = '';
+var is_recommended = false;
 
 
 $(document).ready(function () {
@@ -59,6 +60,7 @@ $(document).ready(function () {
     api_origin = $('#api_origin').val();
     stylist_id = $('#stylist_id').val();
     role_admin = $('#role_admin').val();
+    is_recommended = $('#is_recommended').val();
 
     // Array holding selected row IDs
     var rows_selected = [];
@@ -372,7 +374,11 @@ function showImage(e) {
 };
 
 function deleteItem(e){
-    $(this).parents('.items').remove();
+    if (is_recommended == "" || is_recommended == false) {
+        $(this).parents('.items').remove();
+    } else {
+        alert('No modification allowed');
+    }
     e.preventDefault();
 }
 

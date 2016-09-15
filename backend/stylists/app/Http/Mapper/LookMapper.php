@@ -183,7 +183,7 @@ class LookMapper extends Controller
         if ($look->status_id !== Status::Active && !empty($request->status_id) && $request->status_id == Status::Active && empty($look->image)) {
             return array(
                 'status' => false,
-                'message' => 'Upload image first for this look',
+                'message' => 'Upload image to make status Active',
             );
         }
 

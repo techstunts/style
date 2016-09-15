@@ -1,5 +1,6 @@
 <div class="popup" data-value="{{$popup_entity_type_ids[$nav_tab_index]}}" data-popup="send-entities">
     <div class="popup-inner">
+        <input type="hidden" value="{{!empty($is_recommended) ? $is_recommended : false}}" id="is_recommended">
         <input type="hidden" value="{{env('API_ORIGIN')}}" id="api_origin">
         <input type="hidden" value="{{$recommendation_type_id}}" id="recommendation_type_id">
         @if(!empty($logged_in_stylist_id))

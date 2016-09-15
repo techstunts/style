@@ -24,4 +24,13 @@ class Recommendation extends Model
     protected $fillable = [];
 
     public $timestamps = true;
+
+    public static function checkRecommended($entity) {
+        if (!empty($entity) && !empty($entity->recommendation)) {
+            if (count($entity->recommendation) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

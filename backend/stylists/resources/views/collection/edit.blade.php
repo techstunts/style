@@ -13,9 +13,28 @@
                               enctype="multipart/form-data" style="display: initial;">
                             {!! csrf_field() !!}
                             <table class="info">
+                                @if($is_recommended)
+                                    @if($is_admin)
+                                        <tr class="row">
+                                            <td class="title" colspan="2">
+                                                <span>
+                                                    This item has already been recommended to client(s).Only status change is allowed.
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @else
+                                        <tr class="row">
+                                            <td class="title" colspan="2">
+                                                <span>
+                                                    This item has already been recommended to client(s). No further modification allowed. Please contact admin.
+                                            </span>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endif
                                 <tr class="row">
                                     <td class="title" colspan="2">
-                                        <input class="form-control" placeholder="Name" type="text" name="name"
+                                        <input {{$is_recommended ? "disabled" : ""}} class="form-control" placeholder="Name" type="text" name="name"
                                                value="{{ old('name') != "" ? old('name') : $collection->name }}">
                                         @if($name_error = $errors->first('name'))
                                             <span class="errorMsg">{{$name_error}}</span>
@@ -25,7 +44,7 @@
 
                                 <tr class="row">
                                     <td class="description" colspan="2">
-                                        <textarea class="form-control" placeholder="Description" type="text"
+                                        <textarea {{$is_recommended ? "disabled" : ""}} class="form-control" placeholder="Description" type="text"
                                                   name="description">{{ old('description') != "" ? old('description') : $collection->description }}</textarea>
                                         @if($description_error = $errors->first('description'))
                                             <span class="errorMsg">{{$description_error}}</span>
@@ -88,7 +107,7 @@
 
                                 <tr class="row">
                                     <td class="title" colspan="1">
-                                        <a class="btn active btn-primary btn-xs btn_add_entity" style="color: #fff;"
+                                        <a {{$is_recommended ? "disabled" : ""}} class="btn active btn-primary btn-xs btn_add_entity" style="color: #fff;"
                                            data-popup-open="send-entities" href="#">Add Looks and Products</a>
                                     </td>
                                 </tr>
@@ -157,7 +176,7 @@
 
                             <div class="image">
                                 <img src="{!! strpos($collection->image, "collections") === 0 ? asset('images/'.$collection->image) : $collection->image !!}"/>
-                                <input id="image" name="image" type="file" class="file-loading">
+                                <input {{$is_recommended ? "disabled" : ""}} id="image" name="image" type="file" class="file-loading">
                                 <input name="entity_type_id" type="hidden" value="{{$entity_type_id}}">
                                 <img id="loadedImage" src="" class="pop-image-size"/>
                                 @if($image_error = $errors->first('image'))

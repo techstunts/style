@@ -12,9 +12,29 @@
                               enctype="multipart/form-data" style="display: initial;">
                             {!! csrf_field() !!}
                             <table class="info">
+                                @if($is_recommended)
+                                    @if($is_admin)
+                                        <tr class="row">
+                                            <td class="title" colspan="2">
+                                                <span>
+                                                    This item has already been recommended to client(s).Only status change is allowed.
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @else
+                                        <tr class="row">
+                                            <td class="title" colspan="2">
+                                                <span>
+                                                    This item has already been recommended to client(s). No further modification allowed. Please contact admin.
+                                            </span>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endif
                                 <tr class="row">
                                     <td class="title" colspan="2">
-                                        <input class="form-control" placeholder="Name" type="text" name="name"
+                                        <input {{$is_recommended ? "disabled" : ""}} class="form-control"
+                                               placeholder="Name" type="text" name="name"
                                                value="{{ old('name') != "" ? old('name') : $tip->name }}">
                                         @if($name_error = $errors->first('name'))
                                             <span class="errorMsg">{{$name_error}}</span>
@@ -24,7 +44,8 @@
 
                                 <tr class="row">
                                     <td class="description" colspan="2">
-                                        <textarea class="form-control" placeholder="Description" type="text"
+                                        <textarea {{$is_recommended ? "disabled" : ""}} class="form-control"
+                                                  placeholder="Description" type="text"
                                                   name="description">{{ old('description') != "" ? old('description') : $tip->description }}</textarea>
                                         @if($description_error = $errors->first('description'))
                                             <span class="errorMsg">{{$description_error}}</span>
@@ -87,7 +108,8 @@
 
                                 <tr class="row">
                                     <td class="title" colspan="2">
-                                        <input class="form-control" placeholder="Image URL" type="text" name="image_url"
+                                        <input {{$is_recommended ? "disabled" : ""}} class="form-control"
+                                               placeholder="Image URL" type="text" name="image_url"
                                                value="{{ old('image_url') != "" ? old('image_url') : $tip->image_url }}">
                                         @if($image_url_error = $errors->first('image_url'))
                                             <span class="errorMsg">{{$image_url_error}}</span>
@@ -97,7 +119,8 @@
 
                                 <tr class="row">
                                     <td class="title" colspan="2">
-                                        <input class="form-control" placeholder="Video URL" type="text" name="video_url"
+                                        <input {{$is_recommended ? "disabled" : ""}} class="form-control"
+                                               placeholder="Video URL" type="text" name="video_url"
                                                value="{{ old('video_url') != "" ? old('video_url') : $tip->video_url }}">
                                         @if($video_url_error = $errors->first('video_url'))
                                             <span class="errorMsg">{{$video_url_error}}</span>
@@ -106,7 +129,8 @@
                                 </tr>
                                 <tr class="row">
                                     <td class="title" colspan="2">
-                                        <input class="form-control" placeholder="External URL" type="text"
+                                        <input {{$is_recommended ? "disabled" : ""}} class="form-control"
+                                               placeholder="External URL" type="text"
                                                name="external_url"
                                                value="{{ old('external_url') != "" ? old('external_url') : $tip->external_url}}"
                                                validation="required">
@@ -118,7 +142,8 @@
 
                                 <tr class="row">
                                     <td class="title" colspan="1">
-                                        <a class="btn active btn-primary btn-xs btn_add_entity" style="color: #fff;"
+                                        <a {{$is_recommended ? "disabled" : ""}} class="btn active btn-primary btn-xs btn_add_entity"
+                                           style="color: #fff;"
                                            data-popup-open="send-entities" href="#">Add Looks and Products</a>
                                     </td>
                                 </tr>
@@ -186,7 +211,7 @@
                             </table>
                             <div class="image">
                                 <img src="{!! strpos($tip->image, "tips") === 0 ? asset('images/'.$tip->image) : $tip->image !!}"/>
-                                <input id="image" name="image" type="file" class="file-loading">
+                                <input {{$is_recommended ? "disabled" : ""}} id="image" name="image" type="file" class="file-loading">
                                 <input name="entity_type_id" type="hidden" value="{{$entity_type_id}}">
                                 <img id="loadedImage" src="" class="pop-image-size"/>
                                 @if($image_error = $errors->first('image'))
