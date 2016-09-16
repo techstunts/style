@@ -96,6 +96,7 @@ class ClientController extends Controller
         $view_properties['app_sections'] = AppSections::all();
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
         $view_properties['show_price_filters'] = 'YES';
+        $view_properties['is_super_admin'] = Auth::user()->hasRole('superadmin') ? true : false;
         return view('client.list', $view_properties);
     }
 
