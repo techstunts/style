@@ -54,7 +54,7 @@ class Push
 
     private function sendMessageIos($registration_ids, $params) {
 
-        $ssl_url = 'ssl://gateway.sandbox.push.apple.com:2195';
+        $ssl_url = 'ssl://gateway.push.apple.com:2195';
 
         $payload = array();
         $payload['aps'] = array('alert' => $params["message"], 'badge' => 0, 'sound' => 'default');
