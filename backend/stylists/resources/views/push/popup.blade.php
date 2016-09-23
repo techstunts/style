@@ -37,7 +37,7 @@
                                class="form-control search">
                     @endif
                     <input type="text" name="search" value="" placeholder="Search Text" class="form-control search">
-                    <input class="btn" type="submit" value="Filter"> </input>
+                    <input class="btn popup-inner-btn" type="submit" value="Filter"> </input>
                     <a class="clearall">Clear All</a>
                     <a class="prev-page" data-popup-open="send-entities"> < </a>
                     <a class="next-page" data-popup-open="send-entities"> > </a>

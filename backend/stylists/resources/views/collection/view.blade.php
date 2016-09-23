@@ -46,8 +46,11 @@
                                     <td class="content">{{$collection->status->name}} </td>
                                 </tr>
 
-                                <tr class="row">
+                                <div class="row">
                                     <td class="head">Products</td>
+                                </div>
+
+                                <tr class="row">
                                     <td class="content">
                                         @foreach($collection->product_entities as $entity)
                                             @if(!empty($entity->product))
@@ -68,8 +71,12 @@
                                     </td>
                                 </tr>
                                 <div class="clear"></div>
-                                <tr class="row">
+
+                                <div class="row">
                                     <td class="head">Looks</td>
+                                </div>
+
+                                <tr class="row">
                                     <td class="content looks">
                                         @foreach($collection->look_entities as $entity)
                                             @if(!empty($entity->look))

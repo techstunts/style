@@ -6,7 +6,11 @@
 <div id="contentCntr">
     <div class="section">
         <div class="container">
-            {!! $stylists->render() !!}
+            <div class="row">
+                <div class="col s4 offset-s5">
+                    {!! $stylists->render() !!}
+                </div>
+            </div>
             <div class="clear"></div>
             <ol class="selectable" >
             @foreach($stylists as $stylist)
@@ -28,8 +32,11 @@
 
             <div class="clear"></div>
 
-            {!! $stylists->render() !!}
-
+            <div class="row">
+                <div class="col s4 offset-s5">
+                    {!! $stylists->render() !!}
+                </div>
+            </div>
         </div>
 
     </div>

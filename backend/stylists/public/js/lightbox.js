@@ -210,3 +210,11 @@ $(document).ready(function(){
         $('.filters .main').find('input:submit').trigger('click');
     });
 });
+
+
+var selector = '.second-menu li a';
+
+$(selector).on('click',function(){
+   $(selector).removeClass('active');
+    $(this).addClass()('active');
+});
