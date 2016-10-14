@@ -13,6 +13,7 @@ use App\Models\Lookups\AppSections;
 use App\Models\Enums\RecommendationType;
 use Validator;
 use App\Tip;
+use App\Recommendation;
 use App\TipEntity;
 
 class TipMapper extends Controller
@@ -46,6 +47,7 @@ class TipMapper extends Controller
             foreach ($this->dropdown_fields as $dropdown_field) {
                 $values_array[$dropdown_field] = isset($old_values[$dropdown_field]) && $old_values[$dropdown_field] != '' ? intval($old_values[$dropdown_field]) : $tip->$dropdown_field;
             }
+            $values_array['is_recommended'] = Recommendation::checkRecommended($tip);
         } else {
             foreach ($this->dropdown_fields as $dropdown_field) {
                 $values_array[$dropdown_field] = isset($old_values[$dropdown_field]) && $old_values[$dropdown_field] != '' ? intval($old_values[$dropdown_field]) : '';
@@ -166,6 +168,7 @@ class TipMapper extends Controller
     {
         $entity_type_look = EntityType::LOOK;
         $entity_type_product = EntityType::PRODUCT;
+        $entity_type_id = EntityType::TIP;
 
         $look = function ($query) {
             $query->with('gender', 'status', 'occasion', 'body_type')
@@ -189,6 +192,10 @@ class TipMapper extends Controller
             }])
             ->with([('createdBy') => function ($query) {
                 $query->select('id', 'name', 'image');
+            }])
+            ->with(['recommendation' => function($query) use ($entity_type_id) {
+                $query->where('entity_type_id', $entity_type_id);
+                $query->first();
             }])
             ->with($this->with_array)
             ->select($this->fields)
@@ -237,7 +244,7 @@ class TipMapper extends Controller
         if ($tip->status_id !== Status::Active && !empty($request->status_id) && $request->status_id == Status::Active && empty($tip->image)) {
             return array(
                 'status' => false,
-                'message' => 'Upload image first for this tip',
+                'message' => 'Upload image to make status Active',
             );
         }
 
@@ -278,5 +285,15 @@ class TipMapper extends Controller
         }
 
         return $result;
+    }
+
+    public function updateStatus($tip_id, $status_id)
+    {
+        try{
+            Tip::where(['id' => $tip_id])->update(['status_id' => $status_id]);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 }

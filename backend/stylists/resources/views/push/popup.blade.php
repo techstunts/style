@@ -1,5 +1,6 @@
 <div class="popup" data-value="{{$popup_entity_type_ids[$nav_tab_index]}}" data-popup="send-entities">
     <div class="popup-inner">
+        <input type="hidden" value="{{!empty($is_recommended) ? $is_recommended : false}}" id="is_recommended">
         <input type="hidden" value="{{env('API_ORIGIN')}}" id="api_origin">
         <input type="hidden" value="{{$recommendation_type_id}}" id="recommendation_type_id">
         @if(!empty($logged_in_stylist_id))
@@ -56,6 +57,8 @@
                 <input type="hidden" value="{{$add_entity}}" id="add_entity_btn">
             @else
                 @include('common.app_section.select')
+                <input type="text" name="custom_message"  id="custom_message" value="" placeholder="Custom Message">
+                <input type="text" name="product_list_heading" id="product_list_heading" value="" placeholder="Product List Heading">
                 <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
             @endif
             <img class="loader" src="/images/popup-loader.gif"/>

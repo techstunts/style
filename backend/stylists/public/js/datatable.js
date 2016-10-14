@@ -47,6 +47,7 @@ var entity_fields_ids = [
 var api_origin = '';
 var stylist_id = '';
 var role_admin = '';
+var is_recommended = false;
 
 
 $(document).ready(function () {
@@ -59,6 +60,7 @@ $(document).ready(function () {
     api_origin = $('#api_origin').val();
     stylist_id = $('#stylist_id').val();
     role_admin = $('#role_admin').val();
+    is_recommended = $('#is_recommended').val();
 
     // Array holding selected row IDs
     var rows_selected = [];
@@ -202,6 +204,8 @@ $(document).ready(function () {
         }
 
         var app_section = $("#app_section").val();
+        var custom_message = $("#custom_message").val();
+        var product_list_heading = $("#product_list_heading").val();
 
         if ($(".entity-type-to-send").length > 0) {
             entity_type_to_send = $(".entity-type-to-send").val();
@@ -227,6 +231,8 @@ $(document).ready(function () {
                 entity_type_id: entity_type_to_send,
                 client_ids: rows_selected,
                 app_section: app_section,
+                custom_message: custom_message,
+                product_list_heading: product_list_heading,
                 recommendation_type_id: recommendation_type_id,
                 style_request_ids: request_ids,
                 _token: $(this).parent().children('input[name="_token"]').val()
@@ -245,6 +251,8 @@ $(document).ready(function () {
                     }
                     entity_sent_once = EntitySent.YES;
                 }
+                $("#custom_message").val("");
+                $("#product_list_heading").val("");
             },
             complete: toggleLoader
         });
@@ -366,7 +374,11 @@ function showImage(e) {
 };
 
 function deleteItem(e){
-    $(this).parents('.items').remove();
+    if (is_recommended == "" || is_recommended == false) {
+        $(this).parents('.items').remove();
+    } else {
+        alert('No modification allowed');
+    }
     e.preventDefault();
 }
 

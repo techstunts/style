@@ -15,6 +15,7 @@ use App\Models\Lookups\AppSections;
 use App\Models\Enums\RecommendationType;
 use Validator;
 use App\LookProduct;
+use App\Recommendation;
 
 class LookMapper extends Controller
 {
@@ -47,6 +48,7 @@ class LookMapper extends Controller
             foreach ($this->dropdown_fields as $dropdown_field) {
                 $values_array[$dropdown_field] = isset($old_values[$dropdown_field]) && $old_values[$dropdown_field] != '' ? intval($old_values[$dropdown_field]) : $look->$dropdown_field;
             }
+            $values_array['is_recommended'] = Recommendation::checkRecommended($look);
         } else {
             foreach ($this->dropdown_fields as $dropdown_field) {
                 $values_array[$dropdown_field] = isset($old_values[$dropdown_field]) && $old_values[$dropdown_field] != '' ? intval($old_values[$dropdown_field]) : '';
@@ -136,9 +138,14 @@ class LookMapper extends Controller
 
     public function getLookById($id)
     {
+        $entity_type_id = EntityType::LOOK;
         $look = Look::with([('stylist') => function ($query) {
             $query->select('id', 'name', 'image');
         }])
+            ->with(['recommendation' => function($query) use ($entity_type_id) {
+                $query->where('entity_type_id', $entity_type_id);
+                $query->first();
+            }])
             ->with($this->with_array)
             ->select($this->fields)
             ->where('id', $id)
@@ -183,7 +190,7 @@ class LookMapper extends Controller
         if ($look->status_id !== Status::Active && !empty($request->status_id) && $request->status_id == Status::Active && empty($look->image)) {
             return array(
                 'status' => false,
-                'message' => 'Upload image first for this look',
+                'message' => 'Upload image to make status Active',
             );
         }
 
@@ -244,6 +251,16 @@ class LookMapper extends Controller
             $price += $product->price;
         }
         return $price;
+    }
+
+    public function updateStatus($look_id, $status_id)
+    {
+        try{
+            Look::where(['id' => $look_id])->update(['status_id' => $status_id]);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 
 }

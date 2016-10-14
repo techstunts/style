@@ -23,6 +23,7 @@
                             <input style="display: block;" type="submit" class="btn btn-primary btn-lg" value="Upload">
                         </form>
                     </div>
+
                     <div class="image">
                         <form id="UploadImageForm" action="{{env('API_ORIGIN')}}/file/upload" enctype="multipart/form-data" style="display: initial;">
                             {!! csrf_field() !!}
@@ -37,6 +38,21 @@
                     <form method="POST" action="{!! url('/stylist/update/' . $stylist->id) !!}" style="display: initial;">
                         {!! csrf_field() !!}
                         <table class="info">
+                            <tr class="row">
+                                <td class="title" colspan="2">
+                                @foreach($stylist->upload_images as $upload_image)
+                                    @if ($upload_image->type && in_array($upload_image->type->name, $image_type_names))
+                                        <tr class="row">
+                                            <td class="head">{{$upload_image->type->name}}</td>
+                                            <td class="content">
+                                                <img class="entity" src="{{env('API_ORIGIN') .'/'. $upload_image->path .'/'.$upload_image->name}}"/>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+                                </td>
+                            </tr>
+
                             <tr class="row">
                                 <td class="title" colspan="2">
                                     <input class="form-control" placeholder="Name" type="text" name="name" value="{{ old('name') != "" ? old('name') : $stylist->name }}">

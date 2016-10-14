@@ -53,4 +53,8 @@ class Collection extends Model
     public function look_entities(){
         return $this->hasMany('App\CollectionEntity');
     }
+    public function recommendation(){
+        return $this->hasMany('App\Recommendation', 'entity_id');
+    }
+
 }

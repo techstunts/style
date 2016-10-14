@@ -279,6 +279,7 @@ $(document).ready(function(){
                     image_type[0].selectedIndex = 0;
                     image.val('');
                     alert('Image uploaded successfully');
+                    location.reload();
                 } else {
                     alert(data.error.message);
                 }
@@ -286,7 +287,39 @@ $(document).ready(function(){
         });
         return false;
     });
+
+    api_origin = $('#api_origin').val();
+
+    $('input.autosuggest').keyup(function(){
+        var keyword = $(this).val();
+        var autosuggest_type = $(this).attr('autosuggest_type');
+        var autosuggest_object =  $(this);
+        if(keyword.trim().length>=2){
+            $.ajax({
+                type : "GET",
+                url: api_origin + '/autosuggest/' + autosuggest_type,
+                data : {
+                    keyword : keyword,
+                },
+                success : function(response){
+                    var allSuggestions = [];
+                    for(i=0; i<response.categories.length; i++){
+                        allSuggestions.push({label: response.categories[i].name, value: response.categories[i].id});
+                    }
+                    autosuggest_object.autocomplete({
+                        source: allSuggestions,
+                        select: function (e, ui) {
+                            $(this).val(ui.item.value);
+                            $(this).parent('form')[0].submit();
+                        },
+
+                    });
+                },
+            });
+        }
+    });
 });
+
 
 function deleteTag(){
     var modal_body = $(this).parents('.modal-body');

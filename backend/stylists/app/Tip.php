@@ -54,4 +54,8 @@ class Tip extends Model
         return $this->hasMany('App\TipEntity');
     }
 
+    public function recommendation(){
+        return $this->hasMany('App\Recommendation', 'entity_id');
+    }
+
 }
