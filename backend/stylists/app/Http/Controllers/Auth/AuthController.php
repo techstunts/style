@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Enums\Designation;
+use App\Models\Enums\Gender;
+use App\Models\Lookups\Expertise;
 use App\Role;
 use App\Stylist;
 use Illuminate\Http\Request;
@@ -104,7 +107,10 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'status_id' => BlockedStylistsValidator::BLOCKED_STATUS_ID
+            'status_id' => BlockedStylistsValidator::BLOCKED_STATUS_ID,
+            'expertise_id' => \App\Models\Enums\Expertise::Casuals,
+            'gender_id' => Gender::Female,
+            'designation_id' => Designation::CertifiedStylist,
         ]);
 
         $stylist_role = Role::where('name','stylist')->firstOrFail();
