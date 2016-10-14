@@ -6,7 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="{!! asset('css/style.css') !!}" />
+    @if (str_contains(Request::fullUrl(), 'nicobar'))
+        <link rel="stylesheet" href="{!! asset('css/nicobar.style.css') !!}" />
+    @else
+        <link rel="stylesheet" href="{!! asset('css/style.css') !!}" />
+    @endif
+
     <link rel="stylesheet" href="{!! asset('css/bootstrap.css') !!}" />
     <link rel="stylesheet" href="{!! asset('css/report.css') !!}" />
 
