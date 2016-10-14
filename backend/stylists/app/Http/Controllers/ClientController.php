@@ -126,7 +126,7 @@ class ClientController extends Controller
         $where = "1=1";
         $stylist = Auth::user();
         $booking_id = $request ? $request->input('booking_id') : '';
-        if(!$stylist->hasRole('admin')){
+        if(!$stylist->hasRole('admin') && !env('ANY_STYLIST_CAN_APPROACH_ANY_CLIENT')){
             if (!empty($booking_id)) {
                 $bookingMapperObj = new BookingMapper();
                 $booking_exists = $bookingMapperObj->userBookedStylist($this->resource_id, $stylist->id, $booking_id);
