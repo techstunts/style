@@ -111,6 +111,7 @@ class AuthController extends Controller
             'expertise_id' => \App\Models\Enums\Expertise::Casuals,
             'gender_id' => Gender::Female,
             'designation_id' => Designation::CertifiedStylist,
+            'age' => 25
         ]);
 
         $stylist_role = Role::where('name','stylist')->firstOrFail();
