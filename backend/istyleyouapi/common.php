@@ -1,7 +1,7 @@
 <?php
 include_once("ProductLink.php");
 
-$images_origin = 'http://d36o0t9p57q98i.cloudfront.net/backend';
+$images_origin = 'http://d36o0t9p57q98i.cloudfront.net/';
 
 function getLooksDetails($looks, $userid){
     global $images_origin;
@@ -102,7 +102,7 @@ function getLooksDetails($looks, $userid){
                         'productdetails' => $productarray,
                         'stylish_details' => $stylist_details,
                         'is_collage' => isset($looks[$i]['is_collage']) ? $looks[$i]['is_collage'] : '',
-                        'look_url' => $images_origin . '/' . $looks[$i][2]
+                        'look_url' => $images_origin . '/uploads/images/looks/' . $looks[$i][2]
                     )
             );
         $looks_and_products[] = $current_look_details;
