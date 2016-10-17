@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['stylish_id']) && !empty(
 
         $lookinfo = array();
         $looks = array();
-        $sql = "Select l.id as look_id, l.description, l.image, l.price, l.name, o.name as occasion
+        $sql = "Select l.id as look_id, l.description, concat('uploads/images/looks/', l.image) as image, l.price, l.name, o.name as occasion
               FROM looks l join lu_occasion o on l.occasion_id = o.id
               where stylist_id='$userid' $gender_clause
               order by l.id ASC LIMIT 5";

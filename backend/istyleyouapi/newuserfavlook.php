@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['userid']) && !empty($_GE
     $records_per_page = 20;
     $record_start = intval($page * $records_per_page);
 
-    $sql = "Select l.id as look_id, l.description, l.image, l.price, l.name
+    $sql = "Select l.id as look_id, l.description, concat('uploads/images/looks/', l.image) as image, l.price, l.name
 		  from looks l
 		  where l.id NOT IN (Select look_id from users_unlike where user_id='$userid')
 		  AND l.id IN (Select look_id from usersfav where user_id='$userid')

@@ -159,7 +159,7 @@
 
                             </table>
                             <div class="image">
-                                <img src="{!! strpos($look->image, "uploadfile1") === 0 ? asset('images/'.$look->image) : $look->image !!}"/>
+                                <img src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
                                 <input {{$is_recommended ? "disabled" : ""}} id="image" name="image" type="file" class="file-loading">
                                 <input name="entity_type_id" type="hidden" value="{{$entity_type_id}}">
                                 <img id="loadedImage" src="#" class="pop-image-size"/>
