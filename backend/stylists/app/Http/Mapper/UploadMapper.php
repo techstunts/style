@@ -52,14 +52,12 @@ class UploadMapper extends Controller
         $entity_type_id = $request->input('entity_type_id');
         $entity_name = $this->getEntityTypeName($entity_type_id);
 
-        $entity_image_folder_name = $this->getImageFolderName($entity_name);
         $image_path = env(strtoupper($entity_name) . '_IMAGE_PATH');
 
         $destinationPath = public_path() . '/' . $image_path;
         $filename = preg_replace('/[^a-zA-Z0-9_.]/', '_', $request->file('image')->getClientOriginalName());
         $request->file('image')->move($destinationPath, $filename);
-        $image_name = $entity_image_folder_name . '/' . $filename;
-        return $image_name;
+        return $filename;
     }
 
     public function getImageFolderName($entity_name)
