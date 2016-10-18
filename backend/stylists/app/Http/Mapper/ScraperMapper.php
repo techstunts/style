@@ -251,10 +251,11 @@ class ScraperMapper
                     $this->nicobar_prod_obj['url'] = 'https://www.nicobar.com/';
                     $this->nicobar_prod_obj['sku'] = $line->sku;
                     foreach ($line->attributes->Color as $diff_prod_color) {
-                        $this->nicobar_prod_obj['colors'] = $diff_prod_color->value;
-                        $this->nicobar_prod_obj['sku'] = $line->sku;
-                        $this->nicobar_prod_obj['image_url'] = $diff_prod_color->image ? $diff_prod_color->image : $line->image;
-                        $product_array[$count++] = (object) $this->nicobar_prod_obj;
+                        if ($diff_prod_color->sku == $line->sku) {
+                            $this->nicobar_prod_obj['colors'] = $diff_prod_color->value;
+                            $this->nicobar_prod_obj['image_url'] = $diff_prod_color->image ? $diff_prod_color->image : $line->image;
+                            $product_array[$count++] = (object)$this->nicobar_prod_obj;
+                        }
                     }
                 }
             }
