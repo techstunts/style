@@ -88,7 +88,7 @@
                             </tr>
                         </table>
                         <div class="image">
-                            <img src="{!! asset('images/' . $collection->image) !!}"/>
+                            <img src="{{env('API_ORIGIN') . '/uploads/images/collections/' . $collection->image}}"/>
                         </div>
                     </div>
                 </li>

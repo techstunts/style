@@ -78,7 +78,7 @@
                             </tr>
                         </table>
                         <div class="image">
-                            <img src="{!! asset('images/' . $look->image) !!}"/>
+                            <img class="entity" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
                         </div>
                     </div>
                 </li>

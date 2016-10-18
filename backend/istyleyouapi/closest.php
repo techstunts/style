@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
     $records_per_page = 5;
     $record_start = intval($page * $records_per_page);
 
-    $sql = "Select distinct l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name
+    $sql = "Select distinct l.id as look_id, l.description, concat('uploads/images/looks/', l.image) as image, l.price, o.name as occasion, l.name
 				  from recommendations r
 				  join looks l on r.entity_id=l.id and r.entity_type_id = 2
 				  join lu_occasion o on l.occasion_id = o.id
