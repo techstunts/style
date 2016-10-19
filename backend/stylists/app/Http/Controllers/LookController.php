@@ -12,6 +12,7 @@ use App\Models\Lookups\Status;
 use App\Models\Lookups\AppSections;
 use App\Http\Mapper\LookMapper;
 use App\Http\Mapper\UploadMapper;
+use App\Http\Mapper\Mapper;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -136,6 +137,7 @@ class LookController extends Controller
         $view_properties = $lookMapperObj->getDropDowns();
         $view_properties = array_merge($view_properties, $lookMapperObj->getViewProperties($request->old()));
         $view_properties = array_merge($view_properties, $lookMapperObj->getPopupProperties($request));
+        $view_properties['products'] = !empty($request->old('product_ids')) ? Mapper::productsByIds($request->old('product_ids')) : '';
 
         return view('look.create', $view_properties);
     }
