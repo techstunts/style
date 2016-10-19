@@ -60,12 +60,7 @@
                         </div>
                         <div class="image"><img src="{!! strpos($product->upload_image, "uploadfile") === 0 ? asset('images/' . $product->upload_image) : $product->upload_image !!}" /></div>
                         <div class="extra text">
-                            {{--for nicobar products, temporary solution--}}
-                            @if ($product->merchant_id == 46)
-                                <span><a href="https://www.nicobar.com/">View</a></span>
-                            @else
-                                <span><a href="{{$product->product_link}}">View</a></span>
-                            @endif
+                            <span><a href="{{$product->product_link}}">View</a></span>
                             <span><a href="{{$product->omg_product_link}}">Omg</a></span>
                             <span>{{$product->product_type}}</span>
                             <span>{{$product->category ? $product->category->name : ''}}</span>

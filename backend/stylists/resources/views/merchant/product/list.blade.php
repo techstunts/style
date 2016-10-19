@@ -59,12 +59,6 @@
                                             href="{{$product->m_product_url}}">{{$product->m_product_name}}</a></div>
                                 <div class="image"><img src="{{$product->product_image_url }}"/></div>
                                 <div class="extra text">
-                                    {{--for nicobar products, temporary solution--}}
-                                    @if ($product->id == 46)
-                                        <span><a href="https://www.nicobar.com/">View</a></span>
-                                    @else
-                                        <span><a href="{{url('merchant/product/view/' . $product->id)}}">View</a></span>
-                                    @endif
                                     <span>{{$product->brand->name}}</span>
                                     <span>{{$product->category->name}}</span>
                                     <span>{{$product->m_product_price}}</span>
