@@ -128,24 +128,26 @@
                                            value="{{old('product_ids') != "" ? old('product_ids') : ''}}"
                                            id="product_ids">
                                     <td class="content">
-                                        @foreach($look->products as $product)
-                                            @if(!empty($product))
-                                                <div class="items pop-up-item" value="{{$product->id}}">
-                                                    <span class="pull-right cross_mark"><a href="#"><i
-                                                                    class="material-icons" style="font-size: 13px;">close</i></a></span>
-                                                    <div class="name text">
-                                                        <a href="{{url('product/view/' . $product->id)}}"
-                                                           target="_blank">{{$product->name}}</a>
+                                        @if(!empty($look->products))
+                                            @foreach($look->products as $product)
+                                                @if(!empty($product))
+                                                    <div class="items pop-up-item" value="{{$product->id}}">
+                                                        <span class="pull-right cross_mark"><a href="#"><i
+                                                                        class="material-icons" style="font-size: 13px;">close</i></a></span>
+                                                        <div class="name text">
+                                                            <a href="{{url('product/view/' . $product->id)}}"
+                                                               target="_blank">{{$product->name}}</a>
+                                                        </div>
+                                                        <div class="image" data-toggle="popover" data-trigger="hover"
+                                                             data-placement="right" data-html="true"
+                                                             data-content="{{$product->name}}">
+                                                            <img src="{{strpos($product->upload_image, "http") !== false ? $product->upload_image : asset('images/' . $product->upload_image)}}"
+                                                                 class="pop-image-size"/>
+                                                        </div>
                                                     </div>
-                                                    <div class="image" data-toggle="popover" data-trigger="hover"
-                                                         data-placement="right" data-html="true"
-                                                         data-content="{{$product->name}}">
-                                                        <img src="{{strpos($product->upload_image, "http") !== false ? $product->upload_image : asset('images/' . $product->upload_image)}}"
-                                                             class="pop-image-size"/>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        @endforeach
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     </td>
                                 </tr>
 
