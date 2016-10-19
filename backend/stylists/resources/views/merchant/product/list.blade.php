@@ -59,12 +59,12 @@
                                             href="{{$product->m_product_url}}">{{$product->m_product_name}}</a></div>
                                 <div class="image"><img src="{{$product->product_image_url }}"/></div>
                                 <div class="extra text">
-                                    <span><a href="{{url('merchant/product/view/' . $product->id)}}">View</a></span>
                                     <span>{{$product->brand->name}}</span>
                                     <span>{{$product->category->name}}</span>
                                     <span>{{$product->m_product_price}}</span>
                                     <span>{{$genders_list[$product->gender_id]->name}}</span>
                                     <span>{{$product->color->name}}</span>
+                                    <span>{{$product->m_product_sku}}</span>
                                 </div>
                             </div>
                         </li>
