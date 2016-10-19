@@ -46,7 +46,7 @@ class LookMapper extends Controller
 
         if ($look) {
             foreach ($this->dropdown_fields as $dropdown_field) {
-                $values_array[$dropdown_field] = isset($old_values[$dropdown_field]) && $old_values[$dropdown_field] != '' ? intval($old_values[$dropdown_field]) : $look->$dropdown_field;
+                $values_array[$dropdown_field] = isset($old_values[$dropdown_field]) && $old_values[$dropdown_field] != '' ? intval($old_values[$dropdown_field]) : intval($look->$dropdown_field);
             }
             $values_array['is_recommended'] = Recommendation::checkRecommended($look);
         } else {
