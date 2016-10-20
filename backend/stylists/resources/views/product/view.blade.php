@@ -21,9 +21,6 @@
                             <td class="description" colspan="2">{{$product->description}}</td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Product Type</td><td class="content">{{$product->product_type}} </td>
-                        </tr>
-                        <tr class="row">
                             <td class="head">Price</td><td class="content">Rs.{{$product->price}} </td>
                         </tr>
                         <tr class="row">
@@ -58,7 +55,7 @@
                             <td class="content">
                                 @foreach($looks as $look)
                                     <a href="{{url('look/view/' . $look->id)}}" title="{{$look->name}}" target="look_win">
-                                        <img class="entity" src="{{strpos($look->image, "http") !== false ? $look->image : asset('images/' . $look->image)}}"/>
+                                        <img class="entity" src="{{strpos($look->image, "http") !== false ? $look->image : env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
                                     </a>
                                 @endforeach
                             </td>

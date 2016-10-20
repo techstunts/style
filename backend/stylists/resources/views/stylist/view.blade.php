@@ -70,7 +70,7 @@
                                 @if(count($looks))
                                     @foreach($looks as $look)
                                         <a href="{{url('look/view/' . $look->id)}}" title="{{$look->name}}" target="look_win">
-                                            <img class="entity" src="{{strpos($look->image, "http") !== false ? $look->image : asset('images/' . $look->image)}}"/>
+                                            <img class="entity" src="{{strpos($look->image, "http") !== false ? $look->image : env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
                                         </a>
                                     @endforeach
                                     <br />
