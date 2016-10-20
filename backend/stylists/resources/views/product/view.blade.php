@@ -39,7 +39,7 @@
                             <td class="head">Gender</td><td class="content">{{$gender ? $gender->name : ""}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Colors</td><td class="content">{{$primary_color->name}} {{$secondary_color->id 
+                            <td class="head">Colors</td><td class="content">{{$primary_color->name}} {{$secondary_color && $secondary_color->id
 != 0 ? "(Secondary color: " . $secondary_color->name . ")" : ""}}</td>
                         </tr>
                         <tr class="row">

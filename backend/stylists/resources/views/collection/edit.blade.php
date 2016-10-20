@@ -176,7 +176,7 @@
                             </table>
 
                             <div class="image">
-                                <img src="{!! strpos($collection->image, "collections") === 0 ? asset('images/'.$collection->image) : $collection->image !!}"/>
+                                <img src="{!! strpos($collection->image, "http") === 0 ? $collection->image : env('API_ORIGIN') . '/uploads/images/collections/' . $collection->image !!}"/>
                                 <input {{$is_recommended ? "disabled" : ""}} id="image" name="image" type="file" class="file-loading">
                                 <input name="entity_type_id" type="hidden" value="{{$entity_type_id}}">
                                 <img id="loadedImage" src="" class="pop-image-size"/>

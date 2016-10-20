@@ -38,7 +38,7 @@
                             <a href="{{url('collection/view/' . $collection->id)}}">{{$collection->name == "" ? "Error! Collection name empty" : $collection->name }}</a>
                             <input class="entity_ids pull-right"  value="{{$collection->id}}" type="checkbox">
                         </div>
-                        <div class="image"><img src="{!! asset('images/' . $collection->image) !!}" /></div>
+                        <div class="image"><img src="{{env('API_ORIGIN') . '/uploads/images/collections/' . $collection->image}}"/></div>
                         <div class="extra text">
                             <span>{{$collection->status->name}}</span>
                             <span>{{$collection->gender->name}}</span>

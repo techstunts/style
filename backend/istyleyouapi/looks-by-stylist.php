@@ -43,12 +43,13 @@ if ($request_valid === true) {
         $record_start = intval($page * $records_per_page);
 
         $looks_sql =
-            "Select l.id as look_id, l.description, l.image, l.price, o.name as occasion, l.name, uf.fav_id
+            "Select l.id as look_id, l.description, concat('uploads/images/looks/', l.image) as image, l.price, o.name as occasion, l.name, uf.fav_id
         from looks l
         join lu_occasion o on l.occasion_id = o.id
         LEFT JOIN usersfav uf ON l.id = uf.look_id and uf.user_id = '$userid'
         where l.stylist_id = '$stylist_id'
             AND l.gender_id = '$gender_id'
+            AND l.status_id = 1
             AND l.id NOT IN
                 (Select look_id
                 from users_unlike
