@@ -74,12 +74,12 @@
                                         @endif
                                     </th>
                                 @endif
-                                <td class="table-font-size">{{$client->age}}</td>
+                                <td class="table-font-size">@if($client->age_group){{$client->age_group->name}}@elseif(!empty($client->age)){{$client->age}}@else{{''}}@endif</td>
                                 <td class="table-font-size">{{$client->genders ? $client->genders->name : ''}}</td>
-                                <td class="table-font-size">{{$client->bodytype}}</td>
-                                <td class="table-font-size"> {{$client->bodyshape}} </td>
-                                <td class="table-font-size"> {{$client->skintype}} </td>
-                                <td class="table-font-size"> {{$client->height}} </td>
+                                <td class="table-font-size">@if($client->body_type){{$client->body_type->name}}@elseif(!empty($client->bodytype)){{$client->bodytype}}@else{{''}}@endif</td>
+                                <td class="table-font-size">@if($client->body_shape){{$client->body_shape->name}}@elseif(!empty($client->bodyshape)){{$client->bodyshape}}@else{{''}}@endif</td>
+                                <td class="table-font-size">@if($client->complexion){{$client->complexion->name}}@elseif(!empty($client->skintype)){{$client->skintype}}@else{{''}}@endif</td>
+                                <td class="table-font-size">@if($client->height_group){{$client->height_group->name}}@elseif(!empty($client->height)){{$client->height}}@else{{''}}@endif</td>
                                 <td class="table-font-size">
                                     {{$client->clubprice ? 'Club:'. $client->clubprice : ''}}<br/>
                                     {{$client->ethicprice ? 'Ethic:'. $client->ethicprice : ''}}<br/>

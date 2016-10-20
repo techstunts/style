@@ -20,6 +20,7 @@ class ClientController extends Controller
     protected $records_per_page=100;
     protected $filter_ids = ['stylist_id', 'device_status', 'gender_id', 'body_type_id', 'age_group_id'];
     protected $filters = ['stylists', 'devicesStatuses', 'genders', 'body_types', 'age_groups'];
+    protected $relations = ['stylist', 'genders', 'body_type', 'body_shape', 'complexion', 'daringness', 'age_group', 'height_group'];
     /**
      * Display a listing of the resource.
      *
@@ -84,7 +85,7 @@ class ClientController extends Controller
 
         $authWhereClauses = $this->authWhereClauses();
         $clients =
-            Client::with('stylist', 'genders')
+            Client::with($this->relations)
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereRaw($authWhereClauses)
