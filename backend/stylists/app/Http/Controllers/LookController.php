@@ -239,8 +239,6 @@ class LookController extends Controller
         if ($look) {
             if (!empty($request->old('product_ids'))) {
                 $look->products = Mapper::productsByIds($request->old('product_ids'));
-            } elseif (count($look->products) > 0 && empty($request->old('product_ids'))) {
-                $look->products = array();
             }
             $view_properties = $lookMapperObj->getDropDowns();
 
