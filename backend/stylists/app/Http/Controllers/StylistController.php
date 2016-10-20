@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Enums\ImageType;
 use App\Models\Lookups\Lookup;
 use App\Models\Lookups\StylistStatus;
 use App\Models\Enums\EntityType;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Validator;
 
@@ -37,8 +39,13 @@ class StylistController extends Controller
         $status_list = StylistStatus::all()->keyBy('id');
         $status_list[0] = new StylistStatus();
 
+        $image = function ($query) {
+            $api_origin = env('API_ORIGIN');
+            $query->select('*', DB::raw("concat('$api_origin', '/', path, '/', name) as image"));
+            $query->where(['uploaded_by_entity_type_id' => EntityType::STYLIST, 'image_type_id' => ImageType::Profile, 'status_id' => ProfileImageStatus::Active]);
+        };
         $stylists =
-            Stylist::with('gender','expertise','designation')
+            Stylist::with(['gender','expertise','designation', 'upload_images' => $image])
                 ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
