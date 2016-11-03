@@ -28,7 +28,7 @@ function getLooksDetails($looks, $userid){
         //Get products info for current look
         $current_look_products_query =
             "select p.id, p.name, upload_image, p.price, product_type, product_link, p.agency_id, p.merchant_id,
-                            m.name merchant_name, b.name brand_name, b.id as brand_id, p.discounted_price
+                            m.name merchant_name, b.name brand_name, b.id as brand_id, p.discounted_price, p.category_id
 						from looks l
 						join looks_products lp ON l.id = lp.look_id
 						join products p ON lp.product_id = p.id
@@ -72,7 +72,8 @@ function getLooksDetails($looks, $userid){
                 'discounted_price' => ($current_look_products[$j]['discounted_price'] > 0
                     && $current_look_products[$j][3] > $current_look_products[$j]['discounted_price'] )
                     ? $current_look_products[$j]['discounted_price']
-                    : ''
+                    : '',
+                'category_id' => $current_look_products[$j][12],
             );
 
         }
