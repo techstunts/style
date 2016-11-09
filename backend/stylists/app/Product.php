@@ -22,6 +22,10 @@ class Product extends Model
         return $this->belongsTo('App\Category', 'category_id');
     }
 
+    public function product_prices(){
+        return $this->hasMany('App\Models\Products\ProductPrice');
+    }
+
     public function merchant(){
         return $this->belongsTo('App\Merchant', 'merchant_id');
     }

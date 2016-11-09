@@ -26,7 +26,6 @@
                 </form>
                 {!! $products->render() !!}
             </div>
-
             @include('common.sendrecommendations')
 
             <div class="clear"></div>
@@ -52,32 +51,29 @@
                 No Products found
             @endif
             @foreach($products as $product)
-                <li class="ui-state-default" product_id="{{$product->id}}">
-                    <div class="items">
-                        <div class="name text" id="popup-item">
-                            <a href="{{url('product/view/' . $product->id)}}">{{$product->name}}</a>
-                            <input class="entity_ids pull-right"  value="{{$product->id}}" type="checkbox">
+                    <li class="ui-state-default" product_id="{{$product->id}}">
+                        <div class="items">
+                            <div class="name text" id="popup-item">
+                                <a href="{{url('product/view/' . $product->id)}}">{{$product->name}}</a>
+                                <input class="entity_ids pull-right"  value="{{$product->id}}" type="checkbox">
+                            </div>
+                            <div class="image"><img src="{!! $product->image_name !!}" /></div>
+                            <div class="extra text">
+                                <span><a href="{{$product->product_link}}">View</a></span>
+                                <span><a href="{{$product->omg_product_link}}">Omg</a></span>
+                                <span>{{$product->category ? $product->category->name : ''}}</span>
+                                @foreach($product->product_prices as $product_price)
+                                    <span>{{$product_price->currency->name . ' ' . $product_price->value}}</span>
+                                @endforeach
+                                <span>{{$genders_list[$product->gender_id]->name}}</span>
+                                <span style="background-color:{{$product->primary_color->name}}">{{$product->primary_color->name}}
+                                    {{$product->secondary_color && $product->secondary_color->id != 0 ? "({$product->secondary_color->name})" : ""}}</span>
+                                <span>{{$product->sku_id}}</span>
+                            </div>
+                            @include('common.tag')
                         </div>
-                        <div class="image"><img src="{!! strpos($product->upload_image, "uploadfile") === 0 ? asset('images/' . $product->upload_image) : $product->upload_image !!}" /></div>
-                        <div class="extra text">
-                            <span><a href="{{$product->product_link}}">View</a></span>
-                            <span><a href="{{$product->omg_product_link}}">Omg</a></span>
-                            <span>{{$product->product_type}}</span>
-                            <span>{{$product->category ? $product->category->name : ''}}</span>
-                            <span>{{$product->price}}</span>
-                            @if(!empty($product->discounted_price) && $product->discounted_price > 0 && $product->discounted_price < $product->price)
-                                <span>{{$product->discounted_price}}</span>
-                                <span>{{' ' . round(($product->discounted_price *100) / $product->price) . '%'}} </span>
-                            @endif
-                            <span>{{$genders_list[$product->gender_id]->name}}</span>
-                            <span style="background-color:{{$product->primary_color->name}}">{{$product->primary_color->name}}
-                                {{$product->secondary_color && $product->secondary_color->id != 0 ? "({$product->secondary_color->name})" : ""}}</span>
-                            <span>{{$product->sku_id}}</span>
-                        </div>
-                        @include('common.tag')
-                    </div>
-                </li>
-            @endforeach
+                    </li>
+                @endforeach
             </ol>
 
             <div class="clear"></div>

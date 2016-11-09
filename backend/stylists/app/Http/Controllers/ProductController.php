@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Brand;
 use App\Category;
+use App\Models\Enums\Currency;
+use App\Models\Enums\PriceType;
 use App\Models\Lookups\Gender;
 use App\Models\Lookups\Color;
 use App\Models\Lookups\Tag;
@@ -103,8 +105,12 @@ class ProductController extends Controller
         $genders_list = Gender::all()->keyBy('id');
         $genders_list[0] = new Gender();
 
+        $product_prices = function ($query) {
+            $query->with(['type', 'currency']);
+            $query->where(['price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR]);
+        };
         $products =
-            Product::with('category', 'primary_color', 'secondary_color', 'product_tags.tag')
+            Product::with(['category', 'product_prices' => $product_prices, 'primary_color', 'secondary_color', 'product_tags.tag'])
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->orderBy('created_at', 'desc')
@@ -125,7 +131,6 @@ class ProductController extends Controller
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
         $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
         $view_properties['autosuggest_type'] = 'category';
-
         return view('product.list', $view_properties);
     }
 
