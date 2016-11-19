@@ -213,18 +213,21 @@ class LookController extends Controller
 
     public function getView()
     {
-        $look = Look::find($this->resource_id);
-        $view_properties = [];
+        $looks_products = function ($query) {
+            $query->with('product');
+        };
+        $look = Look::with(['looks_products' => $looks_products, 'stylist'])->where('id', $this->resource_id)->first();
+        dd($look->looks_products);
         if ($look) {
-            $products = $look->products;
-            $status = Status::find($look->status_id);
-            $view_properties = array('look' => $look, 'products' => $products, 'stylist' => $look->stylist,
-                'status' => $status);
-            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $look->stylist_id == Auth::user()->id;
+            $view_properties = array(
+                'look' => $look,
+                'status' => Status::find($look->status_id),
+                'is_owner_or_admin' => Auth::user()->hasRole('admin') || $look->stylist_id == Auth::user()->id,
+            );
+            return view('look.view', $view_properties);
         } else {
             return view('404', array('title' => 'Look not found'));
         }
-        return view('look.view', $view_properties);
     }
 
     public function getEdit($request)
