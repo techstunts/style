@@ -3,6 +3,8 @@ namespace App\Http\Mapper;
 
 use App\Http\Controllers\Controller;
 use App\Look;
+use App\Models\Enums\Currency;
+use App\Models\Enums\PriceType;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -181,7 +183,10 @@ class LookMapper extends Controller
 
     public function getExistingProducts($look_id)
     {
-        $look_products = LookProduct::where('look_id', $look_id)->get();
+        $product_prices = function ($query) {
+            $query->where(['price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR]);
+        };
+        $look_products = LookProduct::with(['product_prices' => $product_prices])->where('look_id', $look_id)->get();
         return $look_products;
     }
 
