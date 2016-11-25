@@ -49,9 +49,6 @@ class ProductController extends Controller
     {
         $this->base_table = 'products';
         $this->initWhereConditions($request);
-        if ($request->input('in_stock') != "") {
-            $this->setInStockCondition($request->input('in_stock'));
-        }
         $this->initFilters();
 
         $lookup = new Lookup();
@@ -79,15 +76,20 @@ class ProductController extends Controller
         $view_properties['tag_id'] = $request->has('tag_id') && $request->input('tag_id') !== "" ? intval($request->input('tag_id')) : "";
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
-        $view_properties['in_stock'] = $request->input('in_stock');
+        $in_stock = $request->input('in_stock');
+        $view_properties['in_stock'] = $in_stock;
 
         $view_properties['from_date'] = $request->input('from_date');
         $view_properties['to_date'] = $request->input('to_date');
 
-        $view_properties['min_price'] = $request->input('min_price');
-        $view_properties['max_price'] = $request->input('max_price');
-        $view_properties['min_discount'] = $request->input('min_discount');
-        $view_properties['max_discount'] = $request->input('max_discount');
+        $min_price = $request->input('min_price');
+        $max_price = $request->input('max_price');
+        $min_discount = $request->input('min_discount');
+        $max_discount = $request->input('max_discount');
+        $view_properties['min_price'] = $min_price;
+        $view_properties['max_price'] = $max_price;
+        $view_properties['min_discount'] = $min_discount;
+        $view_properties['max_discount'] = $max_discount;
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -105,15 +107,17 @@ class ProductController extends Controller
         $genders_list = Gender::all()->keyBy('id');
         $genders_list[0] = new Gender();
 
-        $product_prices = function ($query) {
-            $query->with(['type', 'currency']);
-            $query->where(['price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR]);
-        };
+        $product_prices = $this->getPriceClosure($min_price, $max_price, $min_discount, $max_discount);
+        $in_stock_closure = $this->getInStockClosure($in_stock);
         $products =
-            Product::with(['category', 'product_prices' => $product_prices, 'primary_color', 'secondary_color', 'product_tags.tag'])
+            Product::with(['category', 'product_prices' => $product_prices, 'in_stock', 'primary_color', 'product_tags.tag'])
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
-                ->orderBy('created_at', 'desc')
+                ->whereHas('product_prices', $product_prices);
+        if (!empty($in_stock)) {
+            $products = $products->whereHas('in_stock', $in_stock_closure);
+        }
+        $products = $products->orderBy('created_at', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
@@ -139,6 +143,27 @@ class ProductController extends Controller
         parent::initWhereConditions($request);
     }
 
+    public function getPriceClosure($min_price, $max_price, $min_discount, $max_discount)
+    {
+        return function ($query) use($min_price, $max_price, $min_discount, $max_discount) {
+            $query->with(['type', 'currency']);
+            $query->where(['price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR]);
+            if (!empty($min_price)) {
+                $query->where('value', '>=', $min_price);
+            }
+            if (!empty($max_price)) {
+                $query->where('value', '<=', $max_price);
+            }
+        };
+    }
+    public function getInStockClosure($in_stock)
+    {
+        return function ($query) use($in_stock) {
+            if (!empty($in_stock)) {
+                $query->where('stock_quantity', '>=', $in_stock);
+            }
+        };
+    }
 
     /**
      * Show the form for creating a new resource.

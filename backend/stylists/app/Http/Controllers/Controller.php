@@ -141,15 +141,6 @@ abstract class Controller extends BaseController
         $this->stylist_condition = Auth::user()->hasRole('admin') ? false : true;
     }
 
-    public function setInStockCondition($in_stock)
-    {
-        $columnName = 'in_stock';
-        if ($this->base_table == 'merchant_products') {
-            $columnName = 'm_in_stock';
-        }
-        $this->where_conditions[$this->base_table . '.' . $columnName] = $in_stock;
-    }
-
     public function setTagCondition($tags)
     {
         $tags_array = array();

@@ -217,7 +217,6 @@ class LookController extends Controller
             $query->with('product');
         };
         $look = Look::with(['looks_products' => $looks_products, 'stylist'])->where('id', $this->resource_id)->first();
-        dd($look->looks_products);
         if ($look) {
             $view_properties = array(
                 'look' => $look,

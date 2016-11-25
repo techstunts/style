@@ -58,4 +58,8 @@ class Product extends Model
         return $this->hasMany('App\ProductTag');
     }
 
+    public function in_stock(){
+        return $this->hasMany('App\Models\Products\ProductSize', 'parent_sku_id', 'sku_id');
+    }
+
 }
