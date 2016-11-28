@@ -96,11 +96,11 @@ abstract class Controller extends BaseController
             $where_raw[] = "({$this->base_table}.date = '" . date("Y-m-d",strtotime($request->input('book_date'))) . "')";
         }
 
-        if($request->input('min_price') != ""){
+        if($this->base_table != 'products' && $request->input('min_price') != ""){
             $where_raw[] = "({$this->base_table}.price >= '{$request->input('min_price')}')";
         }
 
-        if($request->input('max_price') != ""){
+        if($this->base_table != 'products' && $request->input('max_price') != ""){
             $where_raw[] = "({$this->base_table}.price <= '{$request->input('max_price')}')";
         }
 
