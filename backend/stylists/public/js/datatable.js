@@ -497,8 +497,8 @@ function showEntities(entity_url) {
                 $(".popup-inner").append(str);
             } else {
                 var price_bar = '<div class="extra text" >' +
-                    '<span>&#8377 {{price}}</span>' +
-                    '<span>&#36 {{dollerPrice}}</span>' +
+                    '<span> {{price}}</span>' +
+                    '<span> {{dollerPrice}}</span>' +
                     //'<span>{{discounted_price}}</span>' +
                     //'<span>{{discount_percent}}</span>' +
                     '</div>';
@@ -520,9 +520,9 @@ function showEntities(entity_url) {
                     if (entity_type_id != EntityType.CLIENT) {
                         if (entity_type_id == EntityType.PRODUCT) {
                             var price = getPrice(item.data[i].prices);
-                            var popover_data = "Price: " + price.INR + "/- <br >";
+                            var popover_data = "Price: " + price.INR != undefined ? '&#8377 ' + price.INR : '' + "/- <br >";
                         }else {
-                            var popover_data = "Price: " + item.data[i].price + "/- <br >";
+                            var popover_data = "Price: " + '&#8377 ' + item.data[i].price + "/- <br >";
                         }
                         var popover_data = popover_data + "Description: " + item.data[i].description + "<br >" +
                         "<img src='" + item.data[i].image + "' />";
@@ -534,8 +534,8 @@ function showEntities(entity_url) {
                             .replace("{{item_popover}}", popover_data)
                             .replace("{{item_image}}", item.data[i].image);
                         if (entity_type_id == EntityType.PRODUCT) {
-                            newstr = newstr.replace("{{price}}", price.INR)
-                                .replace("{{dollerPrice}}", price.USD);
+                            newstr = newstr.replace("{{price}}", price.INR != undefined ? '&#8377 ' + price.INR : '' )
+                                .replace("{{dollerPrice}}", price.USD != undefined ? '&#36 ' + price.USD : '' );
                             //if (item.data[i].discounted_price > 0) {
                             //    newstr = newstr.replace("{{discounted_price}}", item.data[i].discounted_price)
                             //        .replace("{{discount_percent}}", item.data[i].discount_percent);
@@ -593,14 +593,18 @@ function toggleLoader() {
 
 function getPrice(prices) {
     price = [];
-    for(var i = 0; i < prices['INR'].length; i++) {
-        if (prices['INR'][i].type == 'priceRetail') {
-            price.INR = prices['INR'][i].value;
+    if (prices['INR'] != undefined && prices['INR'] != '') {
+        for (var i = 0; i < prices['INR'].length; i++) {
+            if (prices['INR'][i].type == 'priceRetail') {
+                price.INR = prices['INR'][i].value;
+            }
         }
     }
-    for(var i = 0; i < prices['USD'].length; i++) {
-        if (prices['USD'][i].type == 'priceRetail') {
-            price.USD = prices['USD'][i].value;
+    if (prices['USD'] != undefined && prices['USD'] != '') {
+        for (var i = 0; i < prices['USD'].length; i++) {
+            if (prices['USD'][i].type == 'priceRetail') {
+                price.USD = prices['USD'][i].value;
+            }
         }
     }
     return price;
