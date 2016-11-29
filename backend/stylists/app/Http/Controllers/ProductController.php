@@ -11,10 +11,15 @@ use App\Models\Lookups\Color;
 use App\Models\Lookups\Tag;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
+use App\Models\Enums\ProductSize as ProductSizeEnum;
 use App\Models\Enums\RecommendationType;
 use App\Models\Lookups\AppSections;
 use App\Merchant;
 use App\Models\Lookups\Lookup;
+use App\Models\Products\ProductColorGroup;
+use App\Models\Products\ProductGroup;
+use App\Models\Products\ProductPrice;
+use App\Models\Products\ProductSize;
 use App\Product;
 use App\ProductTag;
 use Illuminate\Http\Request;
@@ -219,13 +224,15 @@ class ProductController extends Controller
             $sku_id = !empty($request->input('sku_id')) ? $request->input('sku_id') : 'isy_' . (intval(time()) + rand(0, 10000));
             $product = Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant->id]);
 
+            DB::beginTransaction();
+            $product_group_id = $this->getProductGroupId();
+
             $product->merchant_id = $merchant->id;
             $product->sku_id = $sku_id;
+            $product->group_id = $product_group_id;
             $product->name = htmlentities($request->input('name'));
             $product->description = htmlentities($request->input('desc'));
-            $product->price = str_replace(array(",", " "), "", $request->input('price'));
             $product->product_link = $request->input('url');
-            $product->upload_image = $request->input('image0');
             $product->image_name = $request->input('image0');
             $product->brand_id = $brand->id;
             $product->category_id = $category->id;
@@ -233,16 +240,33 @@ class ProductController extends Controller
             $product->primary_color_id = $primary_color->id;
             $product->secondary_color_id = $secondary_color ? $secondary_color->id : "";
             $product->stylist_id = $request->user()->id;
+            $product->approved_by = $product->stylist_id;
 
-            if ($product->save()) {
-                $product_url = url('product/view/' . $product->id);
-                echo json_encode([true, $product_url]);
-            } else {
-                echo json_encode([false, "Product save failed. Please contact admin."]);
+            try {
+                ProductColorGroup::insert(['group_id' => $product_group_id, 'sku_id' => $sku_id]);
+                ProductSize::insert(['size_id' => ProductSizeEnum::NO_ANY, 'sku_id' => $sku_id, 'parent_sku_id' => $sku_id, 'stock_quantity' => 1]);
+                if ($product->save()) {
+                    ProductPrice::insert(['product_id' => $product->id, 'price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR, 'value' => $request->input('price')]);
+                    $product_url = url('product/view/' . $product->id);
+                    DB::commit();
+                    echo json_encode([true, $product_url]);
+                } else {
+                    echo json_encode([false, "Product save failed. Please contact admin."]);
+                }
+            } catch (\Exception $e) {
+                DB::rollback();
+                echo json_encode([false, "Exception : " . $e->getMessage()]);
             }
         } else {
             echo json_encode([false, "Product required info missing. Please contact admin."]);
         }
+    }
+
+    public function getProductGroupId()
+    {
+        $productGroupObj = new ProductGroup();
+        $productGroupObj->save();
+        return $productGroupObj->id;
     }
 
     public function getView()
