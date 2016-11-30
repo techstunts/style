@@ -216,7 +216,7 @@ class LookController extends Controller
         $looks_products = function ($query) {
             $query->with('product');
         };
-        $look = Look::with(['looks_products' => $looks_products, 'stylist'])->where('id', $this->resource_id)->first();
+        $look = Look::with(['look_products' => $looks_products, 'stylist'])->where('id', $this->resource_id)->first();
         if ($look) {
             $view_properties = array(
                 'look' => $look,
@@ -240,8 +240,9 @@ class LookController extends Controller
 
         if ($look) {
             if (!empty($request->old('product_ids'))) {
-                $look->products = Mapper::productsByIds($request->old('product_ids'));
+                $look->look_products = Mapper::productsByIds($request->old('product_ids'));
             }
+            $look->price = count($look->prices) ? $lookMapperObj->getPrice($look->prices) : $look->price;
             $view_properties = $lookMapperObj->getDropDowns();
 
             $view_properties = array_merge($view_properties, $lookMapperObj->getViewProperties($request->old(), $look));

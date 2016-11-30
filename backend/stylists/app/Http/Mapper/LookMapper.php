@@ -4,7 +4,9 @@ namespace App\Http\Mapper;
 use App\Http\Controllers\Controller;
 use App\Look;
 use App\Models\Enums\Currency;
-use App\Models\Enums\PriceType;
+use App\Models\Enums\PriceType as PriceTypeEnum;
+use App\Models\Looks\LookPrice;
+use App\Models\Lookups\PriceType;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +26,7 @@ class LookMapper extends Controller
     protected $fields = ['id', 'name', 'description', 'image', 'stylist_id', 'price',
         'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'created_at'];
 
-    protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group', 'status', 'look_products.product'];
+    protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group', 'status', 'look_products.product', 'prices'];
 
     protected $dropdown_fields = ['body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'status_id'];
     protected $input_fields = ['name', 'description', 'image', 'video_url', 'image_url', 'external_url'];
@@ -184,7 +186,7 @@ class LookMapper extends Controller
     public function getExistingProducts($look_id)
     {
         $product_prices = function ($query) {
-            $query->where(['price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR]);
+            $query->where(['price_type_id' => PriceTypeEnum::RETAIL, 'currency_id' => Currency::INR]);
         };
         $look_products = LookProduct::with(['product_prices' => $product_prices])->where('look_id', $look_id)->get();
         return $look_products;
@@ -219,9 +221,11 @@ class LookMapper extends Controller
             if ($uploadMapperObj) {
                 $look->image = $uploadMapperObj->moveImageInFolder($request);
             }
-            $look->price = $this->evaluatePrice($look->id);
-            $look->save();
-
+            $response = $this->evaluatePrice($look->id);
+            if ($response['priceExists']) {
+                LookPrice::where(['look_id' => $look->id])->delete();
+            }
+            LookPrice::insert($response['data']);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
@@ -242,20 +246,64 @@ class LookMapper extends Controller
             array_push($products_ids, $look_product->product_id);
         }
 
-        $products = Product::whereIn('id', $products_ids)
-            ->select('id', 'price')
+        $products = Product::with(['product_prices'])
+            ->whereIn('id', $products_ids)
+            ->select('id')
             ->get();
         return $products;
     }
 
     public function evaluatePrice($look_id)
     {
-        $price = 0;
+        $priceArr = array();
+        $currencies = \App\Models\Lookups\Currency::get();
+        $currencies_arr = array();
+
         $products = $this->getProducts($look_id);
-        foreach ($products as $product) {
-            $price += $product->price;
+        $priceTypes = PriceType::get();
+
+        foreach ($currencies as $currency) {
+            $currencies_arr[$currency->id] = $currency->id;
         }
-        return $price;
+
+        foreach ($products as $product) {
+            foreach ($product->product_prices as $product_price) {
+                foreach ($priceTypes as $priceType) {
+                    if ($priceType->id == $product_price->price_type_id) {
+                        $priceArr[$currencies_arr[$product_price->currency_id]][$priceType->id] =
+                            isset($priceArr[$currencies_arr[$product_price->currency_id]][$priceType->id]) ?
+                                $priceArr[$currencies_arr[$product_price->currency_id]][$priceType->id] + $product_price->value :
+                                $product_price->value;
+                    }
+                }
+            }
+        }
+
+        $priceData = array();
+        foreach ($priceArr as $currency => $prices) {
+            foreach ($prices as $priceType => $price) {
+                $priceData[] = array(
+                    'look_id' => $look_id,
+                    'price_type_id' => $priceType,
+                    'currency_id' => $currency,
+                    'value' => $price,
+                );
+            }
+        }
+
+        $lookPriceExists = LookPrice::select('look_id', 'price_type_id', 'currency_id', 'value')
+            ->where(['look_id' => $look_id]);
+        foreach ($priceData as $data) {
+            $lookPriceExists = $lookPriceExists->orWhere($data);
+        }
+        $lookPriceExists = $lookPriceExists->get();
+
+        if ($lookPriceExists) {
+            $priceExisis = true;
+        } else {
+            $priceExisis = false;
+        }
+        return ['priceExists' => $priceExisis, 'data' => $priceData];
     }
 
     public function updateStatus($look_id, $status_id)
@@ -268,4 +316,13 @@ class LookMapper extends Controller
         return true;
     }
 
+    public function getPrice($prices) {
+        $lookPrice = 0;
+        foreach ($prices as $price) {
+            if ($price->currency_id == Currency::INR and $price->price_type_id == PriceTypeEnum::RETAIL) {
+                $lookPrice = $price->value;
+            }
+        }
+        return $lookPrice;
+    }
 }

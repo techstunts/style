@@ -67,10 +67,10 @@
                             <tr class="row">
                                 <td class="head">Products</td>
                                 <td class="content">
-                                    @foreach($look->looks_products as $looks_product)
-                                        <a href="{{url('product/view/' . $looks_product->product->id)}}" title="{{$looks_product->product->name}}"
+                                    @foreach($look->look_products as $look_product)
+                                        <a href="{{url('product/view/' . $look_product->product->id)}}" title="{{$look_product->product->name}}"
                                            target="product_win">
-                                            <img class="entity" src="{{$looks_product->product->image_name}}"/>
+                                            <img class="entity" src="{{$look_product->product->image_name}}"/>
                                         </a>
                                     @endforeach
                                 </td>

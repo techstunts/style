@@ -32,7 +32,6 @@ class LookProduct extends Model
 
     public function product_prices()
     {
-        return $this->hasMany('App\Models\Products\ProductPrice');
+        return $this->hasMany('App\Models\Products\ProductPrice', 'product_id');
     }
-
 }
