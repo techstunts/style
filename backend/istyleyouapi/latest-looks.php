@@ -60,6 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
             $latest_looks_res = mysql_query($latest_looks_sql);
 
             while ($data = mysql_fetch_array($latest_looks_res)) {
+                $price = getINRPrice(2, $data[0]);
+                $data['price'] = $price ? $price : $data[3];
                 $latest_looks[$data[12]] = $data;
             }
             unset($latest_looks_res);
@@ -79,9 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
 } else {
     $response = array('result' => 'fail', 'response_message' => 'userid empty');
 }
-
-//var_dump($response);
-//var_dump($response['latest_looks'][0]['lookdetails']);
 
 mysql_close($conn);
 

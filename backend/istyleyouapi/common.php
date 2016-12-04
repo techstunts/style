@@ -27,8 +27,8 @@ function getLooksDetails($looks, $userid){
 
         //Get products info for current look
         $current_look_products_query =
-            "select p.id, p.name, upload_image, p.price, product_type, product_link, p.agency_id, p.merchant_id,
-                            m.name merchant_name, b.name brand_name, b.id as brand_id, p.discounted_price
+            "select p.id, p.name, image_name as upload_image, product_link, p.agency_id, p.merchant_id,
+                            m.name merchant_name, b.name brand_name, b.id as brand_id
 						from looks l
 						join looks_products lp ON l.id = lp.look_id
 						join products p ON lp.product_id = p.id
@@ -61,18 +61,13 @@ function getLooksDetails($looks, $userid){
                 'productid' => $current_look_products[$j][0],
                 'productname' => mb_convert_encoding($current_look_products[$j][1], "UTF-8", "Windows-1252"),
                 'productimage' => $current_look_products[$j][2],
-                'productprice' => $current_look_products[$j][3],
-                'producttype' => $current_look_products[$j][4],
-                'productlink' => ProductLink::getDeepLink($current_look_products[$j][6],
-                    $current_look_products[$j][7],
-                    $current_look_products[$j][5]),
+                'productprice' => getINRPrice(1, $current_look_products[$j][0]),
+                'productlink' => ProductLink::getDeepLink($current_look_products[$j][4],
+                    $current_look_products[$j][5],
+                    $current_look_products[$j][3]),
                 'merchant' => $current_look_products[$j]['merchant_name'],
                 'brand' => $current_look_products[$j]['brand_name'],
                 'brand_id' => $current_look_products[$j]['brand_id'],
-                'discounted_price' => ($current_look_products[$j]['discounted_price'] > 0
-                    && $current_look_products[$j][3] > $current_look_products[$j]['discounted_price'] )
-                    ? $current_look_products[$j]['discounted_price']
-                    : ''
             );
 
         }
@@ -110,4 +105,22 @@ function getLooksDetails($looks, $userid){
     }
 
     return $looks_and_products;
+}
+function getINRPrice ($entity_type_id, $entity_id)
+{
+    $price = array();
+    if (1 == $entity_type_id) {
+        $priceRawQuery = "select pp.value
+					    from products_prices pp
+						where pp.product_id='$entity_id' AND pp.price_type_id='2' AND pp.currency_id='1'";
+    } elseif (2 == $entity_type_id) {
+        $priceRawQuery = "select lp.value
+						from look_prices lp
+						where lp.look_id='$entity_id' AND lp.price_type_id='2' AND lp.currency_id='1'";
+    }
+    $priceMySQLQuery = mysql_query($priceRawQuery);
+    while ($data = mysql_fetch_array($priceMySQLQuery)) {
+        $price = $data;
+    }
+    return $price ? $price['value'] : $price;
 }
