@@ -68,6 +68,8 @@ function getLooksDetails($looks, $userid){
                 'merchant' => $current_look_products[$j]['merchant_name'],
                 'brand' => $current_look_products[$j]['brand_name'],
                 'brand_id' => $current_look_products[$j]['brand_id'],
+                'producttype' => '',
+                'discounted_price' => '',
             );
 
         }
