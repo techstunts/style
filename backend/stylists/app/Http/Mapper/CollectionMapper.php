@@ -170,7 +170,7 @@ class CollectionMapper extends Controller
 
         $product = function ($query) {
             $query->with('gender', 'primary_color', 'category', 'brand')
-                ->select('id', 'name', 'upload_image', 'product_link', 'product_type', 'price', 'gender_id', 'primary_color_id',
+                ->select('id', 'name', 'image_name', 'product_link', 'gender_id', 'primary_color_id',
                     'category_id', 'brand_id');
         };
 
