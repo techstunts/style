@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Brand;
 use App\Category;
+use App\Http\Mapper\Mapper;
 use App\Models\Enums\Currency;
 use App\Models\Enums\PriceType;
 use App\Models\Lookups\Gender;
@@ -112,7 +113,8 @@ class ProductController extends Controller
         $genders_list = Gender::all()->keyBy('id');
         $genders_list[0] = new Gender();
 
-        $product_prices = $this->getPriceClosure($min_price, $max_price, $min_discount, $max_discount);
+        $mapperObj = new Mapper();
+        $product_prices = $mapperObj->getPriceClosure($min_price, $max_price, $min_discount, $max_discount);
         $in_stock_closure = $this->getInStockClosure($in_stock);
         $products =
             Product::with(['category', 'product_prices' => $product_prices, 'in_stock', 'primary_color', 'product_tags.tag'])
@@ -148,19 +150,6 @@ class ProductController extends Controller
         parent::initWhereConditions($request);
     }
 
-    public function getPriceClosure($min_price, $max_price, $min_discount, $max_discount)
-    {
-        return function ($query) use($min_price, $max_price, $min_discount, $max_discount) {
-            $query->with(['type', 'currency']);
-            $query->where(['price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR]);
-            if (!empty($min_price)) {
-                $query->where('value', '>=', $min_price);
-            }
-            if (!empty($max_price)) {
-                $query->where('value', '<=', $max_price);
-            }
-        };
-    }
     public function getInStockClosure($in_stock)
     {
         return function ($query) use($in_stock) {

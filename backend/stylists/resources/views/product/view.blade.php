@@ -23,7 +23,7 @@
                         <tr class="row">
                             <td class="head">Price</td>
                             @foreach($product->product_prices as $product_price)
-                                <td class="content">{{$product_price->type->type .' : '. $product_price->currency->name .' '. $product_price->value}}</td>
+                                <td class="content">{{$product_price->type ? $product_price->type->type : "" .' : '. $product_price->currency ? $product_price->currency->name : "" .' '. $product_price->value}}</td>
                             @endforeach
                         </tr>
                         <tr class="row">
@@ -39,7 +39,7 @@
                             <td class="head">Gender</td><td class="content">{{$gender ? $gender->name : ""}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Colors</td><td class="content">{{$primary_color->name}} {{$secondary_color && $secondary_color->id
+                            <td class="head">Colors</td><td class="content">{{$primary_color ? $primary_color->name : ''}} {{$secondary_color && $secondary_color->id
 != 0 ? "(Secondary color: " . $secondary_color->name . ")" : ""}}</td>
                         </tr>
                         <tr class="row">
