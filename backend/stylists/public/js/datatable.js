@@ -518,7 +518,7 @@ function showEntities(entity_url) {
 
                 for (var i = 0; i < item.data.length; i++) {
                     if (entity_type_id != EntityType.CLIENT) {
-                        if (entity_type_id == EntityType.PRODUCT || entity_type_id == EntityType.LOOK) {
+                        if (entity_type_id == EntityType.PRODUCT) {
                             var price = getPrice(item.data[i].price);
                             var popover_data = "Price: " + price.INR != undefined ? '&#8377 ' + price.INR : '' + "/- <br >";
                         }else {
