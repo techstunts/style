@@ -27,6 +27,7 @@
                         <li><a href="/tip/list">Tips</a></li>
                         <li><a href="/collection/list">Collections</a></li>
                         @if(Auth::user()->hasRole('admin'))
+                            <li><a href="/homepage/list">Home Page</a></li>
                             <li><a href="/campaign/list">Campaign</a></li>
                         @endif
                         <li><a href="{!! url('stylist/view/' . Auth::user()->id) !!}">{{Auth::user()->name}}</a></li>

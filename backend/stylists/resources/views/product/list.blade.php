@@ -28,7 +28,9 @@
             </div>
 
             @include('common.sendrecommendations')
-
+            @if(Auth::user()->hasRole('admin'))
+                <a class="btn disabled btn-primary btn-xs" id="addToHomePage" href="#">Add to home</a>
+            @endif
             <div class="clear"></div>
 
             @foreach($errors->all() as $e)

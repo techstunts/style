@@ -27,6 +27,9 @@
             <div class="clear"></div>
             <a class="btn btn-primary btn-xs" href="{{url('collection/create')}}">Create Collection</a>
             @include('common.sendrecommendations')
+            @if(Auth::user()->hasRole('admin'))
+                <a class="btn disabled btn-primary btn-xs" id="addToHomePage" href="#">Add to home</a>
+            @endif
             <div class="clear"></div>
 
 
