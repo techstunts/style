@@ -43,13 +43,12 @@
                     <menu class="card item">
                         <b>Item</b>
                         <a class="icon remove disabled">Remove</a>
-                        <a class="icon forwards disabled">Forwards</a>
-                        <a class="icon backwards disabled">Backwards</a>
+                        {{--Commented for now as it is not required by Nicobar--}}
+                        {{--<a class="icon forwards disabled">Forwards</a>--}}
+                        {{--<a class="icon backwards disabled">Backwards</a>--}}
                     </menu>
                     <menu class="card zoom">
                         <b>Zoom</b>
-                        <a class="icon zoom-in disabled">Zoom in</a>
-                        <a class="icon zoom-out disabled">Zoom out</a>
                         <a class="icon flip disabled">Flip</a>
                     </menu>
                 </div>
@@ -83,6 +82,7 @@
                             <input type="text" name="price" disabled value="2595$">
                             <textarea name="description" placeholder="Description"></textarea>
                             <input type="submit" value="Publish">
+                            <input type="button" class="button-bk" id="back" value="Back">
                             <span class="error"></span>
                         </form>
                     </div>
