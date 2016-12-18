@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					\
 					if(merchant == \'koovs\'){\
 						prod_name = document.getElementById(\'prod_name_hide\').value;\
-						prod_price = document.getElementsByClassName(\'product-price\')[0].getElementsByTagName(\'strong\')[0].innerHTML;\
+						prod_price = document.querySelectorAll(\'span[itemprop=price]\')[0].innerText;\
 						prod_desc = document.getElementById(\'product-desc\').innerText;\
 						a_tags = document.getElementsByClassName(\'thumb-views\')[0].getElementsByTagName(\'a\');\
 						category = document.getElementById(\'product-desc\').getElementsByClassName(\'short_detail\')[0].getElementsByTagName(\'a\')[0].innerText;\
@@ -71,6 +71,18 @@ document.addEventListener('DOMContentLoaded', function() {
 						brand = prod_name.split(\' \')[0];\
 						gender = breadcrumbs[0].innerText;\
 						img_links.push(document.getElementsByClassName(\'carousel__product-img\')[0].getElementsByTagName(\'img\')[0].src);\
+					}\
+					else if(merchant == \'bluestone\'){\
+						prod_name = document.getElementsByClassName(\'title-5\')[0].innerText;\
+						prod_price = document.getElementById(\'our_price_display\').innerText.replace(\/,\/g, \'\');\
+						prod_desc = document.getElementById(\'short_desc\').innerText;\
+						prod_desc += document.getElementById(\'short_desc_goldWt\').innerText;\
+						prod_desc += document.getElementById(\'short_desc_diamondCt\').innerText;\
+						var category_name = window.location.href.split(".com")[1].split("\/")[1];\
+						category = category_name.charAt(0).toUpperCase() + category_name.slice(1);\
+						brand = \'BlueStone\';\
+						gender = \'women\';\
+						img_links.push(document.getElementsByClassName(\'cloud-zoom\')[0].getElementsByTagName(\'img\')[0].src);\
 					}\
 					else if(merchant == \'amazon\'){\
 						prod_name = document.getElementById(\'productTitle\').innerHTML.trim();\
