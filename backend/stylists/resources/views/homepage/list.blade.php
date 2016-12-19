@@ -18,14 +18,14 @@
 
             <div class="clear"></div>
 
-            {{--@foreach($looks as $look)--}}
-                {{--<li class="ui-state-default" look_id="{{$look->id}}">--}}
-                    {{--<div class="items">--}}
-                        {{--<div class="name text " id="popup-item">--}}
-                            {{--<a href="{{url('look/view/' . $look->id)}}">{{$look->name == "" ? "Error! Look name empty" : $look->name }}</a>--}}
-                            {{--<input class="entity_ids pull-right"  value="{{$look->id}}" type="checkbox">--}}
-                        {{--</div>--}}
-                        {{--<div class="image"><img src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/></div>--}}
+            @foreach($data as $item)
+                <li class="ui-state-default" entity_id="{{$item->entity_id}}">
+                    <div class="items">
+                        <div class="name text " id="popup-item">
+                            <a href="{{url('look/view/' . $item->id)}}">{{$item->name == "" ? "Error! Entity name empty" : $item->name }}</a>
+                            <input class="entity_ids pull-right"  value="{{$item->entity_id}}" type="checkbox">
+                        </div>
+                        <div class="image"><img src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $item->image}}"/></div>
                         {{--<div class="extra text">--}}
                             {{--<?php--}}
                                 {{--if (isset($status_rules) && isset($status_rules[$look->status->id]['edit_status']['new_status'])){--}}
@@ -50,15 +50,15 @@
                             {{--<span>{{$look->gender->name}}</span>--}}
                             {{--<span>{{$look->occasion->name}}</span>--}}
                             {{--<span>{{$look->body_type->name}}</span>--}}
-                        {{--</div>--}}
+                        </div>
                         {{--<div class="extra text">--}}
                             {{--<span>{{$look->age_group->name}}</span>--}}
                             {{--<span>Rs.{{$look->price}}</span>--}}
                             {{--<span>Rs.{{$look->budget->name}}</span>--}}
                         {{--</div>--}}
-                    {{--</div>--}}
-                {{--</li>--}}
-            {{--@endforeach--}}
+                    </div>
+                </li>
+            @endforeach
             </ol>
 
             <div class="clear"></div>

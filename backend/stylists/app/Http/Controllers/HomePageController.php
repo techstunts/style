@@ -59,12 +59,17 @@ class HomePageController extends Controller
         }
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
-        $products = function ($query) {
-            $query->select(['id', 'name', 'product_link', 'image_name', 'descriptionsty', '', '', ]);
+        $api_origin = env('API_ORIGIN');
+        $collection = function ($query) use ($api_origin) {
+            $query->select(['id', 'name', DB::raw("concat('$api_origin', '/uploads/images/', image) as images"), 'description']);
         };
-        $data = HomePage::with(['products' => $products, ])
-            ->where(['entity_type_id' => EntityType::PRODUCT])
-            ->get();
+        $data = HomePage::with(['collections' => $collection]);
+        $data = $data->orderBy('updated_at', 'created_at');
+        $data = $data->where('entity_type_id', EntityType::COLLECTION);
+        $data = $data->get();
+//        $data = $data->whereIn('entity_type_id', [EntityType::PRODUCT, EntityType::LOOK, EntityType::TIP])
+//            ->orderBy('updated_at', 'created_at')
+//            ->get();
 //            Product::with('category', 'primary_color', 'secondary_color', 'product_tags.tag')
 //                ->where($this->where_conditions)
 //                ->whereRaw($this->where_raw)
@@ -78,7 +83,7 @@ class HomePageController extends Controller
 //        }
 //
         dd($data);
-        $view_properties['products'] = $products;
+        $view_properties['data'] = $data;
         return view('homepage.list', $view_properties);
     }
 
