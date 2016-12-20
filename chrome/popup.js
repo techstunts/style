@@ -63,14 +63,14 @@ document.addEventListener('DOMContentLoaded', function() {
 						}\
 					}\
 					else if(merchant == \'abof\'){\
-						prod_name = document.getElementsByClassName(\'product-detail__title\')[0].innerHTML.trim();\
-						prod_price = document.getElementsByClassName(\'product-detail__price--original\')[0].innerText.trim();\
-						prod_desc = document.getElementsByClassName(\'product-detail__tab-content\')[0].getElementsByTagName(\'p\')[0].innerText;\
+						prod_name = document.getElementsByClassName(\'product-detail__title\')[0].innerText.trim().replace(\/,\/g, \'\');\
+						prod_price = document.getElementsByClassName(\'product-details\')[0].getElementsByClassName(\'prices__price prices__price--selling\')[0].innerText.replace(\/,\/g, \'\').slice(1);\
+						prod_desc = document.getElementsByClassName(\'product-info-toggle-details\')[0].querySelectorAll(\'div[itemprop=\"description\"]\')[0].innerText;\
 						breadcrumbs = document.getElementsByClassName(\'breadcrumbs\')[0].getElementsByTagName(\'li\');\
 						category = breadcrumbs[breadcrumbs.length - 2].innerText;\
 						brand = prod_name.split(\' \')[0];\
 						gender = breadcrumbs[0].innerText;\
-						img_links.push(document.getElementsByClassName(\'carousel__product-img\')[0].getElementsByTagName(\'img\')[0].src);\
+						img_links.push(document.getElementsByClassName(\'image-magnifier-component\')[0].getElementsByTagName(\'img\')[0].src);\
 					}\
 					else if(merchant == \'bluestone\'){\
 						prod_name = document.getElementsByClassName(\'title-5\')[0].innerText;\
@@ -168,12 +168,12 @@ document.addEventListener('DOMContentLoaded', function() {
 					}\
 					else if(merchant == \'fabindia\'){\
 						prod_name = document.getElementsByTagName(\'h1\')[0].innerText;\
-						prod_price = document.getElementsByClassName(\'price\')[0].innerText.slice(4, -3).replace(\',\', \'\');\
-						prod_desc = document.getElementsByClassName(\'product-view\')[0].getElementsByTagName(\'p\')[4].innerText;\
-						colors.push(document.getElementsByClassName(\'super-attribute-select\')[0].getElementsByTagName(\'option\')[1].innerText);\
+						prod_price = document.querySelectorAll(\'span[itemprop=\"price\"]\')[0].getElementsByClassName(\'sp_amt\')[0].innerText.replace(\',\', \'\');\
+						prod_desc = document.getElementById(\'Description\').getElementsByTagName(\'p\')[0].innerText;\
+						colors.push(document.getElementsByClassName(\'mtb-swatch VariantProperty colorswatch\')[0].getElementsByClassName(\'VariantItem\')[0].getAttribute(\'data-value\'));\
 						brand = "Fabindia";\
-						img_links.push(document.getElementsByClassName(\'MagicZoomPlus\')[0].getElementsByTagName(\'img\')[0].src);\
-						sku_id = document.getElementsByClassName(\'product-view\')[0].getElementsByTagName(\'p\')[0].innerText.slice(5);\
+						img_links.push(document.getElementById(\'bankImage\').src);\
+						sku_id = document.getElementsByClassName(\'productbrand sku\')[0].getElementsByClassName(\'brandlname\')[0].innerText;\
 					}\
 					else if(merchant == \'ajio\'){\
 						prod_name = document.getElementsByTagName(\'h2\')[0].innerText;\
@@ -191,6 +191,27 @@ document.addEventListener('DOMContentLoaded', function() {
 						img_links.push(document.getElementsByClassName(\'product-Image slick-slide slick-active\')[0].getElementsByTagName(\'img\')[0].src);\
 						\
 						sku_id = prod_desc_list[prod_desc_list.length - 1].getElementsByTagName(\'span\')[0].innerText;\
+					}\
+					else if(merchant == \'asos\'){\
+						prod_name = document.getElementsByTagName(\'h1\')[0].innerText;\
+						prod_price = (document.querySelectorAll(\'span[data-id=\"current-price\"]\')[0].innerText.slice(1)*68).toString();\
+						var prod_desc_list = document.getElementsByClassName(\'product-description\')[0].getElementsByTagName(\'ul\')[0].getElementsByTagName(\'li\');\
+						for (var i = 0; i < (prod_desc_list.length - 1); i++) {\
+							var span = prod_desc_list[i].getElementsByTagName(\'span\');\
+							if (span.length > 0) {\
+								prod_desc = prod_desc + \' \' + span[0].innerText;\
+							} else {\
+								prod_desc = prod_desc + \' \' + prod_desc_list[i].innerText;\
+							}\
+						}\
+						var breadcrumb = document.getElementById(\'breadcrumb\').getElementsByTagName(\'li\');\
+						gender = breadcrumb[1].innerText.trim();\
+						category = breadcrumb[2].innerText.trim();\
+						colors.push(document.getElementsByClassName(\'colour-component\')[0].getElementsByClassName(\'product-colour\')[0].innerText);\
+						brand = window.location.href.split(".com")[1].split("\/")[1];\
+						img_links.push(document.getElementsByClassName(\'fullImageContainer\')[1].getElementsByTagName(\'img\')[0].src);\
+						\
+						sku_id = document.getElementsByClassName(\'product-code\')[0].getElementsByTagName(\'span\')[0].innerText;\
 					}\
 					gender = gender.toLowerCase();\
 					if(gender == "women" || gender == "girls"){\
