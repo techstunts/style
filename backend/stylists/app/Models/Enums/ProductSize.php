@@ -4,5 +4,5 @@ namespace App\Models\Enums;
 
 class ProductSize
 {
-    const NO_ANY = "127";
+    const NO_ANY = "1";
 }

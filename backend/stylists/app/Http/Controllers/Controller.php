@@ -96,27 +96,6 @@ abstract class Controller extends BaseController
             $where_raw[] = "({$this->base_table}.date = '" . date("Y-m-d",strtotime($request->input('book_date'))) . "')";
         }
 
-        if($this->base_table != 'products' && $request->input('min_price') != ""){
-            $where_raw[] = "({$this->base_table}.price >= '{$request->input('min_price')}')";
-        }
-
-        if($this->base_table != 'products' && $request->input('max_price') != ""){
-            $where_raw[] = "({$this->base_table}.price <= '{$request->input('max_price')}')";
-        }
-
-        $discounted_price_condition = " AND {$this->base_table}.discounted_price > 0";
-        $decimal_points = 3;
-
-        if($request->has('min_discount') != "" && intval($request->input('min_discount')) > 0){
-            $min_discount = intval($request->input('min_discount')) / 100;
-            $where_raw[] = "(TRUNCATE({$this->base_table}.discounted_price / {$this->base_table}.price, $decimal_points) >= {$min_discount} $discounted_price_condition)";
-        }
-
-        if($request->has('max_discount') != "" && intval($request->input('max_discount')) > 0){
-            $max_discount = intval($request->input('max_discount')) / 100;
-            $where_raw[] = "(TRUNCATE({$this->base_table}.discounted_price / {$this->base_table}.price, $decimal_points) <= {$max_discount} $discounted_price_condition)";
-        }
-
         if($request->input('product_id') != ""){
             $ids_arr = [] ;
             foreach($request->input('product_id') as $product){

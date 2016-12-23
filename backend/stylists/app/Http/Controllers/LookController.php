@@ -117,6 +117,11 @@ class LookController extends Controller
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
+        $lookMapperObj = new LookMapper();
+        foreach ($looks as $look) {
+            $look->price = !empty($look->prices) ? $lookMapperObj->getPrice($look->prices) : 0;
+            unset($look->prices);
+        }
         $view_properties['looks'] = $looks;
         $view_properties['status_rules'] = $this->status_rules;
         $view_properties['app_sections'] = AppSections::all();
@@ -243,7 +248,7 @@ class LookController extends Controller
             if (!empty($request->old('product_ids'))) {
                 $look->look_products = Mapper::productsByIds($request->old('product_ids'));
             }
-            $look->price = count($look->prices) ? $lookMapperObj->getPrice($look->prices) : $look->price;
+            $look->price = count($look->prices) ? $lookMapperObj->getPrice($look->prices) : 0;
             $view_properties = $lookMapperObj->getDropDowns();
 
             $view_properties = array_merge($view_properties, $lookMapperObj->getViewProperties($request->old(), $look));

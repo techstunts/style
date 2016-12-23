@@ -3,7 +3,8 @@ include_once("ProductLink.php");
 
 $images_origin = 'http://d36o0t9p57q98i.cloudfront.net/';
 
-function getLooksDetails($looks, $userid){
+function getLooksDetails($looks, $userid)
+{
     global $images_origin;
 
     $looks_count = count($looks);
@@ -38,9 +39,12 @@ function getLooksDetails($looks, $userid){
 
         $current_look_products_res = mysql_query($current_look_products_query);
         $current_look_products = [];
+        $product_ids = array();
         while ($data1 = mysql_fetch_array($current_look_products_res)) {
+            $product_ids[] = $data1['id'];
             $current_look_products[] = $data1;
         }
+        $prices = count($product_ids) ? getINRPrice(1, $product_ids) : [];
 
         $productarray = array();
         for ($j = 0; $j < count($current_look_products); $j++) {
@@ -61,7 +65,7 @@ function getLooksDetails($looks, $userid){
                 'productid' => $current_look_products[$j][0],
                 'productname' => mb_convert_encoding($current_look_products[$j][1], "UTF-8", "Windows-1252"),
                 'productimage' => $current_look_products[$j][2],
-                'productprice' => getINRPrice(1, $current_look_products[$j][0]),
+                'productprice' => isset($prices[$current_look_products[$j][0]]) ? $prices[$current_look_products[$j][0]] : 0,
                 'productlink' => ProductLink::getDeepLink($current_look_products[$j][4],
                     $current_look_products[$j][5],
                     $current_look_products[$j][3]),
@@ -71,7 +75,6 @@ function getLooksDetails($looks, $userid){
                 'producttype' => '',
                 'discounted_price' => '',
             );
-
         }
 
         $stylist_details = array();
@@ -93,7 +96,7 @@ function getLooksDetails($looks, $userid){
                         'lookid' => $looks[$i][0],
                         'lookdescription' => mb_convert_encoding($looks[$i][1], "UTF-8", "Windows-1252"),
                         'lookimage' => $looks[$i][2],
-                        'lookprice' => $looks[$i][3],
+                        'lookprice' => $looks[$i]['price'] ? $looks[$i]['price'] : $looks[$i][3],
                         'occasion' => $looks[$i][4],
                         'lookname' => mb_convert_encoding($looks[$i][5], "UTF-8", "Windows-1252"),
                         'productdetails' => $productarray,
@@ -108,21 +111,23 @@ function getLooksDetails($looks, $userid){
 
     return $looks_and_products;
 }
-function getINRPrice ($entity_type_id, $entity_id)
+
+function getINRPrice($entity_type_id, $entity_ids)
 {
+    $ids = implode(',', $entity_ids);
     $price = array();
     if (1 == $entity_type_id) {
-        $priceRawQuery = "select pp.value
+        $priceRawQuery = "select pp.product_id AS entity_id, pp.value
 					    from products_prices pp
-						where pp.product_id='$entity_id' AND pp.price_type_id='2' AND pp.currency_id='1'";
+						where pp.product_id IN ($ids) AND pp.price_type_id='2' AND pp.currency_id='1'";
     } elseif (2 == $entity_type_id) {
-        $priceRawQuery = "select lp.value
+        $priceRawQuery = "select lp.look_id AS entity_id, lp.value
 						from look_prices lp
-						where lp.look_id='$entity_id' AND lp.price_type_id='2' AND lp.currency_id='1'";
+						where lp.look_id IN ($ids) AND lp.price_type_id='2' AND lp.currency_id='1'";
     }
     $priceMySQLQuery = mysql_query($priceRawQuery);
     while ($data = mysql_fetch_array($priceMySQLQuery)) {
-        $price = $data;
+        $price[$data['entity_id']] = $data['value'];
     }
-    return $price ? $price['value'] : $price;
+    return $price ? $price : $price;
 }

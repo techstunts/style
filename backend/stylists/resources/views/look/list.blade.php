@@ -70,13 +70,7 @@
                         </div>
                         <div class="extra text">
                             <span>{{$look->age_group->name}}</span>
-                            @if (!empty($look->prices) && count($look->prices) > 0)
-                                @foreach($look->prices as $price)
-                                    <span>{{$price->currency ? $price->currency->name : '' . $price->value}}</span>
-                                @endforeach
-                            @else
-                                <span>INR {{$look->price}}</span>
-                            @endif
+                            <span>INR {{$look->price}}</span>
                             <span>Rs.{{$look->budget->name}}</span>
                         </div>
                     </div>
