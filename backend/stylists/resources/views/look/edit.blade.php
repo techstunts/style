@@ -128,7 +128,7 @@
                                            value="{{old('product_ids') != "" ? old('product_ids') : ''}}"
                                            id="product_ids">
                                     <td class="content">
-                                        @if(!empty($look->products))
+                                        @if($look->products)
                                             @foreach($look->products as $product)
                                                 @if(!empty($product))
                                                     <div class="items pop-up-item" value="{{$product->id}}">
