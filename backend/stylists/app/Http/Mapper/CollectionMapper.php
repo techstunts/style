@@ -233,12 +233,13 @@ class CollectionMapper extends Controller
 
     public function saveCollectionDetails($collection, $request, $uploadMapperObj = null)
     {
-        if ($collection->status_id !== Status::Active && !empty($request->status_id) && $request->status_id == Status::Active && empty($collection->image)) {
-            return array(
-                'status' => false,
-                'message' => 'Upload image to make status Active',
-            );
-        }
+        // commented as of now as Design doesn't require banner to be mandatory
+//        if ($collection->status_id !== Status::Active && !empty($request->status_id) && $request->status_id == Status::Active && empty($collection->image)) {
+//            return array(
+//                'status' => false,
+//                'message' => 'Upload image to make status Active',
+//            );
+//        }
 
         $collection = $this->setObjectProperties($collection, $request);
         $logged_in_stylist = $request->user()->id != '' ? $request->user()->id : '';

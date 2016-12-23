@@ -23,7 +23,7 @@ use App\Recommendation;
 
 class LookMapper extends Controller
 {
-    protected $fields = ['id', 'name', 'description', 'image', 'stylist_id', 'price',
+    protected $fields = ['id', 'name', 'description', 'image', 'stylist_id',
         'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'created_at'];
 
     protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group', 'status', 'look_products.product', 'prices'];
