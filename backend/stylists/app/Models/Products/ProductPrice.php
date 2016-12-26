@@ -13,6 +13,6 @@ class ProductPrice extends Model
     }
 
     public function currency(){
-        return $this->belongsTo('App\Models\Lookups\currency', 'currency_id');
+        return $this->belongsTo('App\Models\Lookups\Currency', 'currency_id');
     }
 }

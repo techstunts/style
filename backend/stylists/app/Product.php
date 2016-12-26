@@ -59,7 +59,7 @@ class Product extends Model
     }
 
     public function in_stock(){
-        return $this->hasMany('App\Models\Products\ProductSize', 'parent_sku_id', 'sku_id');
+        return $this->hasMany('App\Models\Products\ProductSize', 'product_id');
     }
 
 }
