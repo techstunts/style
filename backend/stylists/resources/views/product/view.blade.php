@@ -23,7 +23,7 @@
                         <tr class="row">
                             <td class="head">Price</td>
                             @foreach($product->product_prices as $product_price)
-                                <td class="content">{{$product_price->type ? $product_price->type->type : "" .' : '. $product_price->currency ? $product_price->currency->name : "" .' '. $product_price->value}}</td>
+                                <td class="content">{{($product_price->type ? $product_price->type->type : "") .' : '. ($product_price->currency ? $product_price->currency->name : "") . ' '.  $product_price->value}}</td>
                             @endforeach
                         </tr>
                         <tr class="row">
