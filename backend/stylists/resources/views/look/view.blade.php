@@ -54,12 +54,12 @@
                             </tr>
                             <tr class="row">
                                 <td class="head">Stylist</td>
-                                @if(!empty($stylist))
+                                @if(!empty($look->stylist))
                                     <td class="content">
-                                        <a href="{{url('stylist/view/' . $stylist->id)}}" title="{{$stylist->name}}"
+                                        <a href="{{url('stylist/view/' . $look->stylist->id)}}" title="{{$look->stylist->name}}"
                                            target="stylist_win">
-                                            <img class="icon" src="{{asset('images/' . $stylist->image)}}"/>
-                                            {{$stylist->name}}
+                                            <img class="icon" src="{{asset('images/' . $look->stylist->image)}}"/>
+                                            {{$look->stylist->name}}
                                         </a>
                                     </td>
                                 @endif
@@ -67,11 +67,10 @@
                             <tr class="row">
                                 <td class="head">Products</td>
                                 <td class="content">
-                                    @foreach($products as $product)
-                                        <a href="{{url('product/view/' . $product->id)}}" title="{{$product->name}}"
+                                    @foreach($look->look_products as $look_product)
+                                        <a href="{{url('product/view/' . $look_product->product->id)}}" title="{{$look_product->product->name}}"
                                            target="product_win">
-                                            <img class="entity"
-                                                 src="{{strpos($product->upload_image, "http") !== false ? $product->upload_image : asset('images/' . $product->upload_image)}}"/>
+                                            <img class="entity" src="{{$look_product->product->image_name}}"/>
                                         </a>
                                     @endforeach
                                 </td>

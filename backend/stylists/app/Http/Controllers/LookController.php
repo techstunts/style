@@ -106,9 +106,10 @@ class LookController extends Controller
         if (!$request->has('status_id') || $request->input('status_id') != LookupStatus::Deleted) {
             $remove_deleted_looks = 'looks.status_id != ' . LookupStatus::Deleted;
         }
-
+        $mapperObj = new Mapper();
+        $look_prices = $mapperObj->getPriceClosure();
         $looks =
-            Look::with('gender', 'status', 'body_type', 'budget', 'occasion', 'age_group')
+            Look::with(['gender', 'status', 'body_type', 'budget', 'occasion', 'age_group', 'prices' => $look_prices])
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereRaw($remove_deleted_looks)
@@ -116,6 +117,11 @@ class LookController extends Controller
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
+        $lookMapperObj = new LookMapper();
+        foreach ($looks as $look) {
+            $look->price = !empty($look->prices) ? $lookMapperObj->getPrice($look->prices) : 0;
+            unset($look->prices);
+        }
         $view_properties['looks'] = $looks;
         $view_properties['status_rules'] = $this->status_rules;
         $view_properties['app_sections'] = AppSections::all();
@@ -213,18 +219,20 @@ class LookController extends Controller
 
     public function getView()
     {
-        $look = Look::find($this->resource_id);
-        $view_properties = [];
+        $looks_products = function ($query) {
+            $query->with('product');
+        };
+        $look = Look::with(['look_products' => $looks_products, 'stylist'])->where('id', $this->resource_id)->first();
         if ($look) {
-            $products = $look->products;
-            $status = Status::find($look->status_id);
-            $view_properties = array('look' => $look, 'products' => $products, 'stylist' => $look->stylist,
-                'status' => $status);
-            $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin') || $look->stylist_id == Auth::user()->id;
+            $view_properties = array(
+                'look' => $look,
+                'status' => Status::find($look->status_id),
+                'is_owner_or_admin' => Auth::user()->hasRole('admin') || $look->stylist_id == Auth::user()->id,
+            );
+            return view('look.view', $view_properties);
         } else {
             return view('404', array('title' => 'Look not found'));
         }
-        return view('look.view', $view_properties);
     }
 
     public function getEdit($request)
@@ -238,8 +246,9 @@ class LookController extends Controller
 
         if ($look) {
             if (!empty($request->old('product_ids'))) {
-                $look->products = Mapper::productsByIds($request->old('product_ids'));
+                $look->look_products = Mapper::productsByIds($request->old('product_ids'));
             }
+            $look->price = count($look->prices) ? $lookMapperObj->getPrice($look->prices) : 0;
             $view_properties = $lookMapperObj->getDropDowns();
 
             $view_properties = array_merge($view_properties, $lookMapperObj->getViewProperties($request->old(), $look));

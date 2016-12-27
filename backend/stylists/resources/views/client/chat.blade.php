@@ -226,9 +226,9 @@
                             <img ng-src="@{{item.image}}" ng-click="toggle(item)">
                             <main>
                                 <p ng-bind="item.name"></p>
-                                <span ng-bind="item.brand_name"></span>
-                                <b ng-bind="'Rs.' + item.price"></b>
-                                <i ng-bind="item.merchant_name"></i>
+                                <span ng-bind="item.brand ? item.brand.name : ''"></span>
+                                <b ng-bind="'Rs.' + (item.price.INR != undefined ? item.price.INR[0].value : item.price)"></b>
+                                <i ng-bind="item.merchant ? item.merchant.name : ''"></i>
                                 <a target="_blank" ng-href="@{{item.product_link}}">View details</a>
                             </main>
                         </article>

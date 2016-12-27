@@ -496,19 +496,16 @@ function showEntities(entity_url) {
                 var str = '<div class="items">No data found</div>';
                 $(".popup-inner").append(str);
             } else {
-                var price_bar = '<div class="extra text" >' +
-                    '<span>{{price}}</span>' +
-                    '<span>{{discounted_price}}</span>' +
-                    '<span>{{discount_percent}}</span>' +
-                    '</div>';
 
                 var str = '<div class="items pop-up-item" >' +
                     '<div class="name text">' +
                     '<input class="entity_ids" name="entity_ids" value="{{item_id}}" type="checkbox">' +
                     '<a href="' + '/' + entity[entity_type_id] + '/view//{{item_id}}" target="_blank">{{item_name}}</a>' +
                     '</div>';
-                if (entity_type_id == EntityType.PRODUCT) {
-                    str = str + price_bar;
+                if (entity_type_id == EntityType.LOOK) {
+                    str = str + '<div class="extra text" >' + '<span> {{price}}</span>' + '</div>';
+                }else if (entity_type_id == EntityType.PRODUCT) {
+                    str = str + '<div class="extra text" >' + '<span> {{price}}</span>' + '<span> {{dollerPrice}}</span>'  + '</div>';
                 }
                 str = str + '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="{{item_popover}}">' +
                     '<img src="{{item_image}}" class="pop-image-size"/>' +
@@ -516,38 +513,30 @@ function showEntities(entity_url) {
                     '</div>';
 
                 for (var i = 0; i < item.data.length; i++) {
-                    if (entity_type_id != EntityType.CLIENT) {
-                        var popover_data = "Price: " + item.data[i].price + "/- <br >" +
-                            "Description: " + item.data[i].description + "<br >" +
-                            "<img src='" + item.data[i].image + "' />";
-                        newstr = str;
-
-                        newstr = newstr.replace("{{item_id}}", item.data[i].id)
-                            .replace("/{{item_id}}", item.data[i].id)
-                            .replace("{{item_name}}", item.data[i].name)
-                            .replace("{{item_popover}}", popover_data)
-                            .replace("{{item_image}}", item.data[i].image)
-                            .replace("{{price}}", item.data[i].price);
-                        if (entity_type_id == EntityType.PRODUCT) {
-                            if (item.data[i].discounted_price > 0) {
-                                newstr = newstr.replace("{{discounted_price}}", item.data[i].discounted_price)
-                                    .replace("{{discount_percent}}", item.data[i].discount_percent);
-                            } else {
-                                newstr = newstr.replace("{{discounted_price}}", '')
-                                    .replace("{{discount_percent}}", '');
-                            }
-                        }
+                    var popover_data = "";
+                    if (entity_type_id == EntityType.PRODUCT) {
+                        var price = getPrice(item.data[i].price);
+                        popover_data = popover_data + "Price: " + price.INR != undefined ? '&#8377 ' + price.INR : '' + "/- <br >";
+                    }else if (entity_type_id == EntityType.LOOK){
+                        popover_data = popover_data + "Price: " + '&#8377 ' + item.data[i].price + "/- <br >";
                     }
-                    else {
-                        var popover_data = "Name: " + item.data[i].name + "<br >" +
-                            "<img src='" + item.data[i].image + "' />";
-                        newstr = str;
+                    if (entity_type_id != EntityType.CLIENT){
+                        popover_data = popover_data + "Description: " + item.data[i].description + "<br >";
+                    }
+                    popover_data = popover_data + "<img src='" + item.data[i].image + "' />";
+                    newstr = str;
 
-                        newstr = newstr.replace("{{item_id}}", item.data[i].id)
-                            .replace("/{{item_id}}", item.data[i].id)
-                            .replace("{{item_name}}", item.data[i].name)
-                            .replace("{{item_popover}}", popover_data)
-                            .replace("{{item_image}}", item.data[i].image);
+                    newstr = newstr.replace("{{item_id}}", item.data[i].id)
+                        .replace("/{{item_id}}", item.data[i].id)
+                        .replace("{{item_name}}", item.data[i].name)
+                        .replace("{{item_popover}}", popover_data)
+                        .replace("{{item_image}}", item.data[i].image);
+                    if (entity_type_id == EntityType.PRODUCT ) {
+                        newstr = newstr.replace("{{price}}", price.INR != undefined ? '&#8377 ' + price.INR : '' )
+                            .replace("{{dollerPrice}}", price.USD != undefined ? '&#36 ' + price.USD : '' );
+                    }
+                    if (entity_type_id == EntityType.LOOK) {
+                        newstr = newstr.replace("{{price}}", item.data[i].price != undefined ? '&#8377 ' + item.data[i].price : '' );
                     }
                     $(".popup-inner").append(newstr);
                 }
@@ -582,4 +571,23 @@ function showEntities(entity_url) {
 
 function toggleLoader() {
     $('.mobile-app-send img').toggle();
+}
+
+function getPrice(prices) {
+    price = [];
+    if (prices['INR'] != undefined && prices['INR'] != '') {
+        for (var i = 0; i < prices['INR'].length; i++) {
+            if (prices['INR'][i].type == 'priceRetail') {
+                price.INR = prices['INR'][i].value;
+            }
+        }
+    }
+    if (prices['USD'] != undefined && prices['USD'] != '') {
+        for (var i = 0; i < prices['USD'].length; i++) {
+            if (prices['USD'][i].type == 'priceRetail') {
+                price.USD = prices['USD'][i].value;
+            }
+        }
+    }
+    return price;
 }

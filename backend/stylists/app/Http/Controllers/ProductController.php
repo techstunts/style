@@ -4,15 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Brand;
 use App\Category;
+use App\Http\Mapper\Mapper;
+use App\Models\Enums\Currency;
+use App\Models\Enums\PriceType;
 use App\Models\Lookups\Gender;
 use App\Models\Lookups\Color;
 use App\Models\Lookups\Tag;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
+use App\Models\Enums\ProductSize as ProductSizeEnum;
 use App\Models\Enums\RecommendationType;
 use App\Models\Lookups\AppSections;
 use App\Merchant;
 use App\Models\Lookups\Lookup;
+use App\Models\Products\ProductColorGroup;
+use App\Models\Products\ProductGroup;
+use App\Models\Products\ProductPrice;
+use App\Models\Products\ProductSize;
 use App\Product;
 use App\ProductTag;
 use Illuminate\Http\Request;
@@ -47,9 +55,6 @@ class ProductController extends Controller
     {
         $this->base_table = 'products';
         $this->initWhereConditions($request);
-        if ($request->input('in_stock') != "") {
-            $this->setInStockCondition($request->input('in_stock'));
-        }
         $this->initFilters();
 
         $lookup = new Lookup();
@@ -77,15 +82,20 @@ class ProductController extends Controller
         $view_properties['tag_id'] = $request->has('tag_id') && $request->input('tag_id') !== "" ? intval($request->input('tag_id')) : "";
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
-        $view_properties['in_stock'] = $request->input('in_stock');
+        $in_stock = $request->input('in_stock');
+        $view_properties['in_stock'] = $in_stock;
 
         $view_properties['from_date'] = $request->input('from_date');
         $view_properties['to_date'] = $request->input('to_date');
 
-        $view_properties['min_price'] = $request->input('min_price');
-        $view_properties['max_price'] = $request->input('max_price');
-        $view_properties['min_discount'] = $request->input('min_discount');
-        $view_properties['max_discount'] = $request->input('max_discount');
+        $min_price = $request->input('min_price');
+        $max_price = $request->input('max_price');
+        $min_discount = $request->input('min_discount');
+        $max_discount = $request->input('max_discount');
+        $view_properties['min_price'] = $min_price;
+        $view_properties['max_price'] = $max_price;
+        $view_properties['min_discount'] = $min_discount;
+        $view_properties['max_discount'] = $max_discount;
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -103,11 +113,18 @@ class ProductController extends Controller
         $genders_list = Gender::all()->keyBy('id');
         $genders_list[0] = new Gender();
 
+        $mapperObj = new Mapper();
+        $product_prices = $mapperObj->getPriceClosure($min_price, $max_price, $min_discount, $max_discount);
+        $in_stock_closure = $this->getInStockClosure($in_stock);
         $products =
-            Product::with('category', 'primary_color', 'secondary_color', 'product_tags.tag')
+            Product::with(['category', 'product_prices' => $product_prices, 'in_stock', 'primary_color', 'product_tags.tag'])
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
-                ->orderBy('created_at', 'desc')
+                ->whereHas('product_prices', $product_prices);
+        if (!empty($in_stock)) {
+            $products = $products->whereHas('in_stock', $in_stock_closure);
+        }
+        $products = $products->orderBy('created_at', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
 
@@ -125,7 +142,6 @@ class ProductController extends Controller
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
         $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
         $view_properties['autosuggest_type'] = 'category';
-
         return view('product.list', $view_properties);
     }
 
@@ -134,6 +150,14 @@ class ProductController extends Controller
         parent::initWhereConditions($request);
     }
 
+    public function getInStockClosure($in_stock)
+    {
+        return function ($query) use($in_stock) {
+            if (!empty($in_stock)) {
+                $query->where('stock_quantity', '>=', $in_stock);
+            }
+        };
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -189,13 +213,15 @@ class ProductController extends Controller
             $sku_id = !empty($request->input('sku_id')) ? $request->input('sku_id') : 'isy_' . (intval(time()) + rand(0, 10000));
             $product = Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant->id]);
 
+            DB::beginTransaction();
+            $product_group_id = $this->getProductGroupId();
+
             $product->merchant_id = $merchant->id;
             $product->sku_id = $sku_id;
+            $product->group_id = $product_group_id;
             $product->name = htmlentities($request->input('name'));
             $product->description = htmlentities($request->input('desc'));
-            $product->price = str_replace(array(",", " "), "", $request->input('price'));
             $product->product_link = $request->input('url');
-            $product->upload_image = $request->input('image0');
             $product->image_name = $request->input('image0');
             $product->brand_id = $brand->id;
             $product->category_id = $category->id;
@@ -203,21 +229,43 @@ class ProductController extends Controller
             $product->primary_color_id = $primary_color->id;
             $product->secondary_color_id = $secondary_color ? $secondary_color->id : "";
             $product->stylist_id = $request->user()->id;
+            $product->approved_by = $product->stylist_id;
 
-            if ($product->save()) {
-                $product_url = url('product/view/' . $product->id);
-                echo json_encode([true, $product_url]);
-            } else {
-                echo json_encode([false, "Product save failed. Please contact admin."]);
+            try {
+                ProductColorGroup::insert(['group_id' => $product_group_id, 'sku_id' => $sku_id]);
+                ProductSize::insert(['size_id' => ProductSizeEnum::NO_ANY, 'sku_id' => $sku_id, 'parent_sku_id' => $sku_id, 'stock_quantity' => 1]);
+                if ($product->save()) {
+                    ProductPrice::insert(['product_id' => $product->id, 'price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR, 'value' => $request->input('price')]);
+                    $product_url = url('product/view/' . $product->id);
+                    DB::commit();
+                    echo json_encode([true, $product_url]);
+                } else {
+                    echo json_encode([false, "Product save failed. Please contact admin."]);
+                }
+            } catch (\Exception $e) {
+                DB::rollback();
+                echo json_encode([false, "Exception : " . $e->getMessage()]);
             }
         } else {
             echo json_encode([false, "Product required info missing. Please contact admin."]);
         }
     }
 
+    public function getProductGroupId()
+    {
+        $productGroupObj = new ProductGroup();
+        $productGroupObj->save();
+        return $productGroupObj->id;
+    }
+
     public function getView()
     {
-        $product = Product::find($this->resource_id);
+        $product_prices = function ($query) {
+            $query->with(['type', 'currency']);
+            $query->where(['price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR]);
+        };
+
+        $product = Product::where('id', $this->resource_id)->with(['product_prices' => $product_prices])->first();
         $view_properties = null;
         if ($product) {
             $category = $product->category;

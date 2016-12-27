@@ -18,7 +18,7 @@ class ScraperMapper
     protected $api_key = 'ae67de7e514046eb9995ecd497181dd1:';
     protected $with_array = ['merchant', 'project'];
     protected $color_ids = [];
-    protected $process_data_count = 10;
+    protected $process_data_count = 1;
     protected $start = 0;
     protected $none = 0;
     protected $diff_cur_merchants_id = [25 => 'Indianroots', 38 => 'Violetstreet'];
@@ -143,6 +143,7 @@ class ScraperMapper
         $file_name = $job->items_file_path . $job->items_file_name;
         $merchant_id = $job->spider->merchant_id;
         $record_start = $import->count;
+        $url = env('API_ORIGIN') . "/merchant/product/create";
 
         if (!$file = fopen($file_name, 'r')) {
             fwrite($fileObj, date("Y-m-d H:i:s"). ' ' .'Error opening file '. $file_name.PHP_EOL);
@@ -171,7 +172,7 @@ class ScraperMapper
             if ($count == $this->process_data_count) {
                 if ($saved_products = $this->saveProductInLocal($product_array, $merchant_id)) {
 
-                    $response = json_decode($this->importMerchantProducts($saved_products));
+                    $response = json_decode($this->importMerchantProducts($saved_products, $url));
                     if (!empty($response) && $response->success == false) {
                         $this->updateProductsHavingError($response);
                     }
@@ -190,7 +191,7 @@ class ScraperMapper
 
         if (($count > $this->start + 1) && ($count < $this->process_data_count) && (count($product_array) > 1)) {
             if ($saved_products = $this->saveProductInLocal($product_array, $merchant_id)) {
-                $response = json_decode($this->importMerchantProducts($saved_products));
+                $response = json_decode($this->importMerchantProducts($saved_products, $url));
                 if (!empty($response) && $response->success == false) {
                     $this->updateProductsHavingError($response);
                 }
@@ -212,68 +213,28 @@ class ScraperMapper
     {
         $this->color_ids = $this->getColors();
         $file_name = $job->items_file_path . $job->items_file_name;
-        $merchant_id = $job->spider->merchant_id;
+        $url = env('API_ORIGIN') . "/product/createNicoProduct";
 
         if (!$file = fopen($file_name, 'r')) {
             fwrite($fileObj, date("Y-m-d H:i:s"). ' ' .'Error opening file '. $file_name.PHP_EOL);
             return false;
         }
 
-        $imported_item_count = $import->count;
         $count = $this->start;
         if (!$json_line = fgets($file)) {
             return false;
         }
         $product_array = array();
         $lineObj = json_decode($json_line);
-        foreach ($lineObj->storeProduct as $line) {
+        foreach ($lineObj as $line) {
+            $line->merchant = 'Nicobar';
+            $product_array[$count++] = $line;
             if ($count >= $this->process_data_count) {
-                $saved_products = $this->saveProductInLocal($product_array, $merchant_id);
-                if ($saved_products) {
-
-                    $response = json_decode($this->importMerchantProducts($saved_products));
-                    if (!empty($response) && $response->success == false) {
-                        $this->updateProductsHavingError($response);
-                    }
-
-                    $imported_item_count += $count;
-                    $last_item_key = '';
-                    $this->updateImportStatus($import, $imported_item_count, $last_item_key);
-                }
+                $this->importMerchantProducts($product_array, $url);
                 $count = $this->start;
                 unset($product_array);
-
-            } elseif ($count < $this->process_data_count) {
-                if ($line->attributes) {
-                    $this->nicobar_prod_obj['product_name'] = $line->title;
-                    $this->nicobar_prod_obj['product_detail'] = $line->description;
-                    $this->nicobar_prod_obj['image_url'] = $line->image;
-                    $this->nicobar_prod_obj['url'] = 'https://www.nicobar.com/';
-                    $this->nicobar_prod_obj['sku'] = $line->sku;
-                    foreach ($line->attributes->Color as $diff_prod_color) {
-                        if ($diff_prod_color->sku == $line->sku) {
-                            $this->nicobar_prod_obj['colors'] = $diff_prod_color->value;
-                            $this->nicobar_prod_obj['image_url'] = $diff_prod_color->image ? $diff_prod_color->image : $line->image;
-                            $product_array[$count++] = (object)$this->nicobar_prod_obj;
-                        }
-                    }
-                }
             }
         }
-        if (($count >= $this->start + 1) && ($count < $this->process_data_count) && (count($product_array) >= 1)) {
-            if ($saved_products = $this->saveProductInLocal($product_array, $merchant_id)) {
-                $response = json_decode($this->importMerchantProducts($saved_products));
-                if (!empty($response) && $response->success == false) {
-                    $this->updateProductsHavingError($response);
-                }
-
-                $imported_item_count += $count - 1;
-                $last_item_key = '';
-                $this->updateImportStatus($import, $imported_item_count, $last_item_key);
-
-            }
-        }
-
         if(!fclose($file)){
             return false;
         }
@@ -406,7 +367,7 @@ class ScraperMapper
         }
     }
 
-    public function importMerchantProducts($products)
+    public function importMerchantProducts($products, $url)
     {
         $data = array(
             'product_list' => $products,
@@ -417,7 +378,7 @@ class ScraperMapper
         );
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, env('API_ORIGIN') . "/merchant/product/create");
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

@@ -128,21 +128,20 @@
                                            value="{{old('product_ids') != "" ? old('product_ids') : ''}}"
                                            id="product_ids">
                                     <td class="content">
-                                        @if($look->products)
-                                            @foreach($look->products as $product)
-                                                @if(!empty($product))
-                                                    <div class="items pop-up-item" value="{{$product->id}}">
+                                        @if(!empty($look->look_products))
+                                            @foreach($look->look_products as $look_product)
+                                                @if(!empty($look_product) && !empty($look_product->product))
+                                                    <div class="items pop-up-item" value="{{$look_product->product_id}}">
                                                         <span class="pull-right cross_mark"><a href="#"><i
                                                                         class="material-icons" style="font-size: 13px;">close</i></a></span>
                                                         <div class="name text">
-                                                            <a href="{{url('product/view/' . $product->id)}}"
-                                                               target="_blank">{{$product->name}}</a>
+                                                            <a href="{{url('product/view/' .$look_product->product_id)}}"
+                                                               target="_blank">{{$look_product->product->name}}</a>
                                                         </div>
                                                         <div class="image" data-toggle="popover" data-trigger="hover"
                                                              data-placement="right" data-html="true"
-                                                             data-content="{{$product->name}}">
-                                                            <img src="{{strpos($product->upload_image, "http") !== false ? $product->upload_image : asset('images/' . $product->upload_image)}}"
-                                                                 class="pop-image-size"/>
+                                                             data-content="{{$look_product->product->name}}">
+                                                            <img src="{{$look_product->product->image_name}}" class="pop-image-size"/>
                                                         </div>
                                                     </div>
                                                 @endif

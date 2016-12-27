@@ -70,7 +70,7 @@
                         </div>
                         <div class="extra text">
                             <span>{{$look->age_group->name}}</span>
-                            <span>Rs.{{$look->price}}</span>
+                            <span>INR {{$look->price}}</span>
                             <span>Rs.{{$look->budget->name}}</span>
                         </div>
                     </div>
