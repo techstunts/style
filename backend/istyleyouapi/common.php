@@ -93,17 +93,17 @@ function getLooksDetails($looks, $userid)
             array(
                 'lookdetails' =>
                     array(
-                        'fav' => $looks[$i][6] == null ? 'No' : 'Yes',
-                        'lookid' => $looks[$i][0],
-                        'lookdescription' => mb_convert_encoding($looks[$i][1], "UTF-8", "Windows-1252"),
-                        'lookimage' => $looks[$i][2],
-                        'lookprice' => $looks[$i]['price'] ? $looks[$i]['price'] : $looks[$i][3],
-                        'occasion' => $looks[$i][4],
-                        'lookname' => mb_convert_encoding($looks[$i][5], "UTF-8", "Windows-1252"),
+                        'fav' => $looks[$i]['fav_id'] == null ? 'No' : 'Yes',
+                        'lookid' => $looks[$i]['look_id'],
+                        'lookdescription' => mb_convert_encoding($looks[$i]['description'], "UTF-8", "Windows-1252"),
+                        'lookimage' => $looks[$i]['image'],
+                        'lookprice' => $looks[$i]['price'] ? $looks[$i]['price'] : 0,
+                        'occasion' => $looks[$i]['occasion'],
+                        'lookname' => mb_convert_encoding($looks[$i]['name'], "UTF-8", "Windows-1252"),
                         'productdetails' => $productarray,
                         'stylish_details' => $stylist_details,
                         'is_collage' => isset($looks[$i]['is_collage']) ? $looks[$i]['is_collage'] : '',
-                        'look_url' => $images_origin . '/uploads/images/looks/' . $looks[$i][2]
+                        'look_url' => $images_origin . '/uploads/images/looks/' . $looks[$i]['image']
                     )
             );
         $looks_and_products[] = $current_look_details;

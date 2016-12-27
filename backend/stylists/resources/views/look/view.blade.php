@@ -42,7 +42,11 @@
                             </tr>
                             <tr class="row">
                                 <td class="head">Look Price</td>
-                                <td class="content">Rs.{{$look->price}} </td>
+                                @foreach($look->prices as $price)
+                                    @if ($price->price_type_id == \App\Models\Enums\PriceType::RETAIL && $price->currency_id == \App\Models\Enums\Currency::INR)
+                                        <td class="content">Rs.{{$price->value}} </td>
+                                    @endif
+                                @endforeach
                             </tr>
                             <tr class="row">
                                 <td class="head">Status</td>
