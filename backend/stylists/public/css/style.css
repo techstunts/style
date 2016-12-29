@@ -1,7 +1,11 @@
-
+.tag{
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
 
 nav {
-    overflow: auto
+    overflow: auto;
+    margin: 14px;
 }
 
 nav ul {
@@ -14,7 +18,7 @@ nav li {
     padding: 3px 5px;
     list-style: none;
     border: 1px solid wheat;
-    background-color: #E91E63;
+    background-color: gray;
 }
 
 nav li a {
@@ -23,6 +27,9 @@ nav li a {
     padding: 3px;
 }
 
+li.active{
+    background-color:  #E91E63 !important;
+}
 div.items {
     float: left;
     margin: 5px;
@@ -60,15 +67,15 @@ div.items div.extra {
 }
 
 div.items div.extra span {
-    background-color: #E91E63;
+    background-color: lightgrey;
     overflow: overlay;
-    color: wheat;
+    color: black;
     margin: 0 5px 0 0;
     padding: 0 1px;
 }
 
 div.items div.extra a {
-    color: wheat;
+    color: black;
 }
 
 div.items div.extra a.action {
@@ -132,7 +139,7 @@ ul.pager li > span {
 }
 
 div.filters {
-    padding: 5px 0 5px 2px;
+    padding: 5px 1px 12px 5px;
 }
 
 div.filters form {
@@ -140,19 +147,19 @@ div.filters form {
 }
 
 div.filters form select, div.filters form input, div.filters form label {
-    padding: 2px 0 1px 1px;
+    padding: 5px 1px 1px 1px;
     color: grey;
     background-color: white;
     border: 1px solid #d3d3d3;
     max-width: 200px;
     display: inline;
-    width: 90px;
-    height: initial;
-    font-size: 10px;
+    width: 113px;
+    height: 27px;
+    font-size: 12px;
 }
 
 div.filters form input[type="submit"] {
-    background-color: #D32F2F;
+    background-color: #a2a39e;
     border: 1px beige;
     color: white;
     font-weight: bold;
@@ -181,7 +188,7 @@ div.filters form.approve input[type="submit"] {
 }
 
 div.filters form input.search {
-    width: 55px;
+    width: 110px;
 }
 
 div.filters form input.search_text {

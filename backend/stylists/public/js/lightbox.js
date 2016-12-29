@@ -318,7 +318,20 @@ $(document).ready(function(){
             });
         }
     });
+
+    var urlTabSection = findTab($(window.location)[0].href);
+    $('.col-md-12 > ul a').each(function(){
+        var linkTabSection = findTab(this.href);
+        if (urlTabSection == linkTabSection) {
+            $(this).parent('li').addClass('active');
+        }
+    });
 });
+
+function findTab(href){
+    var url = href.split('.loc/')[1].split('/');
+    return url[0];
+}
 
 
 function deleteTag(){

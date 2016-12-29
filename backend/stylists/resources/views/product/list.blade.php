@@ -8,25 +8,33 @@
         <div class="container">
             <div class="filters">
                 <form method="get" action="">
-                    @include('merchant.select')
-                    @include('stylist.select')
-                    @include('brand.select')
+                    @if(!env('IS_NICOBAR'))
+                        @include('merchant.select')
+                        @include('stylist.select')
+                        @include('brand.select')
+                    @endif
                     @include('common.autosuggest')
                     @include('common.gender.select')
                     @include('common.color.select')
-                    @include('common.rating.product')
-                    @include('common.approved_by.select')
+                    @if(!env('IS_NICOBAR'))
+                        @include('common.rating.product')
+                        @include('common.approved_by.select')
+                    @endif
                     @include('common.status.instockselect')
-                    @include('common.search')
-                    @include('common.daterange')
+                    @if(!env('IS_NICOBAR'))
+                        @include('common.daterange')
+                    @endif
                     @include('common.pricerange')
                     <input type="submit" name="filter" value="Filter"/>
-                    <a href="{{url('product/list')}}" class="clearall">Clear All</a>
-                </form>
-                {!! $products->render() !!}
-            </div>
-            @include('common.sendrecommendations')
+                        @include('common.search')
 
+                        <a href="{{url('product/list')}}" class="clearall">Clear All</a>
+
+                </form>
+            </div>
+            @if(!env('IS_NICOBAR'))
+                @include('common.sendrecommendations')
+            @endif
             <div class="clear"></div>
 
             @foreach($errors->all() as $e)
@@ -34,11 +42,15 @@
             @endforeach
 
             @if(Auth::user()->hasRole('admin') )
-                <div class="filters">
-                    @include('product.bulk_update')
-                </div>
+                @if(!env('IS_NICOBAR'))
+                    <div class="filters">
+                        @include('product.bulk_update')
+                    </div>
+                @endif
                 <div class="tag">
                     @include('product.create_tag')
+                    {{--{!! $products->render() !!}--}}
+
                 </div>
 
                 <div class="clear"></div>
