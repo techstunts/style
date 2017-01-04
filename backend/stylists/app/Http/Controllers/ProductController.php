@@ -233,7 +233,6 @@ class ProductController extends Controller
 
             try {
                 ProductColorGroup::insert(['group_id' => $product_group_id, 'sku_id' => $sku_id]);
-                ProductSize::insert(['size_id' => ProductSizeEnum::NO_ANY, 'sku_id' => $sku_id, 'parent_sku_id' => $sku_id, 'stock_quantity' => 1]);
                 if ($product->save()) {
                     ProductPrice::insert(['product_id' => $product->id, 'price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR, 'value' => $request->input('price')]);
                     $product_url = url('product/view/' . $product->id);
@@ -242,6 +241,7 @@ class ProductController extends Controller
                 } else {
                     echo json_encode([false, "Product save failed. Please contact admin."]);
                 }
+                ProductSize::insert(['size_id' => ProductSizeEnum::NO_ANY, 'sku_id' => $sku_id, 'product_id' => $product->id, 'stock_quantity' => 1]);
             } catch (\Exception $e) {
                 DB::rollback();
                 echo json_encode([false, "Exception : " . $e->getMessage()]);
