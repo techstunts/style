@@ -11,6 +11,10 @@ class Error
                 $message = "Exception Occured";
                 break;
 
+            case 11:
+                $message = "Invalid id";
+                break;
+
             case 401:
                 $message = 'No product found';
                 break;
@@ -36,6 +40,8 @@ class Error
                 $message = 'Products rejected';
                 break;
 
+            default :
+                $message = "";
         }
 
         if(strlen($custom_message) > 0){

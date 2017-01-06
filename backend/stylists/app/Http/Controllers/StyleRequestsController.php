@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Error;
+use App\Http\Mapper\StyleRequestMapper;
+use App\StyleRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Enums\EntityType;
@@ -11,6 +14,7 @@ use App\Models\Lookups\AppSections;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Validator;
 
 class StyleRequestsController extends Controller
@@ -101,14 +105,27 @@ class StyleRequestsController extends Controller
         return view('requests.list', $view_properties);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function getView(Request $request)
     {
-        //
+        if (!$this->resource_id || !ctype_digit($this->resource_id)) {
+            Redirect::back()->withError('Request Not Found');
+        }
+        $client = function ($query) {
+            $query->with(['genders']);
+            $query->select(['id', 'name', 'email', 'gender_id']);
+        };
+        $styleRequest = StyleRequests::with(['client' => $client, 'requested_entity'])
+            ->where(['id' => $this->resource_id])
+//            ->select(['id', 'user_id','created_at'])
+            ->first();
+        if (!$styleRequest) {
+            return Redirect::to('requests/list')->withError('Request Not Found');
+        }
+
+        $view_properties = array();
+        $view_properties['request'] = $styleRequest;
+        $styleRequestMapperObj = new StyleRequestMapper();
+        $view_properties = array_merge($view_properties, $styleRequestMapperObj->popupProperties($request));
+        return view('requests.view', $view_properties);
     }
 }

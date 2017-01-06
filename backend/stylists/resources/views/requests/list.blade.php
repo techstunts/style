@@ -21,7 +21,7 @@
 
                 @include('common.sendrecommendations')
                 @if(count($requests) == 0)
-                    No Looks found
+                    No Requests found
                 @endif
                 <form name="frm-datatable" id="frm-datatable" method="POST" action="">
                     <table id="datatable" class="display select datatable" cellspacing="0" width="100%">
@@ -44,7 +44,7 @@
                         @foreach($requests as $request)
                             <tr>
                                 <td>{{$request->user_id}}</td>
-                                <td class="table-font-size"> {{$request->request_id}} </td>
+                                <td class="table-font-size"><a target="_blank" href="/requests/view/{{$request->request_id}}"> {{$request->request_id}} </a> </td>
                                 <td class="table-font-size">{{$request->name}}</td>
                                 <td class="table-font-size">{{$request->age}}</td>
                                 <td class="table-font-size"> {{$request->bodytype}} </td>

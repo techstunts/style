@@ -23,4 +23,8 @@ class StyleRequests extends Model
     {
         return $this->belongsTo('App\Client', 'user_id');
     }
+    public function requested_entity()
+    {
+        return $this->belongsTo('App\Models\Lookups\EntityType', 'entity_type_id');
+    }
 }
