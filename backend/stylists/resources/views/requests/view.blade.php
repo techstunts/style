@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
 @section('title', 'Requests ')
+@include('common.iconlibrary')
 
 @section('content')
     <div id="contentCntr">
@@ -52,28 +53,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        {{--<div class="col-md-1" style="width: 2.333333% !important;"> &nbsp</div>--}}
-                        {{--<div class="col-md-4 gv-border">--}}
-                            {{--<div class="row">--}}
-                                {{--<br>--}}
-                                {{--<div class="col-md-12"> Torso :: S</div>--}}
-                                {{--<br>--}}
-                                {{--<br>--}}
-                            {{--</div>--}}
-                            {{--<div class="row">--}}
-                                {{--<div class="col-md-12"> Height : 5ft 3 inches</div>--}}
-                                {{--<br>--}}
-                                {{--<br>--}}
-                            {{--</div>--}}
-                            {{--<div class="row">--}}
-                                {{--<div class="col-md-12"> Waist : 32</div>--}}
-                                {{--<br>--}}
-                                {{--<br>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-
-
                     </div>
                     <div class="col-md-5">
                         <input type="button" value="Client's past purchases"/>
@@ -148,25 +127,19 @@
                     <div class="col-md-1" style="width: 2.333333% !important;"> &nbsp</div>
                     <div class="col-md-4">
                         <div class="row mrgn5px">
-                            <col-md-4><a href="#" class="btn btn-md btn-primary">Add a Product </a> </col-md-4>
+                            <col-md-4><a data-popup-open="send-entities" href="#" class="btn btn-md btn-primary active btn-xs btn_recommendation">Add a Product </a> </col-md-4>
                             <col-md-4><a href="#" class="btn btn-md btn-primary">Create Look </a> </col-md-4>
-                            <col-md-4><a href="#" class="btn btn-md btn-primary">Add a Look </a> </col-md-4>
+                            <col-md-4><a data-popup-open="send-entities" href="#" class="btn btn-md btn-primary active btn-xs btn_recommendation">Add a Look </a> </col-md-4>
                             <br><br>
                             <div class="row">
-                                <div class="col-md-4">
-                                    <img class="img-responsive" src="https://s3.amazonaws.com/assets.mockflow.com/app/wireframepro/company/Caa63b5b41a06021bb06a692d6a94a006/projects/D780160e8c778d5859e2798261eb57e6f/images/D1098503b02d7ce47bd1fdea585e3edc3" alt="">
+                                <div class="col-md-6">
+                                    <input type="hidden" name="look_ids" value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
+                                    <div class="col-md-4 content"></div>
                                 </div>
-                                <div class="col-md-4">
-                                    <img class="img-responsive" src="https://s3.amazonaws.com/assets.mockflow.com/app/wireframepro/company/Caa63b5b41a06021bb06a692d6a94a006/projects/D780160e8c778d5859e2798261eb57e6f/images/D1098503b02d7ce47bd1fdea585e3edc3" alt="">
-                                </div>
-                                <div class="col-md-4">
-                                    <img class="img-responsive" src="https://s3.amazonaws.com/assets.mockflow.com/app/wireframepro/company/Caa63b5b41a06021bb06a692d6a94a006/projects/D780160e8c778d5859e2798261eb57e6f/images/D1098503b02d7ce47bd1fdea585e3edc3" alt="">
-                                </div>
-                                <div class="col-md-4">
-                                    <img class="img-responsive" src="https://s3.amazonaws.com/assets.mockflow.com/app/wireframepro/company/Caa63b5b41a06021bb06a692d6a94a006/projects/D780160e8c778d5859e2798261eb57e6f/images/D1098503b02d7ce47bd1fdea585e3edc3" alt="">
-                                </div>
-                                <div class="col-md-4">
-                                    <img class="img-responsive" src="https://s3.amazonaws.com/assets.mockflow.com/app/wireframepro/company/Caa63b5b41a06021bb06a692d6a94a006/projects/D780160e8c778d5859e2798261eb57e6f/images/D1098503b02d7ce47bd1fdea585e3edc3" alt="">
+
+                                <div class="col-md-6">
+                                    <input type="hidden" name="look_ids" value="{{old('product_ids') != "" ? old('product_ids') : ''}}" id="product_ids">
+                                    <div class="col-md-4 content"></div>
                                 </div>
                             </div>
 
@@ -236,20 +209,18 @@
                 </div>
                 <br>
 
-
-
-                                {{--@include('common.sendrecommendations')--}}
-                {{--<input type="hidden" id="request_tab" value="{{$request_tab}}">--}}
-                {{--@include('push.popup')--}}
+{{--                @include('common.sendrecommendations')--}}
+                <input type="hidden" id="requestTab" value="{{$request_tab}}">
+                @include('push.popup')
             </div>
         </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            $('#example').DataTable();
-        });
-    </script>
+    {{--<script>--}}
+        {{--$(document).ready(function () {--}}
+            {{--$('#example').DataTable();--}}
+        {{--});--}}
+    {{--</script>--}}
 
 @endsection
 

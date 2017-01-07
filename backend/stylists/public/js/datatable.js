@@ -126,7 +126,9 @@ $(document).ready(function () {
         }
 
         var btn_recommendation = $(this).parents('div.container').children('a.btn_recommendation');
-        if (rows_selected.length > 0) {
+        if ($('#requestTab').length > 0) {
+            btn_recommendation.addClass('active');
+        } else if (rows_selected.length > 0) {
             btn_recommendation.removeClass('disabled');
             btn_recommendation.addClass('active');
         } else {
