@@ -151,7 +151,24 @@ $(document).ready(function () {
     });
 
 
-    $('.nav-tabs #send-entities_0').addClass('active');
+    if ($("#requestTab").length > 0) {
+        var targeted_popup_class = '';
+        $("#requestAddLook").on('click', function () {
+            targeted_popup_class = $(this).attr('data-popup-open');
+            $('.nav-tabs #send-entities_1').removeClass('active');
+            $('.nav-tabs #send-entities_0').addClass('active');
+            $('[data-popup="' + targeted_popup_class + '"]').attr('data-value', EntityType.LOOK);
+            entity_type_id = $('[data-popup="' + targeted_popup_class + '"]').attr('data-value');
+        });
+        $("#requestAddProduct").on('click', function () {
+            targeted_popup_class = $(this).attr('data-popup-open');
+            $('.nav-tabs #send-entities_0').removeClass('active');
+            $('.nav-tabs #send-entities_1').addClass('active');
+            $('[data-popup="' + targeted_popup_class + '"]').attr('data-value', EntityType.PRODUCT);
+            entity_type_id = $('[data-popup="' + targeted_popup_class + '"]').attr('data-value');
+        });
+    } else
+        $('.nav-tabs #send-entities_0').addClass('active');
 
 
     $("ul.nav-tabs li").on('click', function (e) {
@@ -657,8 +674,27 @@ function sendRequestRecommendation (e) {
                 entity_ids = [];
                 entity_sent_once = EntitySent.YES;
             }
-            $("#custom_message").val("");
+            $("#text_msg").val("");
             $("#product_list_heading").val("");
+
+            $.ajax({
+                type: "POST",
+                beforeSend: toggleLoader,
+                url: '/requests/updateStatus',
+                data: {
+                    request_id: $("#requestTab").val(),
+                    status_id: 5,
+                    _token: $(".mobile-app-send").children('input[name="_token"]').val()
+                },
+                success: function (response) {
+                    if (response.status == false) {
+                        alert(response.message);
+                    } else {
+                        var baseUrl = window.location.href.split('/requests')[0];
+                        window.location = baseUrl + "/requests/list";
+                    }
+                },
+            });
         },
         complete: toggleLoader
     });

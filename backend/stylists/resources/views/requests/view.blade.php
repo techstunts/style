@@ -127,20 +127,20 @@
                     <div class="col-md-1" style="width: 2.333333% !important;"> &nbsp</div>
                     <div class="col-md-4">
                         <div class="row mrgn5px">
-                            <col-md-4><a data-popup-open="send-entities" href="#" class="btn btn-md btn-primary active btn-xs btn_recommendation">Add a Product </a> </col-md-4>
+                            <col-md-4><a id="requestAddProduct" data-popup-open="send-entities" href="#" class="btn btn-md btn-primary active btn-xs btn_recommendation">Add a Product </a> </col-md-4>
                             <col-md-4><a href="#" class="btn btn-md btn-primary active">Create Look </a> </col-md-4>
-                            <col-md-4><a data-popup-open="send-entities" href="#" class="btn btn-md btn-primary active btn-xs btn_recommendation">Add a Look </a> </col-md-4>
+                            <col-md-4><a id="requestAddLook" data-popup-open="send-entities" href="#" class="btn btn-md btn-primary active btn-xs btn_recommendation">Add a Look </a> </col-md-4>
                             <br><br>
                             <div class="row">
+                                <span>Looks</span>
                                 <div class="col-md-6">
                                     <input type="hidden" name="look_ids" value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
-                                    <span>Looks</span>
                                     <div class="col-md-4 content looks"></div>
                                 </div>
 
+                                <span>Products</span>
                                 <div class="col-md-6">
                                     <input type="hidden" name="look_ids" value="{{old('product_ids') != "" ? old('product_ids') : ''}}" id="product_ids">
-                                    <span>Products</span>
                                     <div class="col-md-4 content products"></div>
                                 </div>
                             </div>

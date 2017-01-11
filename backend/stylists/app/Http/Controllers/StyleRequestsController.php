@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Error;
+use App\Http\Mapper\BookingMapper;
 use App\Http\Mapper\StyleRequestMapper;
 use App\StyleRequests;
 use Illuminate\Http\Request;
@@ -127,5 +128,50 @@ class StyleRequestsController extends Controller
         $styleRequestMapperObj = new StyleRequestMapper();
         $view_properties = array_merge($view_properties, $styleRequestMapperObj->popupProperties($request));
         return view('requests.view', $view_properties);
+    }
+
+    public function postUpdateStatus(Request $request)
+    {
+        $request_id = $request->input('request_id');
+        if (empty($request_id)) {
+            return response()->json(
+                array(
+                    'success' => false,
+                    'message' => 'Invalid request',
+                ), 200
+            );
+        }
+
+        $bookingsMapperObj = new BookingMapper();
+        $booking_status_id_exists = $bookingsMapperObj->validStatus($request);
+        if (!$booking_status_id_exists) {
+            return response()->json(
+                array(
+                    'success' => false,
+                    'message' => 'Invalid status',
+                ), 200
+            );
+        }
+        $styleRequestObj = new StyleRequestMapper();
+        $styleRequest = $styleRequestObj->requestById($request_id);
+        if (!$styleRequest){
+            return response()->json(
+                array(
+                    'success' => false,
+                    'message' => 'Request not found',
+                ), 200
+            );
+        }
+        if ($styleRequest->status_id == $request->input('status_id')){
+            return response()->json(
+                array(
+                    'success' => false,
+                    'message' => 'Request has already been updated',
+                ), 200
+            );
+        } else {
+            $response = $styleRequestObj->updateStatus($styleRequest, $request->input('status_id'));
+            return response()->json($response, 200);
+        }
     }
 }
