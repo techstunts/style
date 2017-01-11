@@ -128,31 +128,34 @@
                     <div class="col-md-4">
                         <div class="row mrgn5px">
                             <col-md-4><a data-popup-open="send-entities" href="#" class="btn btn-md btn-primary active btn-xs btn_recommendation">Add a Product </a> </col-md-4>
-                            <col-md-4><a href="#" class="btn btn-md btn-primary">Create Look </a> </col-md-4>
+                            <col-md-4><a href="#" class="btn btn-md btn-primary active">Create Look </a> </col-md-4>
                             <col-md-4><a data-popup-open="send-entities" href="#" class="btn btn-md btn-primary active btn-xs btn_recommendation">Add a Look </a> </col-md-4>
                             <br><br>
                             <div class="row">
                                 <div class="col-md-6">
                                     <input type="hidden" name="look_ids" value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
-                                    <div class="col-md-4 content"></div>
+                                    <span>Looks</span>
+                                    <div class="col-md-4 content looks"></div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <input type="hidden" name="look_ids" value="{{old('product_ids') != "" ? old('product_ids') : ''}}" id="product_ids">
-                                    <div class="col-md-4 content"></div>
+                                    <span>Products</span>
+                                    <div class="col-md-4 content products"></div>
                                 </div>
                             </div>
 
                             <br>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                                    <textarea id="text_msg" cols="30" rows="10"></textarea>
                                 </div>
                             </div>
                             <br>
                             <div class="row">
                                 <div class="col-md-12 text-center">
-                                    <col-md-12><a href="#" class="btn btn-lg btn-primary">Send </a> </col-md-12>
+                                    <input type="button" class="btn btn-lg btn-primary" id="requestRecommendation" value="Send" />
+                                    {{--<a href="#" class="btn btn-lg btn-primary">Send </a> --}}
                                 </div>
                             </div>
 
@@ -210,7 +213,8 @@
                 <br>
 
 {{--                @include('common.sendrecommendations')--}}
-                <input type="hidden" id="requestTab" value="{{$request_tab}}">
+                <input type="hidden" id="requestTab" value="{{$request->id}}">
+                <input type="hidden" id="requestedClientId" value="{{$request->client->id}}">
                 @include('push.popup')
             </div>
         </div>

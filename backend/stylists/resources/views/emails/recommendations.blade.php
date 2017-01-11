@@ -205,41 +205,86 @@
                                                     <td valign="top"
                                                         style="padding-top:9px;padding-right:18px;padding-bottom:9px;padding-left:18px">
 
-                                                        @foreach($products as $product)
-                                                        <table align="left" border="0" cellpadding="0"
-                                                               cellspacing="0" width="30%"
-                                                               style="border-collapse:collapse">
-                                                            <tbody>
-                                                            <tr>
-                                                                <td align="left" valign="top"
-                                                                    style="padding-top:0px;padding-right:0px;padding-bottom:0;padding-left:0px;height:250px;">
+                                                        @if(!empty($entity_data[strtolower(\App\Models\Enums\EntityTypeName::PRODUCT)]))
+                                                            @foreach($entity_data[strtolower(\App\Models\Enums\EntityTypeName::PRODUCT)] as $product)
+                                                            <table align="left" border="0" cellpadding="0"
+                                                                   cellspacing="0" width="30%"
+                                                                   style="border-collapse:collapse">
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td align="left" valign="top"
+                                                                        style="padding-top:0px;padding-right:0px;padding-bottom:0;padding-left:0px;height:250px;">
 
 
-                                                                    <a href="{{$product->product_link}}" title="" >
+                                                                        <a href="{{$product->product_link}}" title="" >
 
 
-                                                                        <img alt=""
-                                                                             src="{{$product->upload_image}}"
-                                                                             style="max-width:190px;border:0;min-height:auto;outline:none;text-decoration:none;vertical-align:bottom;max-height:240px;"
-                                                                             class="CToWUd">
-                                                                    </a>
+                                                                            <img alt=""
+                                                                                 src="{{$product->image}}"
+                                                                                 style="max-width:190px;border:0;min-height:auto;outline:none;text-decoration:none;vertical-align:bottom;max-height:240px;"
+                                                                                 class="CToWUd">
+                                                                        </a>
 
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td valign="top"
-                                                                    style="padding:9px 18px;color:#000000;font-family:Helvetica;font-size:14px;font-weight:normal;text-align:center;word-break:break-word;line-height:150%"
-                                                                    width="146">
-                                                                    <div style="text-align:center"><span
-                                                                                style="font-size:13px"><span
-                                                                                    style="font-family:arial,helvetica neue,helvetica,sans-serif">
-                                                                                <strong>{{$product->category->name}}</strong><br>Rs.{{$product->price}}@ {{$product->merchant->name}}</span></span></div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td valign="top"
+                                                                        style="padding:9px 18px;color:#000000;font-family:Helvetica;font-size:14px;font-weight:normal;text-align:center;word-break:break-word;line-height:150%"
+                                                                        width="146">
+                                                                        <div style="text-align:center"><span
+                                                                                    style="font-size:13px"><span
+                                                                                        style="font-family:arial,helvetica neue,helvetica,sans-serif">
+                                                                                    <strong>{{$product->category}}</strong><br>Rs.{{$product->price}}@ {{$product->merchant}}</span></span></div>
 
-                                                                </td>
-                                                            </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        @endforeach
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            @endforeach
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top"
+                                                        style="padding-top:9px;padding-right:18px;padding-bottom:9px;padding-left:18px">
+
+                                                        @if(!empty($entity_data[strtolower(\App\Models\Enums\EntityTypeName::LOOK)]))
+                                                            @foreach($entity_data[strtolower(\App\Models\Enums\EntityTypeName::LOOK)] as $look)
+                                                            <table align="left" border="0" cellpadding="0"
+                                                                   cellspacing="0" width="30%"
+                                                                   style="border-collapse:collapse">
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td align="left" valign="top"
+                                                                        style="padding-top:0px;padding-right:0px;padding-bottom:0;padding-left:0px;height:250px;">
+
+
+                                                                        <a href="{{$look->name}}" title="" >
+
+
+                                                                            <img alt=""
+                                                                                 src="{{$look->image}}"
+                                                                                 style="max-width:190px;border:0;min-height:auto;outline:none;text-decoration:none;vertical-align:bottom;max-height:240px;"
+                                                                                 class="CToWUd">
+                                                                        </a>
+
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td valign="top"
+                                                                        style="padding:9px 18px;color:#000000;font-family:Helvetica;font-size:14px;font-weight:normal;text-align:center;word-break:break-word;line-height:150%"
+                                                                        width="146">
+                                                                        <div style="text-align:center"><span
+                                                                                    style="font-size:13px"><span
+                                                                                        style="font-family:arial,helvetica neue,helvetica,sans-serif">
+                                                                                    <strong>{{$look->category}}</strong><br>Rs.{{$look->price}}</span></span></div>
+
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            @endforeach
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 </tbody>

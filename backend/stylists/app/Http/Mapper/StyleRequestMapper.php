@@ -34,7 +34,7 @@ class StyleRequestMapper extends Controller
         $view_properties['to_date'] = $request->input('to_date');
 
         $view_properties['app_sections'] = AppSections::all();
-        $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
+        $view_properties['recommendation_type_id'] = RecommendationType::STYLE_REQUEST;
         $view_properties['show_price_filters'] = 'YES';
 
         return $view_properties;

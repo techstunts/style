@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Mapper\ProductMapper;
+use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\ImageType;
 use App\Models\Enums\Status;
 use App\UploadImages;
@@ -46,28 +47,14 @@ class RecommendationController extends Controller
         $recommendation_type_id = $request->input('recommendation_type_id') ? $request->input('recommendation_type_id') : RecommendationType::MANUAL;
         $style_request_ids = $request->input('style_request_ids');
 
-        $entity_type_id = '';
-        if ($request->input('entity_type_id')) {
-            $entity_type_id = $request->input('entity_type_id');
-        } else {
-            return response()->json(
-                array(
-                    'error_message' => 'Entity type undefined'
-                ), 200
-            );
-        }
-
         $client_ids = $request->input('client_ids') ? $request->input('client_ids') : '';
         $entity_ids = $request->input('entity_ids') ? $request->input('entity_ids') : '';
 
-        $entity_type_data = EntityType::where('id', $entity_type_id)->first();
-        if (empty($entity_type_data)) {
-            return response()->json(
-                array(
-                    'error_message' => 'Entity type name not found'
-                ), 200
-            );
-        }
+        $product_ids = !empty($request->input('entity_ids')[strtolower(EntityTypeName::PRODUCT)]) ? $request->input('entity_ids')[strtolower(EntityTypeName::PRODUCT)] : [];
+        $look_ids = !empty($request->input('entity_ids')[strtolower(EntityTypeName::LOOK)]) ? $request->input('entity_ids')[strtolower(EntityTypeName::LOOK)] : [];
+        $tip_ids = !empty($request->input('entity_ids')[strtolower(EntityTypeName::TIP)]) ? $request->input('entity_ids')[strtolower(EntityTypeName::TIP)] : [];
+        $collection_ids = !empty($request->input('entity_ids')[strtolower(EntityTypeName::COLLECTION)]) ? $request->input('entity_ids')[strtolower(EntityTypeName::COLLECTION)] : [];
+
         $client_reg_details = function($subQuery){
             $subQuery->where('regId_status', true);
         };
@@ -92,40 +79,28 @@ class RecommendationController extends Controller
                 ), 200
             );
         }
-        $entity_data = '';
-        $productEntityTypeId = EntityTypeId::PRODUCT;
-        if ($entity_type_id == EntityTypeId::PRODUCT) {
-            $entity_data = Product::whereIn('id', $entity_ids)->get();
+        $api_origin = env('API_ORIGIN');
+        $entity_data = array();
+        if (count($product_ids) > 0) {
+            $entity_data[strtolower(EntityTypeName::PRODUCT)] = Product::whereIn('id', $product_ids)
+                ->select('id', 'name', 'image_name as image', 'product_link', 'merchant_id')->get();
         }
-        elseif ($entity_type_id == EntityTypeId::LOOK) {
-            $entity_data = Look::with('products')->whereIn('id', $entity_ids)->get();
+        if (count($look_ids) > 0) {
+            $entity_data[strtolower(EntityTypeName::LOOK)] = Look::whereIn('id', $look_ids)
+                ->select('id', 'name', DB::raw("concat('$api_origin', '/uploads/images/looks/', image) as image"))->get();
         }
-        elseif ($entity_type_id == EntityTypeId::TIP) {
-            $entity_data = Tip::with([('product_entities') => function ($query) use ($productEntityTypeId) {
-                $query->with(['product'])
-                    ->where('entity_type_id', $productEntityTypeId);
-            }])->whereIn('id', $entity_ids)->get();
+        if (count($tip_ids) > 0) {
+            $entity_data[strtolower(EntityTypeName::TIP)] = Tip::whereIn('id', $tip_ids)
+                ->select('id', 'name', DB::raw("concat('$api_origin', '/uploads/images/tips/', image) as image"))->get();
         }
-        elseif ($entity_type_id == EntityTypeId::COLLECTION) {
-            $entity_data = Collection::with([('product_entities') => function ($query) use ($productEntityTypeId) {
-                $query->with(['product'])
-                    ->where('entity_type_id', $productEntityTypeId);
-            }])->whereIn('id', $entity_ids)->get();
+        if (count($collection_ids) > 0) {
+            $entity_data[strtolower(EntityTypeName::COLLECTION)] = Collection::whereIn('id', $collection_ids)
+                ->select('id', 'name', DB::raw("concat('$api_origin', '/uploads/images/collections/', image) as image"))->get();
         }
-        if (empty($entity_data)) {
-            return response()->json(
-                array(
-                    'error_message' => 'Entity not found'
-                ), 200
-            );
-        }
-        $entity_products = $this->getEntityProducts($entity_type_id, $entity_data);
         $clients_count = count($client_data);
-        $entity_count = count($entity_data);
 
         $stylists = [];
         $recommends_arr = array();
-        $query_count = 0;
         $push = new Push();
         $inactive_reg_ids_query = '';
         $client_ids_inactive_device_status = array();
@@ -149,9 +124,7 @@ class RecommendationController extends Controller
                 $stylist_data = Auth::user();
             }
 
-            if (!empty($entity_products)) {
-                $this->sendMail($request, $client, $stylist_data, $entity_products);
-            }
+            $this->sendMail($request, $client, $stylist_data, $entity_data);
 
             $regIdsAndroid = array();
             $regIdsIOS = array();
@@ -168,51 +141,40 @@ class RecommendationController extends Controller
             }
 
             $message_pushed = 0;
-            for ($j = 0; $j < $entity_count; $j++) {
-                $recommends_arr[$query_count] = array(
-                    'user_id' => $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->id : $client_data[$i]->id,
-                    'recommendation_type_id' => $recommendation_type_id,
-                    'created_by' => Auth::user()->id,
-                    'entity_type_id' => $entity_type_id,
-                    'entity_id' => $entity_data[$j]->id,
-                    'style_request_id' => $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->id : 0,
-                    'created_at' => date("Y-m-d H:i:s")
-                );
-                $query_count++;
-                if (count($reg_ids) > 0 && $message_pushed == 0) {
-                    $params = array(
-                        "message" => $stylist_data->name . " has sent you " . $entity_type_data->name,
-                        "message_summery" => $stylist_data->name . " has sent you " . $entity_type_data->name,
-                        "look_url" => $entity_type_id == EntityTypeId::PRODUCT ? $entity_data[$j]->image : env('IMAGE_BASE_URL') . $entity_data[$j]->image,
-                        "url" => $entity_type_id == EntityTypeId::PRODUCT ? $entity_data[$j]->image : env('IMAGE_BASE_URL') . $entity_data[$j]->image,
-                        'app_section' => $app_section,
-                        "stylist" => Stylist::getExposableData($stylist_data)
-                    );
-                    if ($ios_flag) {
-                        $params['pushtype'] = "ios";
-                        $params['registration_id'] = $regIdsIOS;
-                        $response = $push->sendMessage($params);
-                    }
-                    if ($android_flag) {
-                        $params['pushtype'] = "android";
-                        $params['registration_id'] = $regIdsAndroid;
+            $client_id = $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->id : $client_data[$i]->id;
+            $style_request_id = $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->id : 0;
+            $recommends_arr = $this->dataToBeSaved($recommends_arr, $entity_data, $client_id, $recommendation_type_id, $style_request_id);
 
-                        $response = $push->sendMessage($params);
-                        if ($response['result'] && $response['result']->failure > 0) {
-                            $inactive_reg_ids_query = $inactive_reg_ids_query . $this->getQueryForInactiveRegIds($reg_ids, $response['result']->results);
-                            if ($response['result']->failure == count($regIdsAndroid)) {
-                                array_push($client_ids_inactive_device_status, $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->id : $client_data[$i]->id);
-                            }
+            if (count($reg_ids) > 0 && $message_pushed == 0) {
+                $params = array(
+                    "message" => $stylist_data->name . " has sent you recommendation",
+                    "message_summery" => $stylist_data->name . " has sent you recommendation against your style request",
+                    "look_url" => !empty($entity_data[strtolower(EntityTypeName::LOOK)]) ? $entity_data[strtolower(EntityTypeName::LOOK)][0]->image : '',
+                    "url" => !empty($entity_data[strtolower(EntityTypeName::LOOK)]) ? $entity_data[strtolower(EntityTypeName::LOOK)][0]->image : '',
+                    'app_section' => $app_section,
+                    "stylist" => Stylist::getExposableData($stylist_data)
+                );
+                if ($ios_flag) {
+                    $params['pushtype'] = "ios";
+                    $params['registration_id'] = $regIdsIOS;
+                    $response = $push->sendMessage($params);
+                }
+                if ($android_flag) {
+                    $params['pushtype'] = "android";
+                    $params['registration_id'] = $regIdsAndroid;
+
+                    $response = $push->sendMessage($params);
+                    if ($response['result'] && $response['result']->failure > 0) {
+                        $inactive_reg_ids_query = $inactive_reg_ids_query . $this->getQueryForInactiveRegIds($reg_ids, $response['result']->results);
+                        if ($response['result']->failure == count($regIdsAndroid)) {
+                            array_push($client_ids_inactive_device_status, $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->client->id : $client_data[$i]->id);
                         }
                     }
-                    $message_pushed++;
                 }
             }
-
         }
         $error_message = '';
         $success_message = '';
-        $success = false;
 
         DB::beginTransaction();
         try{
@@ -241,6 +203,37 @@ class RecommendationController extends Controller
         );
     }
 
+    public function dataToBeSaved($recommends_arr, $entity_data, $client_id, $recommendation_type_id, $style_request_id) {
+        if (!empty($entity_data[strtolower(EntityTypeName::PRODUCT)]) && count($entity_data[strtolower(EntityTypeName::PRODUCT)]) > 0) {
+            $recommends_arr = $this->formatData($recommends_arr, $entity_data[strtolower(EntityTypeName::PRODUCT)], EntityTypeId::PRODUCT, $client_id, $recommendation_type_id, $style_request_id);
+        }
+        if (!empty($entity_data[strtolower(EntityTypeName::LOOK)]) && count($entity_data[strtolower(EntityTypeName::LOOK)]) > 0) {
+            $recommends_arr = $this->formatData($recommends_arr, $entity_data[strtolower(EntityTypeName::LOOK)], EntityTypeId::LOOK, $client_id, $recommendation_type_id, $style_request_id);
+        }
+        if (!empty($entity_data[strtolower(EntityTypeName::TIP)]) && count($entity_data[strtolower(EntityTypeName::TIP)]) > 0) {
+            $recommends_arr = $this->formatData($recommends_arr, $entity_data[strtolower(EntityTypeName::TIP)], EntityTypeId::TIP, $client_id, $recommendation_type_id, $style_request_id);
+        }
+        if (!empty($entity_data[strtolower(EntityTypeName::COLLECTION)]) && count($entity_data[strtolower(EntityTypeName::COLLECTION)]) > 0) {
+            $recommends_arr = $this->formatData($recommends_arr, $entity_data[strtolower(EntityTypeName::COLLECTION)], EntityTypeId::COLLECTION, $client_id, $recommendation_type_id, $style_request_id);
+        }
+        return $recommends_arr;
+    }
+
+    public function formatData($recommends_arr, $entity_data, $entity_type_id, $client_id, $recommendation_type_id, $style_request_id) {
+        foreach ($entity_data as $item) {
+            $recommends_arr[] = array(
+                'user_id' => $client_id,
+                'recommendation_type_id' => $recommendation_type_id,
+                'created_by' => Auth::user()->id,
+                'entity_type_id' => $entity_type_id,
+                'entity_id' => $item->id,
+                'style_request_id' => $style_request_id,
+                'created_at' => date("Y-m-d H:i:s")
+            );
+        }
+        return $recommends_arr;
+    }
+
     public function getQueryForInactiveRegIds($reg_ids, $reg_status)
     {
         $query = '';
@@ -265,8 +258,9 @@ class RecommendationController extends Controller
         $banner_image_path = $banner_image ? env('API_ORIGIN') .'/'. $banner_image->path . '/' . $banner_image->name : "";
 
         $product_mapper = new ProductMapper();
-        foreach ($entity_data as $product) {
-            $product->product_link = $product_mapper->getDeepLink($product->merchant_id, $product->product_link);
+        if (!empty($entity_data[strtolower(EntityTypeName::PRODUCT)]))
+            foreach ($entity_data[strtolower(EntityTypeName::PRODUCT)] as $product) {
+                $product->product_link = $product_mapper->getDeepLink($product->merchant_id, $product->product_link);
         }
 
         $words = explode(" ", $stylist->name);
@@ -282,7 +276,8 @@ class RecommendationController extends Controller
         $product_list_heading = $request->input('product_list_heading') && trim($request->input('product_list_heading')) != "" ? $request->input('product_list_heading') : $product_list_heading;
 
         Mail::send('emails.recommendations',
-            ['client' => $client, 'stylist' => $stylist, 'products' => $entity_data,
+
+            ['client' => $client, 'stylist' => $stylist, 'entity_data' => $entity_data,
                 'banner_image_path' => $banner_image_path, 'stylist_first_name' => $stylist_first_name,
                 'client_first_name' => $client_first_name, 'custom_message' => $custom_message,
                 'product_list_heading' => $product_list_heading],
@@ -293,7 +288,7 @@ class RecommendationController extends Controller
                     ->subject($stylist->name . ', your stylist has sent you recommendations!');
         });
     }
-
+//below function is not in use right now as structure of sending the recommendatoin has been changed
     public function getEntityProducts($entity_type_id, $entity_data) {
         $entity_products = array();
         if ($entity_type_id == EntityTypeId::PRODUCT) {
