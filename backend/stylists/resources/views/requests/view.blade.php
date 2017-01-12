@@ -128,7 +128,7 @@
                     <div class="col-md-4">
                         <div class="row mrgn5px">
                             <col-md-4><a id="requestAddProduct" data-popup-open="send-entities" href="#" class="btn btn-md btn-primary active btn-xs btn_recommendation">Add a Product </a> </col-md-4>
-                            <col-md-4><a href="#" class="btn btn-md btn-primary active">Create Look </a> </col-md-4>
+                            <col-md-4 id="createLook"><a class="btn btn-md btn-primary active">Create Look </a> </col-md-4>
                             <col-md-4><a id="requestAddLook" data-popup-open="send-entities" href="#" class="btn btn-md btn-primary active btn-xs btn_recommendation">Add a Look </a> </col-md-4>
                             <br><br>
                             <div class="row">
@@ -155,7 +155,6 @@
                             <div class="row">
                                 <div class="col-md-12 text-center">
                                     <input type="button" class="btn btn-lg btn-primary" id="requestRecommendation" value="Send" />
-                                    {{--<a href="#" class="btn btn-lg btn-primary">Send </a> --}}
                                 </div>
                             </div>
 
@@ -212,19 +211,11 @@
                 </div>
                 <br>
 
-{{--                @include('common.sendrecommendations')--}}
                 <input type="hidden" id="requestTab" value="{{$request->id}}">
                 <input type="hidden" id="requestedClientId" value="{{$request->client->id}}">
                 @include('push.popup')
             </div>
         </div>
     </div>
-
-    {{--<script>--}}
-        {{--$(document).ready(function () {--}}
-            {{--$('#example').DataTable();--}}
-        {{--});--}}
-    {{--</script>--}}
-
 @endsection
 

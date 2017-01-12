@@ -397,6 +397,7 @@ $(document).ready(function () {
         }
         $('#selected_booking_id').attr('value', rows_selected);
     });
+    $('#createLook').on('click', createLook);
 });
 
 function showImage(e) {
@@ -699,4 +700,9 @@ function sendRequestRecommendation (e) {
         complete: toggleLoader
     });
     e.preventDefault();
+}
+
+function createLook(){
+    var baseUrl = window.location.href.split('/requests')[0];
+    window.open(baseUrl + '/look/collage');
 }

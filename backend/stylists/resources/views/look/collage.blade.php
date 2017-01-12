@@ -81,7 +81,8 @@
                             <input type="text" name="name" placeholder="Name">
                             <input type="text" name="price" disabled value="2595$">
                             <textarea name="description" placeholder="Description"></textarea>
-                            <input type="submit" value="Publish">
+                            <input type="submit" value="Save it for later">
+                            <input type="button" class="button-publish-to-request" id="publishToRequest" value="Publist to request">
                             <input type="button" class="button-bk" id="back" value="Back">
                             <span class="error"></span>
                         </form>
