@@ -27,4 +27,12 @@ class StyleRequests extends Model
     {
         return $this->belongsTo('App\Models\Lookups\EntityType', 'entity_type_id');
     }
+    public function question_ans()
+    {
+        return $this->hasMany('App\Models\Client\ClientAnswer', 'request_id');
+    }
+    public function category()
+    {
+        return $this->belongsTo('App\Category', 'category_id');
+    }
 }

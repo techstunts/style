@@ -86,7 +86,7 @@ class RecommendationController extends Controller
                 ->select('id', 'name', 'image_name as image', 'product_link', 'merchant_id')->get();
         }
         if (count($look_ids) > 0) {
-            $entity_data[strtolower(EntityTypeName::LOOK)] = Look::whereIn('id', $look_ids)
+            $entity_data[strtolower(EntityTypeName::LOOK)] = Look::whereIn('id', $look_ids)->with('look_products.product')
                 ->select('id', 'name', DB::raw("concat('$api_origin', '/uploads/images/looks/', image) as image"))->get();
         }
         if (count($tip_ids) > 0) {
@@ -275,7 +275,8 @@ class RecommendationController extends Controller
         $product_list_heading = env('RECOMMENDATION_EMAIL_PRODUCTLIST_HEADING');
         $product_list_heading = $request->input('product_list_heading') && trim($request->input('product_list_heading')) != "" ? $request->input('product_list_heading') : $product_list_heading;
 
-        Mail::send('emails.recommendations',
+        $recommendation_template = env('IS_NICOBAR') ? ('emails.nico_recommendations') : ('emails.recommendations');
+        Mail::send($recommendation_template,
 
             ['client' => $client, 'stylist' => $stylist, 'entity_data' => $entity_data,
                 'banner_image_path' => $banner_image_path, 'stylist_first_name' => $stylist_first_name,

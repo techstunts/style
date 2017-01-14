@@ -115,9 +115,13 @@ class StyleRequestsController extends Controller
             $query->with(['genders']);
             $query->select(['id', 'name', 'email', 'gender_id']);
         };
-        $styleRequest = StyleRequests::with(['client' => $client, 'requested_entity'])
+
+        $question_ans = function ($query) {
+            $query->with(['question', 'option']);
+        };
+
+        $styleRequest = StyleRequests::with(['client' => $client, 'requested_entity', 'question_ans' => $question_ans, 'category'])
             ->where(['id' => $this->resource_id])
-//            ->select(['id', 'user_id','created_at'])
             ->first();
         if (!$styleRequest) {
             return Redirect::to('requests/list')->withError('Request Not Found');
