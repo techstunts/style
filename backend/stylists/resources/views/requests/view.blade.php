@@ -37,16 +37,18 @@
                                     <div class="row mrgn5px">
                                         <div class="col-md-12">
                                             <b>{{$question_ans['question']}}: </b>
+                                            <br>
                                             @foreach($question_ans['ans'] as $ans)
                                                 @if($ans->text) {{$ans->text}}
-                                                <img src="{{!empty($ans->image) ? $ans->image : ""}}">
+                                                <img {{!empty($ans->image) ? 'style="width: 100px";' : ""}} src="{{!empty($ans->image) ? $ans->image : ""}}">
                                                 @elseif (strpos($ans->text, 'http://') !== false)
-                                                    <img src="{{$ans->text}}">
+                                                    <img style="width: 100px"; src="{{$ans->text}}">
                                                 @else {{$ans->text}}
                                                 @endif
                                             @endforeach
                                         </div>
                                     </div>
+                                    <br>
                                 @endforeach
                             </div>
                         </div>
