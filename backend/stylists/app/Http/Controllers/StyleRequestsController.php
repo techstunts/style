@@ -126,7 +126,21 @@ class StyleRequestsController extends Controller
         if (!$styleRequest) {
             return Redirect::to('requests/list')->withError('Request Not Found');
         }
-
+        $ans_arr = array();
+        foreach ($styleRequest->question_ans as $question_ans) {
+            if (!isset($ans_arr[$question_ans->question_id])) {
+                $ans_arr[$question_ans->question_id] = array();
+                $ans_arr[$question_ans->question_id]['question'] = $question_ans->question->title;
+                $ans_arr[$question_ans->question_id]['ans'] = array();
+            }
+            if ($question_ans->option) {
+                $ans_arr[$question_ans->question_id]['ans'][] = $question_ans->option;
+            } else {
+                $ans_arr[$question_ans->question_id]['ans'][] = (object) array('text' => $question_ans->text);
+            }
+        }
+        unset($styleRequest->question_ans);
+        $styleRequest->question_ans = $ans_arr;
         $view_properties = array();
         $view_properties['request'] = $styleRequest;
         $styleRequestMapperObj = new StyleRequestMapper();

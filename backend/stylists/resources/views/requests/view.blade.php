@@ -36,10 +36,15 @@
                                 @foreach($request->question_ans as $question_ans)
                                     <div class="row mrgn5px">
                                         <div class="col-md-12">
-                                            <b>{{$question_ans->question ? $question_ans->question->title : 'NA'}}
-                                                : </b> @if($question_ans->option) {{$question_ans->option->text}} <img
-                                                    src="{{$question_ans->option->image}}"> @elseif (strpos($question_ans->text, 'http://') !== false)
-                                                <img src="{{$question_ans->text}}"> @else {{$question_ans->text}} @endif
+                                            <b>{{$question_ans['question']}}: </b>
+                                            @foreach($question_ans['ans'] as $ans)
+                                                @if($ans->text) {{$ans->text}}
+                                                <img src="{{!empty($ans->image) ? $ans->image : ""}}">
+                                                @elseif (strpos($ans->text, 'http://') !== false)
+                                                    <img src="{{$ans->text}}">
+                                                @else {{$ans->text}}
+                                                @endif
+                                            @endforeach
                                         </div>
                                     </div>
                                 @endforeach
