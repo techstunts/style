@@ -55,28 +55,28 @@
                         <input type="button" value="Client's past purchases"/>
                     </div>
                 </div>
-                <div class="row mrgn5px">
-                    <br>
-                    <div class="col-md-8" style="width: 2.333333% !important;"> &nbsp</div>
-                    <div class="col-md-4 gv-border">
-                        <div class="row">
-                            <br>
-                            <div class="col-md-12"> Torso :: S</div>
-                            <br>
-                            <br>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"> Height : 5ft 3 inches</div>
-                            <br>
-                            <br>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"> Waist : 32</div>
-                            <br>
-                            <br>
-                        </div>
-                    </div>
-                </div>
+                {{--<div class="row mrgn5px">--}}
+                    {{--<br>--}}
+                    {{--<div class="col-md-8" style="width: 2.333333% !important;"> &nbsp</div>--}}
+                    {{--<div class="col-md-4 gv-border">--}}
+                        {{--<div class="row">--}}
+                            {{--<br>--}}
+                            {{--<div class="col-md-12"> Torso :: S</div>--}}
+                            {{--<br>--}}
+                            {{--<br>--}}
+                        {{--</div>--}}
+                        {{--<div class="row">--}}
+                            {{--<div class="col-md-12"> Height : 5ft 3 inches</div>--}}
+                            {{--<br>--}}
+                            {{--<br>--}}
+                        {{--</div>--}}
+                        {{--<div class="row">--}}
+                            {{--<div class="col-md-12"> Waist : 32</div>--}}
+                            {{--<br>--}}
+                            {{--<br>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
 
                 <br>
 
