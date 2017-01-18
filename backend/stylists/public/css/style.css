@@ -739,3 +739,11 @@ table.data-table  {
 .col-md-1-d{
     width: 5%;
 }
+
+option.dropdown-parent{
+    font-weight: bold !important;
+}
+
+option.dropdown-child{
+    padding-left: 4px !important;
+}

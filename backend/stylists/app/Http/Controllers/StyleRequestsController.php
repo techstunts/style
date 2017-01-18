@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Error;
 use App\Http\Mapper\BookingMapper;
 use App\Http\Mapper\StyleRequestMapper;
+use App\Models\Lookups\BookingStatus;
+use App\Models\Lookups\Style;
 use App\StyleRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,8 +22,8 @@ use Validator;
 
 class StyleRequestsController extends Controller
 {
-    protected $filter_ids = ['occasion_id', 'budget_id'];
-    protected $filters = ['occasions', 'budgets'];
+    protected $filter_ids = [ 'occasion_id', 'budget_id', 'status_id', 'style_id', 'category_id'];
+    protected $filters = [ 'occasions', 'budgets', 'bookingStatuses', 'styles', 'categories'];
 
     /**
      * Display a listing of the resource.
@@ -44,7 +46,11 @@ class StyleRequestsController extends Controller
 
         $view_properties = array(
             'occasions' => $this->occasions,
+            'categories' => $this->categories,
             'budgets' => $this->budgets,
+            'bookingStatuses' => $this->bookingStatuses,
+            'booking_statuses_list' => BookingStatus::get(),
+            'styles_categories' => $this->styles(),
         );
 
         $entity_nav_tabs = array(
@@ -75,26 +81,18 @@ class StyleRequestsController extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
-        if(Auth::user()->hasRole('stylist')){
-                $this->where_raw = $this->where_raw. " AND (stylists.id = ".Auth::user()->id.")";
-        }
-        $this->where_raw = $this->where_raw. " AND recommendations.style_request_id is NULL";
-
-        $requests  = DB::table($this->base_table)
-                ->join('clients', $this->base_table . '.user_id', '=', 'clients.id')
-                ->join('stylists', 'clients.stylist_id', '=', 'stylists.id')
-                ->leftJoin('lu_budget', 'lu_budget.id', '=', $this->base_table.'.budget_id')
-                ->leftJoin('lu_occasion', 'lu_occasion.id', '=', $this->base_table.'.occasion_id')
-                ->join('lu_entity_type', 'lu_entity_type.id', '=', $this->base_table.'.entity_type_id')
-                ->leftJoin('recommendations', $this->base_table.'.id', '=', 'recommendations.style_request_id')
+        $client = function ($query) {
+            $query->whereHas('stylist', function($subQuery){
+                if(Auth::user()->hasRole('stylist')){
+                    $subQuery->where('id', Auth::user()->id);
+                }
+            });
+        };
+        $requests  = StyleRequests::with(['budget', 'occasion', 'entity_type', 'status'])
+                ->whereHas('client', $client)
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
-                ->select($this->base_table.'.id as request_id', 'clients.id as user_id', 'clients.name',
-                    'stylists.id as stylist_id', 'stylists.name as stylist_name', 'clients.age', 'clients.bodytype',
-                    'lu_budget.name as budget', 'lu_occasion.name as occasion',
-                    $this->base_table.'.created_at', $this->base_table.'.description', 'lu_entity_type.name as request_type'
-                )
-                ->orderBy($this->base_table.'.id', 'desc')
+                ->orderBy('id', 'DESC')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
         $view_properties['requests'] = $requests;
@@ -102,8 +100,24 @@ class StyleRequestsController extends Controller
         $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         $view_properties['recommendation_type_id'] = RecommendationType::STYLE_REQUEST;
         $view_properties['show_price_filters'] = 'YES';
+        $view_properties['show_back_next_button'] = true;
 
         return view('requests.list', $view_properties);
+    }
+
+    public function styles()
+    {
+        $styles = Style::with('category')->get();
+        $category_indexed_styles = array();
+        foreach ($styles as $style) {
+            if (!isset($category_indexed_styles[$style->category_id])){
+                $category_indexed_styles[$style->category_id]['name'] = $style->category->name;
+                $category_indexed_styles[$style->category_id]['styles'] = array();
+            }
+            unset($style->category);
+            $category_indexed_styles[$style->category_id]['styles'][] = $style;
+        }
+        return $category_indexed_styles;
     }
 
     public function getView(Request $request)

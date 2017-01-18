@@ -398,8 +398,23 @@ $(document).ready(function () {
         $('#selected_booking_id').attr('value', rows_selected);
     });
     $('#createLook').on('click', createLook);
+    if ($('#show_back_next_button').length > 0)
+        showPrevAndNextButton();
 });
 
+function showPrevAndNextButton(){
+    var pagerLink = document.getElementsByClassName('pager')[0].getElementsByTagName('li');
+    if (pagerLink[0].getElementsByTagName('a').length === 0) {
+        pagerLink[0].getElementsByTagName('span')[0].innerText = 'Back';
+    } else {
+        pagerLink[0].getElementsByTagName('a')[0].innerText = 'Back';
+    }
+    if (pagerLink[1].getElementsByTagName('a').length === 0) {
+        pagerLink[1].getElementsByTagName('span')[0].innerText = 'Next';
+    } else {
+        pagerLink[1].getElementsByTagName('a')[0].innerText = 'Next';
+    }
+}
 function showImage(e) {
     $("#loadedImage").attr('src', e.target.result);
 };

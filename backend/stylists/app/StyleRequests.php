@@ -35,4 +35,24 @@ class StyleRequests extends Model
     {
         return $this->belongsTo('App\Category', 'category_id');
     }
+    public function occasion()
+    {
+        return $this->belongsTo('App\Models\Lookups\Occasion', 'occasion_id');
+    }
+    public function budget()
+    {
+        return $this->belongsTo('App\Models\Lookups\Budget', 'budget_id');
+    }
+    public function entity_type()
+    {
+        return $this->belongsTo('App\Models\Lookups\EntityType', 'entity_type_id');
+    }
+    public function status()
+    {
+        return $this->belongsTo('App\Models\Lookups\BookingStatus', 'status_id');
+    }
+    public function style()
+    {
+        return $this->belongsTo('App\Models\Lookups\Style', 'style_id');
+    }
 }

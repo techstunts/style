@@ -30,7 +30,7 @@
                                 <br>
                                 <div class="row mrgn5px">
                                     <div class="col-md-12">
-                                        <b>Category : </b>{{$request->category->name}}
+                                        <b>Category : </b>{{$request->category ? $request->category->name : ''}}
                                     </div>
                                 </div>
                                 @foreach($request->question_ans as $question_ans)
