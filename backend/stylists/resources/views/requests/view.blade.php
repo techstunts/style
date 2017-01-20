@@ -39,12 +39,12 @@
                                             <b>{{$question_ans['question']}}: </b>
                                             <br>
                                             @foreach($question_ans['ans'] as $ans)
-                                                @if($ans->text) {{$ans->text}}
-                                                <img {{!empty($ans->image) ? 'style="width: 100px";' : ""}} src="{{!empty($ans->image) ? $ans->image : ""}}">
-                                                @elseif (strpos($ans->text, 'http://') !== false)
+                                                @if ($ans->text && strpos($ans->text, 'http://') == true)
                                                     <img style="width: 100px"; src="{{$ans->text}}">
-                                                @else {{$ans->text}}
+                                                @elseif ($ans->text)
+                                                        <span>{{$ans->text}}</span>
                                                 @endif
+                                                <img {{!empty($ans->image) ? 'style="width: 100px";' : ""}} src="{{$ans->image ? $ans->image : ""}}">
                                             @endforeach
                                         </div>
                                     </div>
