@@ -33,6 +33,14 @@
                                         <b>Category : </b>{{$request->category ? $request->category->name : ''}}
                                     </div>
                                 </div>
+                                <br>
+                                <div class="row mrgn5px">
+                                    <div class="col-md-12">
+                                        <b>Style : </b>{{$request->style ? $request->style->name : ''}}
+                                        <br>
+                                        <img style="width: 100px"; src="{{$request->style ? $request->style->image_url : ''}}">
+                                    </div>
+                                </div>
                                 @foreach($request->question_ans as $question_ans)
                                     <div class="row mrgn5px">
                                         <div class="col-md-12">

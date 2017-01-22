@@ -281,7 +281,9 @@ class RecommendationController extends Controller
             ['client' => $client, 'stylist' => $stylist, 'entity_data' => $entity_data,
                 'banner_image_path' => $banner_image_path, 'stylist_first_name' => $stylist_first_name,
                 'client_first_name' => $client_first_name, 'custom_message' => $custom_message,
-                'product_list_heading' => $product_list_heading],
+                'product_list_heading' => $product_list_heading,
+                'nicobar_website' => env('NICOBAR_WEBSITE'),
+            ],
             function ($mail) use ($client, $stylist) {
                 $mail->from('stylist@istyleyou.in', 'IStyleYou');
                 $mail->to($client->email, $client->name)

@@ -28,7 +28,7 @@
                                 <div class="look">
                                     <div class="look-heading" style="margin: 0 auto;font-size: 1em;color: #000000;text-align: center;margin-bottom: 5%;">Look {{$count++ . ' : ' . $look->name }}</div>
                                     <div class="look-img" style="width: 80%;margin: 0 auto;">
-                                        <img src="{{$look->image}}" alt="" style="width: 100%;margin: 0 auto;">
+                                        <a href="{{$nicobar_website.$look->id}}" target="_blank"><img src="{{$look->image}}" alt="" style="width: 100%;margin: 0 auto;"></a>
                                     </div>
                                 </div>
                                 <div class="products-container" style="max-width: 100%;margin-top: 10%;text-align: center;">
@@ -36,7 +36,9 @@
                                         @foreach($look->look_products as $look_product)
                                             <div class="product-box" style="max-width: 30%;display: inline-block;">
                                                 <div class="pro-box-img" style="max-width: 100%;margin: auto;">
-                                                    <img src="{{$look_product->product ? $look_product->product->image_name : ''}}" alt="" style="max-width: 100%;background-color: #333333;">
+                                                    <a href="{{$look_product->product ? $look_product->product->product_link : ''}}" target="_blank">
+                                                        <img src="{{$look_product->product ? $look_product->product->image_name : ''}}" alt="" style="max-width: 100%;background-color: #333333;">
+                                                    </a>
                                                 </div>
                                                 <div class="pro-box-name">
                                                     <p style="color: #333333;word-wrap: break-word;text-align: center;">{{$look_product->product ? $look_product->product->name : ''}}</p>
@@ -56,7 +58,7 @@
                             <div class="look">
                                 <div class="look-heading" style="margin: 0 auto;font-size: 1em;color: #000000;text-align: center;margin-bottom: 5%;">Product {{$count++ . ' : ' . $product->name }}</div>
                                 <div class="look-img" style="width: 80%;margin: 0 auto;">
-                                    <img src="{{$product->image}}" alt="" style="width: 100%;margin: 0 auto;">
+                                    <a href="{{$product->product_link}}"><img src="{{$product->image}}" alt="" style="width: 100%;margin: 0 auto;"></a>
                                 </div>
                             </div>
                         @endforeach
@@ -71,13 +73,16 @@
                 that <a href="" style="text-decoration: underline;color: #000000;">in here.</a></div>
         </div>
     </div>
-    <div class="email-footer" style="background-color: #E6EFEE;width: 100%;margin: auto;padding-top: 3%;">
+    <div class="email-footer" style="background-color: #E6EFEE;width: 100%;margin: auto;padding-top: 2%;">
+        <div class="image">
+            <img src="http://istyleyou.in/nicobar/resources/images/emailer/kalas.png" height="100%" width="100%">
+        </div>
         <p style="font-weight: bold;color: #000000;margin: auto;text-align: center;">#nicobar</p>
         <p style="font-weight: bold;color: #000000;margin: auto;text-align: center;">#thenicobarstory</p>
         <p class="ask-for-help" style="font-weight: normal;color: #000000;margin: auto;text-align: center;margin-top: 2%;font-style: italic;"> Need help ? Have a question about an order<br>or about getting in touch ?<br>We're always
             happy to be here from you.</p>
 
-        <div class="phone-mail" style="width: 100%;margin-top: 5%;">
+        <div class="phone-mail" style="width: 100%;margin-top: 2%;">
             <div class="phone" style="width: 50%;float: left;">
                 <img src="http://istyleyou.in/nicobar/resources/images/emailer/phone-call.png" alt="" style="float: right;width: 32px;height: 32px;">
             </div>
@@ -103,7 +108,7 @@
         <p class="nico-botom-categorz" style="font-weight: bold;color: #000000;margin: auto;text-align: center;font-size: 0.7em;">WOMEN | MEN | HOUSE &amp; HOME | TAVEL | JOURNAL | STROY | CAREERS | CONTACT US <br>RETURN
             &amp; SHIPPING | TERMS &amp; CONDITIONS</p>
         <br>
-        <p class="wwwnicocom" style="font-weight: bold;color: #000000;margin: auto;text-align: center;font-size: 0.9em;">Nicobar.com</p>
+        <p class="wwwnicocom" style="font-weight: bold;color: #000000;margin: auto;text-align: center;font-size: 0.8em;">www.nicobar.com</p>
         <p class="allrghts" style="font-weight: normal;color: #000000;margin: auto;text-align: center;font-size: 0.7em;">All Rights Reserved @ 2016</p>
         <br>
         <br>
