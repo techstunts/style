@@ -55,4 +55,8 @@ class StyleRequests extends Model
     {
         return $this->belongsTo('App\Models\Lookups\Style', 'style_id');
     }
+    public function uploadedStyleImage()
+    {
+        return $this->belongsTo('App\UploadImages', 'upload_element_id');
+    }
 }
