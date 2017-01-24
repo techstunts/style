@@ -7,6 +7,16 @@
         <div class="container">
 
             <link rel="stylesheet" href="{{asset("collage/styles/app.css")}}">
+            <link rel="stylesheet" href="{{asset("collage/styles/header.css")}}">
+            <link rel="stylesheet" href="{{asset("collage/styles/tools.css")}}">
+            <link rel="stylesheet" href="{{asset("collage/styles/editor.css")}}">
+            <link rel="stylesheet" href="{{asset("collage/styles/browser.css")}}">
+            <link rel="stylesheet" href="{{asset("collage/styles/info.css")}}">
+            <link rel="stylesheet" href="{{asset("collage/styles/drag.css")}}">
+            <link rel="stylesheet" href="{{asset("collage/styles/notification.css")}}">
+            <link rel="stylesheet" href="{{asset("collage/styles/loader.css")}}">
+            <link rel="stylesheet" href="{{asset("collage/styles/publish.css")}}">
+            <link rel="stylesheet" href="{{asset("collage/styles/text.css")}}">
             <script src="{{asset("collage/scripts/stylize.js")}}"></script>
             <script src="{{asset("collage/scripts/preload.js")}}"></script>
             <script src="{{asset("collage/scripts/template.js")}}"></script>
@@ -19,128 +29,157 @@
             <script src="{{asset("collage/scripts/loader.js")}}"></script>
             <script src="{{asset("collage/scripts/editor.js")}}"></script>
             <script src="{{asset("collage/scripts/drag.js")}}"></script>
+            <script src="{{asset("collage/scripts/text.js")}}"></script>
 
             <div class="collage">
+
+
+
+                <!--
+                    Configuration
+                -->
+
                 <input type="hidden" id="stylist_id" value="{{Auth::user()->id}}"/>
                 <input type="hidden" id="api_origin" value="{{env('API_ORIGIN')}}"/>
+
+
+
+                <!--
+                    Header
+                -->
+
+                <div id="header">
+                    <a class="logo" href="#">Logotype</a>
+                    <a class="link" href="#">Link 3</a>
+                    <a class="link" href="#">Link 2</a>
+                    <a class="link" href="#">Link 1</a>
+                </div>
+
+
+
                 <!--
                     Tools
                 -->
 
                 <div id="tools">
-                    <a class="icon publish disabled">Publish</a>
-                    <menu class="card">
+                    <a class="icon preview disabled">Preview</a>
+                    <menu>
                         <b>Template</b>
                         <a class="icon open">Open</a>
                         <a class="icon new">New</a>
                         <a class="icon clear disabled">Clear</a>
                     </menu>
-                    <menu class="card history">
+                    <menu>
                         <b>History</b>
                         <a class="icon undo disabled">Undo</a>
                         <a class="icon redo disabled">Redo</a>
                     </menu>
-                    <menu class="card item">
+                    <menu>
                         <b>Item</b>
                         <a class="icon remove disabled">Remove</a>
                         {{--Commented for now as it is not required by Nicobar--}}
                         {{--<a class="icon forwards disabled">Forwards</a>--}}
                         {{--<a class="icon backwards disabled">Backwards</a>--}}
                     </menu>
-                    <menu class="card zoom">
+                    <menu>
                         <b>Zoom</b>
+                        <a class="icon zoom-in disabled">Zoom in</a>
+                        <a class="icon zoom-out disabled">Zoom out</a>
                         <a class="icon flip disabled">Flip</a>
                     </menu>
                 </div>
 
 
+
                 <!--
-                    Section
+                    Editor
                 -->
-                <div id="section">
 
-                    <!-- Loader -->
-
-                    <div id="loader" class="dialog">
-                        <div class="title"></div>
-                        <i class="icon close"></i>
-                        <ul class="content"></ul>
-                        <div class="pager">
-                            <a class="icon prev disabled"></a>
-                            <a class="current">1</a>
-                            <a class="icon next disabled"></a>
-                        </div>
-                    </div>
-
-                    <!-- Publish -->
-
-                    <div id="publish" class="dialog">
-                        <div class="title">Publish</div>
-                        <i class="icon close"></i>
-                        <form class="content">
-                            <input type="text" name="name" placeholder="Name">
-                            <input type="text" name="price" disabled value="2595$">
-                            <textarea name="description" placeholder="Description"></textarea>
-                            <input type="submit" value="Save it for later">
-                            <input type="button" class="button-publish-to-request" id="publishToRequest" value="Publist to request">
-                            <input type="button" class="button-bk" id="back" value="Back">
-                            <span class="error"></span>
-                        </form>
-                    </div>
-
-                    <!-- Canvas -->
-
-                    <canvas id="canvas"></canvas>
+                <div id="editor">
+                    <canvas></canvas>
                 </div>
 
 
 
-
                 <!--
-                    Catalog
+                    Browser
                 -->
 
-                <div id="catalog">
-
-
-
-                    <!-- Path -->
-
-                    <div id="path" class="title">
-                        <a class="icon path">All</a>
-                    </div>
-
-
-
-                    <!-- Filer -->
-
-                    <div id="filter">
-                        <form id="search">
+                <div id="browser" class="window">
+                    <div class="toolbar">
+                        <select class="tabs">
+                            <option value="catalog">Catalog</option>
+                            <option value="gallery">Gallery</option>
+                        </select>
+                        <div class="input pager">
+                            <a class="icon prev disabled"></a>
+                            <input disabled type="text" value="1">
+                            <a class="icon next disabled"></a>
+                        </div>
+                        <form class="input search">
                             <input type="text" name="search" placeholder="Search">
                             <input type="submit" value="">
+                            <a class="icon close"></a>
                         </form>
-                        <form id="select"></form>
+                        <form class="input category">
+                            <input type="text" name="category" placeholder="Category">
+                            <a class="icon close"></a>
+                            <a class="icon process"></a>
+                            <div class="menu">
+                                <a>1</a>
+                                <a>2</a>
+                                <a>3</a>
+                            </div>
+                        </form>
+                        <form class="filter"></form>
                     </div>
+                    <div class="result"></div>
+                </div>
 
 
 
-                    <!-- Result -->
+                <!--
+                    Loader
+                -->
 
-                    <div id="result">
-                        <menu></menu>
-                        <article></article>
+                <div id="loader" class="window">
+                    <div class="toolbar">
+                        <a class="icon close"></a>
+                        <div class="input pager">
+                            <a class="icon prev disabled"></a>
+                            <input disabled type="text" value="1">
+                            <a class="icon next disabled"></a>
+                        </div>
                     </div>
+                    <div class="result">
 
-
-
-                    <!-- Pager -->
-
-                    <div class="pager">
-                        <a class="icon prev disabled"></a>
-                        <a class="current">1</a>
-                        <a class="icon next disabled"></a>
                     </div>
+                </div>
 
+
+
+                <!--
+                    Publish
+                -->
+
+                <div id="publish" class="window">
+                    <div class="toolbar">
+                        <a class="icon close"></a>
+                    </div>
+                    <div class="result">
+                        <form>
+                            <input type="text" name="name" placeholder="Name">
+                            <input type="text" name="price" disabled value="2595$">
+                            <textarea name="description" placeholder="Description"></textarea>
+                            <input class="button submit" type="submit" value="Publish">
+                            <input class="button submit" type="button" value="Publish to request" id="publishToRequest">
+                            <input type="button" class="button-bk" id="back" value="Back">
+                            <span class="error"></span>
+                        </form>
+                        <div class="image">
+                            <img>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -148,6 +187,7 @@
                 <!--
                     Info
                 -->
+
                 <div id="info">
                     <div class="image"><img></div>
                     <div class="text">
@@ -161,17 +201,36 @@
                 </div>
 
 
+
                 <!--
                     Drag
                 -->
 
                 <div id="drag"></div>
 
+
+
                 <!--
                     Notification
                 -->
 
                 <div id="notification"></div>
+
+
+
+                <!--
+                    Text
+                -->
+
+                <div id="text" class="window">
+                    <form>
+                        <textarea>Hello world</textarea>
+                        <input class="button submit" type="submit" value="Save">
+                        <input class="button cancel" type="button" value="Cancel">
+                    </form>
+                </div>
+
+
 
             </div>
 
