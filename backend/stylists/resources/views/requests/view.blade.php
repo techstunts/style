@@ -52,7 +52,7 @@
                                                 @elseif ($ans->text)
                                                         <span>{{$ans->text}}</span>
                                                 @endif
-                                                <img {{!empty($ans->image) ? 'style="width: 100px";' : ""}} src="{{$ans->image ? $ans->image : ""}}">
+                                                <img {{!empty($ans->image) ? 'style="width: 100px";' : ""}} src="{{!empty($ans->image) ? $ans->image : ""}}">
                                             @endforeach
                                         </div>
                                     </div>
