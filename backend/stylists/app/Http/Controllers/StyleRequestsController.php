@@ -134,7 +134,12 @@ class StyleRequestsController extends Controller
             $query->with(['question', 'option']);
         };
 
-        $styleRequest = StyleRequests::with(['client' => $client, 'requested_entity', 'question_ans' => $question_ans, 'category'])
+        $api_origin = env('API_ORIGIN');
+        $uploadedStyleImage = function ($query) use ($api_origin) {
+            $query->select('id', DB::raw("concat('$api_origin', '/',  path, '/', name) as url"));
+        };
+
+        $styleRequest = StyleRequests::with(['client' => $client, 'requested_entity', 'question_ans' => $question_ans, 'category', 'uploadedStyleImage' => $uploadedStyleImage])
             ->where(['id' => $this->resource_id])
             ->first();
         if (!$styleRequest) {

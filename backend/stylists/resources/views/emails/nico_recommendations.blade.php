@@ -75,7 +75,7 @@
     </div>
     <div class="email-footer" style="background-color: #E6EFEE;width: 100%;margin: auto;padding-top: 2%;">
         <div class="image">
-            <img src="http://istyleyou.in/nicobar/resources/images/emailer/kalas.png" height="100%" width="100%">
+            <img src="http://istyleyou.in/nicobar/resources/images/emailer/kalas.png" height="10%" width="100%">
         </div>
         <p style="font-weight: bold;color: #000000;margin: auto;text-align: center;">#nicobar</p>
         <p style="font-weight: bold;color: #000000;margin: auto;text-align: center;">#thenicobarstory</p>
