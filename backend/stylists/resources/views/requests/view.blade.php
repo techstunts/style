@@ -107,14 +107,14 @@
                             </col-md-4>
                             <br><br>
                             <div class="row">
-                                <span>Looks</span>
                                 <div class="col-md-6">
+                                    <div class="row text-center"><span><b>Looks</b></span></div>
                                     <input type="hidden" name="look_ids"
                                            value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
                                     <div class="col-md-4 content looks"></div>
                                 </div>
-                                <span>Products</span>
                                 <div class="col-md-6">
+                                    <div class="row text-center"><span><b>Products</b></span></div>
                                     <input type="hidden" name="look_ids"
                                            value="{{old('product_ids') != "" ? old('product_ids') : ''}}"
                                            id="product_ids">
