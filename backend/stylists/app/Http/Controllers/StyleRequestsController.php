@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Error;
+use App\Http\Mapper\BookingMapper;
 use App\Http\Mapper\StyleRequestMapper;
+use App\Models\Lookups\BookingStatus;
+use App\Models\Lookups\Style;
 use App\StyleRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,8 +22,8 @@ use Validator;
 
 class StyleRequestsController extends Controller
 {
-    protected $filter_ids = ['occasion_id', 'budget_id'];
-    protected $filters = ['occasions', 'budgets'];
+    protected $filter_ids = [ 'occasion_id', 'budget_id', 'status_id', 'style_id', 'category_id'];
+    protected $filters = [ 'occasions', 'budgets', 'bookingStatuses', 'styles', 'categories'];
 
     /**
      * Display a listing of the resource.
@@ -43,7 +46,11 @@ class StyleRequestsController extends Controller
 
         $view_properties = array(
             'occasions' => $this->occasions,
+            'categories' => $this->categories,
             'budgets' => $this->budgets,
+            'bookingStatuses' => $this->bookingStatuses,
+            'booking_statuses_list' => BookingStatus::get(),
+            'styles_categories' => $this->styles(),
         );
 
         $entity_nav_tabs = array(
@@ -74,26 +81,18 @@ class StyleRequestsController extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
-        if(Auth::user()->hasRole('stylist')){
-                $this->where_raw = $this->where_raw. " AND (stylists.id = ".Auth::user()->id.")";
-        }
-        $this->where_raw = $this->where_raw. " AND recommendations.style_request_id is NULL";
-
-        $requests  = DB::table($this->base_table)
-                ->join('clients', $this->base_table . '.user_id', '=', 'clients.id')
-                ->join('stylists', 'clients.stylist_id', '=', 'stylists.id')
-                ->join('lu_budget', 'lu_budget.id', '=', $this->base_table.'.budget_id')
-                ->join('lu_occasion', 'lu_occasion.id', '=', $this->base_table.'.occasion_id')
-                ->join('lu_entity_type', 'lu_entity_type.id', '=', $this->base_table.'.entity_type_id')
-                ->leftJoin('recommendations', $this->base_table.'.id', '=', 'recommendations.style_request_id')
+        $client = function ($query) {
+            $query->whereHas('stylist', function($subQuery){
+                if(Auth::user()->hasRole('stylist')){
+                    $subQuery->where('id', Auth::user()->id);
+                }
+            });
+        };
+        $requests  = StyleRequests::with(['budget', 'occasion', 'entity_type', 'status'])
+                ->whereHas('client', $client)
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
-                ->select($this->base_table.'.id as request_id', 'clients.id as user_id', 'clients.name',
-                    'stylists.id as stylist_id', 'stylists.name as stylist_name', 'clients.age', 'clients.bodytype',
-                    'lu_budget.name as budget', 'lu_occasion.name as occasion',
-                    $this->base_table.'.created_at', $this->base_table.'.description', 'lu_entity_type.name as request_type'
-                )
-                ->orderBy($this->base_table.'.id', 'desc')
+                ->orderBy('id', 'DESC')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);
         $view_properties['requests'] = $requests;
@@ -101,8 +100,24 @@ class StyleRequestsController extends Controller
         $view_properties['popup_entity_type_ids'] = $entity_nav_tabs;
         $view_properties['recommendation_type_id'] = RecommendationType::STYLE_REQUEST;
         $view_properties['show_price_filters'] = 'YES';
+        $view_properties['show_back_next_button'] = true;
 
         return view('requests.list', $view_properties);
+    }
+
+    public function styles()
+    {
+        $styles = Style::with('category')->get();
+        $category_indexed_styles = array();
+        foreach ($styles as $style) {
+            if (!isset($category_indexed_styles[$style->category_id])){
+                $category_indexed_styles[$style->category_id]['name'] = $style->category->name;
+                $category_indexed_styles[$style->category_id]['styles'] = array();
+            }
+            unset($style->category);
+            $category_indexed_styles[$style->category_id]['styles'][] = $style;
+        }
+        return $category_indexed_styles;
     }
 
     public function getView(Request $request)
@@ -114,18 +129,86 @@ class StyleRequestsController extends Controller
             $query->with(['genders']);
             $query->select(['id', 'name', 'email', 'gender_id']);
         };
-        $styleRequest = StyleRequests::with(['client' => $client, 'requested_entity'])
+
+        $question_ans = function ($query) {
+            $query->with(['question', 'option']);
+        };
+
+        $api_origin = env('API_ORIGIN');
+        $uploadedStyleImage = function ($query) use ($api_origin) {
+            $query->select('id', DB::raw("concat('$api_origin', '/',  path, '/', name) as url"));
+        };
+
+        $styleRequest = StyleRequests::with(['client' => $client, 'requested_entity', 'question_ans' => $question_ans, 'category', 'uploadedStyleImage' => $uploadedStyleImage])
             ->where(['id' => $this->resource_id])
-//            ->select(['id', 'user_id','created_at'])
             ->first();
         if (!$styleRequest) {
             return Redirect::to('requests/list')->withError('Request Not Found');
         }
-
+        $ans_arr = array();
+        foreach ($styleRequest->question_ans as $question_ans) {
+            if (!isset($ans_arr[$question_ans->question_id])) {
+                $ans_arr[$question_ans->question_id] = array();
+                $ans_arr[$question_ans->question_id]['question'] = $question_ans->question->title;
+                $ans_arr[$question_ans->question_id]['ans'] = array();
+            }
+            if ($question_ans->option) {
+                $ans_arr[$question_ans->question_id]['ans'][] = $question_ans->option;
+            } else {
+                $ans_arr[$question_ans->question_id]['ans'][] = (object) array('text' => $question_ans->text);
+            }
+        }
+        unset($styleRequest->question_ans);
+        $styleRequest->question_ans = $ans_arr;
         $view_properties = array();
         $view_properties['request'] = $styleRequest;
         $styleRequestMapperObj = new StyleRequestMapper();
         $view_properties = array_merge($view_properties, $styleRequestMapperObj->popupProperties($request));
         return view('requests.view', $view_properties);
+    }
+
+    public function postUpdateStatus(Request $request)
+    {
+        $request_id = $request->input('request_id');
+        if (empty($request_id)) {
+            return response()->json(
+                array(
+                    'success' => false,
+                    'message' => 'Invalid request',
+                ), 200
+            );
+        }
+
+        $bookingsMapperObj = new BookingMapper();
+        $booking_status_id_exists = $bookingsMapperObj->validStatus($request);
+        if (!$booking_status_id_exists) {
+            return response()->json(
+                array(
+                    'success' => false,
+                    'message' => 'Invalid status',
+                ), 200
+            );
+        }
+        $styleRequestObj = new StyleRequestMapper();
+        $styleRequest = $styleRequestObj->requestById($request_id);
+        if (!$styleRequest){
+            return response()->json(
+                array(
+                    'success' => false,
+                    'message' => 'Request not found',
+                ), 200
+            );
+        }
+        if ($styleRequest->status_id == $request->input('status_id')){
+            return response()->json(
+                array(
+                    'success' => false,
+                    'message' => 'Request has already been updated',
+                ), 200
+            );
+        } else {
+            $response = $styleRequestObj->updateStatus($styleRequest, $request->input('status_id'));
+            return response()->json($response, 200);
+        }
     }
 }
