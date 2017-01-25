@@ -36,9 +36,9 @@
                                 <br>
                                 <div class="row mrgn5px">
                                     <div class="col-md-12">
-                                        <b>Style : </b>{{$request->style ? $request->style->name : ''}}
+                                        <b>Style : </b>{{$request->style ? $request->style->name : 'Uploaded style image'}}
                                         <br>
-                                        <img style="width: 100px"; src="{{$request->style ? $request->style->image_url : ''}}">
+                                        <img style="width: 100px"; src="{{$request->style ? $request->style->image_url : $request->uploadedStyleImage->url}}">
                                     </div>
                                 </div>
                                 @foreach($request->question_ans as $question_ans)
