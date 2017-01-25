@@ -38,7 +38,11 @@
                                     <div class="col-md-12">
                                         <b>Style : </b>{{$request->style ? $request->style->name : 'Uploaded style image'}}
                                         <br>
-                                        <img style="width: 100px"; src="{{$request->style ? $request->style->image_url : $request->uploadedStyleImage->url}}">
+                                        @if($request->style)
+                                            <img style="width: 100px"; src="{{$request->style->image_url}}">
+                                        @elseif($request->uploadedStyleImage)
+                                            <img style="width: 100px"; src="{{$request->uploadedStyleImage->url}}">
+                                        @endif
                                     </div>
                                 </div>
                                 @foreach($request->question_ans as $question_ans)
@@ -52,7 +56,7 @@
                                                 @elseif ($ans->text)
                                                         <span>{{$ans->text}}</span>
                                                 @endif
-                                                <img {{!empty($ans->image) ? 'style="width: 100px";' : ""}} src="{{$ans->image ? $ans->image : ""}}">
+                                                <img {{!empty($ans->image) ? 'style="width: 100px";' : ""}} src="{{!empty($ans->image) ? $ans->image : ""}}">
                                             @endforeach
                                         </div>
                                     </div>
