@@ -99,12 +99,12 @@
                     <div class="col-md-8 text-center">
                         <div class="row mrgn5px">
                             <col-md-4><a id="requestAddProduct" data-popup-open="send-entities" href="#"
-                                         class="btn btn-md btn-primary active btn-xs btn_recommendation">Add a
+                                         class="btn btn-md btn-primary active btn_recommendation">Add a
                                     Product </a></col-md-4>
-                            <col-md-4 id="createLook"><a class="btn btn-md btn-primary active">Create Look </a>
+                            <col-md-4 id="createLook"><a class="btn btn-md btn-primary active btn_recommendation">Create Look </a>
                             </col-md-4>
                             <col-md-4><a id="requestAddLook" data-popup-open="send-entities" href="#"
-                                         class="btn btn-md btn-primary active btn-xs btn_recommendation">Add a Look </a>
+                                         class="btn btn-md btn-primary active btn_recommendation">Add a Look </a>
                             </col-md-4>
                             <br><br>
                             <div class="row">
@@ -112,14 +112,14 @@
                                     <div class="row text-center"><span><b>Looks</b></span></div>
                                     <input type="hidden" name="look_ids"
                                            value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
-                                    <div class="col-md-4 content looks"></div>
+                                    <div class="col-md-12 content looks"></div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row text-center"><span><b>Products</b></span></div>
                                     <input type="hidden" name="look_ids"
                                            value="{{old('product_ids') != "" ? old('product_ids') : ''}}"
                                            id="product_ids">
-                                    <div class="col-md-4 content products"></div>
+                                    <div class="col-md-12 content products"></div>
                                 </div>
                             </div>
 
