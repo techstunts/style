@@ -150,12 +150,26 @@ class StyleRequestsController extends Controller
             if (!isset($ans_arr[$question_ans->question_id])) {
                 $ans_arr[$question_ans->question_id] = array();
                 $ans_arr[$question_ans->question_id]['question'] = $question_ans->question->title;
+                $ans_arr[$question_ans->question_id]['ansType'] = '';
                 $ans_arr[$question_ans->question_id]['ans'] = array();
             }
             if ($question_ans->option) {
+                if (!empty($question_ans->option->text) && '' != $question_ans->option->text
+                    && !empty($question_ans->option->image) && '' != $question_ans->option->image) {
+                    if (empty($ans_arr[$question_ans->question_id]['ansType']))
+                        $ans_arr[$question_ans->question_id]['ansType'] = 'both';
+                } elseif (!empty($question_ans->option->image) && '' != $question_ans->option->image) {
+                    if (empty($ans_arr[$question_ans->question_id]['ansType']))
+                        $ans_arr[$question_ans->question_id]['ansType'] = 'image';
+                } else {
+                    if (empty($ans_arr[$question_ans->question_id]['ansType']))
+                        $ans_arr[$question_ans->question_id]['ansType'] = 'text';
+                }
                 $ans_arr[$question_ans->question_id]['ans'][] = $question_ans->option;
             } else {
                 $ans_arr[$question_ans->question_id]['ans'][] = (object) array('text' => $question_ans->text);
+                if (empty($ans_arr[$question_ans->question_id]['ansType']))
+                    $ans_arr[$question_ans->question_id]['ansType'] = 'text';
             }
         }
         unset($styleRequest->question_ans);
