@@ -63,8 +63,8 @@
                                     }
                                 }
                             ?>
-                            <span>{{$look->status->name}}</span>
-                            <span>{{$look->gender->name}}</span>
+                            <span>{{$look->status ? $look->status->name : ''}}</span>
+                            <span>{{$look->gender ? $look->gender->name : ''}}</span>
                             <span>{{$look->occasion ? $look->occasion->name : ''}}</span>
                             <span>{{$look->body_type ? $look->body_type->name : ''}}</span>
                         </div>
