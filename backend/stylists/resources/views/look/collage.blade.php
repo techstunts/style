@@ -41,21 +41,7 @@
 
                 <input type="hidden" id="stylist_id" value="{{Auth::user()->id}}"/>
                 <input type="hidden" id="api_origin" value="{{env('API_ORIGIN')}}"/>
-
-
-
-                <!--
-                    Header
-                -->
-
-                <div id="header">
-                    <a class="logo" href="#">Logotype</a>
-                    <a class="link" href="#">Link 3</a>
-                    <a class="link" href="#">Link 2</a>
-                    <a class="link" href="#">Link 1</a>
-                </div>
-
-
+                <input type="hidden" id="is_nicobar" value="{{env('IS_NICOBAR')}}"/>
 
                 <!--
                     Tools
@@ -169,7 +155,7 @@
                     <div class="result">
                         <form>
                             <input type="text" name="name" placeholder="Name">
-                            <input type="text" name="price" disabled value="2595$">
+                            <input type="{{env('IS_NICOBAR') ? 'hidden' : 'text'}}" name="price" disabled value="2595$">
                             <textarea name="description" placeholder="Description"></textarea>
                             <input class="button submit" type="submit" value="Publish">
                             <input class="button submit" type="button" value="Publish to request" id="publishToRequest">
