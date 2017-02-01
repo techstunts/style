@@ -63,15 +63,15 @@
                                     }
                                 }
                             ?>
-                            <span>{{$look->status->name}}</span>
-                            <span>{{$look->gender->name}}</span>
-                            <span>{{$look->occasion->name}}</span>
-                            <span>{{$look->body_type->name}}</span>
+                            <span>{{$look->status ? $look->status->name : ''}}</span>
+                            <span>{{$look->gender ? $look->gender->name : ''}}</span>
+                            <span>{{$look->occasion ? $look->occasion->name : ''}}</span>
+                            <span>{{$look->body_type ? $look->body_type->name : ''}}</span>
                         </div>
                         <div class="extra text">
-                            <span>{{$look->age_group->name}}</span>
+                            <span>{{$look->age_group ? $look->age_group->name : ''}}</span>
                             <span>INR {{$look->price}}</span>
-                            <span>Rs.{{$look->budget->name}}</span>
+                            <span>{{$look->budget ? 'INR ' . $look->budget->name : ''}}</span>
                         </div>
                     </div>
                 </li>

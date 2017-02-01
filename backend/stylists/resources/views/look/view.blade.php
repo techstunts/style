@@ -22,23 +22,23 @@
                             </tr>
                             <tr class="row">
                                 <td class="head">Body Type</td>
-                                <td class="content">{{$look->body_type->name}} </td>
+                                <td class="content">{{$look->body_type ? $look->body_type->name : ''}} </td>
                             </tr>
                             <tr class="row">
                                 <td class="head">Budget</td>
-                                <td class="content">{{$look->budget->name}} </td>
+                                <td class="content">{{$look->budget ? $look->budget->name : ''}} </td>
                             </tr>
                             <tr class="row">
                                 <td class="head">Age Group</td>
-                                <td class="content">{{$look->age_group->name}} </td>
+                                <td class="content">{{$look->age_group ? $look->age_group->name : ''}} </td>
                             </tr>
                             <tr class="row">
                                 <td class="head">Occasion</td>
-                                <td class="content">{{$look->occasion->name}} </td>
+                                <td class="content">{{$look->occasion ? $look->occasion->name : ''}} </td>
                             </tr>
                             <tr class="row">
                                 <td class="head">Gender</td>
-                                <td class="content">{{$look->gender->name}} </td>
+                                <td class="content">{{$look->gender ? $look->gender->name : ''}} </td>
                             </tr>
                             <tr class="row">
                                 <td class="head">Look Price</td>
