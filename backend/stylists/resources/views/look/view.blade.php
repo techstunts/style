@@ -38,7 +38,7 @@
                             </tr>
                             <tr class="row">
                                 <td class="head">Gender</td>
-                                <td class="content">{{$look->gender->name}} </td>
+                                <td class="content">{{$look->gender ? $look->gender->name : ''}} </td>
                             </tr>
                             <tr class="row">
                                 <td class="head">Look Price</td>
