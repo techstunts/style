@@ -157,6 +157,8 @@
                             <input type="text" name="name" placeholder="Name">
                             <input type="{{env('IS_NICOBAR') ? 'hidden' : 'text'}}" name="price" disabled value="2595$">
                             <textarea name="description" placeholder="Description"></textarea>
+                            <input type="text" name="tags" value="" placeholder="Add HashTag">
+                            <div class="tags"></div>
                             <input class="button submit" type="submit" value="Publish">
                             <input class="button submit" type="button" value="Publish to request" id="publishToRequest">
                             <input type="button" class="button-bk" id="back" value="Back">
