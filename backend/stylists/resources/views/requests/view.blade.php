@@ -84,7 +84,7 @@
                                     <br>
                                     @foreach($question_ans['ans'] as $ans)
                                         @if($question_ans['ansType'] == 'text')
-                                            <span>{{$ans->text}}</span>
+                                            <h5><span class="tags">{{$ans->text}}</span></h5>
                                         @endif
                                     @endforeach
                                 </div>
