@@ -93,6 +93,16 @@
 
                 <div id="browser" class="window">
                     <div class="toolbar">
+                        <form class="input category">
+                            <input type="text" name="category" placeholder="Category">
+                            <a class="icon close"></a>
+                            <a class="icon process"></a>
+                            <div class="menu">
+                                <a>1</a>
+                                <a>2</a>
+                                <a>3</a>
+                            </div>
+                        </form>
                         <select class="tabs">
                             <option value="catalog">Catalog</option>
                             <option value="gallery">Gallery</option>
@@ -106,16 +116,6 @@
                             <input type="text" name="search" placeholder="Search">
                             <input type="submit" value="">
                             <a class="icon close"></a>
-                        </form>
-                        <form class="input category">
-                            <input type="text" name="category" placeholder="Category">
-                            <a class="icon close"></a>
-                            <a class="icon process"></a>
-                            <div class="menu">
-                                <a>1</a>
-                                <a>2</a>
-                                <a>3</a>
-                            </div>
                         </form>
                         <form class="filter"></form>
                     </div>
