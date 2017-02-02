@@ -747,3 +747,18 @@ option.dropdown-parent{
 option.dropdown-child{
     padding-left: 4px !important;
 }
+
+.content.looks{
+    border: 1px solid #000000;
+    min-height:200px;
+}
+
+.content.products{
+    border: 1px solid #000000;
+    min-height:200px;
+}
+
+.btn_recommendation{
+    background-color: #000 !important;
+    color: #FFFFFF !important;
+}
