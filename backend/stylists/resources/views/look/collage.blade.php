@@ -107,7 +107,7 @@
                             <option value="catalog">Catalog</option>
                             <option value="gallery">Gallery</option>
                         </select>
-                        <div class="input pager">
+                        <div class="input search-icon pager">
                             <a class="icon prev disabled"></a>
                             <input disabled type="text" value="1">
                             <a class="icon next disabled"></a>
@@ -117,8 +117,19 @@
                             <input type="submit" value="">
                             <a class="icon close"></a>
                         </form>
+                        <form class="input search-icon minPrice">
+                            <input type="text" name="min_price" value="" placeholder="Min">
+                            <input type="submit" value="">
+                            <a class="icon close"></a>
+                        </form>
+                        <form class="input search-icon maxPrice">
+                            <input type="text" name="max_price" value="" placeholder="Max">
+                            <input type="submit" value="">
+                            <a class="icon close"></a>
+                        </form>
                         <form class="filter"></form>
                     </div>
+                    <div><a class="clear_all pull-right">Clear all</a></div>
                     <div class="result"></div>
                 </div>
 
