@@ -93,20 +93,6 @@
 
                 <div id="browser" class="window">
                     <div class="toolbar">
-                        <select class="tabs">
-                            <option value="catalog">Catalog</option>
-                            <option value="gallery">Gallery</option>
-                        </select>
-                        <div class="input pager">
-                            <a class="icon prev disabled"></a>
-                            <input disabled type="text" value="1">
-                            <a class="icon next disabled"></a>
-                        </div>
-                        <form class="input search">
-                            <input type="text" name="search" placeholder="Search">
-                            <input type="submit" value="">
-                            <a class="icon close"></a>
-                        </form>
                         <form class="input category">
                             <input type="text" name="category" placeholder="Category">
                             <a class="icon close"></a>
@@ -117,8 +103,33 @@
                                 <a>3</a>
                             </div>
                         </form>
+                        <select class="tabs">
+                            <option value="catalog">Catalog</option>
+                            <option value="gallery">Gallery</option>
+                        </select>
+                        <div class="input search-icon pager">
+                            <a class="icon prev disabled"></a>
+                            <input disabled type="text" value="1">
+                            <a class="icon next disabled"></a>
+                        </div>
+                        <form class="input search">
+                            <input type="text" name="search" placeholder="Search">
+                            <input type="submit" value="">
+                            <a class="icon close"></a>
+                        </form>
+                        <form class="input search-icon minPrice">
+                            <input type="text" name="min_price" value="" placeholder="Min">
+                            <input type="submit" value="">
+                            <a class="icon close"></a>
+                        </form>
+                        <form class="input search-icon maxPrice">
+                            <input type="text" name="max_price" value="" placeholder="Max">
+                            <input type="submit" value="">
+                            <a class="icon close"></a>
+                        </form>
                         <form class="filter"></form>
                     </div>
+                    <div><a class="clear_all pull-right">Clear all</a></div>
                     <div class="result"></div>
                 </div>
 
@@ -157,6 +168,8 @@
                             <input type="text" name="name" placeholder="Name">
                             <input type="{{env('IS_NICOBAR') ? 'hidden' : 'text'}}" name="price" disabled value="2595$">
                             <textarea name="description" placeholder="Description"></textarea>
+                            <input type="text" name="tags" value="" placeholder="Add HashTag">
+                            <div class="tags"></div>
                             <input class="button submit" type="submit" value="Publish">
                             <input class="button submit" type="button" value="Publish to request" id="publishToRequest">
                             <input type="button" class="button-bk" id="back" value="Back">
