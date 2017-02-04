@@ -35,7 +35,7 @@ class Stylist extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $fillable = ['name', 'email', 'password', 'image',  'profile',
-        'code', 'expertise', 'age', 'gender_id', 'description', 'status_id'];
+        'code', 'expertise_id', 'age', 'gender_id', 'description', 'status_id'];
 
     public $timestamps = true;
 

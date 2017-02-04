@@ -30,7 +30,8 @@ class Look extends Model
         return $this->belongsTo('App\Stylist', 'stylist_id');
     }
 
-    public function products(){
+    public function products()
+    {
         return $this->belongsToMany('App\Product', 'looks_products');
     }
 
@@ -61,6 +62,11 @@ class Look extends Model
     public function look_products(){
         return $this->hasMany('App\LookProduct');
     }
+
+    public function prices(){
+        return $this->hasMany('App\Models\Looks\LookPrice');
+    }
+
     public function recommendation(){
         return $this->hasMany('App\Recommendation', 'entity_id');
     }

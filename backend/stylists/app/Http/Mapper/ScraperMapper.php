@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Mapper;
 
+use App\Models\Lookups\Color;
+use App\Models\Enums\Color as ColorEnum;
 use App\Models\Scraper\Jobs;
 use App\Models\Scraper\Spiders;
 use App\Models\Scraper\Products;
@@ -15,15 +17,35 @@ class ScraperMapper
 {
     protected $api_key = 'ae67de7e514046eb9995ecd497181dd1:';
     protected $with_array = ['merchant', 'project'];
-    protected $process_data_count = 10;
+    protected $color_ids = [];
+    protected $process_data_count = 1;
     protected $start = 0;
     protected $none = 0;
     protected $diff_cur_merchants_id = [25 => 'Indianroots', 38 => 'Violetstreet'];
 
+    protected $nicobar_prod_obj = array(
+        'product_name' => '',
+        'product_detail' => '',
+        'category' => 'Dresses',
+        'brand' => 'Nicobar',
+        'mrp' => '1000',
+        'url' => '',
+        'image_url' => '',
+        'sku' => '',
+        'colors' => '',
+        'gender' => 'female',
+        'discounted_price' => '',
+        'sold_out' => true,
+        'status' => ProductStatus::NewProduct,
+        'style_tip' => '',
+        'washing_care' => '',
+        );
+
     public function getContent($url, $file_name = '')
     {
         $headers = array(
-            "Accept: application/x-jsonlines",
+//            "Accept: application/x-jsonlines",
+            "Accept: application/json", //changed to json from x-jsonlines for Nicobar products
         );
 
         $ch = curl_init();
@@ -117,9 +139,11 @@ class ScraperMapper
 
     public function fetchAndSaveProducts($job, $import, $fileObj)
     {
+        $this->color_ids = $this->getColors();
         $file_name = $job->items_file_path . $job->items_file_name;
         $merchant_id = $job->spider->merchant_id;
         $record_start = $import->count;
+        $url = env('API_ORIGIN') . "/merchant/product/create";
 
         if (!$file = fopen($file_name, 'r')) {
             fwrite($fileObj, date("Y-m-d H:i:s"). ' ' .'Error opening file '. $file_name.PHP_EOL);
@@ -148,7 +172,7 @@ class ScraperMapper
             if ($count == $this->process_data_count) {
                 if ($saved_products = $this->saveProductInLocal($product_array, $merchant_id)) {
 
-                    $response = json_decode($this->importMerchantProducts($saved_products));
+                    $response = json_decode($this->importMerchantProducts($saved_products, $url));
                     if (!empty($response) && $response->success == false) {
                         $this->updateProductsHavingError($response);
                     }
@@ -167,7 +191,7 @@ class ScraperMapper
 
         if (($count > $this->start + 1) && ($count < $this->process_data_count) && (count($product_array) > 1)) {
             if ($saved_products = $this->saveProductInLocal($product_array, $merchant_id)) {
-                $response = json_decode($this->importMerchantProducts($saved_products));
+                $response = json_decode($this->importMerchantProducts($saved_products, $url));
                 if (!empty($response) && $response->success == false) {
                     $this->updateProductsHavingError($response);
                 }
@@ -179,6 +203,38 @@ class ScraperMapper
             }
         }
 
+        if(!fclose($file)){
+            return false;
+        }
+        return true;
+    }
+
+    public function fetchAndSaveNicobarProducts($job, $import, $fileObj)
+    {
+        $this->color_ids = $this->getColors();
+        $file_name = $job->items_file_path . $job->items_file_name;
+        $url = env('API_ORIGIN') . "/product/createNicoProduct";
+
+        if (!$file = fopen($file_name, 'r')) {
+            fwrite($fileObj, date("Y-m-d H:i:s"). ' ' .'Error opening file '. $file_name.PHP_EOL);
+            return false;
+        }
+
+        $count = $this->start;
+        if (!$json_line = fgets($file)) {
+            return false;
+        }
+        $product_array = array();
+        $lineObj = json_decode($json_line);
+        foreach ($lineObj as $line) {
+            $line->merchant = 'Nicobar';
+            $product_array[$count++] = $line;
+            if ($count >= $this->process_data_count) {
+                $this->importMerchantProducts($product_array, $url);
+                $count = $this->start;
+                unset($product_array);
+            }
+        }
         if(!fclose($file)){
             return false;
         }
@@ -216,8 +272,8 @@ class ScraperMapper
         foreach ($erroneous_products as $item) {
             array_push($erroneous_products_sku, $item->sku);
         }
-
-        for (; $count < $this->process_data_count; $count++) {
+        $product_count = count($product_array);
+        for (; $count < $product_count; $count++) {
 
             if (empty($product_array[$count]) || empty($product_array[$count]->sku)) {
                 continue;
@@ -311,7 +367,7 @@ class ScraperMapper
         }
     }
 
-    public function importMerchantProducts($products)
+    public function importMerchantProducts($products, $url)
     {
         $data = array(
             'product_list' => $products,
@@ -322,7 +378,7 @@ class ScraperMapper
         );
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, env('API_ORIGIN') . "/merchant/product/create");
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -362,7 +418,7 @@ class ScraperMapper
             'sku_id' => $product->sku,
             'brand' => $merchant_id == 37 ? 'Stalk Buy Love' : $product->brand,
             'category' => $category,
-            'color_id' => $product->colors,
+            'color_id' => !empty($this->color_ids[strtolower($product->colors)]) ? $this->color_ids[strtolower($product->colors)] : ColorEnum::Multi,
             'gender_id' => $this->getGenderId($product->gender),
             'discounted_price' => $discounted_price,
             'in_stock' => !empty($product->sold_out) ? $this->getInStockId($product->sold_out) : true,
@@ -372,6 +428,16 @@ class ScraperMapper
             'care_information' => !empty($product->washing_care) ? $product->washing_care : '',
         );
         return $product_array;
+    }
+
+    public function getColors()
+    {
+        $colors = Color::get();
+        $indexed_color_ids = array();
+        foreach ($colors as $color) {
+            $indexed_color_ids[strtolower($color->name)] = $color->id;
+        }
+        return $indexed_color_ids;
     }
 
     public function getInStockId($sold_out)

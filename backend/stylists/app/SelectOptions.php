@@ -101,6 +101,9 @@ class SelectOptions{
         return $this->get_lookup_data_with_count('booking_status', 'status_id');
     }
 
+    public function styles(){
+        return $this->get_lookup_data_with_count('style');
+    }
     //To be cached
     protected function get_lookup_data_with_count($lookup_type, $count_table_fk=""){
         $whereClauses = $this->whereClauses;

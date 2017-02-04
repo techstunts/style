@@ -45,7 +45,7 @@ class CollectionMapper extends Controller
 
         if ($collection) {
             foreach ($this->dropdown_fields as $dropdown_field) {
-                $values_array[$dropdown_field] = isset($old_values[$dropdown_field]) && $old_values[$dropdown_field] != '' ? intval($old_values[$dropdown_field]) : $collection->$dropdown_field;
+                $values_array[$dropdown_field] = isset($old_values[$dropdown_field]) && $old_values[$dropdown_field] != '' ? intval($old_values[$dropdown_field]) : intval($collection->$dropdown_field);
             }
             $values_array['is_recommended'] = Recommendation::checkRecommended($collection);
         } else {
@@ -170,7 +170,7 @@ class CollectionMapper extends Controller
 
         $product = function ($query) {
             $query->with('gender', 'primary_color', 'category', 'brand')
-                ->select('id', 'name', 'upload_image', 'product_link', 'product_type', 'price', 'gender_id', 'primary_color_id',
+                ->select('id', 'name', 'image_name', 'product_link', 'gender_id', 'primary_color_id',
                     'category_id', 'brand_id');
         };
 
@@ -233,12 +233,13 @@ class CollectionMapper extends Controller
 
     public function saveCollectionDetails($collection, $request, $uploadMapperObj = null)
     {
-        if ($collection->status_id !== Status::Active && !empty($request->status_id) && $request->status_id == Status::Active && empty($collection->image)) {
-            return array(
-                'status' => false,
-                'message' => 'Upload image to make status Active',
-            );
-        }
+        // commented as of now as Design doesn't require banner to be mandatory
+//        if ($collection->status_id !== Status::Active && !empty($request->status_id) && $request->status_id == Status::Active && empty($collection->image)) {
+//            return array(
+//                'status' => false,
+//                'message' => 'Upload image to make status Active',
+//            );
+//        }
 
         $collection = $this->setObjectProperties($collection, $request);
         $logged_in_stylist = $request->user()->id != '' ? $request->user()->id : '';

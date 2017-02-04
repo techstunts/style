@@ -126,7 +126,9 @@ $(document).ready(function () {
         }
 
         var btn_recommendation = $(this).parents('div.container').children('a.btn_recommendation');
-        if (rows_selected.length > 0) {
+        if ($('#requestTab').length > 0) {
+            btn_recommendation.addClass('active');
+        } else if (rows_selected.length > 0) {
             btn_recommendation.removeClass('disabled');
             btn_recommendation.addClass('active');
         } else {
@@ -149,7 +151,24 @@ $(document).ready(function () {
     });
 
 
-    $('.nav-tabs #send-entities_0').addClass('active');
+    if ($("#requestTab").length > 0) {
+        var targeted_popup_class = '';
+        $("#requestAddLook").on('click', function () {
+            targeted_popup_class = $(this).attr('data-popup-open');
+            $('.nav-tabs #send-entities_1').removeClass('active');
+            $('.nav-tabs #send-entities_0').addClass('active');
+            $('[data-popup="' + targeted_popup_class + '"]').attr('data-value', EntityType.LOOK);
+            entity_type_id = $('[data-popup="' + targeted_popup_class + '"]').attr('data-value');
+        });
+        $("#requestAddProduct").on('click', function () {
+            targeted_popup_class = $(this).attr('data-popup-open');
+            $('.nav-tabs #send-entities_0').removeClass('active');
+            $('.nav-tabs #send-entities_1').addClass('active');
+            $('[data-popup="' + targeted_popup_class + '"]').attr('data-value', EntityType.PRODUCT);
+            entity_type_id = $('[data-popup="' + targeted_popup_class + '"]').attr('data-value');
+        });
+    } else
+        $('.nav-tabs #send-entities_0').addClass('active');
 
 
     $("ul.nav-tabs li").on('click', function (e) {
@@ -188,76 +207,85 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    $("#send").on('click', function (e) {
-        var entity_ids = [];
-        if (entity_type_id == EntityType.CLIENT) {
-            $('.items #popup-item :checked').each(function () {
-                entity_ids.push($(this).val());
-            });
-            $(".popup-inner > .pop-up-item :checked").each(function () {
-                rows_selected.push($(this).val());
-            });
-        } else {
-            $(".popup-inner > .pop-up-item :checked").each(function () {
-                entity_ids.push($(this).val());
-            });
-        }
+    if ($("#requestTab").length > 0) {
+        $("#requestRecommendation").on('click', sendRequestRecommendation);
+    }
+    else {
+        $("#send").on('click', function (e) {
+            if ($(".entity-type-to-send").length > 0) {
+                entity_type_to_send = $(".entity-type-to-send").val();
+            } else {
+                entity_type_to_send = entity_type_id;
+            }
 
-        var app_section = $("#app_section").val();
-        var custom_message = $("#custom_message").val();
-        var product_list_heading = $("#product_list_heading").val();
+            var entity_count_status = false;
+            var entity_ids = [];
+            entity_ids[entity[entity_type_to_send]+'s'] = [];
+            if (entity_type_id == EntityType.CLIENT) {
+                $('.items #popup-item :checked').each(function () {
+                    entity_ids[entity[entity_type_to_send]+'s'].push($(this).val());
+                    entity_count_status = true;
+                });
+                $(".popup-inner > .pop-up-item :checked").each(function () {
+                    rows_selected.push($(this).val());
+                });
+            } else {
+                $(".popup-inner > .pop-up-item :checked").each(function () {
+                    entity_ids[entity[entity_type_to_send]+'s'].push($(this).val());
+                    entity_count_status = true;
+                });
+            }
 
-        if ($(".entity-type-to-send").length > 0) {
-            entity_type_to_send = $(".entity-type-to-send").val();
-        } else {
-            entity_type_to_send = entity_type_id;
-        }
+            var app_section = $("#app_section").val();
+            var custom_message = $("#custom_message").val();
+            var product_list_heading = $("#product_list_heading").val();
 
-        if (entity_ids.length <= 0) {
-            alert('Please select at least one item');
-            return false;
-        }
+            if (!entity_count_status) {
+                alert('Please select at least one item');
+                return false;
+            }
 
-        if (rows_selected.length <= 0) {
-            alert('Please select at least one client');
-            return false;
-        }
-        $.ajax({
-            type: "POST",
-            beforeSend: toggleLoader,
-            url: '/recommendation/send',
-            data: {
-                entity_ids: entity_ids,
-                entity_type_id: entity_type_to_send,
-                client_ids: rows_selected,
-                app_section: app_section,
-                custom_message: custom_message,
-                product_list_heading: product_list_heading,
-                recommendation_type_id: recommendation_type_id,
-                style_request_ids: request_ids,
-                _token: $(this).parent().children('input[name="_token"]').val()
-            },
-            success: function (response) {
-                if (response.success == false) {
-                    alert(response.error_message);
-                } else {
-                    alert(response.success_message);
-                    $(".popup-inner > .pop-up-item input").attr('checked', false);
-                    $(".mobile-app-send .btn").removeClass('active');
-                    $(".mobile-app-send .btn").addClass('disabled');
-                    entity_ids = [];
-                    if (entity_type_id == EntityType.CLIENT) {
-                        rows_selected = [];
+            if (rows_selected.length <= 0) {
+                alert('Please select at least one client');
+                return false;
+            }
+            $.ajax({
+                type: "POST",
+                beforeSend: toggleLoader,
+                url: '/recommendation/send',
+                data: {
+                    entity_ids: $.extend({}, entity_ids),
+                    entity_type_id: entity_type_to_send,
+                    client_ids: rows_selected,
+                    app_section: app_section,
+                    custom_message: custom_message,
+                    product_list_heading: product_list_heading,
+                    recommendation_type_id: recommendation_type_id,
+                    style_request_ids: request_ids,
+                    _token: $(this).parent().children('input[name="_token"]').val()
+                },
+                success: function (response) {
+                    if (response.success == false) {
+                        alert(response.error_message);
+                    } else {
+                        alert(response.success_message);
+                        $(".popup-inner > .pop-up-item input").attr('checked', false);
+                        $(".mobile-app-send .btn").removeClass('active');
+                        $(".mobile-app-send .btn").addClass('disabled');
+                        entity_ids = [];
+                        if (entity_type_id == EntityType.CLIENT) {
+                            rows_selected = [];
+                        }
+                        entity_sent_once = EntitySent.YES;
                     }
-                    entity_sent_once = EntitySent.YES;
-                }
-                $("#custom_message").val("");
-                $("#product_list_heading").val("");
-            },
-            complete: toggleLoader
+                    $("#custom_message").val("");
+                    $("#product_list_heading").val("");
+                },
+                complete: toggleLoader
+            });
+            e.preventDefault();
         });
-        e.preventDefault();
-    });
+    }
 
     //----- CLOSE
     $('[data-popup-close]').on('click', function (e) {
@@ -265,7 +293,9 @@ $(document).ready(function () {
         $('[data-popup="' + targeted_popup_class + '"]').fadeOut(350);
         $('#datatable tbody input[type="checkbox"]').attr('checked', false);
         $('.items #popup-item :checked').attr('checked', false);
-        $('div.container a.btn_recommendation').addClass('disabled');
+        if ($("#requestTab").length <= 0) {
+            $('div.container a.btn_recommendation').addClass('disabled');
+        }
         rows_selected = [];
         request_ids = [];
         if (recommendation_type_id == style_request && entity_sent_once == EntitySent.YES) {
@@ -367,8 +397,24 @@ $(document).ready(function () {
         }
         $('#selected_booking_id').attr('value', rows_selected);
     });
+    $('#createLook').on('click', createLook);
+    if ($('#show_back_next_button').length > 0)
+        showPrevAndNextButton();
 });
 
+function showPrevAndNextButton(){
+    var pagerLink = document.getElementsByClassName('pager')[0].getElementsByTagName('li');
+    if (pagerLink[0].getElementsByTagName('a').length === 0) {
+        pagerLink[0].getElementsByTagName('span')[0].innerText = 'Back';
+    } else {
+        pagerLink[0].getElementsByTagName('a')[0].innerText = 'Back';
+    }
+    if (pagerLink[1].getElementsByTagName('a').length === 0) {
+        pagerLink[1].getElementsByTagName('span')[0].innerText = 'Next';
+    } else {
+        pagerLink[1].getElementsByTagName('a')[0].innerText = 'Next';
+    }
+}
 function showImage(e) {
     $("#loadedImage").attr('src', e.target.result);
 };
@@ -496,19 +542,16 @@ function showEntities(entity_url) {
                 var str = '<div class="items">No data found</div>';
                 $(".popup-inner").append(str);
             } else {
-                var price_bar = '<div class="extra text" >' +
-                    '<span>{{price}}</span>' +
-                    '<span>{{discounted_price}}</span>' +
-                    '<span>{{discount_percent}}</span>' +
-                    '</div>';
 
                 var str = '<div class="items pop-up-item" >' +
                     '<div class="name text">' +
                     '<input class="entity_ids" name="entity_ids" value="{{item_id}}" type="checkbox">' +
                     '<a href="' + '/' + entity[entity_type_id] + '/view//{{item_id}}" target="_blank">{{item_name}}</a>' +
                     '</div>';
-                if (entity_type_id == EntityType.PRODUCT) {
-                    str = str + price_bar;
+                if (entity_type_id == EntityType.LOOK) {
+                    str = str + '<div class="extra text" >' + '<span> {{price}}</span>' + '</div>';
+                }else if (entity_type_id == EntityType.PRODUCT) {
+                    str = str + '<div class="extra text" >' + '<span> {{price}}</span>' + '<span> {{dollerPrice}}</span>'  + '</div>';
                 }
                 str = str + '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="{{item_popover}}">' +
                     '<img src="{{item_image}}" class="pop-image-size"/>' +
@@ -516,38 +559,30 @@ function showEntities(entity_url) {
                     '</div>';
 
                 for (var i = 0; i < item.data.length; i++) {
-                    if (entity_type_id != EntityType.CLIENT) {
-                        var popover_data = "Price: " + item.data[i].price + "/- <br >" +
-                            "Description: " + item.data[i].description + "<br >" +
-                            "<img src='" + item.data[i].image + "' />";
-                        newstr = str;
-
-                        newstr = newstr.replace("{{item_id}}", item.data[i].id)
-                            .replace("/{{item_id}}", item.data[i].id)
-                            .replace("{{item_name}}", item.data[i].name)
-                            .replace("{{item_popover}}", popover_data)
-                            .replace("{{item_image}}", item.data[i].image)
-                            .replace("{{price}}", item.data[i].price);
-                        if (entity_type_id == EntityType.PRODUCT) {
-                            if (item.data[i].discounted_price > 0) {
-                                newstr = newstr.replace("{{discounted_price}}", item.data[i].discounted_price)
-                                    .replace("{{discount_percent}}", item.data[i].discount_percent);
-                            } else {
-                                newstr = newstr.replace("{{discounted_price}}", '')
-                                    .replace("{{discount_percent}}", '');
-                            }
-                        }
+                    var popover_data = "";
+                    if (entity_type_id == EntityType.PRODUCT) {
+                        var price = getPrice(item.data[i].price);
+                        popover_data = popover_data + "Price: " + price.INR != undefined ? '&#8377 ' + price.INR : '' + "/- <br >";
+                    }else if (entity_type_id == EntityType.LOOK){
+                        popover_data = popover_data + "Price: " + '&#8377 ' + item.data[i].price + "/- <br >";
                     }
-                    else {
-                        var popover_data = "Name: " + item.data[i].name + "<br >" +
-                            "<img src='" + item.data[i].image + "' />";
-                        newstr = str;
+                    if (entity_type_id != EntityType.CLIENT){
+                        popover_data = popover_data + "Description: " + item.data[i].description + "<br >";
+                    }
+                    popover_data = popover_data + "<img src='" + item.data[i].image + "' />";
+                    newstr = str;
 
-                        newstr = newstr.replace("{{item_id}}", item.data[i].id)
-                            .replace("/{{item_id}}", item.data[i].id)
-                            .replace("{{item_name}}", item.data[i].name)
-                            .replace("{{item_popover}}", popover_data)
-                            .replace("{{item_image}}", item.data[i].image);
+                    newstr = newstr.replace("{{item_id}}", item.data[i].id)
+                        .replace("/{{item_id}}", item.data[i].id)
+                        .replace("{{item_name}}", item.data[i].name)
+                        .replace("{{item_popover}}", popover_data)
+                        .replace("{{item_image}}", item.data[i].image);
+                    if (entity_type_id == EntityType.PRODUCT ) {
+                        newstr = newstr.replace("{{price}}", price.INR != undefined ? '&#8377 ' + price.INR : '' )
+                            .replace("{{dollerPrice}}", price.USD != undefined ? '&#36 ' + price.USD : '' );
+                    }
+                    if (entity_type_id == EntityType.LOOK) {
+                        newstr = newstr.replace("{{price}}", item.data[i].price != undefined ? '&#8377 ' + item.data[i].price : '' );
                     }
                     $(".popup-inner").append(newstr);
                 }
@@ -584,4 +619,105 @@ function toggleLoader() {
     $('.mobile-app-send img').toggle();
 }
 
-//branch made for Jim
+function getPrice(prices) {
+    price = [];
+    if (prices['INR'] != undefined && prices['INR'] != '') {
+        for (var i = 0; i < prices['INR'].length; i++) {
+            if (prices['INR'][i].type == 'priceRetail') {
+                price.INR = prices['INR'][i].value;
+            }
+        }
+    }
+    if (prices['USD'] != undefined && prices['USD'] != '') {
+        for (var i = 0; i < prices['USD'].length; i++) {
+            if (prices['USD'][i].type == 'priceRetail') {
+                price.USD = prices['USD'][i].value;
+            }
+        }
+    }
+    return price;
+}
+
+function sendRequestRecommendation (e) {
+    var entity_ids = [];
+    entity_ids[entity[EntityType.PRODUCT]+'s'] = [];
+    entity_ids[entity[EntityType.LOOK]+'s'] = [];
+    var entity_count_status = false;
+    $(".looks > .pop-up-item").each(function () {
+        entity_ids[entity[EntityType.LOOK]+'s'].push($(this).attr('value'));
+        entity_count_status = true;
+    });
+    $(".products > .pop-up-item").each(function () {
+        entity_ids[entity[EntityType.PRODUCT]+'s'].push($(this).attr('value'));
+        entity_count_status = true;
+    });
+
+    var client_id = [$("#requestedClientId").val()];
+    var request_ids = [$("#requestTab").val()];
+    var app_section = $("#app_section").val();
+    var custom_message = $("#text_msg").val();
+    var product_list_heading = "";
+    entity_type_to_send = '';
+
+    if (entity_count_status == false) {
+        alert('Please select at least one item');
+        return false;
+    }
+    $.ajax({
+        type: "POST",
+        beforeSend: toggleLoader,
+        url: '/recommendation/send',
+        data: {
+            entity_ids: $.extend({}, entity_ids),
+            entity_type_id: entity_type_to_send,
+            client_ids: client_id,
+            app_section: '',
+            custom_message: custom_message,
+            product_list_heading: product_list_heading,
+            recommendation_type_id: $('#recommendation_type_id').val(),
+            style_request_ids: request_ids,
+            request_recommendation: true,
+            _token: $(".mobile-app-send").children('input[name="_token"]').val()
+        },
+        success: function (response) {
+            if (response.success == false) {
+                alert(response.error_message);
+            } else {
+                alert(response.success_message);
+                $(".popup-inner > .pop-up-item input").attr('checked', false);
+                $(".mobile-app-send .btn").removeClass('active');
+                $(".mobile-app-send .btn").addClass('disabled');
+                entity_ids = [];
+                entity_sent_once = EntitySent.YES;
+            }
+            $("#text_msg").val("");
+            $("#product_list_heading").val("");
+
+            $.ajax({
+                type: "POST",
+                beforeSend: toggleLoader,
+                url: '/requests/updateStatus',
+                data: {
+                    request_id: $("#requestTab").val(),
+                    status_id: 5,
+                    _token: $(".mobile-app-send").children('input[name="_token"]').val()
+                },
+                success: function (response) {
+                    if (response.status == false) {
+                        alert(response.message);
+                    } else {
+                        var baseUrl = window.location.href.split('/requests')[0];
+                        window.location = baseUrl + "/requests/list";
+                    }
+                },
+            });
+        },
+        complete: toggleLoader
+    });
+    e.preventDefault();
+}
+
+function createLook(){
+    var baseUrl = window.location.href.split('/requests')[0];
+    window.open(baseUrl + '/look/collage');
+}

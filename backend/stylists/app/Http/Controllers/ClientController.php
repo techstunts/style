@@ -20,6 +20,7 @@ class ClientController extends Controller
     protected $records_per_page=100;
     protected $filter_ids = ['stylist_id', 'device_status', 'gender_id', 'body_type_id', 'age_group_id'];
     protected $filters = ['stylists', 'devicesStatuses', 'genders', 'body_types', 'age_groups'];
+    protected $relations = ['stylist', 'genders', 'body_type', 'body_shape', 'complexion', 'daringness', 'age_group', 'height_group'];
     /**
      * Display a listing of the resource.
      *
@@ -73,7 +74,7 @@ class ClientController extends Controller
         $view_properties['to_date'] = $request->input('to_date');
         $view_properties['min_discount'] = $request->input('min_discount');
         $view_properties['max_discount'] = $request->input('max_discount');
-        $view_properties['show_discount_fields'] = true;
+        $view_properties['show_discount_fields'] = false;
 
         foreach($this->filter_ids as $filter){
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
@@ -84,7 +85,7 @@ class ClientController extends Controller
 
         $authWhereClauses = $this->authWhereClauses();
         $clients =
-            Client::with('stylist', 'genders')
+            Client::with($this->relations)
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereRaw($authWhereClauses)
@@ -126,7 +127,7 @@ class ClientController extends Controller
         $where = "1=1";
         $stylist = Auth::user();
         $booking_id = $request ? $request->input('booking_id') : '';
-        if(!$stylist->hasRole('admin')){
+        if(!$stylist->hasRole('admin') && !env('ANY_STYLIST_CAN_APPROACH_ANY_CLIENT')){
             if (!empty($booking_id)) {
                 $bookingMapperObj = new BookingMapper();
                 $booking_exists = $bookingMapperObj->userBookedStylist($this->resource_id, $stylist->id, $booking_id);

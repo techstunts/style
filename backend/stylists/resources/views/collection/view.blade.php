@@ -58,7 +58,7 @@
                                                 <div class="image" data-toggle="popover" data-trigger="hover"
                                                      data-placement="right" data-html="true"
                                                      data-content="{{$entity->product->name}}">
-                                                    <img src="{{strpos($entity->product->upload_image, "http") !== false ? $entity->product->upload_image : asset('images/' . $entity->product->upload_image)}}"
+                                                    <img src="{{$entity->product->image_name}}"
                                                          class="pop-image-size"/>
                                                 </div>
                                             </div>
@@ -78,7 +78,7 @@
                                                        title="{{$entity->look->name}}"
                                                        target="product_win">
                                                         <img class="entity"
-                                                             src="{{strpos($entity->look->image, "http") !== false ? $entity->look->image : asset('images/' . $entity->look->image)}}"/>
+                                                             src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $entity->look->image}}"/>
                                                     </a>
                                                 </div>
                                             </div>
@@ -88,7 +88,7 @@
                             </tr>
                         </table>
                         <div class="image">
-                            <img src="{!! asset('images/' . $collection->image) !!}"/>
+                            <img src="{{env('API_ORIGIN') . '/uploads/images/collections/' . $collection->image}}"/>
                         </div>
                     </div>
                 </li>

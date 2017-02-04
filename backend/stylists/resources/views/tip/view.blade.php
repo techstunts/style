@@ -94,7 +94,7 @@
                                                        title="{{$entity->product->name}}"
                                                        target="product_win">
                                                         <img class="tip-product-img_size"
-                                                             src="{{strpos($entity->product->upload_image, "http") !== false ? $entity->product->upload_image : asset('images/' . $entity->product->upload_image)}}"/>
+                                                             src="{{$entity->product->image_name}}"/>
                                                     </a>
                                                 </div>
                                                 <div class="image">
@@ -129,7 +129,7 @@
                             </tr>
                         </table>
                         <div class="image">
-                            <img src="{!! asset('images/' . $tip->image) !!}"/>
+                            <img src="{{env('API_ORIGIN') . '/uploads/images/tips/' . $tip->image}}"/>
                         </div>
 
                     </div>

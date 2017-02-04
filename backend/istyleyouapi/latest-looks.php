@@ -35,11 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
 
         $record_start = intval($page * $records_count);
         $gender_id = !empty($user_data[3]) ? $user_data[3] : Lookup::getId('gender', $gender);
+        $look_ids = array();
 
         foreach ($occasions as $occasion) {
             $occasion_id = Lookup::getId('occasion', $occasion);
             $latest_looks_sql =
-                "Select cl.id as look_id, cl.description, cl.image, cl.price, o.name as occasion, cl.name, uf.fav_id, s.id as stylist_id,
+                "Select cl.id as look_id, cl.description, cl.image, o.name as occasion, cl.name, uf.fav_id, s.id as stylist_id,
                   s.name as stylist_name, s.image as stylist_image, s.icon as stylist_icon, cl.is_collage, cl.updated_at
 			from looks cl
 		  	join lu_occasion o on cl.occasion_id = o.id
@@ -60,9 +61,18 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
             $latest_looks_res = mysql_query($latest_looks_sql);
 
             while ($data = mysql_fetch_array($latest_looks_res)) {
-                $latest_looks[$data[12]] = $data;
+                $latest_looks[$data[11]] = $data;
             }
             unset($latest_looks_res);
+        }
+
+        foreach ($latest_looks as $look) {
+            $look_ids[] = $look['look_id'];
+        }
+        $prices = getINRPrice(2, $look_ids);
+
+        foreach ($latest_looks as $look) {
+            $latest_looks[$look['updated_at']]['price'] = !empty($prices[$look['look_id']]) ? $prices[$look['look_id']] : 0;
         }
 
         if (count($latest_looks) > 0) {
@@ -79,9 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_REQUEST['userid']) && !empty(
 } else {
     $response = array('result' => 'fail', 'response_message' => 'userid empty');
 }
-
-//var_dump($response);
-//var_dump($response['latest_looks'][0]['lookdetails']);
 
 mysql_close($conn);
 

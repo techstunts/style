@@ -20,29 +20,48 @@
                             <tr class="row">
                                 <td class="description" colspan="2">{{$look->description}}</td>
                             </tr>
+                            @if($look->body_type)
                             <tr class="row">
                                 <td class="head">Body Type</td>
                                 <td class="content">{{$look->body_type->name}} </td>
                             </tr>
+                            @endif
+
+                            @if($look->budget)
                             <tr class="row">
                                 <td class="head">Budget</td>
                                 <td class="content">{{$look->budget->name}} </td>
                             </tr>
+                            @endif
+
+                            @if($look->age_group)
                             <tr class="row">
                                 <td class="head">Age Group</td>
-                                <td class="content">{{$look->age_group->name}} </td>
+                                <td class="content">{{$look->age_group ? $look->age_group->name : ''}} </td>
                             </tr>
+                            @endif
+
+                            @if($look->occasion)
                             <tr class="row">
                                 <td class="head">Occasion</td>
-                                <td class="content">{{$look->occasion->name}} </td>
+                                <td class="content">{{$look->occasion ? $look->occasion->name : ''}} </td>
                             </tr>
+                            @endif
+
+                            @if($look->gender)
                             <tr class="row">
                                 <td class="head">Gender</td>
-                                <td class="content">{{$look->gender->name}} </td>
+                                <td class="content">{{$look->gender ? $look->gender->name : ''}} </td>
                             </tr>
+                            @endif
+
                             <tr class="row">
                                 <td class="head">Look Price</td>
-                                <td class="content">Rs.{{$look->price}} </td>
+                                @foreach($look->prices as $price)
+                                    @if ($price->price_type_id == \App\Models\Enums\PriceType::RETAIL && $price->currency_id == \App\Models\Enums\Currency::INR)
+                                        <td class="content">Rs.{{$price->value}} </td>
+                                    @endif
+                                @endforeach
                             </tr>
                             <tr class="row">
                                 <td class="head">Status</td>
@@ -54,12 +73,12 @@
                             </tr>
                             <tr class="row">
                                 <td class="head">Stylist</td>
-                                @if(!empty($stylist))
+                                @if(!empty($look->stylist))
                                     <td class="content">
-                                        <a href="{{url('stylist/view/' . $stylist->id)}}" title="{{$stylist->name}}"
+                                        <a href="{{url('stylist/view/' . $look->stylist->id)}}" title="{{$look->stylist->name}}"
                                            target="stylist_win">
-                                            <img class="icon" src="{{asset('images/' . $stylist->image)}}"/>
-                                            {{$stylist->name}}
+                                            <img class="icon" src="{{asset('images/' . $look->stylist->image)}}"/>
+                                            {{$look->stylist->name}}
                                         </a>
                                     </td>
                                 @endif
@@ -67,18 +86,17 @@
                             <tr class="row">
                                 <td class="head">Products</td>
                                 <td class="content">
-                                    @foreach($products as $product)
-                                        <a href="{{url('product/view/' . $product->id)}}" title="{{$product->name}}"
+                                    @foreach($look->look_products as $look_product)
+                                        <a href="{{url('product/view/' . $look_product->product->id)}}" title="{{$look_product->product->name}}"
                                            target="product_win">
-                                            <img class="entity"
-                                                 src="{{strpos($product->upload_image, "http") !== false ? $product->upload_image : asset('images/' . $product->upload_image)}}"/>
+                                            <img class="entity" src="{{$look_product->product->image_name}}"/>
                                         </a>
                                     @endforeach
                                 </td>
                             </tr>
                         </table>
                         <div class="image">
-                            <img src="{!! asset('images/' . $look->image) !!}"/>
+                            <img class="entity" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
                         </div>
                     </div>
                 </li>

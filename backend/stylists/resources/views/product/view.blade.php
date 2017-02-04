@@ -9,7 +9,7 @@
             <li class="ui-state-default" id="{{$product->id}}">
                 <div class="resource_view">
                     <div class="image">
-                        <img src="{{strpos($product->upload_image, "http") !== false ? $product->upload_image : asset('images/' . $product->upload_image)}}"/>
+                        <img src="{{$product->image_name}}"/>
                     </div>
                     <table class="info">
                         <tr class="row">
@@ -21,10 +21,10 @@
                             <td class="description" colspan="2">{{$product->description}}</td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Product Type</td><td class="content">{{$product->product_type}} </td>
-                        </tr>
-                        <tr class="row">
-                            <td class="head">Price</td><td class="content">Rs.{{$product->price}} </td>
+                            <td class="head">Price</td>
+                            @foreach($product->product_prices as $product_price)
+                                <td class="content">{{($product_price->type ? $product_price->type->type : "") .' : '. ($product_price->currency ? $product_price->currency->name : "") . ' '.  $product_price->value}}</td>
+                            @endforeach
                         </tr>
                         <tr class="row">
                             <td class="head">Merchant</td><td class="content">{{$merchant ? $merchant->name : ""}} <a target="new" href="{{$product->product_link}}" class="product_link">Product Link</a></td>
@@ -39,7 +39,7 @@
                             <td class="head">Gender</td><td class="content">{{$gender ? $gender->name : ""}} </td>
                         </tr>
                         <tr class="row">
-                            <td class="head">Colors</td><td class="content">{{$primary_color->name}} {{$secondary_color->id 
+                            <td class="head">Colors</td><td class="content">{{$primary_color ? $primary_color->name : ''}} {{$secondary_color && $secondary_color->id
 != 0 ? "(Secondary color: " . $secondary_color->name . ")" : ""}}</td>
                         </tr>
                         <tr class="row">
@@ -58,7 +58,7 @@
                             <td class="content">
                                 @foreach($looks as $look)
                                     <a href="{{url('look/view/' . $look->id)}}" title="{{$look->name}}" target="look_win">
-                                        <img class="entity" src="{{strpos($look->image, "http") !== false ? $look->image : asset('images/' . $look->image)}}"/>
+                                        <img class="entity" src="{{strpos($look->image, "http") !== false ? $look->image : env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
                                     </a>
                                 @endforeach
                             </td>
