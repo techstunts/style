@@ -65,7 +65,9 @@ abstract class Controller extends BaseController
             $search_query = $desc_condition = $tag_condition = "";
 
             if ($this->base_table == 'products') {
-                $tag_condition = $this->setTagCondition($search_term);
+                $tag_condition = $this->setTagCondition($search_term, 'product');
+            } elseif ($this->base_table == 'looks') {
+                $tag_condition = $this->setTagCondition($search_term, 'look');
             }
 
             if($request->input('exact_word') == "search exact word"){
@@ -120,23 +122,24 @@ abstract class Controller extends BaseController
         $this->stylist_condition = Auth::user()->hasRole('admin') ? false : true;
     }
 
-    public function setTagCondition($tags)
+    public function setTagCondition($tags, $table)
     {
         $tags_array = array();
         foreach (explode(',', $tags) as $value) {
             $tags_array[] = trim($value);
         }
-        $tagged_products = DB::table('product_tags')
-            ->select(DB::raw('DISTINCT product_id'))
-            ->join('lu_tags', 'lu_tags.id', '=', 'product_tags.tag_id')
+        $tagged_products = DB::table($table.'_tags')
+            ->select(DB::raw("DISTINCT {$table}_id"))
+            ->join('lu_tags', 'lu_tags.id', '=', $table.'_tags.tag_id')
             ->whereIn('lu_tags.name', $tags_array)
             ->get();
         if (count($tagged_products) <= 0) {
            return '';
         }
         $product_ids = array();
+        $paramName = $table.'_id';
         foreach ($tagged_products as $tagged_product) {
-            array_push($product_ids, $tagged_product->product_id);
+            array_push($product_ids, $tagged_product->$paramName);
         }
         return " OR {$this->base_table}.id IN(". implode(", ", $product_ids) . ")";
     }
