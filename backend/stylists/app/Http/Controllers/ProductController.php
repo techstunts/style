@@ -60,11 +60,16 @@ class ProductController extends Controller
         $lookup = new Lookup();
         $category_obj = new Category();
 
+        $categories = array();
+        foreach ($this->categories as $category){
+            $categories[$category->id] = $category->name;
+        }
+
         $view_properties = array(
             'stylists' => $this->stylists,
             'merchants' => $this->merchants,
             'brands' => $this->brands,
-            'categories' => $this->categories,
+            'categories' => $categories,
             'genders' => $this->genders,
             'colors' => $this->colors,
             'ratings' => $this->ratings,
