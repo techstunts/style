@@ -56,6 +56,11 @@ class StylistController extends Controller
         return view('stylist.list', $view_properties);
     }
 
+    public function getAvailability(Request $request)
+    {
+        return view('stylist.calendar');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
