@@ -76,9 +76,9 @@
                 that <a href="" style="text-decoration: underline;color: #000000;">in here.</a></div>
         </div>
     </div>
-    <div class="email-footer" style="background-color: #E6EFEE;width: 100%;margin: auto;padding-top: 2%;">
+    <div class="email-footer" style="background-color: #E6EFEE;width: 100%;margin: auto;">
         <div class="image">
-            <img src="http://istyleyou.in/nicobar/resources/images/emailer/kalas.png" height="auto" width="100%">
+            <img src="http://istyleyou.in/nicobar/resources/images/emailer/kalas.jpg" style="width: 100%">
         </div>
         <p style="font-weight: bold;color: #000000;margin: auto;text-align: center;">#nicobar</p>
         <p style="font-weight: bold;color: #000000;margin: auto;text-align: center;">#thenicobarstory</p>
