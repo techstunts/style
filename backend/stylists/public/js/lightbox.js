@@ -309,7 +309,8 @@ $(document).ready(function(){
                     autosuggest_object.autocomplete({
                         source: allSuggestions,
                         select: function (e, ui) {
-                            $(this).val(ui.item.value);
+                            $(this).val(ui.item.label);
+                            $(this).siblings('input[name="category_id"]').val(ui.item.value);
                             $(this).parent('form')[0].submit();
                         },
 

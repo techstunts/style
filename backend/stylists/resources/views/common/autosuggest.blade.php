@@ -1,1 +1,2 @@
-<input type="text" class="autosuggest" name="{{$autosuggest_type}}_id" autosuggest_type="{{$autosuggest_type}}" value="" placeholder="{{$autosuggest_type}}" class="form-control search">
+<input type="text" class="autosuggest form-control search" autosuggest_type="{{$autosuggest_type}}" placeholder="{{$autosuggest_type}}" value="{{!empty($category_id) && !empty($categories[$category_id]) ? $categories[$category_id] : ''}}">
+<input type="hidden" name="{{$autosuggest_type}}_id" value="{{!empty($category_id) ? $category_id : ''}}" >
