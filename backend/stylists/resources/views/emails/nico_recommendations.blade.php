@@ -43,8 +43,8 @@
                                                         <img src="{{$look_product->product ? $look_product->product->image_name : ''}}" alt="" style="max-width: 100%;background-color: #333333;">
                                                     </a>
                                                 </div>
-                                                <div class="pro-box-name">
-                                                    <p style="color: #333333;word-wrap: break-word;text-align: center;">@if($look_product->product)@if(strlen($look_product->product->name) > 24){{substr($look_product->product->name, 0, 21) . '...'}} @else{{$look_product->product->name}} @endif @else{{''}}@endif</p>
+                                                <div class="pro-box-name" style="overflow: hidden;margin: auto;">
+                                                    <p style="color: #333333;word-wrap: break-word;text-align: center;white-space: nowrap;">@if($look_product->product)@if(strlen($look_product->product->name) > 24){{substr($look_product->product->name, 0, 21) . '...'}} @else{{$look_product->product->name}} @endif @else{{''}}@endif</p>
                                                 </div>
                                             </div>
                                         @endforeach
