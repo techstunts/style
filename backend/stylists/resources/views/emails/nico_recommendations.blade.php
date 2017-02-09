@@ -13,6 +13,9 @@
                 We Promised you a selection of styles, handpicked for you,
                 So here we are
             </div>
+            @if(!empty($custom_message))
+                <div class="content" style="margin: 0 auto;text-align: center;margin-top: 2%;">{{$custom_message}}</div>
+            @endif
         </div>
 
         <div class="email-recommendation-container" style="background-color: #f6f7f8;">
@@ -40,8 +43,8 @@
                                                         <img src="{{$look_product->product ? $look_product->product->image_name : ''}}" alt="" style="max-width: 100%;background-color: #333333;">
                                                     </a>
                                                 </div>
-                                                <div class="pro-box-name">
-                                                    <p style="color: #333333;word-wrap: break-word;text-align: center;">{{$look_product->product ? $look_product->product->name : ''}}</p>
+                                                <div class="pro-box-name" style="overflow: hidden;margin: auto;">
+                                                    <p style="color: #333333;word-wrap: break-word;text-align: center;white-space: nowrap;">@if($look_product->product)@if(strlen($look_product->product->name) > 24){{substr($look_product->product->name, 0, 21) . '...'}} @else{{$look_product->product->name}} @endif @else{{''}}@endif</p>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -73,9 +76,9 @@
                 that <a href="" style="text-decoration: underline;color: #000000;">in here.</a></div>
         </div>
     </div>
-    <div class="email-footer" style="background-color: #E6EFEE;width: 100%;margin: auto;padding-top: 2%;">
+    <div class="email-footer" style="background-color: #E6EFEE;width: 100%;margin: auto;">
         <div class="image">
-            <img src="http://istyleyou.in/nicobar/resources/images/emailer/kalas.png" height="10%" width="100%">
+            <img src="http://istyleyou.in/nicobar/resources/images/emailer/kalas.jpg" style="width: 100%">
         </div>
         <p style="font-weight: bold;color: #000000;margin: auto;text-align: center;">#nicobar</p>
         <p style="font-weight: bold;color: #000000;margin: auto;text-align: center;">#thenicobarstory</p>
