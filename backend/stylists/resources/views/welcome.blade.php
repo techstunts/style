@@ -40,16 +40,21 @@
     <body>
         <div class="container">
             <div class="content">
-                <h1 class="logo">
-                    <img style="height:150px;" src="{!! asset('images/logoistle.png') !!}" alt="">
-                </h1>
-                <div style="margin-top:6px;">
-                    <div>Discover a New you</div>
-                </div>
-                <div class="intro-section">
-                    <h1 class="intro">Help people discover their best look !</h1>
-                    <h3 class="" ><a href="/product/list">Start here</a></h3>
-                </div>
+                @if (str_contains(Request::fullUrl(), 'nicobar'))
+                    <img style="height:150px;width:500px;" src="{!! asset('images/nicobar/nicobar-horizontal-logo-dark.svg') !!}" alt="">
+                    <h3 class="" ><a style="color:#313135;" href="/product/list">Start here</a></h3>
+                @else
+                    <h1 class="logo">
+                        <img style="height:150px;" src="{!! asset('images/logoistle.png') !!}" alt="">
+                    </h1>
+                    <div style="margin-top:6px;">
+                        <div>Discover a New you</div>
+                    </div>
+                    <div class="intro-section">
+                        <h1 class="intro">Help people discover their best look !</h1>
+                        <h3 class="" ><a href="/product/list">Start here</a></h3>
+                    </div>
+                @endif
             </div>
         </div>
     </body>
