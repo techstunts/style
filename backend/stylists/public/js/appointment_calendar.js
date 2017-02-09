@@ -6,7 +6,7 @@
 Date.prototype.getWeek = function () {
     var onejan = new Date(this.getFullYear(), 0, 1);
     return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
-}
+};
 
 // var weekNumber = (new Date()).getWeek();
 //
@@ -28,9 +28,11 @@ var monthNames = ["January", "February", "March", "April", "May", "June",
 ];
 var seesionInHour = 2;
 var minutInOneSession = 60 / seesionInHour;
-var dayAhead = 1
-var calData = null
-var selectedSlots = []
+var dayAhead = 1;
+var calData = null;
+var selectedSlots = [];
+var api_origin = $('#api_origin').val();
+var stylist_id = $('#stylist_id').val();
 function renderCal() {
 
 
@@ -125,23 +127,23 @@ function renderCal() {
     });
 }
 
-getslots('nextWeek')
+getslots('nextWeek');
 //renderCal()
 
 $('#nextWeek').on('click', function () {
-    if(isSelctedSlots()){
+    if (isSelctedSlots()) {
 
-        var aa = confirm('there is unsaved data do you want tp proceed')
-        if (aa){
-            selectedSlots=[]
-            dayAhead = dayAhead + 7
-            getslots('nextWeek')
-          //  $('.zcal').addClass('slideInRight');
+        var aa = confirm('there is unsaved data do you want tp proceed');
+        if (aa) {
+            selectedSlots = [];
+            dayAhead = dayAhead + 7;
+            getslots('nextWeek');
+            //  $('.zcal').addClass('slideInRight');
         }
-    }else {
-        dayAhead = dayAhead + 7
-        getslots('nextWeek')
-       // $('.zcal').addClass('slideInRight');
+    } else {
+        dayAhead = dayAhead + 7;
+        getslots('nextWeek');
+        // $('.zcal').addClass('slideInRight');
     }
 
 
@@ -149,27 +151,29 @@ $('#nextWeek').on('click', function () {
 $('#prevWeek').on('click', function () {
 
 
-    if(isSelctedSlots()){
+    if (isSelctedSlots()) {
 
         var aa = confirm('there is unsaved data do you want to proceed')
-        if (aa){
+        if (aa) {
             dayAhead = dayAhead - 7
             getslots('prevWeek')
-           // $('.zcal').addClass('slideInLeft');
+            // $('.zcal').addClass('slideInLeft');
 
         }
-    }else {
+    } else {
         dayAhead = dayAhead - 7
         getslots('prevWeek')
-       // $('.zcal').addClass('slideInLeft');
+        // $('.zcal').addClass('slideInLeft');
 
     }
 
 
 });
+$('#save').on('click', saveSelected);
 
-function getslots(week) {
-
+function getslots(week)
+{
+    checkStylist();
     var now = new Date();     // get current date
 
     var weekstart = now.getDate() - now.getDay() + dayAhead;
@@ -196,38 +200,52 @@ function getslots(week) {
     console.log(endtDate)
     $.ajax({
 
-        url: 'http://api.istyleyou.loc/stylist/availability/111?start_date=' + startDate + '&end_date=' + endtDate,
+        url: api_origin + '/stylist/availability/' + stylist_id + '?start_date=' + startDate + '&end_date=' + endtDate,
         method: "get"
     }).done(function (res) {
         console.log(res)
         calData = res
         renderCal();
-        if (week=='nextWeek'){
+        if (week == 'nextWeek') {
             $('.zcal').addClass('slideInRight');
 
-        }else if (week=='prevWeek'){
+        } else if (week == 'prevWeek') {
             $('.zcal').addClass('slideInLeft');
 
         }
-
     });
 }
 
-function saveSelected() {
+function saveSelected(e) {
+    checkStylist();
     $.ajax({
-
-        url: 'http://api.istyleyou.loc/stylist/availability/111?start_date=' + startDate + '&end_date=' + endtDate,
-        data: {'avail_dt_slot': selectedSlots},
-        method: "post"
-    }).done(function (res) {
-        console.log(res)
-
+        type: "POST",
+        url: api_origin + '/stylist/availability',
+        data: {
+            'avail_dt_slot': selectedSlots,
+            'stylist_id': stylist_id
+        },
+        success : function (response) {
+            if (response[0].status == false)
+                alert(response[0].errorMsg);
+            else
+                alert(response[0].message);
+            console.log(response);
+        }
     });
+    e.preventDefault();
 }
 
-function isSelctedSlots(){
-    if( selectedSlots.length>0){
-       return true
+function checkStylist() {
+    if (stylist_id === '') {
+        alert('Something wrong');
+        return false;
+    }
+}
+
+function isSelctedSlots() {
+    if (selectedSlots.length > 0) {
+        return true
     }
     return false
 }
