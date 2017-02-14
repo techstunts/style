@@ -74,12 +74,15 @@ class ProductController extends Controller
             'colors' => $this->colors,
             'ratings' => $this->ratings,
             'approvedBy' => $this->approvedBy,
-            'category_tree' => $category_obj->getCategoryTree(),
+//            'category_tree' => $category_obj->getCategoryTree(),
             'gender_list' => $lookup->type('gender')->get(),
             'color_list' => $lookup->type('color')->get(),
             'ratings_list' => $lookup->type('rating')->where('status_id', true)->get(),
             'tags_list' => $lookup->type('tags')->get(),
         );
+        if (!env('IS_NICOBAR')) {
+            $view_properties['category_tree'] = $category_obj->getCategoryTree();
+        }
 
         foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
