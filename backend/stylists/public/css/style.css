@@ -1,4 +1,4 @@
-.tag{
+.tag {
     margin-bottom: 10px;
     margin-top: 10px;
 }
@@ -27,9 +27,10 @@ nav li a {
     padding: 3px;
 }
 
-li.active{
-    background-color:  #E91E63 !important;
+li.active {
+    background-color: #E91E63 !important;
 }
+
 div.items {
     float: left;
     margin: 5px;
@@ -734,38 +735,62 @@ table.data-table {
 }
 
 .calendar-container {
-padding-left: 30px;
+    padding-left: 30px;
     padding-right: 30px;
 
     /*box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);*/
     /*transition: all 0.3s cubic-bezier(.25,.8,.25,1);*/
 }
+
 .cal {
-width: 100%;
+    width: 100%;
 
 }
-.cal-time-container{
+
+.cal-time-container {
 }
-.cal-header{
+
+.cal-header {
     color: rgba(93, 102, 103, 0.76);
 }
-.cal-time-button{
-    border:1px solid rgba(175, 192, 194, 0.76);
-    border-radius: 50px;
+
+.cal-time-button {
+// border: 1 px solid rgba(175, 192, 194, 0.76);
     font-size: 12px;
-    margin: 5px;
-    /* padding: 5px; */
-    height: 22px;
+    margin-top: 1px;
+    margin-left: 1px;
+    height: 30px;
+    background-color: rgba(226, 226, 226, 0.2);
+    /*padding-top: 5px;*/
+    /*padding-right: 5px;*/
 
 }
-.slotAvailable{
+.cal-range-button {
+    font-size: 11px;
+    margin-top: 1px;
+    /* margin-left: 1px; */
+    height: 30px;
+    /*background-color: rgba(70, 95, 111, 0.22);*/
+    padding-top: 6px;
+}
+.col-md-2{
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+}.col-md-1{
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+}
+
+.slotAvailable {
     color: rgba(175, 192, 194, 0.76);
 }
-.slotUnAvailable{
+
+.slotUnAvailable {
     color: rgba(107, 120, 122, 0.76);
-background-color: rgba(175, 192, 194, 0.76);
+    background-color: rgba(175, 192, 194, 0.76);
 }
-.nav-btn{
+
+.nav-btn {
     margin-top: 20px;
     padding-left: 40px;
     padding-right: 40px;
@@ -775,6 +800,7 @@ background-color: rgba(175, 192, 194, 0.76);
     font-size: 20px;
     font-weight: 500;
 }
+
 .selected-btn {
     padding: 15px;
     border: 1px solid #282b30;
@@ -783,66 +809,85 @@ background-color: rgba(175, 192, 194, 0.76);
     color: #000000;
     letter-spacing: 2px;
 }
+.disabled-btn{
+    padding: 15px;
+    border: 1px solid #dedede;
+    background: #dedede;
+    text-align: center;
+    color: #fff;
+    letter-spacing: 2px;
+}
+.non-editable{
+    background-color: rgba(226, 226, 226, 0.5);
+}
 
 .selected-btn:hover {
     background: #000000;
     color: #FFFFFF;
 }
-.round-btn-selected{
+
+.round-btn-selected {
     display: block;
-    width: 20px;
-    height: 20px;
-    border: 1px solid #3e3b44;
-    border-radius: 20px;
-    background-color:#3e3b44;
+    /* width: 20px; */
+    height: 30px;
+    /* border: 1px solid #3e3b44; */
+    /* border-radius: 20px; */
+    background-color: rgba(62, 59, 68, 0.61);
     color: white;
     float: right;
-}
-.timeSelected{
-    padding: 3px;
-}
-.visible{
- display: block;
-}
-.invisible{
-  display: none;
-}
-.mrgn5px{
-    margin-top:5px;
-    margin-bottom: 5px;
-}
-
-.gv-border{
-    border: 1px solid #000000;
-}
-
-.brdr-right{
+    text-align: center;
+    padding: 8px;
     border-right: 1px solid #000000;
 }
 
-.col-md-1-d{
+.timeSelected {
+    padding: 3px;
+}
+
+.visible {
+    display: block;
+}
+
+.invisible {
+    display: none;
+}
+
+.mrgn5px {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.gv-border {
+    border: 1px solid #000000;
+}
+
+.brdr-right {
+    border-right: 1px solid #000000;
+}
+
+.col-md-1-d {
     width: 5%;
 }
 
-option.dropdown-parent{
+option.dropdown-parent {
     font-weight: bold !important;
 }
 
-option.dropdown-child{
+option.dropdown-child {
     padding-left: 4px !important;
 }
 
-.content.looks{
+.content.looks {
     border: 1px solid #000000;
-    min-height:200px;
+    min-height: 200px;
 }
 
-.content.products{
+.content.products {
     border: 1px solid #000000;
-    min-height:200px;
+    min-height: 200px;
 }
 
-.btn_recommendation{
+.btn_recommendation {
     background-color: #000 !important;
     color: #FFFFFF !important;
 }
