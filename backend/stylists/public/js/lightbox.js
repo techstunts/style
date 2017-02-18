@@ -330,7 +330,7 @@ $(document).ready(function(){
 });
 
 function findTab(href){
-    var url = href.split('.loc/')[1].split('/');
+    var url = href.split('/')[3];
     return url[0];
 }
 

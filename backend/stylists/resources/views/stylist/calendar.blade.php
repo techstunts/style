@@ -3,6 +3,7 @@
 @section('title', 'Stylist Calendar')
 
 @section('content')
+    <link rel="stylesheet" href="{!! asset('css/style.css') !!}" />
     <div id="contentCntr">
         <div class="container">
             <div class="calendar-container">

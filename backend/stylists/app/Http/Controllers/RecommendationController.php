@@ -285,7 +285,7 @@ class RecommendationController extends Controller
                 'nicobar_website' => env('NICOBAR_WEBSITE'),
             ],
             function ($mail) use ($client, $stylist) {
-                $mail->from('stylist@istyleyou.in', 'IStyleYou');
+                $mail->from('stylist@istyleyou.in', (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
                 $mail->to($client->email, $client->name)
                     ->bcc('stylist@istyleyou.in')
                     ->subject($stylist->name . ', your stylist has sent you recommendations!');
