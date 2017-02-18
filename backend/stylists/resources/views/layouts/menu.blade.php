@@ -9,6 +9,7 @@
                     @elseif (env('IS_NICOBAR'))
                         <li><a href="/client/chat">Chat</a></li>
                         <li><a href="/requests/list">Requests</a></li>
+                        <li><a href="/bookings/list">Bookings</a></li>
                         <li><a href="/client/list">Clients</a></li>
                         <li><a href="/product/list">Products</a></li>
                         <li><a href="/look/list">Looks</a></li>
