@@ -63,4 +63,8 @@ class StyleRequests extends Model
     {
         return $this->hasOne('App\RequestsBooking', 'request_id');
     }
+    public function request_styling_element_texts()
+    {
+        return $this->hasMany('App\Models\Questionnaire\StyleElementText', 'request_id');
+    }
 }
