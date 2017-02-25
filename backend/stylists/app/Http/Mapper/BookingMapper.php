@@ -24,7 +24,7 @@ class BookingMapper extends Controller
             $query->select('id', 'name');
         };
 
-        $bookings = Booking::with(['client' => $client, 'slot', 'stylist' => $stylist, 'status'])
+        $bookings = Booking::with(['client' => $client, 'slot', 'stylist' => $stylist, 'status', 'bookingRequest.request'])
             ->where($where_conditions)
             ->whereRaw($where_raw)
             ->orderBy('id', 'desc')

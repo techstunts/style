@@ -88,7 +88,7 @@ class StyleRequestsController extends Controller
                 }
             });
         };
-        $requests  = StyleRequests::with(['budget', 'occasion', 'entity_type', 'status'])
+        $requests  = StyleRequests::with(['budget', 'occasion', 'entity_type', 'status', 'requestBooking.booking'])
                 ->whereHas('client', $client)
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)

@@ -44,6 +44,7 @@
                         <tr>
                             <th><input name="select_all" value="1" type="checkbox"></th>
                             <th class="font-size-table-header">Booking id</th>
+                            <th class="font-size-table-header">Request id</th>
                             <th class="font-size-table-header">Book Date</th>
                             <th class="font-size-table-header">Slot</th>
                             <th class="font-size-table-header">Service</th>
@@ -65,6 +66,7 @@
                             <tr>
                                 <td> {{$booking->id}} </td>
                                 <td class="table-font-size"> {{$booking->id}} </td>
+                                <td class="table-font-size"> {{$booking->bookingRequest && $booking->bookingRequest->request ? $booking->bookingRequest->request->id : ''}} </td>
                                 <td class="table-font-size">{{$booking->date}}</td>
                                 <td class="table-font-size">{{$booking->slot ? $booking->slot->name : ''}}</td>
                                 <td class="table-font-size"> {{$booking->service}} </td>

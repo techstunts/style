@@ -59,4 +59,8 @@ class StyleRequests extends Model
     {
         return $this->belongsTo('App\UploadImages', 'upload_element_id');
     }
+    public function requestBooking()
+    {
+        return $this->hasOne('App\RequestsBooking', 'request_id');
+    }
 }
