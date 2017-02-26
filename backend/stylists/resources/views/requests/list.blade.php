@@ -39,6 +39,7 @@
                             @if(env('IS_NICOBAR'))
                                 <th><input name="select_all" value="1" type="checkbox"></th>
                                 <th class="font-size-table-header">Ticket Id</th>
+                                <th class="font-size-table-header">Booking id</th>
                                 <th class="font-size-table-header">Date</th>
                                 <th class="font-size-table-header">Client Name</th>
                                 <th class="font-size-table-header">Category</th>
@@ -70,6 +71,7 @@
                             <tr>
                                 <td>{{$request->id}}</td>
                                 <td class="table-font-size"><a target="_blank" href="/requests/view/{{$request->id}}"> {{$request->id}} </a> </td>
+                                <td class="table-font-size">{{$request->requestBooking && $request->requestBooking->booking ? $request->requestBooking->booking->id : ''}}</td>
                                 <td class="table-font-size">{{$request->created_at->format('j-F-Y')}}</td>
                                 <td class="table-font-size"> {{$request->client ? $request->client->name : ''}} </td>
                                 <td class="table-font-size"> {{$request->category ? $request->category->name : ''}} </td>

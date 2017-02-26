@@ -42,7 +42,12 @@
                                         @if($request->style)
                                             <img style="width:100px;" src="{{$request->style->image_url}}">
                                         @elseif($request->uploadedStyleImage)
-                                            <img style="width:100px;" src="{{$request->uploadedStyleImage->url}}">
+                                            <img style="width: 100px"; src="{{$request->uploadedStyleImage->url}}">
+                                            @if(count($request->request_styling_element_texts) > 0)
+                                                @foreach($request->request_styling_element_texts as $text)
+                                                    <span>{{$text->text}}</span>&nbsp;
+                                                @endforeach
+                                            @endif
                                         @endif
                                     </div>
                                 </div>

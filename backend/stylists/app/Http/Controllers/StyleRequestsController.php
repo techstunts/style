@@ -88,7 +88,7 @@ class StyleRequestsController extends Controller
                 }
             });
         };
-        $requests  = StyleRequests::with(['budget', 'occasion', 'entity_type', 'status'])
+        $requests  = StyleRequests::with(['budget', 'occasion', 'entity_type', 'status', 'requestBooking.booking'])
                 ->whereHas('client', $client)
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
@@ -139,7 +139,8 @@ class StyleRequestsController extends Controller
             $query->select('id', DB::raw("concat('$api_origin', '/',  path, '/', name) as url"));
         };
 
-        $styleRequest = StyleRequests::with(['client' => $client, 'requested_entity', 'question_ans' => $question_ans, 'category', 'uploadedStyleImage' => $uploadedStyleImage])
+        $styleRequest = StyleRequests::with(['client' => $client, 'requested_entity', 'question_ans' => $question_ans,
+            'category', 'uploadedStyleImage' => $uploadedStyleImage, 'request_styling_element_texts'])
             ->where(['id' => $this->resource_id])
             ->first();
         if (!$styleRequest) {
