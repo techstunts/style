@@ -40,12 +40,21 @@
                                         <b>Style : </b>{{$request->style ? $request->style->name : 'Uploaded style image'}}
                                         <br>
                                         @if($request->style)
-                                            <img style="width: 100px"; src="{{$request->style->image_url}}">
+                                            <img style="width:100px;" src="{{$request->style->image_url}}">
                                         @elseif($request->uploadedStyleImage)
                                             <img style="width: 100px"; src="{{$request->uploadedStyleImage->url}}">
+                                            @if(count($request->request_styling_element_texts) > 0)
+                                                @foreach($request->request_styling_element_texts as $text)
+                                                    <span>{{$text->text}}</span>&nbsp;
+                                                @endforeach
+                                            @endif
                                         @endif
                                     </div>
                                 </div>
+
+                                <br>
+                                <b>Questionnaire :</b>
+
                                 @foreach($request->question_ans as $question_ans)
                                     @if($question_ans['ansType'] == 'both' or $question_ans['ansType'] == 'image')
                                     <div class="row mrgn5px">
@@ -53,18 +62,20 @@
                                                 <br>
                                                 <div class="col-md-12 text-center">
                                                 <b>{{$question_ans['question']}}: </b>
-                                                    <br><br>
+                                                    <br>
                                                 </div>
                                             <br>
-                                            @foreach($question_ans['ans'] as $ans)
-                                                @if($question_ans['ansType'] == 'both')
-                                                        <br>
-                                                    <div class="col-md-12 text-center"><span>{{$ans->text}}</span></div>
-                                                     <div class="col-md-12 text-center"><img {{!empty($ans->image) ? 'style="width: 100px";' : ""}} src="{{!empty($ans->image) ? $ans->image : ""}}"></div>
-                                                @elseif($question_ans['ansType'] == 'image')
-                                                    <img {{!empty($ans->image) ? 'style="width: 100px";' : ""}} src="{{!empty($ans->image) ? $ans->image : ""}}">
-                                                @endif
-                                            @endforeach
+                                            <div class="col-md-12 text-center">
+                                                @foreach($question_ans['ans'] as $ans)
+                                                    @if($question_ans['ansType'] == 'both')
+                                                            <br>
+                                                        <div class="col-md-12 text-center"><span>{{$ans->text}}</span></div>
+                                                         <div class="col-md-12 text-center"><img {{!empty($ans->image) ? "style=width:100px;" : ""}} src="{{!empty($ans->image) ? $ans->image : ""}}"></div>
+                                                    @elseif($question_ans['ansType'] == 'image')
+                                                        <img {{!empty($ans->image) ? "style=width:100px;" : ""}} src="{{!empty($ans->image) ? $ans->image : ""}}">
+                                                    @endif
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                     <br>

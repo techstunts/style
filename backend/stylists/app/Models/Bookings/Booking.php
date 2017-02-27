@@ -24,4 +24,7 @@ class Booking extends Model
     public function status(){
         return $this->belongsTo('App\Models\Lookups\BookingStatus', 'status_id');
     }
+    public function bookingRequest(){
+        return $this->hasOne('App\RequestsBooking', 'booking_id');
+    }
 }
