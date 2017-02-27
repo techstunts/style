@@ -3,28 +3,68 @@
  */
 
 
-console.log(moment("20111031", "YYYYMMDD").fromNow())
 $('input[name="daterange"]').daterangepicker(
+// $('#reportrange').daterangepicker(
     {
+        // autoUpdateInput: false,
+        linkedCalendars:true,
+
         locale: {
-            format: 'YYYY-MM-DD'
-        },
-        startDate: '2013-01-01',
-        endDate: '2013-12-31'
+            // cancelLabel: 'Clear',
+            format: 'DD-MM-YYYY',
+
+        },isInvalidDate:function (date) {
+        if (date<moment()){
+            return true;
+
+        }
+    }
     },
-    function(start, end, label) {
-        alert("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    function (start, end, label) {
+        var a = moment(start);
+        var b = moment(end);
+        var diff = b.diff(a, 'days')   // =1
+        alert(diff)
+        var dates_arr = []
+        for (var i = 0; i <=diff; i++) {
+            var nowdate = moment(a)
+            nowdate.add(i, 'days');
+            var today = nowdate.format('DD-MM-YYYY')
+            var day = nowdate.day()
+            if (nowdate > moment()) {
+                if (day != 0) {
+                    console.log(today)
+                    console.log(nowdate.day())
+                    dates_arr.push(today)
+                }
+            }
+
+
+        }
+        bulk_data.dates = dates_arr
+        bulk_data.stylist_id = stylist_id
+        // console.log(data)
+        $('input[name="daterange"]').val(start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'))
+        // alert("A new date range was chosen: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
     });
 
-Date.prototype.getWeek = function () {
-    var onejan = new Date(this.getFullYear(), 0, 1);
-    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
-};
+$('#bulkAdd').on('click', function () {
+    bulkUpdate('add')
+})
+$('#bulkRemove').on('click', function () {
+    bulkUpdate('remove')
+})
 
-var weekNumber = (new Date()).getWeek();
-console.log(weekNumber)
-var currentDateTime;
-var isPast;
+// $('input[name="daterange"]').data('daterangepicker').setStartDate('03/01/2014');
+// Date.prototype.getWeek = function () {
+//     var onejan = new Date(this.getFullYear(), 0, 1);
+//     return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+// };
+
+// var weekNumber = (new Date()).getWeek();
+// console.log(weekNumber)
+// var currentDateTime;
+// var isPast;
 
 //
 // var dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -53,6 +93,8 @@ var calData = null;
 var selectedSlots = [];
 var api_origin = $('#api_origin').val();
 var stylist_id = $('#stylist_id').val();
+var bulk_data = {}
+
 function renderCal() {
 
 
@@ -109,7 +151,7 @@ function renderCal() {
                 x++
                 var isVisible = 'visible'
                 var slotAvailable = 'slotAvailable'
-                if (stylists.length>0) {
+                if (stylists.length > 0) {
                     isVisible = 'visible'
                     slotAvailable = 'slotUnAvailable'
                 }
@@ -145,8 +187,8 @@ function renderCal() {
         var slot = this.getAttribute("slot")
         var slot_id = this.getAttribute("slot_id")
         var available = this.getAttribute("available")
-        var isEditable=this.getAttribute("isEditable")
-        if (isEditable=="non-editable"){
+        var isEditable = this.getAttribute("isEditable")
+        if (isEditable == "non-editable") {
             return false;
         }
         if (available == 'true') {
@@ -292,7 +334,30 @@ function getslots(week) {
         }
     });
 }
+function bulkUpdate(action) {
+    bulk_data.action = action
+    console.log(bulk_data)
+    $.ajax({
+        type: "POST",
+        url: api_origin + '/stylist/availability',
+        data: bulk_data,
+        success: function (response) {
+            if (response.status == false)
+                alert(response.errorMsg);
 
+            else
+                alert(response.message);
+            selectedSlots = []
+            bulk_data = {}
+            saveButtonUpdate()
+
+            getslots();
+
+            console.log(response);
+        }
+    });
+    // e.preventDefault();
+}
 function saveSelected(e) {
 
     if (checkStylist()) {

@@ -7,7 +7,14 @@
     <div id="contentCntr">
         <div class="container">
             <div class="calendar-container">
-                <div class="row"><input type="text" name="daterange" value="01/01/2015 - 01/31/2015" /></div>
+                <div class="row">
+                    <input class="selected-btn"  type="text" name="daterange" placeholder="Select date range" />
+                    {{--<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">--}}
+                        {{--<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;--}}
+                    {{--</div>--}}
+
+                    <button id="bulkAdd" class="selected-btn" >Add</button>
+                    <button id="bulkRemove" class="selected-btn " >Remove</button></div>
                 <div class="row">
                     <div class="col-md-1"><h4 class="text-center cal-header">Slot</h4>
                         <div class=" cal-range-button">
