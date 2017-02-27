@@ -6,6 +6,7 @@
     <div id="contentCntr">
         <div class="container">
             <div class="calendar-container">
+                <div class="row"><input type="text" name="daterange" value="01/01/2015 - 01/31/2015" /></div>
                 <div class="row">
                     <div class="col-md-1"><h4 class="text-center cal-header">Slot</h4>
                         <div class=" cal-range-button">

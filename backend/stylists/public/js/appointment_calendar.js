@@ -4,7 +4,17 @@
 
 
 console.log(moment("20111031", "YYYYMMDD").fromNow())
-
+$('input[name="daterange"]').daterangepicker(
+    {
+        locale: {
+            format: 'YYYY-MM-DD'
+        },
+        startDate: '2013-01-01',
+        endDate: '2013-12-31'
+    },
+    function(start, end, label) {
+        alert("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    });
 
 Date.prototype.getWeek = function () {
     var onejan = new Date(this.getFullYear(), 0, 1);
