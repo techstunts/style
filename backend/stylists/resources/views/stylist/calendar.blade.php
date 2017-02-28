@@ -8,7 +8,7 @@
         <div class="container">
             <div class="calendar-container">
                 <div class="row">
-                    <input class="selected-btn col-md-3" type="text" name="daterange" placeholder="Select date range"/>
+                    <input class="selected-btn col-md-2" type="text" name="daterange" placeholder="Select date range"/>
                     {{--<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">--}}
                     {{--<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;--}}
                     {{--</div>--}}
@@ -24,8 +24,8 @@
                         {{--</div>--}}
 
                     {{--</div>--}}
-                    <button id="bulkAdd" class="selected-btn col-md-3">Add</button>
-                    <button id="bulkRemove" class="selected-btn col-md-3">Remove</button>
+                    <button id="bulkAdd" class="selected-btn col-md-1">Add</button>
+                    <button id="bulkRemove" class="selected-btn col-md-1">Remove</button>
                 </div>
                 <div class="row">
                     <div class="col-md-1"><h4 class="text-center cal-header">Slot</h4>
