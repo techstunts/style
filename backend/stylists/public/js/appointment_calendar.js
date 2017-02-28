@@ -3,18 +3,68 @@
  */
 
 
-console.log(moment("20111031", "YYYYMMDD").fromNow())
+$('input[name="daterange"]').daterangepicker(
+// $('#reportrange').daterangepicker(
+    {
+         autoUpdateInput: false,
+        linkedCalendars:true,
+
+        locale: {
+            cancelLabel: 'Clear',
+            format: 'DD-MM-YYYY',
+
+        },isInvalidDate:function (date) {
+        if (date<moment()){
+            return true;
+
+        }
+    }
+    },
+    function (start, end, label) {
+        var a = moment(start);
+        var b = moment(end);
+        var diff = b.diff(a, 'days')   // =1
+        // alert(diff)
+        var dates_arr = []
+        for (var i = 0; i <=diff; i++) {
+            var nowdate = moment(a)
+            nowdate.add(i, 'days');
+            var today = nowdate.format('DD-MM-YYYY')
+            var day = nowdate.day()
+            if (nowdate > moment()) {
+                if (day != 0) {
+                    console.log(today)
+                    console.log(nowdate.day())
+                    dates_arr.push(today)
+                }
+            }
 
 
-Date.prototype.getWeek = function () {
-    var onejan = new Date(this.getFullYear(), 0, 1);
-    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
-};
+        }
+        bulk_data.dates = dates_arr
+        bulk_data.stylist_id = stylist_id
+        // console.log(data)
+         $('input[name="daterange"]').val(start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'))
+        // alert("A new date range was chosen: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
+    });
 
-var weekNumber = (new Date()).getWeek();
-console.log(weekNumber)
-var currentDateTime;
-var isPast;
+$('#bulkAdd').on('click', function () {
+    bulkUpdate('add')
+})
+$('#bulkRemove').on('click', function () {
+    bulkUpdate('remove')
+})
+
+// $('input[name="daterange"]').data('daterangepicker').setStartDate('03/01/2014');
+// Date.prototype.getWeek = function () {
+//     var onejan = new Date(this.getFullYear(), 0, 1);
+//     return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+// };
+
+// var weekNumber = (new Date()).getWeek();
+// console.log(weekNumber)
+// var currentDateTime;
+// var isPast;
 
 //
 // var dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -43,6 +93,8 @@ var calData = null;
 var selectedSlots = [];
 var api_origin = $('#api_origin').val();
 var stylist_id = $('#stylist_id').val();
+var bulk_data = {dates:[],slots:[]}
+
 function renderCal() {
 
 
@@ -99,7 +151,7 @@ function renderCal() {
                 x++
                 var isVisible = 'visible'
                 var slotAvailable = 'slotAvailable'
-                if (stylists.length>0) {
+                if (stylists.length > 0) {
                     isVisible = 'visible'
                     slotAvailable = 'slotUnAvailable'
                 }
@@ -135,8 +187,8 @@ function renderCal() {
         var slot = this.getAttribute("slot")
         var slot_id = this.getAttribute("slot_id")
         var available = this.getAttribute("available")
-        var isEditable=this.getAttribute("isEditable")
-        if (isEditable=="non-editable"){
+        var isEditable = this.getAttribute("isEditable")
+        if (isEditable == "non-editable") {
             return false;
         }
         if (available == 'true') {
@@ -273,6 +325,7 @@ function getslots(week) {
         console.log(res)
         calData = res
         renderCal();
+        renderSlots(res.slots)
         if (week == 'nextWeek') {
             $('.zcal').addClass('slideInRight');
 
@@ -282,7 +335,73 @@ function getslots(week) {
         }
     });
 }
+function renderSlots(slots){
+    console.log(slots)
+  var slotsHtml = slots.map(function (slot,index) {
+     return '<div> <label><input name="slot" type="checkbox" value='+slot.id+'>'+slot.name+'</label> </div>';
+  })
+    var slotHtmlSelect ='<select id="m_slots_select" class="selectpicker" noneSelectedText="jhsdgfdsjhf" multiple>'
+     slotHtmlSelect += slots.map(function (slot,index) {
+        return '<option  value='+slot.id+'>'+slot.name+'</option>';
+    })
+    slotHtmlSelect+='</select>'
+    $('#m_slots').html(slotsHtml)
+    if ($('#aaaa').html()==''){
+        $('#aaaa').html(slotHtmlSelect)
+        $('.selectpicker').selectpicker('setStyle', 'selected-btn');
+        $('.selectpicker').selectpicker('noneSelectedText',function () {
+           return "Select Slots"
+        })
 
+    }else {
+        $('.selectpicker').selectpicker('deselectAll')
+    }
+}
+function bulkUpdate(action) {
+    bulk_data.action = action
+    var slots = [];
+    // $.each($("li[class='selected']"), function(){
+    //     slots.push($(this).val());
+    // });
+    slots = $('.selectpicker').val()
+    console.log(slots)
+    // $.each($("input[name='slot']:checked"), function(){
+    //     slots.push($(this).val());
+    // });
+      if (bulk_data['dates'].length==0){
+        alert ('please select date range')
+        return false;
+    }else if (slots.length==0){
+          alert ('please select slots update')
+          return false;
+      }
+    bulk_data.slots= slots
+    console.log(bulk_data)
+    $.ajax({
+        type: "POST",
+        url: api_origin + '/stylist/availability',
+        data: bulk_data,
+        success: function (response) {
+            if (response.status == false){
+                alert(response.errorMsg);
+
+        }else {
+                alert(response.message);
+                selectedSlots = []
+                bulk_data = {dates: [], slots: []}
+                saveButtonUpdate()
+
+                getslots();
+
+                // $.each($("input[name='slot']:checked"), function(){
+                //     $("input[name='slot']:checked").attr('checked', false);
+                // });
+                console.log(response);
+            }
+        }
+    });
+    // e.preventDefault();
+}
 function saveSelected(e) {
 
     if (checkStylist()) {
