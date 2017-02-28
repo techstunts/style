@@ -66,7 +66,11 @@
                             <tr>
                                 <td> {{$booking->id}} </td>
                                 <td class="table-font-size"> {{$booking->id}} </td>
-                                <td class="table-font-size"> {{$booking->bookingRequest && $booking->bookingRequest->request ? $booking->bookingRequest->request->id : ''}} </td>
+                                @if($booking->bookingRequest && $booking->bookingRequest->request)
+                                    <td class="table-font-size"><a href="{{url("requests/view/".$booking->bookingRequest->request->id)}}">{{$booking->bookingRequest->request->id}}</a> </td>
+                                @else
+                                    <td class="table-font-size"></td>
+                                @endif
                                 <td class="table-font-size">{{$booking->date}}</td>
                                 <td class="table-font-size">{{$booking->slot ? $booking->slot->name : ''}}</td>
                                 <td class="table-font-size"> {{$booking->service}} </td>
