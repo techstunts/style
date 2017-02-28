@@ -795,6 +795,11 @@ table.data-table {
     padding-left: 92px;
     /*padding-right: 40px;*/
 }
+.range-row {
+    /*margin-top: 20px;*/
+    padding-left: 92px;
+    /*padding-right: 40px;*/
+}
 
 .nav-btn-text {
     font-size: 20px;
