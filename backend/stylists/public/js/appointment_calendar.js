@@ -6,15 +6,15 @@
 $('input[name="daterange"]').daterangepicker(
 // $('#reportrange').daterangepicker(
     {
-         autoUpdateInput: false,
-        linkedCalendars:true,
+        autoUpdateInput: false,
+        linkedCalendars: true,
 
         locale: {
             cancelLabel: 'Clear',
             format: 'DD-MM-YYYY',
 
-        },isInvalidDate:function (date) {
-        if (date<moment()){
+        }, isInvalidDate: function (date) {
+        if (date < moment()) {
             return true;
 
         }
@@ -26,7 +26,7 @@ $('input[name="daterange"]').daterangepicker(
         var diff = b.diff(a, 'days')   // =1
         // alert(diff)
         var dates_arr = []
-        for (var i = 0; i <=diff; i++) {
+        for (var i = 0; i <= diff; i++) {
             var nowdate = moment(a)
             nowdate.add(i, 'days');
             var today = nowdate.format('DD-MM-YYYY')
@@ -44,7 +44,7 @@ $('input[name="daterange"]').daterangepicker(
         bulk_data.dates = dates_arr
         bulk_data.stylist_id = stylist_id
         // console.log(data)
-         $('input[name="daterange"]').val(start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'))
+        $('input[name="daterange"]').val(start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'))
         // alert("A new date range was chosen: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
     });
 
@@ -93,7 +93,7 @@ var calData = null;
 var selectedSlots = [];
 var api_origin = $('#api_origin').val();
 var stylist_id = $('#stylist_id').val();
-var bulk_data = {dates:[],slots:[]}
+var bulk_data = {dates: [], slots: []}
 
 function renderCal() {
 
@@ -335,25 +335,25 @@ function getslots(week) {
         }
     });
 }
-function renderSlots(slots){
+function renderSlots(slots) {
     console.log(slots)
-  var slotsHtml = slots.map(function (slot,index) {
-     return '<div> <label><input name="slot" type="checkbox" value='+slot.id+'>'+slot.name+'</label> </div>';
-  })
-    var slotHtmlSelect ='<select id="m_slots_select" class="selectpicker" noneSelectedText="jhsdgfdsjhf" multiple>'
-     slotHtmlSelect += slots.map(function (slot,index) {
-        return '<option  value='+slot.id+'>'+slot.name+'</option>';
+    var slotsHtml = slots.map(function (slot, index) {
+        return '<div> <label><input name="slot" type="checkbox" value=' + slot.id + '>' + slot.name + '</label> </div>';
     })
-    slotHtmlSelect+='</select>'
+    var slotHtmlSelect = '<select id="m_slots_select" class="selectpicker" noneSelectedText="jhsdgfdsjhf" multiple>'
+    slotHtmlSelect += slots.map(function (slot, index) {
+        return '<option  value=' + slot.id + '>' + slot.name + '</option>';
+    })
+    slotHtmlSelect += '</select>'
     $('#m_slots').html(slotsHtml)
-    if ($('#aaaa').html()==''){
+    if ($('#aaaa').html() == '') {
         $('#aaaa').html(slotHtmlSelect)
         $('.selectpicker').selectpicker('setStyle', 'selected-btn');
-        $('.selectpicker').selectpicker('noneSelectedText',function () {
-           return "Select Slots"
+        $('.selectpicker').selectpicker('noneSelectedText', function () {
+            return "Select Slots"
         })
 
-    }else {
+    } else {
         $('.selectpicker').selectpicker('deselectAll')
     }
 }
@@ -368,28 +368,31 @@ function bulkUpdate(action) {
     // $.each($("input[name='slot']:checked"), function(){
     //     slots.push($(this).val());
     // });
-      if (bulk_data['dates'].length==0){
-        alert ('please select date range')
+    if (bulk_data['dates'].length == 0) {
+        alert('please select date range')
         return false;
-    }else if (slots.length==0){
-          alert ('please select slots update')
-          return false;
-      }
-    bulk_data.slots= slots
+    } else if (slots.length == 0) {
+        alert('please select slots update')
+        return false;
+    }
+    bulk_data.slots = slots
     console.log(bulk_data)
     $.ajax({
         type: "POST",
         url: api_origin + '/stylist/availability',
         data: bulk_data,
         success: function (response) {
-            if (response.status == false){
+            if (response.status == false) {
                 alert(response.errorMsg);
 
-        }else {
+            } else {
                 alert(response.message);
                 selectedSlots = []
                 bulk_data = {dates: [], slots: []}
                 saveButtonUpdate()
+                $('input[name="daterange"]').val('');
+
+
 
                 getslots();
 
