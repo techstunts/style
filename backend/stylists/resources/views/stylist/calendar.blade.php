@@ -7,7 +7,7 @@
     <div id="contentCntr">
         <div class="container">
             <div class="calendar-container">
-                <div class="row">
+                <div class="row range-row">
                     <input class="selected-btn col-md-2" type="text" name="daterange" placeholder="Select date range"/>
                     {{--<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">--}}
                     {{--<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;--}}
@@ -88,13 +88,13 @@
             <input type="hidden" value="{{env('API_ORIGIN')}}" id="api_origin">
             <input type="hidden" value="{{\Illuminate\Support\Facades\Auth::user()->id}}" id="stylist_id">
 
-            <div class=" col-lg-offset-0 col-md-3">
+            <div class=" col-lg-offset-1 col-md-2">
                 <div id="prevWeek" class="selected-btn nav-btn-text"><b>PREV</b></div>
             </div>
-            <div class=" col-lg-offset-1 col-md-3">
+            <div class=" col-lg-offset-2 col-md-2">
                 <div id="save" class="disabled-btn nav-btn-text"><b>SAVE</b></div>
             </div>
-            <div class=" col-lg-offset-1 col-md-3">
+            <div class=" col-lg-offset-2 col-md-2">
                 <div id="nextWeek" class="selected-btn nav-btn-text"><b>NEXT</b></div>
             </div>
         </div>
