@@ -891,3 +891,9 @@ option.dropdown-child {
     background-color: #000 !important;
     color: #FFFFFF !important;
 }
+
+.txt-qstn{
+    font-weight: 600;
+    font-family: serif;
+    font-size: 0.9em;
+}

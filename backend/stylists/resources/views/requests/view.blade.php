@@ -86,12 +86,12 @@
                     </div>
                     <div class="col-md-5">
                         <input type="button" value="Client's past purchases"/>
-                        <br><br><br>
+                        <br><br><br><br><br><br><br>
                          @foreach($request->question_ans as $question_ans)
                             @if($question_ans['ansType'] == 'text')
                                 <div class="row mrgn5px">
                                 <div class="col-md-12">
-                                        <b>{{$question_ans['question']}}: </b>
+                                        <b class="txt-qstn">{{$question_ans['question']}}: </b>
                                     <br>
                                     @foreach($question_ans['ans'] as $ans)
                                         @if($question_ans['ansType'] == 'text')
