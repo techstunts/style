@@ -6,15 +6,15 @@
 $('input[name="daterange"]').daterangepicker(
 // $('#reportrange').daterangepicker(
     {
-        // autoUpdateInput: false,
-        linkedCalendars:true,
+        autoUpdateInput: false,
+        linkedCalendars: true,
 
         locale: {
-            // cancelLabel: 'Clear',
+            cancelLabel: 'Clear',
             format: 'DD-MM-YYYY',
 
-        },isInvalidDate:function (date) {
-        if (date<moment()){
+        }, isInvalidDate: function (date) {
+        if (date < moment()) {
             return true;
 
         }
@@ -24,9 +24,9 @@ $('input[name="daterange"]').daterangepicker(
         var a = moment(start);
         var b = moment(end);
         var diff = b.diff(a, 'days')   // =1
-        alert(diff)
+        // alert(diff)
         var dates_arr = []
-        for (var i = 0; i <=diff; i++) {
+        for (var i = 0; i <= diff; i++) {
             var nowdate = moment(a)
             nowdate.add(i, 'days');
             var today = nowdate.format('DD-MM-YYYY')
@@ -93,7 +93,7 @@ var calData = null;
 var selectedSlots = [];
 var api_origin = $('#api_origin').val();
 var stylist_id = $('#stylist_id').val();
-var bulk_data = {}
+var bulk_data = {dates: [], slots: []}
 
 function renderCal() {
 
@@ -325,6 +325,7 @@ function getslots(week) {
         console.log(res)
         calData = res
         renderCal();
+        renderSlots(res.slots)
         if (week == 'nextWeek') {
             $('.zcal').addClass('slideInRight');
 
@@ -334,26 +335,72 @@ function getslots(week) {
         }
     });
 }
+function renderSlots(slots) {
+    console.log(slots)
+    var slotsHtml = slots.map(function (slot, index) {
+        return '<div> <label><input name="slot" type="checkbox" value=' + slot.id + '>' + slot.name + '</label> </div>';
+    })
+    var slotHtmlSelect = '<select id="m_slots_select" class="selectpicker" noneSelectedText="jhsdgfdsjhf" multiple>'
+    slotHtmlSelect += slots.map(function (slot, index) {
+        return '<option  value=' + slot.id + '>' + slot.name + '</option>';
+    })
+    slotHtmlSelect += '</select>'
+    $('#m_slots').html(slotsHtml)
+    if ($('#aaaa').html() == '') {
+        $('#aaaa').html(slotHtmlSelect)
+        $('.selectpicker').selectpicker('setStyle', 'selected-btn');
+        $('.selectpicker').selectpicker('noneSelectedText', function () {
+            return "Select Slots"
+        })
+
+    } else {
+        $('.selectpicker').selectpicker('deselectAll')
+    }
+}
 function bulkUpdate(action) {
     bulk_data.action = action
+    var slots = [];
+    // $.each($("li[class='selected']"), function(){
+    //     slots.push($(this).val());
+    // });
+    slots = $('.selectpicker').val()
+    console.log(slots)
+    // $.each($("input[name='slot']:checked"), function(){
+    //     slots.push($(this).val());
+    // });
+    if (bulk_data['dates'].length == 0) {
+        alert('please select date range')
+        return false;
+    } else if (slots.length == 0) {
+        alert('please select slots update')
+        return false;
+    }
+    bulk_data.slots = slots
     console.log(bulk_data)
     $.ajax({
         type: "POST",
         url: api_origin + '/stylist/availability',
         data: bulk_data,
         success: function (response) {
-            if (response.status == false)
+            if (response.status == false) {
                 alert(response.errorMsg);
 
-            else
+            } else {
                 alert(response.message);
-            selectedSlots = []
-            bulk_data = {}
-            saveButtonUpdate()
+                selectedSlots = []
+                bulk_data = {dates: [], slots: []}
+                saveButtonUpdate()
+                $('input[name="daterange"]').val('');
 
-            getslots();
 
-            console.log(response);
+
+                getslots();
+
+                // $.each($("input[name='slot']:checked"), function(){
+                //     $("input[name='slot']:checked").attr('checked', false);
+                // });
+                console.log(response);
+            }
         }
     });
     // e.preventDefault();
