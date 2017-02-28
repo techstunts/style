@@ -50,8 +50,10 @@
                             <th class="font-size-table-header">Service</th>
                             <th class="font-size-table-header">Booked at</th>
                             <th class="font-size-table-header">Client name</th>
+                            @if(!env('IS_NICOBAR'))
                             <th class="font-size-table-header">Profile Image</th>
                             <th class="font-size-table-header">Gender</th>
+                            @endif
                             <th class="font-size-table-header">Status</th>
                             @if($is_admin)
                                 <th class="font-size-table-header">Mobile</th>
@@ -77,9 +79,11 @@
                                 <td class="table-font-size"> {{$booking->created_at}} </td>
                                 <td class="table-font-size"><a href="{{url("client/view/".$booking->client_id . "?booking_id=" . $booking->id)}}">
                                     {{$booking->client ? $booking->client->name : ''}}</a> </td>
+                                @if(!env('IS_NICOBAR'))
                                 <td class="image image-width"><a href="{{url("client/view/".$booking->client_id . "?booking_id=" . $booking->id)}}"><img
                                                 src="{{$booking->client ? $booking->client->image : ''}}"/></a></td>
                                 <td class="table-font-size"> {{$booking->client && $booking->client->genders ? $booking->client->genders->name : ''}} </td>
+                                @endif
                                 <td class="table-font-size"> {{$booking->status ? $booking->status->name : ''}}</td>
                                 @if($is_admin)
                                     <td class="table-font-size"> {{!empty($booking->mobile) ? $booking->mobile : ''}} </td>
