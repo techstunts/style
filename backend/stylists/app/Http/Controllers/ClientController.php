@@ -109,6 +109,13 @@ class ClientController extends Controller
      */
     public function getView(Request $request)
     {
+        if (env('IS_NICOBAR')) {
+            $view_properties = array(
+                'api_origin' => env('API_ORIGIN'),
+                'client_id' => $this->resource_id,
+            );
+            return view('client.view', $view_properties);
+        }
         $authWhereClauses = $this->authWhereClauses($request);
         $client = Client::with('genders')
                 ->whereRaw($authWhereClauses)
