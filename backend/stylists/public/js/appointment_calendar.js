@@ -107,7 +107,7 @@ function renderCal() {
 
         var weekstart = current.getDate() - current.getDay() + dayAhead;
         var weekend = weekstart + i;       // end day is the first day + 6
-        var monday = new Date(current.setDate(weekstart));
+        // var monday = new Date(current.setDate(weekstart));
 
         // if (current.getMonth() == 11) {
         //     current = new Date(current.getFullYear() + 1, 0, 1);
@@ -115,8 +115,8 @@ function renderCal() {
         //     current = new Date(current.getFullYear(), current.getMonth() + 1, 1);
         // }
         var nextDay = new Date(current.setDate(weekend));
-        var nextDate = nextDay.getDate()
-        var month = parseInt(nextDay.getUTCMonth())
+        // var nextDate = nextDay.getDate()
+        // var month = parseInt(nextDay.getUTCMonth())
         var day = calData.days[i]
         var arrrr = day.date.split('-')
         var apiDate = arrrr[0]
@@ -283,38 +283,15 @@ $('#prevWeek').on('click', function () {
 $('#save').on('click', saveSelected);
 
 function getslots(week) {
+
     saveButtonUpdate()
     checkStylist();
-    var now = new Date();     // get current date
-    console.log(now)
-    currentDateTime = now
-    var weekstart = now.getDate() - now.getDay() + dayAhead;
-    var weekend = weekstart + 5;       // end day is the first day + 6
-    var monday = new Date(now.setDate(weekstart));
-    if (now.getMonth() == 11) {
-        now = new Date(now.getFullYear() + 1, 0, 1);
-    } else {
-        //now = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-    }
-    var nextDay = new Date(now.setDate(weekend));
-    // console.log(monday + "    " + nextDay)
-    // return false;
-    // var nextDate = nextDay.getDate()
-    // var month = parseInt(nextDay.getUTCMonth())
+
+    var startDate = moment().day(+1).add(dayAhead-1, 'days').format('DD-MM-YYYY')
+
+    var endtDate = moment(startDate,'DD-MM-YYYY').add(5, 'days').format('DD-MM-YYYY');
 
 
-    // console.log(monday)
-    // console.log(nextDay)
-    var startMonth = monday.getMonth()
-    var endMonth = nextDay.getMonth() + 1
-    if (dayAhead < 0) {
-        endMonth = nextDay.getMonth() + 1
-    } else {
-        startMonth = monday.getMonth() + 1
-    }
-
-    var startDate = monday.getDate() + "-" + startMonth + '-' + monday.getFullYear()
-    var endtDate = nextDay.getDate() + "-" + endMonth + '-' + nextDay.getFullYear()
     console.log(startDate)
     console.log(endtDate)
     $.ajax({
