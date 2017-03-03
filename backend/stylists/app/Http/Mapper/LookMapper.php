@@ -210,16 +210,14 @@ class LookMapper extends Controller
 
         DB::beginTransaction();
         try {
-            if (!$look->exists) {
-                $look->save();
+            if ($uploadMapperObj) {
+                $look->image = $uploadMapperObj->moveImageInFolder($request);
             }
+            $look->save();
             $result = $this->saveProducts($look->id, $request->input('product_ids'));
             if ($result['status'] == false) {
                 DB::rollback();
                 return $result;
-            }
-            if ($uploadMapperObj) {
-                $look->image = $uploadMapperObj->moveImageInFolder($request);
             }
             $response = $this->evaluatePrice($look->id);
             if ($response['priceExists']) {
