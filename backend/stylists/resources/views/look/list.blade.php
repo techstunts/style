@@ -6,16 +6,19 @@
 <div id="contentCntr">
     <div class="section">
         <div class="container">
-            <div class="filters">
+            <div id="look-filters" class="filters look-filters">
 
                 <form method="get" action="">
                     @include('stylist.select')
+                    @include('category.select')
                     @include('common.occasion.select')
                     @include('common.status.select')
-                    @include('common.gender.select')
-                    @include('common.body_type.select')
-                    @include('common.budget.select')
-                    @include('common.age_group.select')
+                    @if(!env('IS_NICOBAR'))
+                        @include('common.gender.select')
+                        @include('common.body_type.select')
+                        @include('common.budget.select')
+                        @include('common.age_group.select')
+                    @endif
                     @include('common.search')
                     @include('common.daterange')
                     @include('common.pricerange')
