@@ -46,8 +46,18 @@ var entity_fields_ids = [
 ];
 var api_origin = '';
 var stylist_id = '';
+var is_nicobar = $('#is_nicobar').val();
 var role_admin = '';
 var is_recommended = false;
+var categoryOccasions = [];
+if (is_nicobar) {
+    entity_filters[EntityType.PRODUCT] = ['colors', 'stylists', 'categories'];
+    entity_filter_ids[EntityType.PRODUCT] = ['id', 'id'];
+    entity_fields_ids[EntityType.PRODUCT] = ['primary_color_id', 'stylist_id', 'category_id'];
+    entity_filters[EntityType.LOOK] = ['stylists', 'statuses', 'category', 'occasions'];
+    entity_filter_ids[EntityType.LOOK] = ['id', 'id', 'id', 'id'];
+    entity_fields_ids[EntityType.LOOK] = ['stylist_id', 'status_id', 'category_id', 'occasion_id'];
+}
 
 
 $(document).ready(function () {
@@ -400,6 +410,17 @@ $(document).ready(function () {
     $('#createLook').on('click', createLook);
     if ($('#show_back_next_button').length > 0)
         showPrevAndNextButton();
+
+    var look_filters = $("#look-filters");
+    if (look_filters.length > 0) {
+        $.ajax({
+            url: api_origin + '/look/filters',
+            success: function (data) {
+                categoryOccasions = data.category_occasions;
+                sortCategoryOccasion();
+            },
+        });
+    }
 });
 
 function showPrevAndNextButton(){
@@ -486,6 +507,10 @@ function showFilters() {
     var min_discount_field = $('.buttons input[name="min_discount"]');
     var max_discount_field = $('.buttons input[name="max_discount"]');
 
+    if (entity_type_id == EntityType.LOOK) {
+        categoryOccasions = all_filters[entity_type_id]['category_occasions'];
+        sortCategoryOccasion();
+    }
     if (entity_type_id == EntityType.PRODUCT) {
         min_discount_field.show();
         max_discount_field.show();
@@ -493,6 +518,24 @@ function showFilters() {
         min_discount_field.hide();
         max_discount_field.hide();
     }
+}
+
+function sortCategoryOccasion(){
+    var categoryFilter = $("#look-filters select[name='category_id']").length > 0 ? $("#look-filters select[name='category_id']") : $("#filters select[name='category_id']");
+    var occasionFilter = $("#look-filters select[name='occasion_id']").length > 0 ? $("#look-filters select[name='occasion_id']") : $("#filters select[name='occasion_id']");
+    categoryFilter.on('change', function(){
+        var option = occasionFilter.find('option');
+        if (option.length > 0) option.remove();
+        var filter_name = 'occasion';
+        var filter_id = 'id';
+        var filter_str = '<option value="">' + filter_name.charAt(0).toUpperCase() + filter_name.slice(1) + '</option>';
+        for (var i = 0; i < categoryOccasions[this.value].length; i++) {
+            var id = categoryOccasions[this.value][i][filter_id];
+            var name = categoryOccasions[this.value][i].name;
+            filter_str += '<option value="' + id + '" >' + name + '</option>';
+        }
+        occasionFilter.append(filter_str);
+    });
 }
 
 function getEntityUrl(entity_type_id) {
