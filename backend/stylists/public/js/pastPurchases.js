@@ -44,31 +44,49 @@ function showOrders(response)
     var orderDiv = $('div[data-popup="past-purchases"]').find('.orders');
     for (var index = 0; index < response.count; index++) {
         var products = response.results[index].lines;
-        var html = '<div class="col-md-12">' +
-            '<span>ORDER ' + response.results[index].number + '</span>' +
-            '<br>'+
-            '<span>' + moment(response.results[index].date_placed).format('DD MMMM YYYY') + '</span>' +
-            '<br>'+
-            '<span> STATUS : ' + response.results[index].status + '</span>' +
-            '<br>'+
-            '<span>You bought ' + products.length + ' items</span>' +
-            '<br>'+
-            '<span>Order Total ' + response.results[index].currency + ' ' + response.results[index].total_incl_tax + '</span>';
+        var html = '<div class="row">' +
+            '<div class="col-md-12 text-center">' +
+            '<p>ORDER ' + response.results[index].number + '</p>' +
+            '</div>'+
+            '</div>' +
+            '<div class="row">' +
+            '<div class="col-md-1"></div>' +
+            '<div class="col-md-10">' +
+            '<p class="pur-date">' + moment(response.results[index].date_placed).format('DD MMMM YYYY') + '</p>' +
+            '<p class="or-st"> STATUS : ' + response.results[index].status + '</p>' +
+            '<br>' +
+            '<h4 class="itm-num">You bought ' + products.length + ' items</h4>' +
+            '<p class="or-tot">Order Total ' + response.results[index].currency + ' ' + response.results[index].total_incl_tax + '</p>' +
+            '</div>' +
+            '</div>' +
+            '<hr>';
         for (var count = 0; count < products.length; count++) {
             var product = products[count].product;
-            html += '<img src="'+ product.images[0].original +'">' +
-                '<span>'+ product.title +'</span>' +
-                '<br>' +
-                '<span>'+ products[count].price_incl_tax +'</span>' +
-                '<br>';
+            html += '<div class="row">' +
+                '<div class="col-md-1"></div>' +
+                '<div class="col-md-10 bg-white">' +
+                '<div class="col-md-2">' +
+                '<img class="img-responsive" src="'+ product.images[0].original +'" alt="">' +
+                '</div>' +
+                '<div class="col-md-10">' +
+                '<div class="row">' +
+                '<div class="col-md-12">' +
+                '<p class="gft-crd">'+ product.title +'</p>' +
+                '<p class="gft-crd-pr">'+ products[count].price_incl_tax +'</p>' +
+                '</div>' +
+                '<div class="col-md-12">';
             for (var attrCount = 0; attrCount < products[count].attributes.length; attrCount++) {
                 if (products[count].attributes[attrCount].name == 'Size') {
-                    html += '<span>' + products[count].attributes[attrCount].value + '</span>' +
-                        '<br>';
+                    html += '<p class="gft-crd-size">' + products[count].attributes[attrCount].value + '</p>';
                 }
             }
-            html += '<span>'+ products[count].quantity +'</span>' +
-                '<br>';
+            html += '<p class="gft-crd-qty">'+ products[count].quantity +'</p>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '<hr>' ;
         }
 
         html += '</div>' +
