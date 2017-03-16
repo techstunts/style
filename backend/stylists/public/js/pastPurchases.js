@@ -72,15 +72,15 @@ function showOrders(response)
                 '<div class="row">' +
                 '<div class="col-md-12">' +
                 '<p class="gft-crd">'+ product.title +'</p>' +
-                '<p class="gft-crd-pr">'+ products[count].price_incl_tax +'</p>' +
+                '<p class="gft-crd-pr">'+ products[count].price_currency+ ' ' + products[count].price_incl_tax +'</p>' +
                 '</div>' +
                 '<div class="col-md-12">';
             for (var attrCount = 0; attrCount < products[count].attributes.length; attrCount++) {
                 if (products[count].attributes[attrCount].name == 'Size') {
-                    html += '<p class="gft-crd-size">' + products[count].attributes[attrCount].value + '</p>';
+                    html += '<p class="gft-crd-size">SIZE : ' + products[count].attributes[attrCount].value + '</p>';
                 }
             }
-            html += '<p class="gft-crd-qty">'+ products[count].quantity +'</p>' +
+            html += '<p class="gft-crd-qty">QTY : '+ products[count].quantity +'</p>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +
