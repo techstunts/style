@@ -25,7 +25,6 @@ $(document).ready(function () {
                 beforeSend: toggleLoader,
                 url: url + email,
                 success: function (response) {
-                    console.log(response.count);
                     if (response.count < 1) {
                         $('a[data-popup-close="past-purchases"]').trigger('click');
                         alert('No data found');
@@ -44,12 +43,11 @@ function showOrders(response)
 {
     var orderDiv = $('div[data-popup="past-purchases"]').find('.orders');
     for (var index = 0; index < response.count; index++) {
-        console.log(response.results[index].number);
         var products = response.results[index].lines;
         var html = '<div class="col-md-12">' +
             '<span>ORDER ' + response.results[index].number + '</span>' +
             '<br>'+
-            '<span>' + response.results[index].date_placed + '</span>' +
+            '<span>' + moment(response.results[index].date_placed).format('DD MMMM YYYY') + '</span>' +
             '<br>'+
             '<span> STATUS : ' + response.results[index].status + '</span>' +
             '<br>'+
