@@ -37,6 +37,29 @@ $(document).ready(function () {
             popupDataUpdated = true;
         }
     });
+    $('#websocket').on('click', function(){
+        var conn = new WebSocket('ws://localhost:8080');
+        conn.onopen = function(e) {
+            console.log("Connection established!");
+            conn.send('check');
+        };
+
+        conn.onmessage = function(e) {
+            console.log(e.data);
+            if (e.data == true)
+                console.log('true');
+            else
+                console.log('false');
+            setTimeout(function(){
+                conn.send('check');
+            }, 20000);
+        };
+
+        conn.onerror = function (e){
+            console.log('Error : ' +e);
+            conn.close();
+        };
+    });
 });
 
 function showOrders(response)

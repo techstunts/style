@@ -12,6 +12,7 @@
                         <div class="row mrgn5px">
                             <div class="col-md-6"><span> Name : {{$request->client->name}}</span></div>
                             <div class="col-md-6">Date : {{ $request->created_at }} </div>
+                            <div class="col-md-6" id="websocket">Run WebSocket</div>
                         </div>
                         <div class="row mrgn5px">
                             <div class="col-md-6 mrgn5px">Email id: {{ $request->client->email }}</div>
