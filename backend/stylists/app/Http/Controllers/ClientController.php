@@ -58,16 +58,17 @@ class ClientController extends Controller
         $view_properties['popup_entity_type_ids'] = array(
             EntityType::LOOK,
             EntityType::PRODUCT,
-            EntityType::TIP,
-            EntityType::COLLECTION,
         );
 
         $view_properties['entity_type_names']= array(
             EntityTypeName::LOOK,
             EntityTypeName::PRODUCT,
-            EntityTypeName::TIP,
-            EntityTypeName::COLLECTION,
         );
+        if (!env('IS_NICOBAR')){
+            array_push($view_properties['popup_entity_type_ids'], EntityType::TIP, EntityType::COLLECTION);
+            array_push($view_properties['entity_type_names'], EntityTypeName::TIP, EntityTypeName::COLLECTION);
+        }
+
         $view_properties['nav_tab_index'] = '0';
 
         $view_properties['search'] = $request->input('search');
@@ -112,6 +113,13 @@ class ClientController extends Controller
      */
     public function getView(Request $request)
     {
+        if (env('IS_NICOBAR')) {
+            $view_properties = array(
+                'api_origin' => env('API_ORIGIN'),
+                'client_id' => $this->resource_id,
+            );
+            return view('client.view', $view_properties);
+        }
         $authWhereClauses = $this->authWhereClauses($request);
         $client = Client::with('genders')
                 ->whereRaw($authWhereClauses)

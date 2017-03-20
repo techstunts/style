@@ -85,7 +85,7 @@
                         </div>
                     </div>
                     <div class="col-md-5">
-                        <input type="button" value="Client's past purchases"/>
+                        <input type="button" id="past-purchases" data-popup-open="past-purchases" value="Client's past purchases"/>
                         <br><br><br>
                          @foreach($request->question_ans as $question_ans)
                             @if($question_ans['ansType'] == 'text')
@@ -154,6 +154,7 @@
                 <input type="hidden" id="requestTab" value="{{$request->id}}">
                 <input type="hidden" id="requestedClientId" value="{{$request->client->id}}">
                 @include('push.popup')
+                @include('client.purchases')
             </div>
         </div>
     </div>

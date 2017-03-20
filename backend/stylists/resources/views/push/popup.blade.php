@@ -2,6 +2,7 @@
     <div class="popup-inner">
         <input type="hidden" value="{{!empty($is_recommended) ? $is_recommended : false}}" id="is_recommended">
         <input type="hidden" value="{{env('API_ORIGIN')}}" id="api_origin">
+        <input type="hidden" value="{{env('IS_NICOBAR')}}" id="is_nicobar">
         <input type="hidden" value="{{$recommendation_type_id}}" id="recommendation_type_id">
         @if(!empty($logged_in_stylist_id))
             <input type="hidden" value="{{$logged_in_stylist_id}}" id="stylist_id">
@@ -56,9 +57,11 @@
                 <a class="btn disabled btn-primary btn-xs" id="add" value="send">Add</a>
                 <input type="hidden" value="{{$add_entity}}" id="add_entity_btn">
             @else
-                @include('common.app_section.select')
-                <input type="text" name="custom_message"  id="custom_message" value="" placeholder="Custom Message">
-                <input type="text" name="product_list_heading" id="product_list_heading" value="" placeholder="Product List Heading">
+                @if(!env('IS_NICOBAR'))
+                    @include('common.app_section.select')
+                    <input type="text" name="custom_message"  id="custom_message" value="" placeholder="Custom Message">
+                    <input type="text" name="product_list_heading" id="product_list_heading" value="" placeholder="Product List Heading">
+                @endif
                 <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
             @endif
             <img class="loader" src="/images/popup-loader.gif"/>
