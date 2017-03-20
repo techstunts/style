@@ -56,7 +56,7 @@ $(document).ready(function () {
         };
 
         conn.onerror = function (e){
-            console.log('Error : ' +e);
+            console.log('Error');
             conn.close();
         };
     });
