@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Mapper;
 
+use App\Category;
 use App\Http\Controllers\Controller;
 use App\Look;
 use App\Models\Enums\Currency;
+use App\Models\Enums\Category as CategoryEnum;
 use App\Models\Enums\PriceType as PriceTypeEnum;
 use App\Models\Looks\LookPrice;
 use App\Models\Lookups\PriceType;
@@ -28,20 +30,24 @@ class LookMapper extends Controller
 
     protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group', 'status', 'look_products.product', 'prices'];
 
-    protected $dropdown_fields = ['body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'status_id'];
+    protected $dropdown_fields = ['body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'status_id', 'category_id', 'occasion_id'];
     protected $input_fields = ['name', 'description', 'image', 'video_url', 'image_url', 'external_url'];
 
     public function getDropDowns()
     {
         $lookup = new Lookup();
-        return array(
+        $dropDowns = array(
             'genders' => $lookup->type('gender')->get(),
             'body_types' => $lookup->type('body_type')->get(),
             'age_groups' => $lookup->type('age_group')->get(),
             'budgets' => $lookup->type('budget')->get(),
             'occasions' => $lookup->type('occasion')->get(),
             'statuses' => $lookup->type('status')->get(),
+            'categories' => Category::whereIn('id', [CategoryEnum::Men, CategoryEnum::Women, CategoryEnum::House])->get(),
         );
+        if (env('IS_NICOBAR'))
+            $dropDowns['occasions'] = $this->categoryWiseOccasion($dropDowns['occasions']);
+        return $dropDowns;
     }
 
     public function getViewProperties($old_values, $look = null)
@@ -136,7 +142,7 @@ class LookMapper extends Controller
         return Validator::make($request->all(), [
             'name' => 'required|max:256|min:5',
             'description' => 'required|min:25',
-            'gender_id' => 'required|in:1,2',
+            'gender_id' => 'in:1,2',
         ]);
     }
 
@@ -322,5 +328,16 @@ class LookMapper extends Controller
             }
         }
         return $lookPrice;
+    }
+
+    public function categoryWiseOccasion($occasions)
+    {
+        $occasionsArr = array();
+        foreach ($occasions as $occasion) {
+            if (!isset($occasionsArr[$occasion->category_id]))
+                $occasionsArr[$occasion->category_id] = array();
+            $occasionsArr[$occasion->category_id][] = $occasion;
+        }
+        return $occasionsArr;
     }
 }

@@ -12,6 +12,7 @@
                         <form method="POST" action="{!! url('/look/update/' . $look->id) !!}"
                               enctype="multipart/form-data" style="display: initial;">
                             {!! csrf_field() !!}
+                            <input type="hidden" id="category_occasion_sort" value="{{true}}">
                             <table class="info">
                                 @if($is_recommended)
                                     @if($is_admin)
@@ -51,7 +52,27 @@
                                         @endif
                                     </td>
                                 </tr>
+                                @if(env('IS_NICOBAR'))
+                                    <tr class="row">
+                                        <td class="title" colspan="2">
+                                            @include('category.select')
+                                            @if($category_error = $errors->first('category_id'))
+                                                <span class="errorMsg">{{$category_error}}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
 
+                                    <tr class="row">
+                                        <td class="title" colspan="2">
+                                            <select  {{!empty($is_recommended) ? "disabled" : ""}} class="form-control" name="occasion_id">
+                                                <option value="">Occasions</option>
+                                            </select>
+                                            @if($occasion_error = $errors->first('occasion_id'))
+                                                <span class="errorMsg">{{$occasion_error}}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @else
                                 <tr class="row">
                                     <td class="title" colspan="2">
                                         @include('common.body_type.select')
@@ -96,8 +117,9 @@
                                         @endif
                                     </td>
                                 </tr>
+                                @endif
 
-                                <tr class="row">
+                                <tr class="row">.
                                     <td class="title" colspan="2">
                                         <input {{$is_recommended ? "disabled" : ""}} class="form-control" placeholder="Look price" type="text" name="price"
                                                value="{{ old('price') != "" ? old('price') : $look->price }}">
@@ -178,3 +200,7 @@
     </div>
 
 @endsection
+
+<script>
+    var list = '<?php echo json_encode($occasions); ?>';
+</script>

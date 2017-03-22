@@ -171,6 +171,7 @@ function unselectProduct(e){
     });
     updateSelectedProductSnapshotView();
 }
+var occasions = {};
 $(document).ready(function(){
     if($('#selectable').length){
         $( "#selectable" ).selectable({
@@ -327,6 +328,12 @@ $(document).ready(function(){
             $(this).parent('li').addClass('active');
         }
     });
+
+    if ($('#category_occasion_sort').length > 0) {
+        occasions = jQuery.parseJSON(list);
+        var categorySelect = $('select[name="category_id"]');
+        categorySelect.on('change', updateCategoryOcasion);
+    }
 });
 
 function findTab(href){
@@ -361,4 +368,17 @@ function deleteTag(){
             }
         },
     });
+}
+
+function updateCategoryOcasion()
+{
+    var options = '<option value="">Occasions</option>';
+    var category_id = this.value;
+    var option = occasions[this.value];
+    for (var i = 0; i < option.length; i++) {
+        options += '<option value="'+ option[i].id +'"> '+ option[i].name +'</option>'
+    }
+    var occasionSelect = $('select[name="occasion_id"]');
+    occasionSelect.find('option').remove();
+    occasionSelect.append(options);
 }
