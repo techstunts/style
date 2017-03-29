@@ -79,7 +79,7 @@ class LookMapper extends Controller
         $look->description = strtoupper(substr($request->description, 0, 1)) . substr($request->description, 1);
 
         foreach ($this->dropdown_fields as $dropdown_field) {
-            $look->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : '';
+            $look->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : 1;
         }
         $look->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : Status::Submitted;
         $look->is_collage=false;
