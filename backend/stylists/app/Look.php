@@ -71,4 +71,7 @@ class Look extends Model
         return $this->hasMany('App\Recommendation', 'entity_id');
     }
 
+    public function category(){
+        return $this->belongsTo('App\Category', 'category_id');
+    }
 }

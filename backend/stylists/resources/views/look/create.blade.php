@@ -12,6 +12,7 @@
                         <form method="POST" action="{!! url('/look/create/') !!}" enctype="multipart/form-data"
                               style="display: initial;">
                             {!! csrf_field() !!}
+                            <input type="hidden" id="category_occasion_sort" value="{{true}}">
                             <table class="info">
                                 <tr class="row">
                                     <td class="title" colspan="2">
@@ -33,6 +34,27 @@
                                     </td>
                                 </tr>
 
+                                @if(env('IS_NICOBAR'))
+                                    <tr class="row">
+                                        <td class="title" colspan="2">
+                                            @include('category.select')
+                                            @if($category_error = $errors->first('category_id'))
+                                                <span class="errorMsg">{{$category_error}}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="title" colspan="2">
+                                            <select  {{!empty($is_recommended) ? "disabled" : ""}} class="form-control" name="occasion_id">
+                                                <option value="">Occasions</option>
+                                            </select>
+                                            @if($occasion_error = $errors->first('occasion_id'))
+                                                <span class="errorMsg">{{$occasion_error}}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @else
                                 <tr class="row">
                                     <td class="title" colspan="2">
                                         @include('common.body_type.select')
@@ -77,8 +99,9 @@
                                         @endif
                                     </td>
                                 </tr>
+                                @endif
 
-                                @if($is_admin)
+                            @if($is_admin)
                                     <tr class="row">
                                         <td class="title" colspan="2">
                                             @include('common.status.select')
@@ -147,3 +170,7 @@
         @include('push.popup')
     </div>
 @endsection
+
+<script>
+    var list = '<?php echo json_encode($occasions); ?>';
+</script>
