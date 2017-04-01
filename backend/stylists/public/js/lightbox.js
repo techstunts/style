@@ -290,6 +290,15 @@ $(document).ready(function(){
     });
 
     api_origin = $('#api_origin').val();
+    var entity_id = 0;
+    $('.list-image-button').each(function(){
+        if (entity_id == 0) {
+            entity_id = $('#UploadImageForm').find('input[name="entity_id"]')[0].value;
+        }
+        $(this).on('click', function(){
+            updateLookListImage(entity_id, this.value, api_origin);
+        });
+    });
 
     $('input.autosuggest').keyup(function(){
         var keyword = $(this).val();
@@ -339,6 +348,26 @@ $(document).ready(function(){
 function findTab(href){
     var url = href.split('/')[3];
     return url[0];
+}
+
+function updateLookListImage(entity_id, upload_id, api_origin){
+    $.ajax({
+        type : "POST",
+        url : api_origin + "/look/updatelistimage",
+        data : {
+            look_id : entity_id,
+            upload_id : upload_id,
+            _token: $('#UploadImageForm').find('input[name="_token"]').val(),
+        },
+        success : function(response) {
+            if (response.status == false) {
+                alert(response.message);
+                return false;
+            } else {
+                alert(response.message);
+            }
+        },
+    });
 }
 
 

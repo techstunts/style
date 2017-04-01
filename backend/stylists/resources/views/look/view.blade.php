@@ -110,7 +110,11 @@
                             </tr>
                         </table>
                         <div class="image">
-                            <img class="entity" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
+                            @if(count($look->otherImages) > 0)
+                                @foreach($look->otherImages as $image)
+                                    <img class="entity" src="{{env('API_ORIGIN') .'/' . $image->path.'/'  . $image->name}}"/>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </li>

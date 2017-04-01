@@ -25,7 +25,7 @@ use App\Recommendation;
 
 class LookMapper extends Controller
 {
-    protected $fields = ['id', 'name', 'description', 'image', 'stylist_id',
+    protected $fields = ['id', 'name', 'description', 'image', 'stylist_id', 'list_image',
         'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'created_at'];
 
     protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group', 'status', 'look_products.product', 'prices'];
@@ -149,7 +149,11 @@ class LookMapper extends Controller
     public function getLookById($id)
     {
         $entity_type_id = EntityType::LOOK;
-        $look = Look::with([('stylist') => function ($query) {
+
+        $images = function ($query) {
+            $query->where('uploaded_by_entity_type_id', EntityType::LOOK);
+        };
+        $look = Look::with(['otherImages' => $images, 'stylist' => function ($query) {
             $query->select('id', 'name', 'image');
         }])
             ->with(['recommendation' => function($query) use ($entity_type_id) {

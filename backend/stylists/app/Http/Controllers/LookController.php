@@ -226,7 +226,13 @@ class LookController extends Controller
         $looks_products = function ($query) {
             $query->with('product');
         };
-        $look = Look::with(['look_products' => $looks_products, 'stylist', 'prices', 'category'])->where('id', $this->resource_id)->first();
+        $images = function ($query) {
+            $query->where('uploaded_by_entity_type_id', EntityType::LOOK);
+        };
+
+        $look = Look::with(['look_products' => $looks_products, 'stylist', 'prices', 'category', 'otherImages' => $images])
+            ->where('id', $this->resource_id)
+            ->first();
         if ($look) {
             $view_properties = array(
                 'look' => $look,

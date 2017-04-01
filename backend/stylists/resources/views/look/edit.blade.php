@@ -181,17 +181,29 @@
                                 </tr>
 
                             </table>
-                            <div class="image">
-                                <img src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
-                                <input {{$is_recommended ? "disabled" : ""}} id="image" name="image" type="file" class="file-loading">
-                                <input name="entity_type_id" type="hidden" value="{{$entity_type_id}}">
-                                <img id="loadedImage" src="#" class="pop-image-size"/>
-                                @if($image_error = $errors->first('image'))
-                                    <span class="errorMsg">{{$image_error}}</span>
-                                @endif
-                            </div>
-
                         </form>
+                        <div class="image">
+                            <form id="UploadImageForm" action="{{env('API_ORIGIN')}}/file/upload" enctype="multipart/form-data" style="display: initial;">
+                                {!! csrf_field() !!}
+                                <input name="image" type="file" class="file-loading">
+                                <input name="entity_id" type="hidden" value="{{$look->id}}">
+                                <input name="url" type="hidden" value="{{env('API_ORIGIN')}}/file/upload">
+                                <input name="entity_type_id" type="hidden" value="{{App\Models\Enums\EntityType::LOOK}}">
+                                <select class="form-control" name="image_type" style="display: none;">
+                                    <option value="{{\App\Models\Enums\ImageType::Other_look_image}}">Other look image</option>
+                                </select>
+                                <input type="submit" style="display: block;" class="btn btn-primary btn-lg" value="Upload Image">
+                            </form>
+                            @if(count($look->otherImages) > 0)
+                                @foreach($look->otherImages as $image)
+                                    <input type="radio" class="list-image-button" value="{{$image->id}}" {{$look->list_image ==  $image->id ? 'checked' : ''}}> Make it listing image<br>
+                                    <img class="entity" src="{{env('API_ORIGIN') .'/' . $image->path.'/'  . $image->name}}"/>
+                                @endforeach
+                            @endif
+                            @if($image_error = $errors->first('image'))
+                                <span class="errorMsg">{{$image_error}}</span>
+                            @endif
+                        </div>
                     </div>
                 </li>
             </ol>
