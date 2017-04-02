@@ -114,6 +114,8 @@
                                 @foreach($look->otherImages as $image)
                                     <img class="entity" src="{{env('API_ORIGIN') .'/' . $image->path.'/'  . $image->name}}"/>
                                 @endforeach
+                            @else
+                                <img class="entity" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
                             @endif
                         </div>
                     </div>
