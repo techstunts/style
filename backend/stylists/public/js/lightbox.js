@@ -365,6 +365,7 @@ function updateLookListImage(entity_id, upload_id, api_origin){
                 return false;
             } else {
                 alert(response.message);
+                location.reload();
             }
         },
     });
