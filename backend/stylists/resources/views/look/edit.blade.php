@@ -194,8 +194,10 @@
                                 </select>
                                 <input type="submit" style="display: block;" class="btn btn-primary btn-lg" value="Upload Image">
                             </form>
-
-                            <img class="entity" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/><br>
+                            @if(count($look->otherImages) > 0)
+                                <input type="radio" class="list-image-button" value="" {{$look->list_image == null ? 'checked' : ''}}> {{$look->list_image == null ? 'Default list image' : 'Make it listing image'}}
+                            @endif
+                                <img class="entity" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/><br>
                             @if(count($look->otherImages) > 0)
                                 @foreach($look->otherImages as $image)
                                     <input type="radio" class="list-image-button" value="{{$image->id}}" {{$look->list_image ==  $image->id ? 'checked' : ''}}> Make it listing image

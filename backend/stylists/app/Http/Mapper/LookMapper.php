@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Look;
 use App\Models\Enums\Currency;
 use App\Models\Enums\Category as CategoryEnum;
+use App\Models\Enums\ImageType;
 use App\Models\Enums\PriceType as PriceTypeEnum;
+use App\Models\Enums\ProfileImageStatus;
 use App\Models\Looks\LookPrice;
 use App\Models\Lookups\PriceType;
 use App\Product;
@@ -152,6 +154,7 @@ class LookMapper extends Controller
 
         $images = function ($query) {
             $query->where('uploaded_by_entity_type_id', EntityType::LOOK);
+            $query->where(['status_id' => ProfileImageStatus::Active, 'image_type_id' => ImageType::Other_look_image]);
         };
         $look = Look::with(['otherImages' => $images, 'stylist' => function ($query) {
             $query->select('id', 'name', 'image');

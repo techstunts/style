@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Look;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
+use App\Models\Enums\ProfileImageStatus;
 use App\Models\Enums\RecommendationType;
 use App\Models\Enums\Status as LookupStatus;
 use App\Models\Enums\StylistStatus;
+use App\Models\Lookups\ImageType;
 use App\Models\Lookups\Status;
 use App\Models\Lookups\AppSections;
 use App\Http\Mapper\LookMapper;
@@ -227,7 +229,8 @@ class LookController extends Controller
             $query->with('product');
         };
         $images = function ($query) {
-            $query->where('uploaded_by_entity_type_id', EntityType::LOOK);
+            $query->where(['uploaded_by_entity_type_id' => EntityType::LOOK, 'status_id' => ProfileImageStatus::Active,
+                'image_type_id' => \App\Models\Enums\ImageType::Other_look_image]);
         };
 
         $look = Look::with(['look_products' => $looks_products, 'stylist', 'prices', 'category', 'otherImages' => $images])
