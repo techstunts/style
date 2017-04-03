@@ -6,10 +6,10 @@
 @section('content')
     <div id="contentCntr">
         <div class="container">
-            <ol class="selectable">
-                <li class="ui-state-default" id="{{$look->id}}">
-                    <div class="resource_view">
-                        <form method="POST" action="{!! url('/look/update/' . $look->id) !!}"
+            <div class="row">
+                <div class="col-md-12 no-padd" id="{{$look->id}}">
+                    <div class="resource_view col-md-12 ">
+                        <form class="col-md-6" method="POST" action="{!! url('/look/update/' . $look->id) !!}"
                               enctype="multipart/form-data" style="display: initial;">
                             {!! csrf_field() !!}
                             <input type="hidden" id="category_occasion_sort" value="{{true}}">
@@ -172,7 +172,7 @@
                                     </td>
                                 </tr>
 
-                                <tr class="row">
+                                <tr class="row text-align-center">
                                     <td class="title" colspan="2">
                                         <input type="hidden" name="is_recommended" value="{{$is_recommended ? true : false}}">
                                         <input type="submit" class="btn btn-primary btn-lg" value="Save">
@@ -182,26 +182,53 @@
 
                             </table>
                         </form>
-                        <div class="image">
+                        <div class="image col-md-6 border-around">
                             <form id="UploadImageForm" action="{{env('API_ORIGIN')}}/file/upload" enctype="multipart/form-data" style="display: initial;">
                                 {!! csrf_field() !!}
+                                <div class="row">
+                                <div class="col-md-8">
                                 <input name="image" type="file" class="file-loading">
+                                </div>
+                                </div>
                                 <input name="entity_id" type="hidden" value="{{$look->id}}">
                                 <input name="url" type="hidden" value="{{env('API_ORIGIN')}}/file/upload">
                                 <input name="entity_type_id" type="hidden" value="{{App\Models\Enums\EntityType::LOOK}}">
                                 <select class="form-control" name="image_type" style="display: none;">
                                     <option value="{{\App\Models\Enums\ImageType::Other_look_image}}">Other look image</option>
                                 </select>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-8">
                                 <input type="submit" style="display: block;" class="btn btn-primary btn-lg" value="Upload Image">
+                                    </div>
+                                </div>
                             </form>
+                            <br>
+                            <div class="col-md-8 no-padd">
+                            <img class="entity img-responsive" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
+                            </div>
+
                             @if(count($look->otherImages) > 0)
-                                <input type="radio" class="list-image-button" value="" {{$look->list_image == null ? 'checked' : ''}}> {{$look->list_image == null ? 'Default list image' : 'Make it listing image'}}
+                                <div class="col-md-4 no-padd">
+                                    <input type="radio" class="list-image-button" value="" {{$look->list_image == null ? 'checked' : ''}}> {{$look->list_image == null ? 'Default list image' : 'Make it listing image'}}
+                                </div>
                             @endif
-                                <img class="entity" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/><br>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <hr>
+                                </div>
+                            </div>
+
                             @if(count($look->otherImages) > 0)
                                 @foreach($look->otherImages as $image)
+                                    <div class="col-md-8 no-padd">
+                                        <img class="entity img-responsive" src="{{env('API_ORIGIN') .'/' . $image->path.'/'  . $image->name}}"/>
+                                    </div>
+                                    <div class="col-md-4 no-padd">
                                     <input type="radio" class="list-image-button" value="{{$image->id}}" {{$look->list_image ==  $image->id ? 'checked' : ''}}> Make it listing image
-                                    <img class="entity" src="{{env('API_ORIGIN') .'/' . $image->path.'/'  . $image->name}}"/><br>
+                                    </div>
+                                    <br>
                                 @endforeach
                             @endif
                             @if($image_error = $errors->first('image'))
@@ -209,8 +236,8 @@
                             @endif
                         </div>
                     </div>
-                </li>
-            </ol>
+                </div>
+            </div>
         </div>
         @include('push.popup')
     </div>
