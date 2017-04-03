@@ -27,7 +27,7 @@ use App\Recommendation;
 
 class LookMapper extends Controller
 {
-    protected $fields = ['id', 'name', 'description', 'image', 'stylist_id', 'list_image',
+    protected $fields = ['id', 'name', 'description', 'image', 'stylist_id', 'list_image', 'category_id',
         'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'created_at'];
 
     protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group', 'status', 'look_products.product', 'prices'];
@@ -48,7 +48,7 @@ class LookMapper extends Controller
             'categories' => Category::whereIn('id', [CategoryEnum::Men, CategoryEnum::Women, CategoryEnum::House])->get(),
         );
         if (env('IS_NICOBAR'))
-            $dropDowns['occasions'] = $this->categoryWiseOccasion($dropDowns['occasions']);
+            $dropDowns['occasions_list'] = $this->categoryWiseOccasion($dropDowns['occasions']);
         return $dropDowns;
     }
 
