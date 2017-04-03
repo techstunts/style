@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Look;
 use App\Models\Enums\Currency;
 use App\Models\Enums\Category as CategoryEnum;
+use App\Models\Enums\ImageType;
 use App\Models\Enums\PriceType as PriceTypeEnum;
+use App\Models\Enums\ProfileImageStatus;
 use App\Models\Looks\LookPrice;
 use App\Models\Lookups\PriceType;
 use App\Product;
@@ -25,7 +27,7 @@ use App\Recommendation;
 
 class LookMapper extends Controller
 {
-    protected $fields = ['id', 'name', 'description', 'image', 'stylist_id',
+    protected $fields = ['id', 'name', 'description', 'image', 'stylist_id', 'list_image',
         'status_id', 'body_type_id', 'occasion_id', 'gender_id', 'budget_id', 'age_group_id', 'created_at'];
 
     protected $with_array = ['body_type', 'occasion', 'gender', 'budget', 'age_group', 'status', 'look_products.product', 'prices'];
@@ -149,7 +151,12 @@ class LookMapper extends Controller
     public function getLookById($id)
     {
         $entity_type_id = EntityType::LOOK;
-        $look = Look::with([('stylist') => function ($query) {
+
+        $images = function ($query) {
+            $query->where('uploaded_by_entity_type_id', EntityType::LOOK);
+            $query->where(['status_id' => ProfileImageStatus::Active, 'image_type_id' => ImageType::Other_look_image]);
+        };
+        $look = Look::with(['otherImages' => $images, 'stylist' => function ($query) {
             $query->select('id', 'name', 'image');
         }])
             ->with(['recommendation' => function($query) use ($entity_type_id) {
