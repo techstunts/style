@@ -58,12 +58,16 @@ class LookController extends Controller
     public function getList(Request $request)
     {
         $this->base_table = 'looks';
+        $this->filter_ids = ['stylist_id', 'status_id', 'category_id', 'occasion_id'];
+        $this->filters = ['stylists', 'statuses', 'categories', 'occasions'];
+
         $this->initWhereConditions($request);
         $this->initFilters();
 
         $view_properties = array(
             'stylists' => $this->stylists,
             'statuses' => $this->statuses,
+            'categories' => $this->categories,
             'genders' => $this->genders,
             'occasions' => $this->occasions,
             'body_types' => $this->body_types,
@@ -222,7 +226,7 @@ class LookController extends Controller
         $looks_products = function ($query) {
             $query->with('product');
         };
-        $look = Look::with(['look_products' => $looks_products, 'stylist', 'prices'])->where('id', $this->resource_id)->first();
+        $look = Look::with(['look_products' => $looks_products, 'stylist', 'prices', 'category'])->where('id', $this->resource_id)->first();
         if ($look) {
             $view_properties = array(
                 'look' => $look,

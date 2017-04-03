@@ -8,6 +8,9 @@ use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\RecommendationType;
 use App\Models\Enums\StylistStatus;
 use App\Models\Lookups\AppSections;
+use App\Models\Lookups\ChatOnlineStatus;
+
+use App\Models\Stylist\ChatOnline;
 use App\Stylist;
 use App\Http\Mapper\BookingMapper;
 use Illuminate\Http\Request;
@@ -55,16 +58,17 @@ class ClientController extends Controller
         $view_properties['popup_entity_type_ids'] = array(
             EntityType::LOOK,
             EntityType::PRODUCT,
-            EntityType::TIP,
-            EntityType::COLLECTION,
         );
 
         $view_properties['entity_type_names']= array(
             EntityTypeName::LOOK,
             EntityTypeName::PRODUCT,
-            EntityTypeName::TIP,
-            EntityTypeName::COLLECTION,
         );
+        if (!env('IS_NICOBAR')){
+            array_push($view_properties['popup_entity_type_ids'], EntityType::TIP, EntityType::COLLECTION);
+            array_push($view_properties['entity_type_names'], EntityTypeName::TIP, EntityTypeName::COLLECTION);
+        }
+
         $view_properties['nav_tab_index'] = '0';
 
         $view_properties['search'] = $request->input('search');
@@ -109,6 +113,13 @@ class ClientController extends Controller
      */
     public function getView(Request $request)
     {
+        if (env('IS_NICOBAR')) {
+            $view_properties = array(
+                'api_origin' => env('API_ORIGIN'),
+                'client_id' => $this->resource_id,
+            );
+            return view('client.view', $view_properties);
+        }
         $authWhereClauses = $this->authWhereClauses($request);
         $client = Client::with('genders')
                 ->whereRaw($authWhereClauses)
@@ -163,10 +174,16 @@ class ClientController extends Controller
             $stylist_id_to_chat = $request->input('stylist_id') ? $request->input('stylist_id') : $stylist_id_to_chat;
         }
 
+        $online_statuses = ChatOnlineStatus::get();
+        $stylist_online_status = ChatOnline::where('stylist_id', $stylist_id_to_chat)->orderBy('created_at', 'desc')->limit(1)->first();
+
         $view_properties['stylist_id_to_chat'] = $stylist_id_to_chat;
         $view_properties['stylists'] = $stylists;
         $view_properties['is_admin'] = $is_admin;
         $view_properties['is_authorised_for_chat_as_admin'] = $is_authorised_for_chat_as_admin;
+        $view_properties['online_statuses'] = $online_statuses;
+        //dd($stylist_online_status);
+        $view_properties['stylist_online_status'] = $stylist_online_status ? $stylist_online_status->chat_online_status_id : "";
 
         return view('client/chat', $view_properties);
     }

@@ -22,13 +22,26 @@
                     @if($is_admin || $is_authorised_for_chat_as_admin)
                         <form action="">
                             <select name="stylist_id" onchange="this.form.submit()">
-                                <option>Switch stylist</option>
+                                <option value="" disabled>Switch stylist</option>
                                 @foreach($stylists as $stylist)
-                                    <option value="{{$stylist->id}}">{{$stylist->name}}</option>
+                                    <option value="{{$stylist->id}}" {{ $stylist->id == $stylist_id_to_chat ? "selected=selected" : ""}}>{{$stylist->name}}</option>
                                 @endforeach
                             </select>
                         </form>
                     @endif
+                    <form action="">
+                        <select name="online_id"
+                                ng-model="status"
+                                ng-change="statusUpdate()"
+                                ng-disabled="statusLoading"
+                                ng-class="statusClass"
+                                ng-click="statusSave()">
+                            <option value="" disabled>Chat availability status</option>
+                            @foreach($online_statuses as $status)
+                                <option value="{{$status->id}}" {{ $status->id == $stylist_online_status ? "ng-selected=true" : ""}}>{{$status->name}}</option>
+                            @endforeach
+                        </select>
+                    </form>
                 </div>
 
                 <div class="tabs">
@@ -136,7 +149,7 @@
             -->
 
             <div id="chat" ng-controller="Chat" ng-class="{'loading': loading}">
-                    <div class="contact" ng-class="{'online': client.client.online}">
+                    <div class="contact" ng-class="{'online': client.online}">
                     <img icon ng-src="@{{client.client.image}}">
                     <a ng-bind="client.client.name"></a>
                     <span class="on">online</span>
@@ -168,7 +181,7 @@
                         <a class="button icon look" ng-click="share('look')"></a>
                         <a class="button icon product" ng-click="share('product')"></a>
                         <div class="button icon file">
-                            <input type="file" accept="image/*" fileread="upload(data)" client="client">
+                            <input type="file" accept="image/*" fileread="upload(data)" client="client" stylist="stylist">
                         </div>
                     </div>
                 </div>

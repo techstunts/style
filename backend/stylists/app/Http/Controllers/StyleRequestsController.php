@@ -56,16 +56,16 @@ class StyleRequestsController extends Controller
         $entity_nav_tabs = array(
             EntityType::LOOK,
             EntityType::PRODUCT,
-            EntityType::TIP,
-            EntityType::COLLECTION,
         );
 
         $view_properties['entity_type_names']= array(
             EntityTypeName::LOOK,
             EntityTypeName::PRODUCT,
-            EntityTypeName::TIP,
-            EntityTypeName::COLLECTION,
         );
+        if (!env('IS_NICOBAR')){
+            array_push($entity_nav_tabs, EntityType::TIP, EntityType::COLLECTION);
+            array_push($view_properties['entity_type_names'], EntityTypeName::TIP, EntityTypeName::COLLECTION);
+        }
         $view_properties['nav_tab_index'] = '0';
 
         foreach($this->filter_ids as $filter){

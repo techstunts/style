@@ -792,8 +792,13 @@ table.data-table {
 
 .nav-btn {
     margin-top: 20px;
-    padding-left: 40px;
-    padding-right: 40px;
+    padding-left: 92px;
+    /*padding-right: 40px;*/
+}
+.range-row {
+    /*margin-top: 20px;*/
+    padding-left: 92px;
+    /*padding-right: 40px;*/
 }
 
 .nav-btn-text {
@@ -802,20 +807,23 @@ table.data-table {
 }
 
 .selected-btn {
-    padding: 15px;
+    padding: 5px;
     border: 1px solid #282b30;
     background: #FFFFFF;
     text-align: center;
     color: #000000;
-    letter-spacing: 2px;
+    font-size: 12px;
+    /*letter-spacing: 2px;*/
 }
 .disabled-btn{
-    padding: 15px;
+    padding: 5px;
     border: 1px solid #dedede;
     background: #dedede;
     text-align: center;
     color: #fff;
-    letter-spacing: 2px;
+    font-size: 12px;
+
+    /*letter-spacing: 2px;*/
 }
 .non-editable{
     background-color: rgba(226, 226, 226, 0.5);

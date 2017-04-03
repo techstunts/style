@@ -12,6 +12,7 @@ use App\Models\Enums\Gender;
 use App\Models\Enums\ProductStatus;
 use App\Models\Enums\ProductError;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ScraperMapper
 {
@@ -230,7 +231,14 @@ class ScraperMapper
             $line->merchant = 'Nicobar';
             $product_array[$count++] = $line;
             if ($count >= $this->process_data_count) {
-                $this->importMerchantProducts($product_array, $url);
+                try {
+                    $result = \GuzzleHttp\json_decode($this->importMerchantProducts($product_array, $url));
+                    if (!$result->status) {
+                        echo 'Some error occured ' . $result->message;
+                    }
+                } catch (\Exception $e) {
+                    Log::info($e->getMessage());
+                }
                 $count = $this->start;
                 unset($product_array);
             }
