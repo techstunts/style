@@ -224,7 +224,7 @@
                                         <img class="entity img-responsive" src="{{env('API_ORIGIN') .'/' . $image->path.'/'  . $image->name}}"/>
                                     </div>
                                     <div class="col-md-4 no-padd">
-                                    <input type="radio" class="list-image-button" value="{{$image->id}}" {{$look->list_image ==  $image->id ? 'checked' : ''}}> Make it listing image
+                                    <input type="radio" class="list-image-button" value="{{$image->id}}" {{$look->list_image ==  $image->id ? 'checked' : ''}}> {{$look->list_image ==  $image->id ? 'Default list image' : 'Make it listing image'}}
                                     </div>
                                     <br>
                                 @endforeach

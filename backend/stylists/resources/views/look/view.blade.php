@@ -119,7 +119,7 @@
                         <table class="info">
                             <div class="row">
                                 <div class="col-md-12 text-center">
-                                    <h4>Looks</h4>
+                                    <h4>Images</h4>
                                 </div>
                             </div>
                             <div class="row">
