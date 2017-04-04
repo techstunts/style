@@ -91,7 +91,7 @@
                             @if($question_ans['ansType'] == 'text')
                                 <div class="row mrgn5px">
                                 <div class="col-md-12">
-                                        <b>{{$question_ans['question']}}: </b>
+                                        <b class="txt-qstn">{{$question_ans['question']}}: </b>
                                     <br>
                                     @foreach($question_ans['ans'] as $ans)
                                         @if($question_ans['ansType'] == 'text')

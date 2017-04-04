@@ -361,11 +361,6 @@ div.resource_view div.image {
     float: left;
 }
 
-div.resource_view div.image img {
-    max-height: 700px;
-    max-width: 550px;
-}
-
 div.resource_view table.info {
     float: left;
     width: 500px;
@@ -424,6 +419,10 @@ div.resource_view tr.row td.content img.entity {
 div.resource_view tr.row a.product_link {
     color: blue;
     font-size: 13px;
+}
+
+.text-align-center{
+    text-align: center !important;
 }
 
 /*Css for CLIENT LIST*/
@@ -825,6 +824,22 @@ table.data-table {
 
     /*letter-spacing: 2px;*/
 }
+
+.resource_view.col-md-12.no-padd{
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.no-padd{
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.border-around{
+    border:1px solid #282b30;
+    padding:20px 10px;
+}
+
 .non-editable{
     background-color: rgba(226, 226, 226, 0.5);
 }
@@ -898,4 +913,10 @@ option.dropdown-child {
 .btn_recommendation {
     background-color: #000 !important;
     color: #FFFFFF !important;
+}
+
+.txt-qstn{
+    font-weight: 600;
+    font-family: serif;
+    font-size: 0.9em;
 }
