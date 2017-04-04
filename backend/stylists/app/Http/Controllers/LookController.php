@@ -311,13 +311,14 @@ class LookController extends Controller
         $look = Look::find($this->resource_id);
 
         $uploadMapperObj = new UploadMapper();
+        if ($request->file('image')) {
+            $validator = $uploadMapperObj->inputValidator($request);
+            if ($validator->fails()) {
 
-        $validator = $uploadMapperObj->inputValidator($request);
-        if ($validator->fails()) {
-
-            return Redirect::back()
-                ->withErrors($validator)
-                ->withInput($request->all());
+                return Redirect::back()
+                    ->withErrors($validator)
+                    ->withInput($request->all());
+            }
         }
         if ($request->file('image')) {
             $result = $lookMapperObj->saveLookDetails($look, $request, $uploadMapperObj);
