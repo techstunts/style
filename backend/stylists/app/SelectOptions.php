@@ -70,7 +70,7 @@ class SelectOptions{
     }
 
     public function occasions(){
-        return $this->get_lookup_data_with_count('occasion');
+        return $this->get_lookup_data_with_count('occasion', '', 'label');
     }
 
     public function body_types(){
@@ -105,12 +105,12 @@ class SelectOptions{
         return $this->get_lookup_data_with_count('style');
     }
     //To be cached
-    protected function get_lookup_data_with_count($lookup_type, $count_table_fk=""){
+    protected function get_lookup_data_with_count($lookup_type, $count_table_fk="", $label = 'name'){
         $whereClauses = $this->whereClauses;
 
         $lookup_table = 'lu_' . $lookup_type;
         $lookup_table_pk_col = $lookup_table. '.id';
-        $lookup_table_name_col = $lookup_table. '.name';
+        $lookup_table_name_col = $lookup_table. '.'. $label;
         $count_table_id_col = $this->table . '.id';
         $count_table_fk_col = $this->table . '.' . ($count_table_fk!="" ? $count_table_fk : $lookup_type . '_id');
         $count_table_fk = $lookup_type . '_id';
@@ -128,6 +128,7 @@ class SelectOptions{
             ->whereRaw($this->whereRawClauses)
             ->select($lookup_table_pk_col, $lookup_table_name_col, DB::raw('COUNT(' . $count_table_id_col . ') as product_count'))
             ->groupBy($lookup_table_pk_col, $lookup_table_name_col)
+            ->orderBy($lookup_table_name_col, 'ASC')
             ->get();
         return $data;
     }

@@ -46,9 +46,7 @@
 
                                     <tr class="row">
                                         <td class="title" colspan="2">
-                                            <select  {{!empty($is_recommended) ? "disabled" : ""}} class="form-control" name="occasion_id">
-                                                <option value="">Occasions</option>
-                                            </select>
+                                        @include('common.occasion.select')
                                             @if($occasion_error = $errors->first('occasion_id'))
                                                 <span class="errorMsg">{{$occasion_error}}</span>
                                             @endif
@@ -172,5 +170,5 @@
 @endsection
 
 <script>
-    var list = '<?php echo json_encode($occasions); ?>';
+    var list = '<?php echo json_encode($occasions_list); ?>';
 </script>

@@ -27,4 +27,7 @@ class Booking extends Model
     public function bookingRequest(){
         return $this->hasOne('App\RequestsBooking', 'booking_id');
     }
+    public function country(){
+        return $this->belongsTo('App\Models\Lookups\Country', 'country_id');
+    }
 }

@@ -74,10 +74,10 @@
                                 <span><a href="{{$product->omg_product_link}}">Omg</a></span>
                                 <span>{{$product->category ? $product->category->name : ''}}</span>
                                 @foreach($product->product_prices as $product_price)
-                                    <span>{{$product_price->currency->name . ' ' . $product_price->value}}</span>
+                                    <span>{{$product_price->currency ? $product_price->currency->name : '' . ' ' . $product_price->value}}</span>
                                 @endforeach
                                 <span>{{$genders_list[$product->gender_id]->name}}</span>
-                                <span style="background-color:{{$product->primary_color->name}}">{{$product->primary_color->name}}
+                                <span style="background-color:{{$product->primary_color ? $product->primary_color->name : 'grey'}}">{{$product->primary_color ? $product->primary_color->name : ''}}
                                     {{$product->secondary_color && $product->secondary_color->id != 0 ? "({$product->secondary_color->name})" : ""}}</span>
                                 <span>sku : {{$product->sku_id}}</span>
                             </div>

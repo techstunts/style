@@ -5,4 +5,5 @@ class ImageType{
     const Long = "5";
     const Profile = "6";
     const Banner = "7";
+    const Other_look_image = "12";
 }

@@ -5,9 +5,9 @@
 @section('content')
     <div id="contentCntr">
         <div class="container">
-            <ol class="selectable">
-                <li class="ui-state-default" id="{{$look->id}}">
-                    <div class="resource_view">
+            <div class="row">
+                <div class="col-md-12" id="{{$look->id}}">
+                    <div class="col-md-6">
                         <table class="info">
                             <tr class="row">
                                 <td class="title" colspan="2">{{$look->name}}
@@ -97,24 +97,51 @@
                                     </td>
                                 @endif
                             </tr>
-                            <tr class="row">
-                                <td class="head">Products</td>
-                                <td class="content">
-                                    @foreach($look->look_products as $look_product)
-                                        <a href="{{url('product/view/' . $look_product->product->id)}}" title="{{$look_product->product->name}}"
-                                           target="product_win">
-                                            <img class="entity" src="{{$look_product->product->image_name}}"/>
-                                        </a>
-                                    @endforeach
-                                </td>
-                            </tr>
                         </table>
-                        <div class="image">
-                            <img class="entity" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
+                        <br>
+                        <div class="row">
+                            <div class="row">
+                               <div class="col-md-12 text-center">
+                                   <h4>Products</h4>
+                               </div>
+                            </div>
+                            @foreach($look->look_products as $look_product)
+                                <div class="col-md-3 mBot1 pLF5">
+                                    <a href="{{url('product/view/' . $look_product->product->id)}}" title="{{$look_product->product->name}}"
+                                       target="product_win">
+                                        <img class="entity img-responsive" src="{{$look_product->product->image_name}}"/>
+                                    </a>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                </li>
-            </ol>
+                    <div class="col-md-6">
+                        <table class="info">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <h4>Images</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="image">
+                                        <div class="col-md-6">
+                                            <img class="entity img-responsive" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
+                                        </div>
+                                        @if(count($look->otherImages) > 0)
+                                            @foreach($look->otherImages as $image)
+                                                <div class="col-md-6">
+                                                    <img class="entity img-responsive" src="{{env('API_ORIGIN') .'/' . $image->path.'/'  . $image->name}}"/>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
