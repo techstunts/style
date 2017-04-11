@@ -49,6 +49,7 @@
                             <th class="font-size-table-header">Slot</th>
                             <th class="font-size-table-header">Service</th>
                             <th class="font-size-table-header">Booked at</th>
+                            <th class="font-size-table-header">Country</th>
                             <th class="font-size-table-header">Client name</th>
                             @if(!env('IS_NICOBAR'))
                             <th class="font-size-table-header">Profile Image</th>
@@ -77,6 +78,7 @@
                                 <td class="table-font-size">{{$booking->slot ? $booking->slot->name : ''}}</td>
                                 <td class="table-font-size"> {{$booking->service}} </td>
                                 <td class="table-font-size"> {{$booking->created_at}} </td>
+                                <td class="table-font-size">{{$booking->country ? $booking->country->name : ''}}</td>
                                 <td class="table-font-size"><a href="{{url("client/view/".$booking->client_id . "?booking_id=" . $booking->id)}}">
                                     {{$booking->client ? $booking->client->name : ''}}</a> </td>
                                 @if(!env('IS_NICOBAR'))
