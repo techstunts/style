@@ -9,7 +9,7 @@ use App\Models\Enums\ProfileImageStatus;
 use App\Models\Enums\RecommendationType;
 use App\Models\Enums\Status as LookupStatus;
 use App\Models\Enums\StylistStatus;
-use App\Models\Lookups\ImageType;
+use App\Models\Enums\ImageType;
 use App\Models\Lookups\Status;
 use App\Models\Lookups\AppSections;
 use App\Http\Mapper\LookMapper;
@@ -115,7 +115,7 @@ class LookController extends Controller
         $mapperObj = new Mapper();
         $look_prices = $mapperObj->getPriceClosure();
         $looks =
-            Look::with(['gender', 'status', 'body_type', 'budget', 'occasion', 'age_group', 'prices' => $look_prices])
+            Look::with(['gender', 'status', 'body_type', 'budget', 'occasion', 'age_group', 'tags.tag', 'prices' => $look_prices])
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereRaw($remove_deleted_looks)
@@ -136,6 +136,7 @@ class LookController extends Controller
         $view_properties['entity_type_to_send'] = EntityType::LOOK;
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
         $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
+        $view_properties['entity'] = 'look';
         return view('look.list', $view_properties);
     }
 
@@ -229,14 +230,16 @@ class LookController extends Controller
             $query->with('product');
         };
         $images = function ($query) {
-            $query->where(['uploaded_by_entity_type_id' => EntityType::LOOK, 'status_id' => ProfileImageStatus::Active,
-                'image_type_id' => \App\Models\Enums\ImageType::Other_look_image]);
+            $query->where(['uploaded_by_entity_type_id' => EntityType::LOOK, 'status_id' => ProfileImageStatus::Active]);
+            $query->whereIn('image_type_id', [ImageType::PDP_Image, ImageType::PLP_Image]);
         };
 
         $look = Look::with(['look_products' => $looks_products, 'stylist', 'prices', 'category', 'otherImages' => $images])
             ->where('id', $this->resource_id)
             ->first();
         if ($look) {
+            $lookMapperObj = new LookMapper();
+            $look = $lookMapperObj->setLookImages($look);
             $view_properties = array(
                 'look' => $look,
                 'status' => Status::find($look->status_id),
@@ -261,6 +264,7 @@ class LookController extends Controller
             if (!empty($request->old('product_ids'))) {
                 $look->look_products = Mapper::productsByIds($request->old('product_ids'));
             }
+            $look = $lookMapperObj->setLookImages($look);
             $look->price = count($look->prices) ? $lookMapperObj->getPrice($look->prices) : 0;
             $view_properties = $lookMapperObj->getDropDowns();
 

@@ -172,6 +172,7 @@ function unselectProduct(e){
     updateSelectedProductSnapshotView();
 }
 var occasions = {};
+
 $(document).ready(function(){
     if($('#selectable').length){
         $( "#selectable" ).selectable({
@@ -214,18 +215,21 @@ $(document).ready(function(){
             }
         },
     });
+    var entity = $("input[name='entityName']").val();
+    var entity_type_id = $("input[name='entityTypeId']").val();
     $(".input-tag").each(function(){
         $(this).autocomplete({
             source: allTags,
             select: function (e, ui) {
                 var tag_name = ui.item.value;
-                var product_id = $(this).siblings("input[name='product_id']").val();
+                var entity_id = $(this).siblings("input[name= '" + entity + "_id']").val();
                 var this_var = $(this);
                 $.ajax({
                     type : "POST",
                     url : "/product/addTag",
                     data : {
-                        product_id : product_id,
+                        entity_id : entity_id,
+                        entity_type_id : entity_type_id,
                         tag : tag_name,
                         _token: $(this).siblings('input[name="_token"]').val(),
                     },
@@ -235,7 +239,7 @@ $(document).ready(function(){
                         } else {
                             var modal_body = this_var.parents('.modal-content').children('.modal-body');
                             var cross_mark = '<span class="cross_mark"><a href="#"><i class="material-icons" style="font-size: 8px;">close</i></a></span>';
-                            if (modal_body.children('span').length == 1 && modal_body.children('span').text() == 'No tags for this product') {
+                            if (modal_body.children('span').length == 1 && modal_body.children('span').text() == 'No tags for this ' + entity) {
                                 modal_body.children('span').remove();
                             }
                             modal_body.append('<span>' + tag_name + cross_mark + '</span>');
@@ -373,15 +377,18 @@ function updateLookListImage(entity_id, upload_id, api_origin){
 
 
 function deleteTag(){
+    var entity = $("input[name='entityName']").val();
+    var entity_type_id = $("input[name='entityTypeId']").val();
     var modal_body = $(this).parents('.modal-body');
     var par_span = $(this).parents('span');
     var tag_name = par_span.clone().children('span').remove().end().text();
-    var product_id = modal_body.data('product_id');
+    var entity_id = modal_body.data('product_id');
     $.ajax({
         type : "POST",
         url : "/product/removeTag",
         data : {
-            product_id : product_id,
+            entity_id : entity_id,
+            entity_type_id : entity_type_id,
             tag : tag_name,
             _token: $(this).parents('.modal-dialog').find("input[name='_token']").val(),
         },
@@ -393,7 +400,7 @@ function deleteTag(){
                 alert(response.message);
                 par_span.remove();
                 if (modal_body.children('span').length == 0) {
-                    modal_body.append('<span>No tags for this product</span>');
+                    modal_body.append('<span>No tags for this '+entity+'</span>');
                 }
             }
         },

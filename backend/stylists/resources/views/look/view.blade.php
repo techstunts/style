@@ -119,22 +119,33 @@
                         <table class="info">
                             <div class="row">
                                 <div class="col-md-12 text-center">
-                                    <h4>Images</h4>
+                                    <h4>PDP Image</h4>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="image">
                                         <div class="col-md-6">
-                                            <img class="entity img-responsive" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
+                                            <img class="entity img-responsive" src="{{$look->PDP_Image}}"/>
                                         </div>
-                                        @if(count($look->otherImages) > 0)
-                                            @foreach($look->otherImages as $image)
-                                                <div class="col-md-6">
-                                                    <img class="entity img-responsive" src="{{env('API_ORIGIN') .'/' . $image->path.'/'  . $image->name}}"/>
-                                                </div>
-                                            @endforeach
-                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="info">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <h4>PLP Image</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="image">
+                                        <div class="col-md-6">
+                                            <img class="entity img-responsive" src="{{$look->PLP_Image}}"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

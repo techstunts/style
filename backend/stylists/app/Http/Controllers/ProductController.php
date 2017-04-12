@@ -7,6 +7,7 @@ use App\Category;
 use App\Http\Mapper\Mapper;
 use App\Models\Enums\Currency;
 use App\Models\Enums\PriceType;
+use App\Models\Looks\LookTag;
 use App\Models\Lookups\Gender;
 use App\Models\Lookups\Color;
 use App\Models\Lookups\Tag;
@@ -125,7 +126,7 @@ class ProductController extends Controller
         $product_prices = $mapperObj->getPriceClosure($min_price, $max_price, $min_discount, $max_discount);
         $in_stock_closure = $this->getInStockClosure($in_stock);
         $products =
-            Product::with(['category', 'product_prices' => $product_prices, 'in_stock', 'primary_color', 'product_tags.tag'])
+            Product::with(['category', 'product_prices' => $product_prices, 'in_stock', 'primary_color', 'tags.tag'])
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereHas('product_prices', $product_prices);
@@ -150,6 +151,7 @@ class ProductController extends Controller
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
         $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
         $view_properties['autosuggest_type'] = 'category';
+        $view_properties['entity'] = 'product';
         return view('product.list', $view_properties);
     }
 
@@ -446,18 +448,27 @@ class ProductController extends Controller
         if (!$tagObj) {
             return array('status' => false, 'message' => 'Undefined tag');
         }
-        $product_id = $request->input('product_id');
-        $productTagExists = ProductTag::where(['product_id' => $product_id, 'tag_id' => $tagObj->id])->exists();
+        $entity_id = $request->input('entity_id');
+        $entity_type_id = $request->input('entity_type_id');
+        $tagMessage = 'Already tagged';
+        if ($entity_type_id == EntityType::PRODUCT)
+            $entityTagExists = ProductTag::where(['product_id' => $entity_id, 'tag_id' => $tagObj->id])->exists();
+        elseif ($entity_type_id == EntityType::LOOK)
+            $entityTagExists = LookTag::where(['look_id' => $entity_id, 'tag_id' => $tagObj->id])->exists();
+        else {
+            $entityTagExists = true;
+            $tagMessage = 'Undefined entity type';
+        }
 
-        if ($productTagExists) {
-            return array('status' => false, 'message' => 'Already tagged');
+        if ($entityTagExists) {
+            return array('status' => false, 'message' => $tagMessage);
         }
 
         try {
-            $newProductTag = new ProductTag();
-            $newProductTag->product_id = $product_id;
-            $newProductTag->tag_id = $tagObj->id;
-            $newProductTag->save();
+            if ($entity_type_id == EntityType::PRODUCT)
+                ProductTag::insert(['product_id' => $entity_id, 'tag_id' => $tagObj->id]);
+            elseif ($entity_type_id == EntityType::LOOK)
+                LookTag::insert(['look_id' => $entity_id, 'tag_id' => $tagObj->id]);
             $status = true;
             $message = 'Tagged successfully';
         } catch (\Exception $e) {
@@ -482,15 +493,27 @@ class ProductController extends Controller
             return array('status' => false, 'message' => 'Undefined tag');
         }
 
-        $product_id = $request->input('product_id');
-        $productTagExists = ProductTag::where(['product_id' => $product_id, 'tag_id' => $tagObj->id])->first();
+        $entity_id = $request->input('entity_id');
+        $entity_type_id = $request->input('entity_type_id');
+        $tagMessage = 'Tag does not exist for this product';
+        if ($entity_type_id == EntityType::PRODUCT)
+            $entityTagExists = ProductTag::where(['product_id' => $entity_id, 'tag_id' => $tagObj->id])->first();
+        elseif ($entity_type_id == EntityType::LOOK)
+            $entityTagExists = LookTag::where(['look_id' => $entity_id, 'tag_id' => $tagObj->id])->first();
+        else {
+            $entityTagExists = null;
+            $tagMessage = 'Undefined entity type';
+        }
 
-        if (!$productTagExists) {
-            return array('status' => false, 'message' => 'Tag does not exist for this product');
+        if (!$entityTagExists) {
+            return array('status' => false, 'message' => $tagMessage);
         }
 
         try {
-            ProductTag::where(['product_id' => $product_id, 'tag_id' => $productTagExists->tag_id])->delete();
+            if ($entity_type_id == EntityType::PRODUCT)
+                ProductTag::where(['product_id' => $entity_id, 'tag_id' => $entityTagExists->tag_id])->delete();
+            elseif ($entity_type_id == EntityType::LOOK)
+                LookTag::where(['look_id' => $entity_id, 'tag_id' => $entityTagExists->tag_id])->delete();
             $status = true;
             $message = 'Tag removed successfully';
         } catch (\Exception $e) {
@@ -503,7 +526,8 @@ class ProductController extends Controller
     public function validateInput($request)
     {
         $validator = Validator::make($request->all(), [
-            'product_id' => 'required|numeric',
+            'entity_id' => 'required|numeric',
+            'entity_type_id' => 'required|numeric',
             'tag' => 'required|min:2',
         ]);
 

@@ -67,6 +67,10 @@ class Look extends Model
         return $this->hasMany('App\Models\Looks\LookPrice');
     }
 
+    public function tags(){
+        return $this->hasMany('App\Models\Looks\LookTag');
+    }
+
     public function recommendation(){
         return $this->hasMany('App\Recommendation', 'entity_id');
     }

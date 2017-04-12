@@ -12,6 +12,7 @@ use App\Models\Enums\ProfileImageStatus;
 use App\Models\Looks\LookPrice;
 use App\Models\Lookups\PriceType;
 use App\Product;
+use App\UploadImages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +47,8 @@ class LookMapper extends Controller
             'occasions' => $lookup->type('occasion')->get(),
             'statuses' => $lookup->type('status')->get(),
             'categories' => Category::whereIn('id', [CategoryEnum::Men, CategoryEnum::Women, CategoryEnum::House])->get(),
-        );
+            'image_types' => $lookup->type('image_type')->where(['entity_type_id' => EntityType::LOOK])->get(),
+    );
         if (env('IS_NICOBAR'))
             $dropDowns['occasions_list'] = $this->categoryWiseOccasion($dropDowns['occasions']);
         return $dropDowns;
@@ -153,8 +155,8 @@ class LookMapper extends Controller
         $entity_type_id = EntityType::LOOK;
 
         $images = function ($query) {
-            $query->where('uploaded_by_entity_type_id', EntityType::LOOK);
-            $query->where(['status_id' => ProfileImageStatus::Active, 'image_type_id' => ImageType::Other_look_image]);
+            $query->whereIn('image_type_id', [ImageType::PDP_Image, ImageType::PLP_Image]);
+            $query->where(['status_id' => ProfileImageStatus::Active, 'uploaded_by_entity_type_id' => EntityType::LOOK]);
         };
         $look = Look::with(['otherImages' => $images, 'stylist' => function ($query) {
             $query->select('id', 'name', 'image');
@@ -167,6 +169,27 @@ class LookMapper extends Controller
             ->select($this->fields)
             ->where('id', $id)
             ->first();
+        return $look;
+    }
+
+    public function setLookImages($look)
+    {
+        $look->PLP_Image = $look->PDP_Image = '';
+        if (count($look->otherImages) > 0) {
+            foreach ($look->otherImages as $otherImage) {
+                if ($otherImage->image_type_id == ImageType::PDP_Image){
+                    $look->PDP_Image = env('API_ORIGIN') .'/' . $otherImage->path.'/'  . $otherImage->name;
+                } elseif ($otherImage->image_type_id == ImageType::PLP_Image) {
+                    $look->PLP_Image = env('API_ORIGIN') .'/' . $otherImage->path.'/'  . $otherImage->name;
+                }
+            }
+        }
+        if (empty($look->PDP_Image)) {
+            $look->PDP_Image = env('API_ORIGIN') . '/uploads/images/looks/' . $look->image;
+        }
+        if (empty($look->PLP_Image)) {
+            $look->PLP_Image = env('API_ORIGIN') . '/uploads/images/looks/' . $look->image;
+        }
         return $look;
     }
 
@@ -227,6 +250,9 @@ class LookMapper extends Controller
                 $look->image = $uploadMapperObj->moveImageInFolder($request);
             }
             $look->save();
+            if ($uploadMapperObj) {
+                $this->saveUploadImage($request, $look->id);
+            }
             $result = $this->saveProducts($look->id, $request->input('product_ids'));
             if ($result['status'] == false) {
                 DB::rollback();
@@ -247,6 +273,21 @@ class LookMapper extends Controller
         }
 
         return $result;
+    }
+
+    public function saveUploadImage($request, $look_id)
+    {
+        $uploadObj = new UploadImages();
+        $uploadObj->name = $filename = preg_replace('/[^a-zA-Z0-9_.]/', '_', $request->file('image')->getClientOriginalName());;
+        $uploadObj->path = 'uploads/images/looks';
+        $uploadObj->mime_type = $request->file('image')->getClientMimeType();
+        $uploadObj->size = $request->file('image')->getClientSize();
+        $uploadObj->uploaded_by_entity_id = $look_id;
+        $uploadObj->uploaded_by_entity_type_id = EntityType::LOOK;
+        $uploadObj->image_type_id = ImageType::PDP_Image;
+
+        $uploadObj->save();
+        return $uploadObj->id;
     }
 
     public function getProducts($look_id)
