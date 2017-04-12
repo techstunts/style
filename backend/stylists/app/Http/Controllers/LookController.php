@@ -115,7 +115,7 @@ class LookController extends Controller
         $mapperObj = new Mapper();
         $look_prices = $mapperObj->getPriceClosure();
         $looks =
-            Look::with(['gender', 'status', 'body_type', 'budget', 'occasion', 'age_group', 'prices' => $look_prices])
+            Look::with(['gender', 'status', 'body_type', 'budget', 'occasion', 'age_group', 'tags.tag', 'prices' => $look_prices])
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereRaw($remove_deleted_looks)
@@ -136,6 +136,7 @@ class LookController extends Controller
         $view_properties['entity_type_to_send'] = EntityType::LOOK;
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
         $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
+        $view_properties['entity'] = 'look';
         return view('look.list', $view_properties);
     }
 

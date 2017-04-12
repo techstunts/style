@@ -61,6 +61,8 @@
             @if(count($products) == 0)
                 No Products found
             @endif
+                <input type="hidden" name="entityName" value="{{$entity}}">
+                <input type="hidden" name="entityTypeId" value="{{$entity_type_to_send}}">
             @foreach($products as $product)
                     <li class="ui-state-default" product_id="{{$product->id}}">
                         <div class="items">

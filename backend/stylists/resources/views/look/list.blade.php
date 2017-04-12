@@ -37,7 +37,8 @@
             @if(count($looks) == 0)
                 No Looks found
             @endif
-
+            <input type="hidden" name="entityName" value="{{$entity}}">
+            <input type="hidden" name="entityTypeId" value="{{$entity_type_to_send}}">
             @foreach($looks as $look)
                 <li class="ui-state-default" look_id="{{$look->id}}">
                     <div class="items">
@@ -76,6 +77,7 @@
                             <span>INR {{$look->price}}</span>
                             <span>{{$look->budget ? 'INR ' . $look->budget->name : ''}}</span>
                         </div>
+                        @include('common.tag')
                     </div>
                 </li>
             @endforeach
