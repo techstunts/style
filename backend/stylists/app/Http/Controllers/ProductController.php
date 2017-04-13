@@ -275,7 +275,7 @@ class ProductController extends Controller
             $query->where(['price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR]);
         };
 
-        $product = Product::where('id', $this->resource_id)->with(['product_prices' => $product_prices])->first();
+        $product = Product::where('id', $this->resource_id)->with(['product_prices' => $product_prices, 'tags.tag'])->first();
         $view_properties = null;
         if ($product) {
             $category = $product->category;
