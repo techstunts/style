@@ -22,10 +22,10 @@ var all_filters = [];
 var entity_filters = [
     [],
     ['genders', 'colors', 'stylists', 'categories'],
-    ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
+    ['status', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
     [],
-    ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
-    ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
+    ['status', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
+    ['status', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
     []
 ];
 var entity_filter_ids = [
@@ -54,7 +54,7 @@ if (is_nicobar) {
     entity_filters[EntityType.PRODUCT] = ['colors', 'stylists', 'categories'];
     entity_filter_ids[EntityType.PRODUCT] = ['id', 'id'];
     entity_fields_ids[EntityType.PRODUCT] = ['primary_color_id', 'stylist_id', 'category_id'];
-    entity_filters[EntityType.LOOK] = ['stylists', 'statuses', 'category', 'occasions'];
+    entity_filters[EntityType.LOOK] = ['stylists', 'status', 'category', 'occasions'];
     entity_filter_ids[EntityType.LOOK] = ['id', 'id', 'id', 'id'];
     entity_fields_ids[EntityType.LOOK] = ['stylist_id', 'status_id', 'category_id', 'occasion_id'];
 }
