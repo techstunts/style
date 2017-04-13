@@ -61,7 +61,7 @@ abstract class Controller extends BaseController
         }
 
         if($request->input('search') != "" and strlen(trim($request->input('search')))>0){
-            $search_term  = trim($request->input('search'));
+            $search_term  = strtolower(trim($request->input('search')));
             $search_query = $desc_condition = $tag_condition = "";
 
             if ($this->base_table == 'products') {
@@ -71,15 +71,15 @@ abstract class Controller extends BaseController
             }
 
             if($request->input('exact_word') == "search exact word"){
-                $search_query = "({$name} REGEXP '[[:<:]]{$search_term}[[:>:]]' {{desc}} )";
+                $search_query = "(LOWER({$name}) REGEXP '[[:<:]]{$search_term}[[:>:]]' {{desc}} )";
                 if($this->base_table != 'clients'){
-                    $desc_condition = " OR {$description} REGEXP '[[:<:]]{$search_term}[[:>:]]' ";
+                    $desc_condition = " OR LOWER({$description}) REGEXP '[[:<:]]{$search_term}[[:>:]]' ";
                 }
             }
             else{
-                $search_query = "({$name} like '%{$search_term}%' {{desc}} )";
+                $search_query = "(LOWER({$name}) like '%{$search_term}%' {{desc}} )";
                 if($this->base_table != 'clients'){
-                    $desc_condition = " OR {$description} like '%{$search_term}%' ";
+                    $desc_condition = " OR LOWER({$description}) like '%{$search_term}%' ";
                 }
             }
             $search_query .= $tag_condition;
@@ -131,7 +131,7 @@ abstract class Controller extends BaseController
         $tagged_products = DB::table($table.'_tags')
             ->select(DB::raw("DISTINCT {$table}_id"))
             ->join('lu_tags', 'lu_tags.id', '=', $table.'_tags.tag_id')
-            ->whereIn('lu_tags.name', $tags_array)
+            ->whereIn(DB::raw("LOWER(lu_tags.name)"), $tags_array)
             ->get();
         if (count($tagged_products) <= 0) {
            return '';
