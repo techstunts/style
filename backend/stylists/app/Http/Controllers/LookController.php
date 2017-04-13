@@ -234,7 +234,7 @@ class LookController extends Controller
             $query->whereIn('image_type_id', [ImageType::PDP_Image, ImageType::PLP_Image]);
         };
 
-        $look = Look::with(['look_products' => $looks_products, 'stylist', 'prices', 'category', 'otherImages' => $images])
+        $look = Look::with(['look_products' => $looks_products, 'stylist', 'prices', 'category', 'otherImages' => $images, 'tags.tag'])
             ->where('id', $this->resource_id)
             ->first();
         if ($look) {

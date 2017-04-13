@@ -43,6 +43,16 @@
 != 0 ? "(Secondary color: " . $secondary_color->name . ")" : ""}}</td>
                         </tr>
                         <tr class="row">
+                            <td class="head">Tags : </td>
+                            <td class="content">
+                                @if(count($product->tags) > 0)
+                                    @foreach($product->tags as $tag)
+                                        <span>{{$tag->tag->name.', '}}</span>
+                                    @endforeach
+                                @endif
+                            </td>
+                        </tr>
+                        <tr class="row">
                             <td class="head">Stylist</td>
                             <td class="content">
                                 @if(isset($stylist) && isset($stylist->id))

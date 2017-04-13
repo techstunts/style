@@ -23,13 +23,13 @@
                             @if (env('IS_NICOBAR'))
                                 @if($look->category)
                                     <tr class="row">
-                                        <td class="head">Category</td>
+                                        <td class="head">Category : </td>
                                         <td class="content">{{$look->category ? $look->category->name : ''}} </td>
                                     </tr>
                                 @endif
                                 @if($look->occasion)
                                     <tr class="row">
-                                        <td class="head">Occasion</td>
+                                        <td class="head">Occasion : </td>
                                         <td class="content">{{$look->occasion ? $look->occasion->name : ''}} </td>
                                     </tr>
                                 @endif
@@ -70,7 +70,7 @@
                                 @endif
                             @endif
                             <tr class="row">
-                                <td class="head">Look Price</td>
+                                <td class="head">Look Price : </td>
                                 @foreach($look->prices as $price)
                                     @if ($price->price_type_id == \App\Models\Enums\PriceType::RETAIL && $price->currency_id == \App\Models\Enums\Currency::INR)
                                         <td class="content">Rs.{{$price->value}} </td>
@@ -78,15 +78,25 @@
                                 @endforeach
                             </tr>
                             <tr class="row">
-                                <td class="head">Status</td>
+                                <td class="head">Status : </td>
                                 <td class="content">{{$status->name}} </td>
                             </tr>
                             <tr class="row">
-                                <td class="head">Created At</td>
+                                <td class="head">Tags : </td>
+                                <td class="content">
+                                @if(count($look->tags) > 0)
+                                    @foreach($look->tags as $tag)
+                                        <span>{{$tag->tag->name.', '}}</span>
+                                    @endforeach
+                                @endif
+                                </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="head">Created At : </td>
                                 <td class="content">{{date('d/M/Y', strtotime($look->created_at))}} </td>
                             </tr>
                             <tr class="row">
-                                <td class="head">Stylist</td>
+                                <td class="head">Stylist : </td>
                                 @if(!empty($look->stylist))
                                     <td class="content">
                                         <a href="{{url('stylist/view/' . $look->stylist->id)}}" title="{{$look->stylist->name}}"
