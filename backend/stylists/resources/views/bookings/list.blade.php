@@ -68,7 +68,7 @@
                         @foreach($bookings as $booking)
                             <tr>
                                 <td> {{$booking->id}} </td>
-                                <td class="table-font-size"> {{$booking->id}} </td>
+                                <td class="table-font-size"> <a target="_blank" href="/bookings/view/{{$booking->id}}"> {{$booking->id}} </a></td>
                                 @if($booking->bookingRequest && $booking->bookingRequest->request)
                                     <td class="table-font-size"><a href="{{url("requests/view/".$booking->bookingRequest->request->id)}}">{{$booking->bookingRequest->request->id}}</a> </td>
                                 @else

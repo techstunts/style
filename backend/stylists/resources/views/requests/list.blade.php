@@ -71,7 +71,11 @@
                             <tr>
                                 <td>{{$request->id}}</td>
                                 <td class="table-font-size"><a target="_blank" href="/requests/view/{{$request->id}}"> {{$request->id}} </a> </td>
-                                <td class="table-font-size">{{$request->requestBooking && $request->requestBooking->booking ? $request->requestBooking->booking->id : ''}}</td>
+                                @if($request->requestBooking && $request->requestBooking->booking)
+                                    <td class="table-font-size"><a target="_blank" href="/bookings/view/{{$request->requestBooking->booking->id}}"> {{$request->requestBooking->booking->id}} </a> </td>
+                                @else
+                                    <td class="table-font-size">{{''}} </a> </td>
+                                @endif
                                 <td class="table-font-size">{{$request->created_at->format('j-F-Y')}}</td>
                                 <td class="table-font-size"> {{$request->client ? $request->client->name : ''}} </td>
                                 <td class="table-font-size"> {{$request->category ? $request->category->name : ''}} </td>
