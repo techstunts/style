@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Booking;
+use App\Client;
+use App\Models\Enums\EntityType;
 use App\Models\Lookups\Lookup;
+use App\Stylist;
 use Illuminate\Http\Request;
 use App\Http\Mapper\BookingMapper;
 use App\Http\Requests;
@@ -74,5 +78,26 @@ class BookingsController extends Controller
             return $redirect->with('errorMsg', $response['message']);
         }
         return $redirect->with('successMsg', $response['message']);
+    }
+
+    public function getView(Request $request)
+    {
+        $booking_id = $this->resource_id;
+        $view_properties = array();
+        $bookingsMapperObj = new  BookingMapper();
+        $bookings = $bookingsMapperObj->getList($request, ['id' => $booking_id]);
+        if (count($bookings) < 1) {
+            return Redirect::to('bookings/list')->withError('Booking Not Found');
+        }
+        $booking = $bookings[0];
+        if ($booking->cancelled_by_entity_type_id == EntityType::STYLIST){
+            $booking->updatedBy = Stylist::where(['id' => $booking->cancelled_by_entity_id])->select('id', 'name')->first();
+        } elseif ($booking->cancelled_by_entity_type_id == EntityType::CLIENT){
+            $booking->updatedBy = Client::where(['id' => $booking->cancelled_by_entity_id])->select('id', 'name')->first();
+        } else {
+            $bookings->updatedBy = null;
+        }
+        $view_properties['booking'] = $booking;
+        return view('bookings.view', $view_properties);
     }
 }

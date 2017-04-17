@@ -66,6 +66,10 @@ class Stylist extends Model implements AuthenticatableContract,
         return $this->hasMany('App\UploadImages', 'uploaded_by_entity_id');
     }
 
+    public function category(){
+        return $this->belongsTo('App\Category', 'category_id');
+    }
+
     public static function getExposableData($stylist)
     {
         $data['id'] = $stylist->id;
