@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Mapper\ProductMapper;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\ImageType;
+use App\Models\Enums\ProfileImageStatus;
 use App\Models\Enums\Status;
 use App\UploadImages;
 use Illuminate\Http\Request;
@@ -79,6 +80,14 @@ class RecommendationController extends Controller
                 ), 200
             );
         }
+        $upload_image = function ($query) {
+            $query->where([
+                'uploaded_by_entity_type_id' => EntityTypeId::LOOK,
+                'image_type_id' => ImageType::PDP_Image,
+                'status_id' => ProfileImageStatus::Active,
+            ]);
+        };
+
         $api_origin = env('API_ORIGIN');
         $entity_data = array();
         if (count($product_ids) > 0) {
@@ -86,8 +95,15 @@ class RecommendationController extends Controller
                 ->select('id', 'name', 'image_name as image', 'product_link', 'merchant_id')->get();
         }
         if (count($look_ids) > 0) {
-            $entity_data[strtolower(EntityTypeName::LOOK)] = Look::whereIn('id', $look_ids)->with('look_products.product')
+            $looks = Look::whereIn('id', $look_ids)->with(['look_products.product', 'images' => $upload_image])
                 ->select('id', 'name', DB::raw("concat('$api_origin', '/uploads/images/looks/', image) as image"))->get();
+            foreach ($looks as $look) {
+                if (count($look->images) > 0) {
+                    $look->image = env('API_ORIGIN') . '/' . $look->images[0]['path'] . '/' . $look->images[0]['name'];
+                    unset($look->images);
+                }
+            }
+            $entity_data[strtolower(EntityTypeName::LOOK)] = $looks;
         }
         if (count($tip_ids) > 0) {
             $entity_data[strtolower(EntityTypeName::TIP)] = Tip::whereIn('id', $tip_ids)

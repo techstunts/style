@@ -82,4 +82,8 @@ class Look extends Model
     public function otherImages(){
         return $this->hasMany('App\UploadImages', 'uploaded_by_entity_id');
     }
+
+    public function images(){
+        return $this->hasMany('App\UploadImages', 'uploaded_by_entity_id');
+    }
 }
