@@ -1,122 +1,221 @@
-<!DOCTYPE html>
-<head>
-</head>
-<body style="margin: 0">
-<div class="email-container" style="max-width: 100%;background-color: #f6f7f8;">
-    <div class="email-head-img" style="max-width: 100%;">
-        <img src="http://istyleyou.in/nicobar/resources/images/emailer/Recommendation-styling.jpg" style="width: 100%;">
-    </div>
-    <div class="email-content-container" style="width: 68%;margin: 0 auto;">
-        <div class="email-content-info">
-            <div class="heading-first-nm" style="font-weight: bold;text-align: center;margin: 5% 0%;">Hi {{$client_first_name}}</div>
-            <div class="content" style="margin: 0 auto;text-align: center;"> Answering our style studio questionaire was a breeze, wasn't it?.
-                We Promised you a selection of styles, handpicked for you,
-                So here we are
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<body>
+<table border="0" cellpadding="0" cellspacing="0"
+       style="width:600px;max-width:600px;margin:0 auto;text-align:center;color:#282b30;font-family:arial;font-size:13px;letter-spacing:.015em;line-height:1.25;">
+    <tbody style="background:#f6f8f7;">
+
+    <tr>
+        <td>
+            <a href="https://www.nicobar.com/" target="_blank">
+                <img src="http://istyleyou.in/nicobar/resources/images/emailer/Recommendation-styling.jpg"
+                     style="border:0" alt="" class="CToWUd">
+            </a>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="padding-top:20px;padding-right:100px;padding-left:100px;line-height:1.6;">
+            <p style="font-family:Arial;color:#585867;font-style:normal;">Hi {{$client_first_name}},</p>
+            <div>Answering our style studio questionnaire was a breeze, wasn't it?</div>
+            <div>We promised you a selection of styles, handpicked for you, So here we are.</div>
+            <p>
+            </p>
+            <div>Following recommendations have been created
+                and sent by {{$stylist_first_name}}, your personal stylist. Please check out the suggestions.
             </div>
             @if(!empty($custom_message))
                 <div class="content" style="margin: 0 auto;text-align: center;margin-top: 2%;">{{$custom_message}}</div>
             @endif
-        </div>
+        </td>
+    </tr>
 
-        <div class="email-recommendation-container" style="background-color: #f6f7f8;">
-            <div class="email-recom-header" style="font-weight: bold;margin-top: 10%;margin-bottom: 3%;font-size: 1.2em;letter-spacing: 1px;">
-                Recommendations
-            </div>
-            <div class="looks-container" style="background-color: #ffffff;">
-                <div class="container" style="width: 80%;margin: 0 auto;">
-                    <?php $count = 1; ?>
-                    <div class="looks-products" style="padding: 10% 0%;">
-                        @if(!empty($entity_data[strtolower(\App\Models\Enums\EntityTypeName::LOOK)]))
-                            @foreach($entity_data[strtolower(\App\Models\Enums\EntityTypeName::LOOK)] as $look)
-                                <div class="look">
-                                    <div class="look-heading" style="margin: 0 auto;font-size: 1em;color: #000000;text-align: center;margin-bottom: 5%;">Look {{$count++ . ' : ' . $look->name }}</div>
-                                    <div class="look-img" style="width: 80%;margin: 0 auto;">
-                                        <a href="{{$nicobar_website.$look->id}}" target="_blank"><img src="{{$look->image}}" alt="" style="width: 100%;margin: 0 auto;"></a>
-                                    </div>
-                                </div>
-                                <div class="products-container" style="max-width: 100%;margin-top: 10%;text-align: center;">
-                                    @if(count($look->look_products) > 0)
-                                        @foreach($look->look_products as $look_product)
-                                            <div class="product-box" style="max-width: 30%;display: inline-block;">
-                                                <div class="pro-box-img" style="max-width: 100%;margin: auto;">
-                                                    <a href="{{$look_product->product ? $look_product->product->product_link : ''}}" target="_blank">
-                                                        <img src="{{$look_product->product ? $look_product->product->image_name : ''}}" alt="" style="max-width: 100%;background-color: #333333;">
-                                                    </a>
-                                                </div>
-                                                <div class="pro-box-name" style="overflow: hidden;margin: auto;">
-                                                    <p style="color: #333333;word-wrap: break-word;text-align: center;white-space: nowrap;">@if($look_product->product)@if(strlen($look_product->product->name) > 24){{substr($look_product->product->name, 0, 21) . '...'}} @else{{$look_product->product->name}} @endif @else{{''}}@endif</p>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
-                <?php $count = 1; ?>
-                <div class="looks-products" style="padding: 10% 0%;">
-                    @if(!empty($entity_data[strtolower(\App\Models\Enums\EntityTypeName::PRODUCT)]))
-                        @foreach($entity_data[strtolower(\App\Models\Enums\EntityTypeName::PRODUCT)] as $product)
-                            <div class="look">
-                                <div class="look-heading" style="margin: 0 auto;font-size: 1em;color: #000000;text-align: center;margin-bottom: 5%;">Product {{$count++ . ' : ' . $product->name }}</div>
-                                <div class="look-img" style="width: 80%;margin: 0 auto;">
-                                    <a href="{{$product->product_link}}"><img src="{{$product->image}}" alt="" style="width: 100%;margin: 0 auto;"></a>
-                                </div>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-            </div>
-        </div>
+    <tr>
+        <td style="padding-top:40px;font-weight: bolder">
+            Recommendations
+        </td>
+    </tr>
+    @if(!empty($entity_data[strtolower(\App\Models\Enums\EntityTypeName::LOOK)]))
+        @foreach($entity_data[strtolower(\App\Models\Enums\EntityTypeName::LOOK)] as $look)
 
-        <div class="email-content-info-bottom" style="margin-top: 5%;">
-            <div class="heading-first-nm" style="font-size: 1em;text-align: center;margin: 3% 0%;">Want to do a makeover? Get that <a href="" style="text-decoration: underline;color: #000000;">here</a>.</div>
-            <div class="heading-first-nm" style="font-size: 1em;text-align: center;margin: 3% 0%;"> Or if you just have feedback for us, send
-                that <a href="" style="text-decoration: underline;color: #000000;">in here.</a></div>
-        </div>
-    </div>
-    <div class="email-footer" style="background-color: #E6EFEE;width: 100%;margin: auto;">
-        <div class="image">
-            <img src="http://istyleyou.in/nicobar/resources/images/emailer/kalas.jpg" style="width: 100%">
-        </div>
-        <p style="font-weight: bold;color: #000000;margin: auto;text-align: center;">#nicobar</p>
-        <p style="font-weight: bold;color: #000000;margin: auto;text-align: center;">#thenicobarstory</p>
-        <p class="ask-for-help" style="font-weight: normal;color: #000000;margin: auto;text-align: center;margin-top: 2%;font-style: italic;"> Need help ? Have a question about an order<br>or about getting in touch ?<br>We're always
-            happy to be here from you.</p>
+            <tr>
+                <td style="padding-top:20px;">
+                    <table border="0" cellpadding="2" cellspacing="2"
+                           style="width:100%;margin:0 auto;text-align:center;">
+                        <tbody>
+                        <tr>
+                            <td style="width:80%;vertical-align:top;text-align:center;">
+                                <a href="{{$nicobar_website.$look->id}}" style="color:#000000;text-decoration:none;"
+                                   target="_blank">
+                                    <img src="{{$look->image}}" style="border:0;clear:both;width:50%;margin-bottom:10px"
+                                         alt=""
+                                         class="CToWUd">
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
 
-        <div class="phone-mail" style="width: 100%;margin-top: 2%;">
-            <div class="phone" style="width: 50%;float: left;">
-                <img src="http://istyleyou.in/nicobar/resources/images/emailer/phone-call.png" alt="" style="float: right;width: 32px;height: 32px;">
-            </div>
-            <div class="mail" style="width: 50%;display: inline-block;">
-                <img src="http://istyleyou.in/nicobar/resources/images/emailer/mail.png" alt="" style="float: left;width: 32px;height: 32px;margin-left: 2%;">
-            </div>
-        </div>
-        <br>
-        <p class="contct-num" style="font-weight: bold;color: #000000;margin: auto;text-align: center;font-size: 0.8em;">+91 22 2263 3888 & +91 22 2263 3877</p>
-        <p class="careemail" style="font-weight: bold;color: #000000;margin: auto;text-align: center;font-size: 0.8em;">care@nicobar.com</p>
-        <br>
-        <p style="font-weight: bold;color: #000000;margin: auto;text-align: center;"><img src="http://istyleyou.in/nicobar/resources/images/emailer/nico-address.jpg" alt=""></p>
-
-        <div class="sm" style="width: 100%;">
-            <div class="fb" style="width: 50%;float: left;">
-                <img style="float: right;" src="http://istyleyou.in/nicobar/resources/images/emailer/fb-nico.jpg" alt="">
-            </div>
-            <div class="insta" style="width: 50%;display: inline-block;">
-                <img src="http://istyleyou.in/nicobar/resources/images/emailer/ins-nico.jpg" alt="" style="float: left;margin-left: 2%;">
-            </div>
-        </div>
-
-        <p class="nico-botom-categorz" style="font-weight: bold;color: #000000;margin: auto;text-align: center;font-size: 0.7em;">WOMEN | MEN | HOUSE &amp; HOME | TAVEL | JOURNAL | STROY | CAREERS | CONTACT US <br>RETURN
-            &amp; SHIPPING | TERMS &amp; CONDITIONS</p>
-        <br>
-        <p class="wwwnicocom" style="font-weight: bold;color: #000000;margin: auto;text-align: center;font-size: 0.8em;">www.nicobar.com</p>
-        <p class="allrghts" style="font-weight: normal;color: #000000;margin: auto;text-align: center;font-size: 0.7em;">All Rights Reserved @ 2016</p>
-        <br>
-        <br>
-
-    </div>
-</div>
+            <tr>
+                <td style="padding-top:20px;">
+                    <table border="0" cellpadding="2" cellspacing="2"
+                           style="width:80%;margin:0 auto;text-align:center;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.08em;">
+                        <tbody>
+                        <tr>
+                            @if(count($look->look_products) > 0)
+                                @foreach($look->look_products as $look_product)
+                                    <td style="width:33%;vertical-align:top;text-align:center;">
+                                        <a href="{{$look_product->product ? $look_product->product->product_link : ''}}"
+                                           style="color:#000000;text-decoration:none;" target="_blank">
+                                            <img src="{{$look_product->product ? $look_product->product->image_name : ''}}"
+                                                 style="border:0;width:100%;clear:both;margin-bottom:10px" alt=""
+                                                 class="CToWUd">@if($look_product->product)@if(strlen($look_product->product->name) > 24){{substr($look_product->product->name, 0, 21) . '...'}} @else{{$look_product->product->name}} @endif @else{{''}}@endif
+                                        </a>
+                                    </td>
+                                @endforeach
+                            @endif
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        @endforeach
+    @endif
+    <tr>
+        <td style="background:#e5eff1;margin-top:10px;">
+            <img src="http://istyleyou.in/nicobar/resources/images/emailer/kalas.jpg" alt="" style="clear:both"
+                 class="CToWUd">
+        </td>
+    </tr>
+    <tr>
+        <td style="background:#e5eff1;padding-bottom:20px;">
+            <table border="0" cellpadding="8" cellspacing="0"
+                   style="width:500px;margin:0 auto;text-align:center;font-size:11px;letter-spacing:.08em;">
+                <tbody>
+                <tr>
+                    <td>
+                        <a href="#m_-7481920367755743928_" style="font-weight:bold;text-decoration:none;color:#282b30;">#nicobar</a>
+                        <br>
+                        <a href="#m_-7481920367755743928_" style="font-weight:bold;text-decoration:none;color:#282b30;">#thenicobarstory</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top:4px;font-style:italic;font-size:9px;">
+                        Need help? Have a question about an order,<br>or about getting in touch? <br>We're always happy
+                        to hear from you.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top:4px;" valign="top">
+                        <img src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/common/phone-icon.png"
+                             alt="" style="border:0" class="CToWUd">    
+                        <img src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/common/mail-icon.png"
+                             alt="" style="border:0" class="CToWUd">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top:4px;">
+                        <a href="tel:+918588000150" style="text-decoration:none;color:#2c2e2e;" target="_blank">+91
+                            22 2263 3888</a> &amp; <a href="tel:+918588000151"
+                                                      style="text-decoration:none;color:#2c2e2e;" target="_blank">+91 22
+                            2263 3877</a>
+                        <br>
+                        <a href="mailto:care@nicobar.com" style="text-decoration:none;color:#2c2e2e;" target="_blank">care@nicobar
+                            .com</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top:4px;font-size:12px;text-transform:uppercase;font-weight:bold;">
+                        Nicobar Design Studio
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top:0px;font-size:11px;line-height:1.6;">
+                        <table border="0" cellpadding="0" cellspacing="0"
+                               style="width:500px;margin:0 auto;text-align:center;font-size:11px;letter-spacing:.08em;">
+                            <tbody>
+                            <tr>
+                                <td style="text-align:right;" width="245">
+                                    <address style="font-style:normal;font-size:1em;">
+                                        Above Kala Ghoda Cafe,<br>
+                                        10, Ropewalk Lane<br>
+                                        Kala Ghoda Fort,<br>
+                                        Mumbai - 400001<br>
+                                    </address>
+                                </td>
+                                <td style="width:10px;border-right:1px solid #6d6d6d;">
+                                </td>
+                                <td style="width:10px;">
+                                </td>
+                                <td style="text-align:left;" width="245">
+                                    <address style="font-style:normal;font-size:1em;">
+                                        Shop #79 &amp; 80, <br>
+                                        Above Diva Spiced,Meherchand Market,<br>
+                                        Fifth Avenue Road<br>
+                                        Lodhi Colony, 110003<br>
+                                    </address>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top:4px;font-size:11px;">
+                        <a href="https://www.facebook.com/nicobarstudio" style="text-decoration:none;color:#2c2e2e;"
+                           target="_blank">
+                            <img src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/common/fb-icon.png"
+                                 alt="" class="CToWUd"> /nicobarstudio</a>   
+                        <a href="https://www.instagram.com/nicojournal" style="text-decoration:none;color:#2c2e2e;"
+                           target="_blank">
+                            <img src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/common/instagram-icon.png"
+                                 alt="" class="CToWUd"> /nicojournal</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top:10px;text-transform:uppercase;font-weight:bold;font-size:9px;line-height:2;">
+                        <a href="#" style="text-decoration:none;color:#2c2e2e;" target="_blank">Women</a>
+                        |
+                        <a href="#" style="text-decoration:none;color:#2c2e2e;" target="_blank">Men</a>
+                        |
+                        <a href="#" style="text-decoration:none;color:#2c2e2e;" target="_blank">House
+                            &amp; Home</a> |
+                        <a href="#" style="text-decoration:none;color:#2c2e2e;" target="_blank">Travel</a>
+                        |
+                        <a href="#" style="text-decoration:none;color:#2c2e2e;" target="_blank">Journal</a>
+                        |
+                        <a href="#" style="text-decoration:none;color:#2c2e2e;" target="_blank">Story</a>
+                        |
+                        <a href="#" style="text-decoration:none;color:#2c2e2e;" target="_blank">In
+                            The Press</a> |
+                        <a href="#" style="text-decoration:none;color:#2c2e2e;" target="_blank">Contact
+                            us</a> |
+                        <a href="#" style="text-decoration:none;color:#2c2e2e;" target="_blank">Careers</a>
+                        |
+                        <a href="#" style="text-decoration:none;color:#2c2e2e;" target="_blank">Shipping
+                            &amp; Returns</a> |
+                        <a href="#" style="text-decoration:none;color:#2c2e2e;" target="_blank">Terms
+                            &amp; Conditions</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top:30px;font-weight:bold;font-size:9px;line-height:1;">
+                        <a href="https://www.nicobar.com" style="text-decoration:none;color:#2c2e2e;" target="_blank">www.nicobar.com</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top:0px;font-size:8px;line-height:1;">
+                        Nicobar All Rights Reserved � 2016
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
-
+</html>
