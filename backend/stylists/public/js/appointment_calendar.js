@@ -192,8 +192,9 @@ function renderCal() {
             return false;
         }
         if (available == 'true') {
-            $(this).removeClass('slotAvailable')
-            $(this).addClass('slotUnAvailable')
+            // $(this).removeClass('slotAvailable')
+            // $(this).addClass('slotUnAvailable')
+            $(this).addClass('slotSelected')
             this.setAttribute("available", false);
             var obj = {}
             obj.date = date
@@ -214,8 +215,10 @@ function renderCal() {
                 selectedSlots.push(obj)
             }
         } else if (available == 'false') {
-            $(this).removeClass('slotUnAvailable')
-            $(this).addClass('slotAvailable')
+            $(this).addClass('slotSelected')
+
+            // $(this).removeClass('slotUnAvailable')
+            // $(this).addClass('slotAvailable')
             this.setAttribute("available", true);
             var availableInSelectedSlot = false;
             for (i in selectedSlots) {

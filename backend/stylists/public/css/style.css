@@ -788,6 +788,10 @@ table.data-table {
     color: rgba(107, 120, 122, 0.76);
     background-color: rgba(175, 192, 194, 0.76);
 }
+.slotSelected {
+    color: rgba(224, 253, 255, 0);
+    background-color: rgba(35, 43, 45, 0.76);
+}
 
 .nav-btn {
     margin-top: 20px;
