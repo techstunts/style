@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Validator;
 
@@ -170,12 +171,25 @@ class LookController extends Controller
                 if (isset($new_statuses['id'])) {
                     $new_statuses = array($new_statuses);
                 }
+                $lookMapper = new LookMapper();
                 foreach ($new_statuses as $new_status) {
                     if ($new_status['id'] == $this->action_resource_id) {
                         $look->status_id = $new_status['id'];
+                        DB::beginTransaction();
                         if ($look->save()) {
+                            if ($look->status_id == LookupStatus::Active) {
+                                $response = $lookMapper->createSequence($look->id);
+                            } else {
+                                $response = $lookMapper->deleteSequence($look->id);
+                            }
+                            if (!$response['status']){
+                                DB::rollback();
+                                return Redirect::back()->withError('Error! ' . $response['message']);
+                            }
+                            DB::commit();
                             return Redirect::back()->withSuccess('Look status changed successfully!');
                         } else {
+                            DB::rollback();
                             return Redirect::back()->withError('Error! Look save error.');
                         }
                     }
@@ -344,5 +358,24 @@ class LookController extends Controller
             return redirect('look/list')->withError('Collage access denied!');
         }
         return view('look/collage');
+    }
+
+    public function getSequence (Request $request)
+    {
+        $lookMapper = new LookMapper();
+        $looks = $lookMapper->sequesceList($request);
+        $view_properties['items'] = $looks;
+        return view('look.sequence', $view_properties);
+    }
+    public function postUpdateSequence (Request $request)
+    {
+        $look_ids = $request->input('look_ids');
+        $lookMapper = new LookMapper();
+        $update_status = $lookMapper->checkUpdate($look_ids);
+        $response = array('status' => false, 'message' => "No update found");
+        if ($update_status) {
+            $response = $lookMapper->updateSequence($look_ids);
+        }
+        return $response;
     }
 }
