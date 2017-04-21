@@ -17,7 +17,7 @@
                     @foreach($items as $item)
                         <li class="col-md-3 ui-state-default border-around" look_id="{{$item->look_id}}" order_id="{{$item->_id}}">
                             <div>
-                                <img class="img-responsive" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $item->look->image}}"/>
+                                <img class="img-responsive" src="{{$item->look->image}}"/>
                             </div>
                         </li>
                     @endforeach

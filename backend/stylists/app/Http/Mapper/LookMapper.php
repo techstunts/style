@@ -409,8 +409,11 @@ class LookMapper extends Controller
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
 
-        $look = function ($query) {
-            $query->with(['images']);
+        $images = function ($query) {
+            $query->where(['image_type_id'=>ImageType::PLP_Image, 'status_id' => ProfileImageStatus::Active]);
+        };
+        $look = function ($query) use ($images){
+            $query->with(['images' => $images]);
             $query->select(['id', 'name', 'image']);
         };
 
@@ -418,6 +421,13 @@ class LookMapper extends Controller
         ->orderBy('order_id', 'asc')
         ->simplePaginate($this->records_per_page * 4)
         ->appends($paginate_qs);
+        foreach ($looks as $item) {
+            if ($item->look && count($item->look->images) > 0) {
+                $item->look->image = env('API_ORIGIN') . '/' .$item->look->images[0]->path . '/' . $item->look->images[0]->name;
+            } else{
+                $item->look->image = env('API_ORIGIN') . '/uploads/images/looks/' . $item->look->image;
+            }
+        }
         return $looks;
     }
 
