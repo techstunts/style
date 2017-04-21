@@ -13,6 +13,7 @@ use App\Models\Looks\LookPrice;
 use App\Models\Lookups\PriceType;
 use App\Product;
 use App\UploadImages;
+use App\Models\Looks\LookSequence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -236,7 +237,10 @@ class LookMapper extends Controller
                 'message' => 'Upload image to make status Active',
             );
         }
-
+        $updateSequence = false;
+        if ($look->status_id != $request->status_id){
+            $updateSequence = true;
+        }
         $look = $this->setObjectProperties($look, $request);
         $logged_in_stylist = $request->user()->id != '' ? $request->user()->id : '';
 
@@ -252,6 +256,17 @@ class LookMapper extends Controller
             $look->save();
             if ($uploadMapperObj) {
                 $this->saveUploadImage($request, $look->id);
+            }
+            if ($updateSequence){
+                if ($look->status_id == Status::Active){
+                    $response = $this->createSequence($look->id);
+                } else {
+                    $response = $this->deleteSequence($look->id);
+                }
+                if (!$response['status']) {
+                    DB::rollback();
+                    return $response;
+                }
             }
             $result = $this->saveProducts($look->id, $request->input('product_ids'));
             if ($result['status'] == false) {
@@ -387,5 +402,114 @@ class LookMapper extends Controller
             $occasionsArr[$occasion->category_id][] = $occasion;
         }
         return $occasionsArr;
+    }
+
+    public function sequesceList($request)
+    {
+        $paginate_qs = $request->query();
+        unset($paginate_qs['page']);
+
+        $look = function ($query) {
+            $query->with(['images']);
+            $query->select(['id', 'name', 'image']);
+        };
+
+        $looks = LookSequence::with(['look' => $look])
+        ->orderBy('order_id', 'asc')
+        ->simplePaginate($this->records_per_page * 4)
+        ->appends($paginate_qs);
+        return $looks;
+    }
+
+    public function checkUpdate($look_ids)
+    {
+        $existing_list = LookSequence::get();
+        $indexedArr = array();
+        foreach ($existing_list as $data) {
+            $indexedArr[$data->order_id] = $data->look_id;
+        }
+        unset($existing_list);
+        $status = false;
+        foreach ($look_ids as $index => $look_id) {
+            if ($indexedArr[($index+1)] != $look_id) {
+                $status = true;
+                break;
+            }
+        }
+        return $status;
+    }
+
+    public function updateSequence ($look_ids)
+    {
+        DB::beginTransaction();
+        $data = array();
+        foreach ($look_ids as $index => $look_id) {
+            $data[] = array(
+                'look_id' => $look_id,
+                'order_id' => ($index+1),
+            );
+        }
+        try {
+            LookSequence::whereRaw('1=1')->delete();
+            if (count($data)>0)
+                LookSequence::insert($data);
+
+            DB::commit();
+            $status = true;
+            $message = 'Updated successfully';
+        } catch (\Exception $e) {
+            DB::rollback();
+            $status = false;
+            $message = $e->getMessage();
+        }
+        return ['status' => $status, 'message' => $message];
+    }
+
+    public function createSequence ($look_id)
+    {
+        $max_order_look = LookSequence::select(DB::raw("MAX(order_id) as max_order_id"))->first();
+        $data = array(
+            'look_id' => $look_id,
+            'order_id' => $max_order_look->max_order_id,
+        );
+        try {
+            LookSequence::insert($data);
+            $status = true;
+            $message = 'Updated successfully';
+        } catch (\Exception $e) {
+            $status = false;
+            $message = $e->getMessage();
+        }
+        return ['status' => $status, 'message' => $message];
+    }
+
+    public function deleteSequence ($look_id)
+    {
+        $look = LookSequence::where(['look_id' => $look_id])->first();
+        if ($look) {
+            $otherLooks = LookSequence::where('order_id', '>', $look->order_id)->get();
+            $look_ids = array($look_id);
+            $data = array();
+            foreach ($otherLooks as $otherLook) {
+                array_push($look_ids, $otherLook->look_id);
+                $data[] = array(
+                    'look_id' => $otherLook->look_id,
+                    'order_id' => ($otherLook->order_id - 1),
+                );
+            }
+            try {
+                LookSequence::whereIn('look_id', $look_ids)->delete();
+                LookSequence::insert($data);
+                $status = true;
+                $message = 'Updated successfully';
+            } catch (\Exception $e) {
+                $status = false;
+                $message = $e->getMessage();
+            }
+        } else {
+            $status = true;
+            $message = 'Nothing to update';
+        }
+        return ['status' => $status, 'message' => $message];
     }
 }
