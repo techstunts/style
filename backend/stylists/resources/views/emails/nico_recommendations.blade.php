@@ -16,13 +16,16 @@
     </tr>
 
     <tr>
-        <td style="padding-top:20px;padding-right:100px;padding-left:100px;line-height:1.6;">
-            <p style="font-family:Arial;color:#585867;font-style:normal;">Hi {{$client_first_name}},</p>
-            <div>Answering our style studio questionnaire was a breeze, wasn't it?</div>
-            <div>We promised you a selection of styles, handpicked for you, So here we are.</div>
+        <td style="padding-right:100px;padding-left:100px;line-height:1.4;">
+            <p style="font-family:Arial;color:#282b30;font-style:normal;">Hi {{$client_first_name}},</p>
+            <div style="color:#282b30">
+                <div>Answering our style studio questionnaire was a breeze, wasn't it?</div>
+                <div>We promised you a selection of styles, handpicked for you,</div>
+                <div> So here we are.</div>
+            </div>
             <p>
             </p>
-            <div>Following recommendations have been created
+            <div style="color: #282b30">Following recommendations have been created
                 and sent by {{$stylist_first_name}}, your personal stylist. Please check out the suggestions.
             </div>
             @if(!empty($custom_message))
@@ -32,58 +35,126 @@
     </tr>
 
     <tr>
-        <td style="padding-top:40px;font-weight: bolder">
-            Recommendations
+        <td>
+            <table border="0" cellpadding="2" cellspacing="2"
+                   style="width:66%;margin:0 auto;text-align: left;font-weight: bolder;font-size: 15px;margin-top:25px;">
+                <tbody>
+                <tr>
+                    <td style="width:80%;vertical-align:top;">
+                        Recommendations
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </td>
     </tr>
     @if(!empty($entity_data[strtolower(\App\Models\Enums\EntityTypeName::LOOK)]))
+        <?php $index = 0; ?>
         @foreach($entity_data[strtolower(\App\Models\Enums\EntityTypeName::LOOK)] as $look)
-
             <tr>
-                <td style="padding-top:20px;">
+                <td style="padding-top:10px;">
                     <table border="0" cellpadding="2" cellspacing="2"
-                           style="width:100%;margin:0 auto;text-align:center;">
-                        <tbody>
+                           style="width:66%;margin:0 auto;text-align:center;background-color: #ffffff;padding-bottom: 20px;">
+                        <tbody style="padding-bottom: 10px;">
                         <tr>
-                            <td style="width:80%;vertical-align:top;text-align:center;">
-                                <a href="{{$nicobar_website.$look->id}}" style="color:#000000;text-decoration:none;"
-                                   target="_blank">
-                                    <img src="{{$look->image}}" style="border:0;clear:both;width:50%;margin-bottom:10px"
+                            <td colspan="10"
+                                style="vertical-align:top;text-align:center;padding-top:30px;padding-bottom: 10px;">
+                                Look {{($index +1). ' : ' . $look->name}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="10" style="vertical-align:top;text-align:center;">
+                                <a href="{{$nicobar_website.$look->id}}" style="color:#000000;text-decoration:none;" target="_blank">
+                                    <img src="{{$look->image}}" style="border:0;clear:both;width:75%;margin-bottom:10px"
                                          alt=""
                                          class="CToWUd">
                                 </a>
                             </td>
                         </tr>
+                        @if(count($look->look_products) > 0)
+                            @foreach($look->look_products as $product_index => $look_product)
+                                @if($product_index % 3 == 0)
+                                    <?php $start = 0; ?>
+                                @endif
+                                @if($start == 0)
+                                    <tr style="padding-bottom:10px;">
+                                        @endif
+                                        <td style="width:33%;vertical-align:top;text-align:center;">
+                                            <a href="{{$look_product->product ? $look_product->product->product_link : '#'}}"
+                                               style="color: #282b30;text-decoration: none;font-size: 11px;font-weight: bold;;"
+                                               target="_blank">
+                                                <img src="{{$look_product->product ? $look_product->product->image_name : ''}}"
+                                                     style="border:0;width:100%;clear:both;margin-bottom:10px" alt=""
+                                                     class="CToWUd">@if($look_product->product)@if(strlen($look_product->product->name) > 20){{substr($look_product->product->name, 0, 19) . '-'}} @else{{$look_product->product->name}} @endif @else{{''}}@endif
+                                            </a>
+                                            @if($look_product->product)
+                                                <div style="font-size: 10px;color:#282b30">
+                                                    Rs. {{$look_product->product->price}}</div>
+                                            @endif
+                                        </td>
+                                        @if($start == 2)
+                                    </tr>
+                                @endif
+                                <?php $start++; ?>
+                            @endforeach
+                        @endif
                         </tbody>
                     </table>
                 </td>
             </tr>
-
-            <tr>
-                <td style="padding-top:20px;">
-                    <table border="0" cellpadding="2" cellspacing="2"
-                           style="width:80%;margin:0 auto;text-align:center;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.08em;">
-                        <tbody>
-                        <tr>
-                            @if(count($look->look_products) > 0)
-                                @foreach($look->look_products as $look_product)
-                                    <td style="width:33%;vertical-align:top;text-align:center;">
-                                        <a href="{{$look_product->product ? $look_product->product->product_link : ''}}"
-                                           style="color:#000000;text-decoration:none;" target="_blank">
-                                            <img src="{{$look_product->product ? $look_product->product->image_name : ''}}"
-                                                 style="border:0;width:100%;clear:both;margin-bottom:10px" alt=""
-                                                 class="CToWUd">@if($look_product->product)@if(strlen($look_product->product->name) > 24){{substr($look_product->product->name, 0, 21) . '...'}} @else{{$look_product->product->name}} @endif @else{{''}}@endif
-                                        </a>
-                                    </td>
-                                @endforeach
-                            @endif
-                        </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
+            <?php $index++; ?>
         @endforeach
     @endif
+
+    @if(!empty($entity_data[strtolower(\App\Models\Enums\EntityTypeName::PRODUCT)]))
+        <tr>
+            <td>
+                <table border="0" cellpadding="2" cellspacing="2"
+                       style="width:66%;margin:0 auto;text-align: left;font-weight: bolder;font-size: 15px;margin-top:25px;">
+                    <tbody>
+                    <tr>
+                        <td style="width:80%;vertical-align:top;">
+                            Products
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding-top:10px;">
+                <table border="0" cellpadding="2" cellspacing="2"
+                       style="width:66%;margin:0 auto;text-align:center;background-color: #ffffff;padding-bottom: 20px;">
+                    <tbody style="padding-bottom: 10px;">
+                    @foreach($entity_data[strtolower(\App\Models\Enums\EntityTypeName::PRODUCT)] as $product_index => $product)
+                        @if($product_index % 3 == 0)
+                            <?php $start = 0; ?>
+                        @endif
+                        @if($start == 0)
+                            <tr style="padding-bottom:10px;">
+                                @endif
+                                <td style="width:33%;vertical-align:top;text-align:center;">
+                                    <a href="{{$product->product_link}}"
+                                       style="color: #282b30;text-decoration: none;font-size: 11px;font-weight: bold;;"
+                                       target="_blank">
+                                        <img src="{{$product->image}}" style="border:0;width:100%;clear:both;margin-bottom:10px" alt=""
+                                             class="CToWUd">@if($product)@if(strlen($product->name) > 20){{substr($product->name, 0, 19) . '-'}} @else{{$product->name}} @endif @else{{''}}@endif
+                                    </a>
+                                    <div style="font-size: 10px;color:#282b30">
+                                        Rs. {{$product->price}}</div>
+                                </td>
+                                @if($start == 2)
+                            </tr>
+                        @endif
+                        <?php $start++; ?>
+                    @endforeach
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    @endif
+
+
     <tr>
         <td style="background:#e5eff1;margin-top:10px;">
             <img src="http://istyleyou.in/nicobar/resources/images/emailer/kalas.jpg" alt="" style="clear:both"
