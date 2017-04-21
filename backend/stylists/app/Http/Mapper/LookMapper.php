@@ -470,7 +470,7 @@ class LookMapper extends Controller
         $max_order_look = LookSequence::select(DB::raw("MAX(order_id) as max_order_id"))->first();
         $data = array(
             'look_id' => $look_id,
-            'order_id' => $max_order_look->max_order_id,
+            'order_id' => ($max_order_look->max_order_id+1),
         );
         try {
             LookSequence::insert($data);
