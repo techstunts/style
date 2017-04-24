@@ -7,6 +7,6 @@ class Merchants extends Model
 {
     protected $table = 'merchants';
     protected $primaryKey = 'id';
-    protected $connection = 'mysqlScraper';
+//    protected $connection = 'mysqlScraper';
 
 }

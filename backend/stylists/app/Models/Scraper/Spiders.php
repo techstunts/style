@@ -6,7 +6,7 @@ class Spiders extends Model
 {
     protected $table = 'spiders';
     protected $primaryKey = 'id';
-    protected $connection = 'mysqlScraper';
+//    protected $connection = 'mysqlScraper';
 
     public function merchant(){
         return $this->belongsTo('App\Models\Scraper\Merchants', 'merchant_id');
