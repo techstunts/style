@@ -519,7 +519,8 @@ function showFilters() {
 function addSubcategoryField()
 {
     $('.options select[name="parent"]').after(autosuggest_element);
-    $('.options select[name="parent"]').after('<input type="hidden" name="category_id" value="" >');
+    if ($('.options select[name="parent"]').siblings('input[name="category_id"]').length == 0)
+        $('.options select[name="parent"]').after('<input type="hidden" name="category_id" value="" >');
     $('input.autosuggest').keyup(function(){
         var keyword = $(this).val();
         var parent =  $('.options select[name="parent"]').val();
@@ -540,10 +541,10 @@ function addSubcategoryField()
                     autosuggest_object.autocomplete({
                         source: allSuggestions,
                         select: function (e, ui) {
-                            $('input.autosuggest').val(ui.item.label);
                             $(this).siblings('input[name="category_id"]').val(ui.item.value);
-                        },
-
+                            $(this).val(ui.item.label);
+                            return false;
+                        }
                     });
                 },
             });
