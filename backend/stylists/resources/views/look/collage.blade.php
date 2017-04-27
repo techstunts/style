@@ -93,8 +93,13 @@
 
                 <div id="browser" class="window">
                     <div class="toolbar">
+                        <form class="input search">
+                            <input type="text" name="search" placeholder="Search">
+                            <input type="submit" value="">
+                            <a class="icon close"></a>
+                        </form>
                         <form class="input category">
-                            <input type="text" name="category" placeholder="Category">
+                            <input type="text" name="category" placeholder="Sub category">
                             <a class="icon close"></a>
                             <a class="icon process"></a>
                             <div class="menu">
@@ -103,20 +108,7 @@
                                 <a>3</a>
                             </div>
                         </form>
-                        <select class="tabs">
-                            <option value="catalog">Catalog</option>
-                            <option value="gallery">Gallery</option>
-                        </select>
-                        <div class="input search-icon pager">
-                            <a class="icon prev disabled"></a>
-                            <input disabled type="text" value="1">
-                            <a class="icon next disabled"></a>
-                        </div>
-                        <form class="input search">
-                            <input type="text" name="search" placeholder="Search">
-                            <input type="submit" value="">
-                            <a class="icon close"></a>
-                        </form>
+                        <form class="filter"></form>
                         <form class="input search-icon minPrice">
                             <input type="text" name="min_price" value="" placeholder="Min">
                             <input type="submit" value="">
@@ -127,9 +119,18 @@
                             <input type="submit" value="">
                             <a class="icon close"></a>
                         </form>
-                        <form class="filter"></form>
+                        <select class="tabs">
+                            <option value="catalog">Catalog</option>
+                            <option value="gallery">Gallery</option>
+                        </select>
+                        <div class="input search-icon pager">
+                            <a class="icon prev disabled"></a>
+                            <input disabled type="text" value="1">
+                            <a class="icon next disabled"></a>
+                        </div>
+                        <div><a class="clear_all pull-left">Clear all</a></div>
                     </div>
-                    <div><a class="clear_all pull-right">Clear all</a></div>
+
                     <div class="result"></div>
                 </div>
 
