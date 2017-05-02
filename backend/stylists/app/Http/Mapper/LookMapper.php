@@ -247,15 +247,18 @@ class LookMapper extends Controller
         if (!$look->exists) {
             $look->stylist_id = $logged_in_stylist;
         }
-
+        $dimensions = array();
         DB::beginTransaction();
         try {
             if ($uploadMapperObj) {
+                $dimensions = getimagesize($request->file('image'));
                 $look->image = $uploadMapperObj->moveImageInFolder($request);
+                $look->image_width = $dimensions[0];
+                $look->image_height = $dimensions[1];
             }
             $look->save();
             if ($uploadMapperObj) {
-                $this->saveUploadImage($request, $look->id);
+                $this->saveUploadImage($request, $look->id, $dimensions);
             }
             if ($updateSequence){
                 if ($look->status_id == Status::Active){
@@ -290,13 +293,15 @@ class LookMapper extends Controller
         return $result;
     }
 
-    public function saveUploadImage($request, $look_id)
+    public function saveUploadImage($request, $look_id, $dimensions)
     {
         $uploadObj = new UploadImages();
         $uploadObj->name = $filename = preg_replace('/[^a-zA-Z0-9_.]/', '_', $request->file('image')->getClientOriginalName());;
         $uploadObj->path = 'uploads/images/looks';
         $uploadObj->mime_type = $request->file('image')->getClientMimeType();
         $uploadObj->size = $request->file('image')->getClientSize();
+        $uploadObj->image_width = $dimensions[0];
+        $uploadObj->image_height = $dimensions[1];
         $uploadObj->uploaded_by_entity_id = $look_id;
         $uploadObj->uploaded_by_entity_type_id = EntityType::LOOK;
         $uploadObj->image_type_id = ImageType::PDP_Image;
