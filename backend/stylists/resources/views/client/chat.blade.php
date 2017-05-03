@@ -8,6 +8,7 @@
 
             <input type="hidden" id="stylist_id" value="{{$stylist_id_to_chat}}"/>
             <input type="hidden" id="api_origin" value="{{env('API_ORIGIN')}}"/>
+            <input type="hidden" id="is_nicobar" value="{{env('IS_NICOBAR')}}"/>
 
             <!--
                 Contacts
