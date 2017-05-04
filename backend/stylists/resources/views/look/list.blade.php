@@ -68,12 +68,19 @@
                                 }
                             ?>
                             <span>{{$look->status ? $look->status->name : ''}}</span>
+                            @if(!env('IS_NICOBAR'))
                             <span>{{$look->gender ? $look->gender->name : ''}}</span>
                             <span>{{$look->occasion ? $look->occasion->name : ''}}</span>
                             <span>{{$look->body_type ? $look->body_type->name : ''}}</span>
+                            @else
+                                <span>{{$look->category ? $look->category->name : ''}}</span>
+                                <span>{{$look->occasion ? $look->occasion->name : ''}}</span>
+                            @endif
                         </div>
                         <div class="extra text">
+                            @if(!env('IS_NICOBAR'))
                             <span>{{$look->age_group ? $look->age_group->name : ''}}</span>
+                            @endif
                             <span>INR {{$look->price}}</span>
                             <span>{{$look->budget ? 'INR ' . $look->budget->name : ''}}</span>
                         </div>
