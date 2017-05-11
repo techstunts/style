@@ -98,7 +98,7 @@
                             <input type="submit" value="">
                             <a class="icon close"></a>
                         </form>
-                        <form class="input category">
+                        <form class="input category" autocomplete="off">
                             <input type="text" name="category" placeholder="Sub category">
                             <a class="icon close"></a>
                             <a class="icon process"></a>
