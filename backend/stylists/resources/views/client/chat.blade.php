@@ -19,13 +19,13 @@
                 <div class="profile" ng-class="{'loading': !stylist}">
                     <img ng-src="@{{stylist.icon}}">
                     <h1 ng-bind="stylist.name"></h1>
-                    <h2 ng-bind="stylist.designation"></h2>
+                    <h2 ng-bind="{{env('IS_NICOBAR') ? 'stylist.category' : 'stylist.designation'}}"></h2>
                     @if($is_admin || $is_authorised_for_chat_as_admin)
                         <form action="">
                             <select name="stylist_id" onchange="this.form.submit()">
                                 <option value="" disabled>Switch stylist</option>
                                 @foreach($stylists as $stylist)
-                                    <option value="{{$stylist->id}}" {{ $stylist->id == $stylist_id_to_chat ? "selected=selected" : ""}}>{{$stylist->name}}</option>
+                                    <option value="{{$stylist->id}}" {{ $stylist->id == $stylist_id_to_chat ? "selected=selected" : ""}}>{{$stylist->name}} - {{$stylist->category->name}}</option>
                                 @endforeach
                             </select>
                         </form>
