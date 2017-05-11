@@ -521,6 +521,12 @@ function addSubcategoryField()
     $('.options select[name="parent"]').after(autosuggest_element);
     if ($('.options select[name="parent"]').siblings('input[name="category_id"]').length == 0)
         $('.options select[name="parent"]').after('<input type="hidden" name="category_id" value="" >');
+
+    $('.options select[name="parent"]').on('change', function (){
+        $('input.autosuggest').val('');
+        $('input.autosuggest').siblings('input[name="category_id"]').val('');
+    });
+
     $('input.autosuggest').keyup(function(){
         var keyword = $(this).val();
         var parent =  $('.options select[name="parent"]').val();
