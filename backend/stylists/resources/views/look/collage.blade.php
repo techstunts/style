@@ -52,7 +52,9 @@
                     <menu>
                         <b>Template</b>
                         <a class="icon open">Open</a>
-                        <a class="icon new">New</a>
+                        @if(!env('IS_NICOBAR'))
+                            <a class="icon new">New</a>
+                        @endif
                         <a class="icon clear disabled">Clear</a>
                     </menu>
                     <menu>
@@ -102,11 +104,6 @@
                             <input type="text" name="category" placeholder="Sub category">
                             <a class="icon close"></a>
                             <a class="icon process"></a>
-                            <div class="menu">
-                                <a>1</a>
-                                <a>2</a>
-                                <a>3</a>
-                            </div>
                         </form>
                         <form class="filter"></form>
                         <form class="input search-icon minPrice">
