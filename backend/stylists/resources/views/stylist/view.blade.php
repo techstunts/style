@@ -41,6 +41,9 @@
                             <td class="head">Gender</td><td class="content">{{$stylist->gender->name}} </td>
                         </tr>
                         <tr class="row">
+                            <td class="head">Category</td><td class="content">{{$stylist->category->name}} </td>
+                        </tr>
+                        <tr class="row">
                             <td class="head">Designation</td><td class="content">{{$stylist->designation->name}} </td>
                         </tr>
                         <tr class="row">

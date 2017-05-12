@@ -9,6 +9,7 @@ use App\Models\Enums\RecommendationType;
 use App\Models\Enums\StylistStatus;
 use App\Models\Lookups\AppSections;
 use App\Models\Lookups\ChatOnlineStatus;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Stylist\ChatOnline;
 use App\Stylist;
@@ -159,6 +160,7 @@ class ClientController extends Controller
         $stylists=[];
         $stylist = Auth::user();
         $stylist_id_to_chat = $stylist->id;
+        $all_stylist_online_status = [];
 
         $is_admin = $stylist->hasRole('admin');
 
@@ -171,6 +173,23 @@ class ClientController extends Controller
         if($is_admin || $is_authorised_for_chat_as_admin){
             $stylists = Stylist::whereIn('status_id',[StylistStatus::Active])
                 ->orderBy('name')->get();
+
+            //select `s1`.*, `lc`.`name` as `chat_online_status` from `stylist_chat_online` as `s1` left join `stylist_chat_online` as `s2` on `s1`.`stylist_id` = `s2`.`stylist_id` and `s1`.`id` < `s2`.`id` inner join `lu_chat_online_status` as `lc` on `s1`.`chat_online_status_id` = `lc`.`id` where `s2`.`id` is null
+            $stylists_online = DB::table('stylist_chat_online as s1')
+                        ->leftJoin('stylist_chat_online as s2', function ($join) {
+                            $join->on('s1.stylist_id', '=', 's2.stylist_id')
+                                ->on('s1.id', '<', 's2.id');
+                        })
+                        ->join('lu_chat_online_status as lc', 's1.chat_online_status_id', '=', 'lc.id')
+                        ->whereNull('s2.id')
+                        ->select('s1.*', 'lc.name as chat_online_status')
+                        ->get();
+
+            foreach($stylists_online as $k){
+                $all_stylist_online_status[$k->stylist_id] = $k->chat_online_status;
+            }
+
+
             $stylist_id_to_chat = $request->input('stylist_id') ? $request->input('stylist_id') : $stylist_id_to_chat;
         }
 
@@ -184,6 +203,7 @@ class ClientController extends Controller
         $view_properties['online_statuses'] = $online_statuses;
         //dd($stylist_online_status);
         $view_properties['stylist_online_status'] = $stylist_online_status ? $stylist_online_status->chat_online_status_id : "";
+        $view_properties['all_stylist_online_status'] = $all_stylist_online_status;
 
         return view('client/chat', $view_properties);
     }
