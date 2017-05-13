@@ -291,7 +291,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 					if(response[0])
 					{
-						document.getElementById('response').innerHTML = "<a href='" + response[1] + "' target='New'>Check product</a>";
+						productid = response[1].split('/')[response[1].split('/').length-1];
+						document.getElementById('response').innerHTML = "<a href='" + response[1] + "' target='New'>Check product</a>"
+						    + ' Product Id: ' + productid;
 					}
 					else{
 						document.getElementById('response').innerHTML = "<label style='color:red;'>" + response[1] + "</label>";
