@@ -258,7 +258,7 @@ class LookMapper extends Controller
             }
             $look->save();
             if ($uploadMapperObj) {
-                $this->saveUploadImage($request, $look->id, $dimensions);
+                $this->saveUploadImage($request, $look->id, $dimensions, $look->image);
             }
             if ($updateSequence){
                 if ($look->status_id == Status::Active){
@@ -293,10 +293,10 @@ class LookMapper extends Controller
         return $result;
     }
 
-    public function saveUploadImage($request, $look_id, $dimensions)
+    public function saveUploadImage($request, $look_id, $dimensions, $filename)
     {
         $uploadObj = new UploadImages();
-        $uploadObj->name = $filename = preg_replace('/[^a-zA-Z0-9_.]/', '_', $request->file('image')->getClientOriginalName());;
+        $uploadObj->name = $filename;
         $uploadObj->path = 'uploads/images/looks';
         $uploadObj->mime_type = $request->file('image')->getClientMimeType();
         $uploadObj->size = $request->file('image')->getClientSize();
