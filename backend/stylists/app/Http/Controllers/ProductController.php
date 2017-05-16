@@ -71,6 +71,7 @@ class ProductController extends Controller
             'merchants' => $this->merchants,
             'brands' => $this->brands,
             'categories' => $categories,
+            'par_categories' => $category_obj->whereIn('id', [1,8,38])->get(),
             'genders' => $this->genders,
             'colors' => $this->colors,
             'ratings' => $this->ratings,
@@ -121,7 +122,12 @@ class ProductController extends Controller
 
         $genders_list = Gender::all()->keyBy('id');
         $genders_list[0] = new Gender();
-
+        if (!empty($request->input('par_category_id'))){
+            $category_ids = $this->subCategoryIds($request->input('par_category_id'));
+            $view_properties['par_category_id'] = intval($request->input('par_category_id'));
+        } else{
+            $view_properties['par_category_id'] = intval($request->input('par_category_id'));
+        }
         $mapperObj = new Mapper();
         $product_prices = $mapperObj->getPriceClosure($min_price, $max_price, $min_discount, $max_discount);
         $in_stock_closure = $this->getInStockClosure($in_stock);
@@ -130,8 +136,11 @@ class ProductController extends Controller
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereHas('product_prices', $product_prices);
-        if (!empty($in_stock)) {
+        if ($in_stock !== '') {
             $products = $products->whereHas('in_stock', $in_stock_closure);
+        }
+        if (!empty($category_ids)) {
+            $products = $products->whereIn('category_id', $category_ids);
         }
         $products = $products->orderBy('created_at', 'desc')
                 ->simplePaginate($this->records_per_page)
@@ -163,8 +172,12 @@ class ProductController extends Controller
     public function getInStockClosure($in_stock)
     {
         return function ($query) use($in_stock) {
-            if (!empty($in_stock)) {
-                $query->where('stock_quantity', '>=', $in_stock);
+            if (!($in_stock == '')) {
+                if (!$in_stock) {
+                    $query->where('stock_quantity', '=', 0);
+                } else {
+                    $query->where('stock_quantity', '>=', $in_stock);
+                }
             }
         };
     }
@@ -580,5 +593,14 @@ class ProductController extends Controller
         return Redirect::back()
             ->withErrors([$message])
             ->withInput();
+    }
+
+    public function subCategoryIds ($category_id) {
+        $categories = Category::where(['parent_category_id' => $category_id])->get();
+        $category_ids = array(intval($category_id));
+        foreach ($categories as $category) {
+            $category_ids[] = $category->id;
+        }
+        return $category_ids;
     }
 }

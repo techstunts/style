@@ -308,12 +308,14 @@ $(document).ready(function(){
         var keyword = $(this).val();
         var autosuggest_type = $(this).attr('autosuggest_type');
         var autosuggest_object =  $(this);
+        var par_category_id = $('input.autosuggest').parent().find('select[name="par_category_id"]').val();
         if(keyword.trim().length>=2){
             $.ajax({
                 type : "GET",
                 url: api_origin + '/autosuggest/' + autosuggest_type,
                 data : {
                     keyword : keyword,
+                    parent : par_category_id,
                 },
                 success : function(response){
                     var allSuggestions = [];
