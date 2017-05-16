@@ -17,6 +17,7 @@
             <link rel="stylesheet" href="{{asset("collage/styles/loader.css")}}">
             <link rel="stylesheet" href="{{asset("collage/styles/publish.css")}}">
             <link rel="stylesheet" href="{{asset("collage/styles/text.css")}}">
+            <script src="{{asset("collage/vendor/pubnub-3.14.5.min.js")}}"></script>
             <script src="{{asset("collage/scripts/stylize.js")}}"></script>
             <script src="{{asset("collage/scripts/preload.js")}}"></script>
             <script src="{{asset("collage/scripts/template.js")}}"></script>
@@ -30,6 +31,7 @@
             <script src="{{asset("collage/scripts/editor.js")}}"></script>
             <script src="{{asset("collage/scripts/drag.js")}}"></script>
             <script src="{{asset("collage/scripts/text.js")}}"></script>
+            <script src="{{asset("collage/scripts/pubnub.js")}}"></script>
 
             <div class="collage">
 
@@ -172,6 +174,7 @@
                             <div class="tags"></div>
                             <input class="button submit" type="submit" value="Publish">
                             <input class="button submit" type="button" value="Publish to request" id="publishToRequest">
+                            <input class="button submit" type="button" value="Publish to chat" id="publishToChat">
                             <input type="button" class="button-bk" id="back" value="Back">
                             <span class="error"></span>
                         </form>

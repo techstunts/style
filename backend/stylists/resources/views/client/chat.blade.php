@@ -9,6 +9,7 @@
             <input type="hidden" id="stylist_id" value="{{$stylist_id_to_chat}}"/>
             <input type="hidden" id="api_origin" value="{{env('API_ORIGIN')}}"/>
             <input type="hidden" id="is_nicobar" value="{{env('IS_NICOBAR')}}"/>
+            <input type="hidden" id="collage_path" value="{{env('COLLAGE_PATH')}}"/>
 
             <!--
                 Contacts
@@ -177,6 +178,14 @@
                         </article>
                         <span ng-bind="message.data.time | time"></span>
                     </li>
+                    <li class="client text typing" ng-class="{active: typing}">
+                        <img class="user" icon ng-src="@{{client.image}}">
+                        <article class="dots">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </article>
+                    </li>
                 </ul>
 
                 <div class="send">
@@ -256,6 +265,7 @@
 
                 <div class="foot">
                     <button class="button" ng-disabled="!result.length" ng-click="send()">Send</button>
+                    <button class="button" ng-click="create()">Create</button>
                     <div class="pager">
                         <a class="icon prev-dark" ng-class="{'disabled': !current.prev}" ng-click="pager(-1)"></a>
                         <b ng-bind="current.page"></b>
