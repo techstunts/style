@@ -172,6 +172,7 @@
                             <div class="tags"></div>
                             <input class="button submit" type="submit" value="Publish">
                             <input class="button submit" type="button" value="Publish to request" id="publishToRequest">
+                            <input class="button submit" type="button" value="Publish to chat" id="publishToChat">
                             <input type="button" class="button-bk" id="back" value="Back">
                             <span class="error"></span>
                         </form>
