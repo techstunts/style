@@ -89,7 +89,7 @@
             <input type="hidden" value="{{\Illuminate\Support\Facades\Auth::user()->id}}" id="stylist_id">
 
             <div class=" col-lg-offset-1 col-md-2">
-                <div id="prevWeek" class="selected-btn nav-btn-text"><b>PREV</b></div>
+                <div id="prevWeek" class="selected-btn nav-btn-text"><b>PREVIOUS</b></div>
             </div>
             <div class=" col-lg-offset-2 col-md-2">
                 <div id="save" class="disabled-btn nav-btn-text"><b>SAVE</b></div>
