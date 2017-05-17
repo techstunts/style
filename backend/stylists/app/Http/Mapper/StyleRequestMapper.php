@@ -33,6 +33,7 @@ class StyleRequestMapper extends Controller
 
         $view_properties['from_date'] = $request->input('from_date');
         $view_properties['to_date'] = $request->input('to_date');
+        $view_properties['in_stock'] = $request->input('in_stock');
 
         $view_properties['app_sections'] = AppSections::all();
         $view_properties['recommendation_type_id'] = RecommendationType::STYLE_REQUEST;

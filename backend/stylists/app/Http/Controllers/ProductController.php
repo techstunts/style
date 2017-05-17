@@ -172,12 +172,12 @@ class ProductController extends Controller
     public function getInStockClosure($in_stock)
     {
         return function ($query) use($in_stock) {
-            if (!($in_stock == '')) {
-                if (!$in_stock) {
-                    $query->where('stock_quantity', '=', 0);
-                } else {
-                    $query->where('stock_quantity', '>=', $in_stock);
-                }
+            if ($in_stock !== '' && $in_stock) {
+                $query->where('stock_quantity', '>=', 1);
+            } elseif ($in_stock !== '' && !$in_stock) {
+                $query->select('product_id')
+                    ->groupBy('product_id')
+                    ->havingRaw('SUM(stock_quantity) = 0');
             }
         };
     }
