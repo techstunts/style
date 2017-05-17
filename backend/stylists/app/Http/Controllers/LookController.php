@@ -10,7 +10,7 @@ use App\Models\Enums\RecommendationType;
 use App\Models\Enums\Status as LookupStatus;
 use App\Models\Enums\StylistStatus;
 use App\Models\Enums\ImageType;
-use App\Models\Lookups\Status;
+use App\Models\Lookups\LookStatus;
 use App\Models\Lookups\AppSections;
 use App\Http\Mapper\LookMapper;
 use App\Http\Mapper\UploadMapper;
@@ -27,7 +27,7 @@ use Validator;
 class LookController extends Controller
 {
     protected $filter_ids = ['stylist_id', 'status_id', 'gender_id', 'occasion_id', 'body_type_id', 'budget_id', 'age_group_id'];
-    protected $filters = ['stylists', 'statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups'];
+    protected $filters = ['stylists', 'lookStatuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups'];
 
     protected $status_rules;
 
@@ -46,7 +46,12 @@ class LookController extends Controller
 
     protected function initStatusRules()
     {
-        $rules_file = app_path() . '/Models/Rules/look.xml';
+        if(env('IS_NICOBAR')){
+            $rules_file = app_path() . '/Models/Rules/Nicobar/look.xml';
+        }
+        else{
+            $rules_file = app_path() . '/Models/Rules/look.xml';
+        }
         $data = implode("", file($rules_file));
 
         $xml = simplexml_load_string($data);
@@ -61,15 +66,17 @@ class LookController extends Controller
     public function getList(Request $request)
     {
         $this->base_table = 'looks';
-        $this->filter_ids = ['stylist_id', 'status_id', 'category_id', 'occasion_id'];
-        $this->filters = ['stylists', 'statuses', 'categories', 'occasions'];
+        if(env('IS_NICOBAR')){
+            $this->filter_ids = ['stylist_id', 'status_id', 'category_id', 'occasion_id'];
+            $this->filters = ['stylists', 'lookStatuses', 'categories', 'occasions'];
+        }
 
         $this->initWhereConditions($request);
         $this->initFilters();
 
         $view_properties = array(
             'stylists' => $this->stylists,
-            'statuses' => $this->statuses,
+            'statuses' => $this->lookStatuses,
             'categories' => $this->categories,
             'genders' => $this->genders,
             'occasions' => $this->occasions,
@@ -256,7 +263,7 @@ class LookController extends Controller
             $look = $lookMapperObj->setLookImages($look);
             $view_properties = array(
                 'look' => $look,
-                'status' => Status::find($look->status_id),
+                'status' => LookStatus::find($look->status_id),
                 'is_owner_or_admin' => Auth::user()->hasRole('admin') || $look->stylist_id == Auth::user()->id,
             );
             return view('look.view', $view_properties);
