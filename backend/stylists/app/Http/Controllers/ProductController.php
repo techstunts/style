@@ -6,6 +6,7 @@ use App\Brand;
 use App\Category;
 use App\Http\Mapper\Mapper;
 use App\Models\Enums\Currency;
+use App\Models\Enums\InStock;
 use App\Models\Enums\PriceType;
 use App\Models\Looks\LookTag;
 use App\Models\Lookups\Gender;
@@ -136,7 +137,7 @@ class ProductController extends Controller
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereHas('product_prices', $product_prices);
-        if ($in_stock !== '') {
+        if ($in_stock != null && $in_stock !== '') {
             $products = $products->whereHas('in_stock', $in_stock_closure);
         }
         if (!empty($category_ids)) {
@@ -172,9 +173,9 @@ class ProductController extends Controller
     public function getInStockClosure($in_stock)
     {
         return function ($query) use($in_stock) {
-            if ($in_stock !== '' && $in_stock) {
+            if ($in_stock == InStock::Yes) {
                 $query->where('stock_quantity', '>=', 1);
-            } elseif ($in_stock !== '' && !$in_stock) {
+            } elseif ($in_stock == InStock::No) {
                 $query->select('product_id')
                     ->groupBy('product_id')
                     ->havingRaw('SUM(stock_quantity) = 0');
