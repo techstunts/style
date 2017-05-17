@@ -74,6 +74,10 @@ class ScraperMapper
             }
             curl_close($ch);
             fclose($fp);
+            $fp = fopen($file_name_with_path, 'r+') or die("can't open file");
+            $stat = fstat($fp);
+            ftruncate($fp, $stat['size']-1);
+            fclose($fp);
 
             return array('status' => true, 'file_path' => env('JSONLINE_FILE_BASE_PATH'));
         }
@@ -233,6 +237,7 @@ class ScraperMapper
             if ($count >= $this->process_data_count) {
                 try {
                     $result = \GuzzleHttp\json_decode($this->importMerchantProducts($product_array, $url));
+                    var_dump($result->message);
                     if (!$result->status) {
                         echo 'Some error occured ' . $result->message;
                     }

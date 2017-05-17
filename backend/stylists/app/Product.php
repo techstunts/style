@@ -54,7 +54,7 @@ class Product extends Model
         return $this->belongsTo('App\Stylist', 'stylist_id');
     }
 
-    public function product_tags(){
+    public function tags(){
         return $this->hasMany('App\ProductTag');
     }
 

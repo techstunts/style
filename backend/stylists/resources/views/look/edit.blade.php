@@ -191,9 +191,7 @@
                                 <input name="entity_id" type="hidden" value="{{$look->id}}">
                                 <input name="url" type="hidden" value="{{env('API_ORIGIN')}}/file/upload">
                                 <input name="entity_type_id" type="hidden" value="{{App\Models\Enums\EntityType::LOOK}}">
-                                <select class="form-control" name="image_type" style="display: none;">
-                                    <option value="{{\App\Models\Enums\ImageType::Other_look_image}}">Other look image</option>
-                                </select>
+                                @include('common.image_type.select')
                                 <br>
                                 <div class="row">
                                     <div class="col-md-8">
@@ -202,15 +200,10 @@
                                 </div>
                             </form>
                             <br>
+                            <div>PDP Image</div>
                             <div class="col-md-8 no-padd">
-                            <img class="entity img-responsive" src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/>
+                            <img class="entity img-responsive" src="{{$look->PDP_Image}}"/>
                             </div>
-
-                            @if(count($look->otherImages) > 0)
-                                <div class="col-md-4 no-padd">
-                                    <input type="radio" class="list-image-button" value="" {{$look->list_image == null ? 'checked' : ''}}> {{$look->list_image == null ? 'Default list image' : 'Make it listing image'}}
-                                </div>
-                            @endif
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -218,17 +211,11 @@
                                 </div>
                             </div>
 
-                            @if(count($look->otherImages) > 0)
-                                @foreach($look->otherImages as $image)
-                                    <div class="col-md-8 no-padd">
-                                        <img class="entity img-responsive" src="{{env('API_ORIGIN') .'/' . $image->path.'/'  . $image->name}}"/>
-                                    </div>
-                                    <div class="col-md-4 no-padd">
-                                    <input type="radio" class="list-image-button" value="{{$image->id}}" {{$look->list_image ==  $image->id ? 'checked' : ''}}> Make it listing image
-                                    </div>
-                                    <br>
-                                @endforeach
-                            @endif
+                            <div>PLP Image</div>
+                            <div class="col-md-8 no-padd">
+                                <img class="entity img-responsive" src="{{$look->PLP_Image}}"/>
+                            </div>
+                            <br>
                             @if($image_error = $errors->first('image'))
                                 <span class="errorMsg">{{$image_error}}</span>
                             @endif

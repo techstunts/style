@@ -67,6 +67,10 @@ class Look extends Model
         return $this->hasMany('App\Models\Looks\LookPrice');
     }
 
+    public function tags(){
+        return $this->hasMany('App\Models\Looks\LookTag');
+    }
+
     public function recommendation(){
         return $this->hasMany('App\Recommendation', 'entity_id');
     }
@@ -76,6 +80,10 @@ class Look extends Model
     }
 
     public function otherImages(){
+        return $this->hasMany('App\UploadImages', 'uploaded_by_entity_id');
+    }
+
+    public function images(){
         return $this->hasMany('App\UploadImages', 'uploaded_by_entity_id');
     }
 }

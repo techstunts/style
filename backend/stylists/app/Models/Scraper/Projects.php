@@ -7,5 +7,5 @@ class Projects extends Model
 {
     protected $table = 'projects';
     protected $primaryKey = 'id';
-    protected $connection = 'mysqlScraper';
+//    protected $connection = 'mysqlScraper';
 }

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Mapper\ProductMapper;
+use App\Models\Enums\Currency;
 use App\Models\Enums\EntityTypeName;
 use App\Models\Enums\ImageType;
+use App\Models\Enums\PriceType;
+use App\Models\Enums\ProfileImageStatus;
 use App\Models\Enums\Status;
 use App\UploadImages;
 use Illuminate\Http\Request;
@@ -79,15 +82,54 @@ class RecommendationController extends Controller
                 ), 200
             );
         }
+        $upload_image = function ($query) {
+            $query->where([
+                'uploaded_by_entity_type_id' => EntityTypeId::LOOK,
+                'image_type_id' => ImageType::PDP_Image,
+                'status_id' => ProfileImageStatus::Active,
+            ]);
+        };
+
         $api_origin = env('API_ORIGIN');
         $entity_data = array();
         if (count($product_ids) > 0) {
-            $entity_data[strtolower(EntityTypeName::PRODUCT)] = Product::whereIn('id', $product_ids)
+            $products = Product::whereIn('id', $product_ids)
                 ->select('id', 'name', 'image_name as image', 'product_link', 'merchant_id')->get();
+
+            if (count($products)) {
+                foreach ($products as $product) {
+                    if ($product->product_prices){
+                        foreach ($product->product_prices as $product_price) {
+                            if ($product_price->price_type_id == PriceType::RETAIL && $product_price->currency_id == Currency::INR)
+                                $product->price = $product_price->value;
+                        }
+                        unset($product->product_prices);
+                    }
+                }
+            }
+            $entity_data[strtolower(EntityTypeName::PRODUCT)] = $products;
         }
         if (count($look_ids) > 0) {
-            $entity_data[strtolower(EntityTypeName::LOOK)] = Look::whereIn('id', $look_ids)->with('look_products.product')
+            $looks = Look::whereIn('id', $look_ids)->with(['look_products.product', 'images' => $upload_image])
                 ->select('id', 'name', DB::raw("concat('$api_origin', '/uploads/images/looks/', image) as image"))->get();
+            foreach ($looks as $look) {
+                if (count($look->images) > 0) {
+                    $look->image = env('API_ORIGIN') . '/' . $look->images[0]['path'] . '/' . $look->images[0]['name'];
+                    unset($look->images);
+                }
+                if (count($look->look_products)) {
+                    foreach ($look->look_products as $look_product) {
+                        if ($look_product->product && $look_product->product->product_prices){
+                            foreach ($look_product->product->product_prices as $product_price) {
+                                if ($product_price->price_type_id == PriceType::RETAIL && $product_price->currency_id == Currency::INR)
+                                    $look_product->product->price = $product_price->value;
+                            }
+                            unset($look_product->product->product_prices);
+                        }
+                    }
+                }
+            }
+            $entity_data[strtolower(EntityTypeName::LOOK)] = $looks;
         }
         if (count($tip_ids) > 0) {
             $entity_data[strtolower(EntityTypeName::TIP)] = Tip::whereIn('id', $tip_ids)

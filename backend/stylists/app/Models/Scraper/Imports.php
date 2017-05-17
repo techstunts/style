@@ -7,5 +7,5 @@ class Imports extends Model
 {
     protected $table = 'imports';
     protected $primaryKey = 'id';
-    protected $connection = 'mysqlScraper';
+//    protected $connection = 'mysqlScraper';
 }

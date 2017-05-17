@@ -10,11 +10,12 @@
                         <li><a href="/client/chat">Chat</a></li>
                         <li><a href="/requests/list">Requests</a></li>
                         <li><a href="/bookings/list">Bookings</a></li>
-                        <li><a href="/client/list">Clients</a></li>
                         <li><a href="/product/list">Products</a></li>
                         <li><a href="/look/list">Looks</a></li>
+                        <li><a href="/look/sequence">Sequence</a></li>
                         <li><a href="/look/collage">Collage</a></li>
                         <li><a href="/stylist/availability/">Availability</a></li>
+                        <li><a href="/client/list">Clients</a></li>
                         <li class="pull-right" a><a href="{!! url('auth/logout') !!}">Logout</a></li>
                         <li class="pull-right"><a href="{!! url('stylist/view/' . Auth::user()->id) !!}">{{Auth::user()->name}}</a></li>
                     @else

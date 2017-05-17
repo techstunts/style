@@ -17,6 +17,7 @@
             <link rel="stylesheet" href="{{asset("collage/styles/loader.css")}}">
             <link rel="stylesheet" href="{{asset("collage/styles/publish.css")}}">
             <link rel="stylesheet" href="{{asset("collage/styles/text.css")}}">
+            <script src="{{asset("collage/vendor/pubnub-3.14.5.min.js")}}"></script>
             <script src="{{asset("collage/scripts/stylize.js")}}"></script>
             <script src="{{asset("collage/scripts/preload.js")}}"></script>
             <script src="{{asset("collage/scripts/template.js")}}"></script>
@@ -30,6 +31,7 @@
             <script src="{{asset("collage/scripts/editor.js")}}"></script>
             <script src="{{asset("collage/scripts/drag.js")}}"></script>
             <script src="{{asset("collage/scripts/text.js")}}"></script>
+            <script src="{{asset("collage/scripts/pubnub.js")}}"></script>
 
             <div class="collage">
 
@@ -52,7 +54,9 @@
                     <menu>
                         <b>Template</b>
                         <a class="icon open">Open</a>
-                        <a class="icon new">New</a>
+                        @if(!env('IS_NICOBAR'))
+                            <a class="icon new">New</a>
+                        @endif
                         <a class="icon clear disabled">Clear</a>
                     </menu>
                     <menu>
@@ -93,30 +97,19 @@
 
                 <div id="browser" class="window">
                     <div class="toolbar">
-                        <form class="input category">
-                            <input type="text" name="category" placeholder="Category">
-                            <a class="icon close"></a>
-                            <a class="icon process"></a>
-                            <div class="menu">
-                                <a>1</a>
-                                <a>2</a>
-                                <a>3</a>
-                            </div>
-                        </form>
-                        <select class="tabs">
-                            <option value="catalog">Catalog</option>
-                            <option value="gallery">Gallery</option>
-                        </select>
-                        <div class="input search-icon pager">
-                            <a class="icon prev disabled"></a>
-                            <input disabled type="text" value="1">
-                            <a class="icon next disabled"></a>
-                        </div>
                         <form class="input search">
                             <input type="text" name="search" placeholder="Search">
                             <input type="submit" value="">
                             <a class="icon close"></a>
                         </form>
+                        <form class="parent"></form>
+                        <form class="input category" autocomplete="off">
+                            <input type="text" name="category" placeholder="Sub category">
+                            <a class="icon close"></a>
+                            <a class="icon process"></a>
+                            <div class="menu"></div>
+                        </form>
+                        <form class="filter"></form>
                         <form class="input search-icon minPrice">
                             <input type="text" name="min_price" value="" placeholder="Min">
                             <input type="submit" value="">
@@ -127,9 +120,18 @@
                             <input type="submit" value="">
                             <a class="icon close"></a>
                         </form>
-                        <form class="filter"></form>
+                        <select class="tabs">
+                            <option value="catalog">Catalog</option>
+                            <option value="gallery">Gallery</option>
+                        </select>
+                        <div class="input search-icon pager">
+                            <a class="icon prev disabled"></a>
+                            <input disabled type="text" value="1">
+                            <a class="icon next disabled"></a>
+                        </div>
+                        <div><a class="clear_all pull-left">Clear all</a></div>
                     </div>
-                    <div><a class="clear_all pull-right">Clear all</a></div>
+
                     <div class="result"></div>
                 </div>
 
@@ -172,6 +174,7 @@
                             <div class="tags"></div>
                             <input class="button submit" type="submit" value="Publish">
                             <input class="button submit" type="button" value="Publish to request" id="publishToRequest">
+                            <input class="button submit" type="button" value="Publish to chat" id="publishToChat">
                             <input type="button" class="button-bk" id="back" value="Back">
                             <span class="error"></span>
                         </form>

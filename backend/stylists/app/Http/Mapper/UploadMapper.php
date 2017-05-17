@@ -55,7 +55,8 @@ class UploadMapper extends Controller
         $image_path = env(strtoupper($entity_name) . '_IMAGE_PATH');
 
         $destinationPath = public_path() . '/' . $image_path;
-        $filename = preg_replace('/[^a-zA-Z0-9_.]/', '_', $request->file('image')->getClientOriginalName());
+        $filename = preg_replace('/[^a-zA-Z0-9_.]/', '_', time() . '_' . $request->file('image')->getClientOriginalName());
+
         $request->file('image')->move($destinationPath, $filename);
         return $filename;
     }

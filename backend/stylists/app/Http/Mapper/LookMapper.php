@@ -12,6 +12,8 @@ use App\Models\Enums\ProfileImageStatus;
 use App\Models\Looks\LookPrice;
 use App\Models\Lookups\PriceType;
 use App\Product;
+use App\UploadImages;
+use App\Models\Looks\LookSequence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +48,8 @@ class LookMapper extends Controller
             'occasions' => $lookup->type('occasion')->get(),
             'statuses' => $lookup->type('status')->get(),
             'categories' => Category::whereIn('id', [CategoryEnum::Men, CategoryEnum::Women, CategoryEnum::House])->get(),
-        );
+            'image_types' => $lookup->type('image_type')->where(['entity_type_id' => EntityType::LOOK])->get(),
+    );
         if (env('IS_NICOBAR'))
             $dropDowns['occasions_list'] = $this->categoryWiseOccasion($dropDowns['occasions']);
         return $dropDowns;
@@ -83,7 +86,7 @@ class LookMapper extends Controller
         foreach ($this->dropdown_fields as $dropdown_field) {
             $look->$dropdown_field = isset($request->$dropdown_field) && $request->$dropdown_field != '' ? $request->$dropdown_field : 1;
         }
-        $look->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : Status::Submitted;
+        $look->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : Status::Inactive;
         $look->is_collage=false;
         return $look;
     }
@@ -153,8 +156,8 @@ class LookMapper extends Controller
         $entity_type_id = EntityType::LOOK;
 
         $images = function ($query) {
-            $query->where('uploaded_by_entity_type_id', EntityType::LOOK);
-            $query->where(['status_id' => ProfileImageStatus::Active, 'image_type_id' => ImageType::Other_look_image]);
+            $query->whereIn('image_type_id', [ImageType::PDP_Image, ImageType::PLP_Image]);
+            $query->where(['status_id' => ProfileImageStatus::Active, 'uploaded_by_entity_type_id' => EntityType::LOOK]);
         };
         $look = Look::with(['otherImages' => $images, 'stylist' => function ($query) {
             $query->select('id', 'name', 'image');
@@ -167,6 +170,27 @@ class LookMapper extends Controller
             ->select($this->fields)
             ->where('id', $id)
             ->first();
+        return $look;
+    }
+
+    public function setLookImages($look)
+    {
+        $look->PLP_Image = $look->PDP_Image = '';
+        if (count($look->otherImages) > 0) {
+            foreach ($look->otherImages as $otherImage) {
+                if ($otherImage->image_type_id == ImageType::PDP_Image){
+                    $look->PDP_Image = env('API_ORIGIN') .'/' . $otherImage->path.'/'  . $otherImage->name;
+                } elseif ($otherImage->image_type_id == ImageType::PLP_Image) {
+                    $look->PLP_Image = env('API_ORIGIN') .'/' . $otherImage->path.'/'  . $otherImage->name;
+                }
+            }
+        }
+        if (empty($look->PDP_Image)) {
+            $look->PDP_Image = env('API_ORIGIN') . '/uploads/images/looks/' . $look->image;
+        }
+        if (empty($look->PLP_Image)) {
+            $look->PLP_Image = env('API_ORIGIN') . '/uploads/images/looks/' . $look->image;
+        }
         return $look;
     }
 
@@ -213,20 +237,40 @@ class LookMapper extends Controller
                 'message' => 'Upload image to make status Active',
             );
         }
-
+        $updateSequence = false;
+        if ($look->status_id != $request->status_id){
+            $updateSequence = true;
+        }
         $look = $this->setObjectProperties($look, $request);
         $logged_in_stylist = $request->user()->id != '' ? $request->user()->id : '';
 
         if (!$look->exists) {
             $look->stylist_id = $logged_in_stylist;
         }
-
+        $dimensions = array();
         DB::beginTransaction();
         try {
             if ($uploadMapperObj) {
+                $dimensions = getimagesize($request->file('image'));
                 $look->image = $uploadMapperObj->moveImageInFolder($request);
+                $look->image_width = $dimensions[0];
+                $look->image_height = $dimensions[1];
             }
             $look->save();
+            if ($uploadMapperObj) {
+                $this->saveUploadImage($request, $look->id, $dimensions, $look->image);
+            }
+            if ($updateSequence){
+                if ($look->status_id == Status::Active){
+                    $response = $this->createSequence($look->id);
+                } else {
+                    $response = $this->deleteSequence($look->id);
+                }
+                if (!$response['status']) {
+                    DB::rollback();
+                    return $response;
+                }
+            }
             $result = $this->saveProducts($look->id, $request->input('product_ids'));
             if ($result['status'] == false) {
                 DB::rollback();
@@ -247,6 +291,23 @@ class LookMapper extends Controller
         }
 
         return $result;
+    }
+
+    public function saveUploadImage($request, $look_id, $dimensions, $filename)
+    {
+        $uploadObj = new UploadImages();
+        $uploadObj->name = $filename;
+        $uploadObj->path = 'uploads/images/looks';
+        $uploadObj->mime_type = $request->file('image')->getClientMimeType();
+        $uploadObj->size = $request->file('image')->getClientSize();
+        $uploadObj->image_width = $dimensions[0];
+        $uploadObj->image_height = $dimensions[1];
+        $uploadObj->uploaded_by_entity_id = $look_id;
+        $uploadObj->uploaded_by_entity_type_id = EntityType::LOOK;
+        $uploadObj->image_type_id = ImageType::PDP_Image;
+
+        $uploadObj->save();
+        return $uploadObj->id;
     }
 
     public function getProducts($look_id)
@@ -346,5 +407,124 @@ class LookMapper extends Controller
             $occasionsArr[$occasion->category_id][] = $occasion;
         }
         return $occasionsArr;
+    }
+
+    public function sequesceList($request)
+    {
+        $paginate_qs = $request->query();
+        unset($paginate_qs['page']);
+
+        $images = function ($query) {
+            $query->where(['image_type_id'=>ImageType::PLP_Image, 'status_id' => ProfileImageStatus::Active]);
+        };
+        $look = function ($query) use ($images){
+            $query->with(['images' => $images]);
+            $query->select(['id', 'name', 'image']);
+        };
+
+        $looks = LookSequence::with(['look' => $look])
+        ->orderBy('order_id', 'asc')
+        ->simplePaginate($this->records_per_page * 4)
+        ->appends($paginate_qs);
+        foreach ($looks as $item) {
+            if ($item->look && count($item->look->images) > 0) {
+                $item->look->image = env('API_ORIGIN') . '/' .$item->look->images[0]->path . '/' . $item->look->images[0]->name;
+            } else{
+                $item->look->image = env('API_ORIGIN') . '/uploads/images/looks/' . $item->look->image;
+            }
+        }
+        return $looks;
+    }
+
+    public function checkUpdate($look_ids)
+    {
+        $existing_list = LookSequence::get();
+        $indexedArr = array();
+        foreach ($existing_list as $data) {
+            $indexedArr[$data->order_id] = $data->look_id;
+        }
+        unset($existing_list);
+        $status = false;
+        foreach ($look_ids as $index => $look_id) {
+            if ($indexedArr[($index+1)] != $look_id) {
+                $status = true;
+                break;
+            }
+        }
+        return $status;
+    }
+
+    public function updateSequence ($look_ids)
+    {
+        DB::beginTransaction();
+        $data = array();
+        foreach ($look_ids as $index => $look_id) {
+            $data[] = array(
+                'look_id' => $look_id,
+                'order_id' => ($index+1),
+            );
+        }
+        try {
+            LookSequence::whereRaw('1=1')->delete();
+            if (count($data)>0)
+                LookSequence::insert($data);
+
+            DB::commit();
+            $status = true;
+            $message = 'Updated successfully';
+        } catch (\Exception $e) {
+            DB::rollback();
+            $status = false;
+            $message = $e->getMessage();
+        }
+        return ['status' => $status, 'message' => $message];
+    }
+
+    public function createSequence ($look_id)
+    {
+        $max_order_look = LookSequence::select(DB::raw("MAX(order_id) as max_order_id"))->first();
+        $data = array(
+            'look_id' => $look_id,
+            'order_id' => ($max_order_look->max_order_id+1),
+        );
+        try {
+            LookSequence::insert($data);
+            $status = true;
+            $message = 'Updated successfully';
+        } catch (\Exception $e) {
+            $status = false;
+            $message = $e->getMessage();
+        }
+        return ['status' => $status, 'message' => $message];
+    }
+
+    public function deleteSequence ($look_id)
+    {
+        $look = LookSequence::where(['look_id' => $look_id])->first();
+        if ($look) {
+            $otherLooks = LookSequence::where('order_id', '>', $look->order_id)->get();
+            $look_ids = array($look_id);
+            $data = array();
+            foreach ($otherLooks as $otherLook) {
+                array_push($look_ids, $otherLook->look_id);
+                $data[] = array(
+                    'look_id' => $otherLook->look_id,
+                    'order_id' => ($otherLook->order_id - 1),
+                );
+            }
+            try {
+                LookSequence::whereIn('look_id', $look_ids)->delete();
+                LookSequence::insert($data);
+                $status = true;
+                $message = 'Updated successfully';
+            } catch (\Exception $e) {
+                $status = false;
+                $message = $e->getMessage();
+            }
+        } else {
+            $status = true;
+            $message = 'Nothing to update';
+        }
+        return ['status' => $status, 'message' => $message];
     }
 }

@@ -9,7 +9,7 @@ use App\Models\Enums\ProfileImageStatus;
 use App\Models\Enums\RecommendationType;
 use App\Models\Enums\Status as LookupStatus;
 use App\Models\Enums\StylistStatus;
-use App\Models\Lookups\ImageType;
+use App\Models\Enums\ImageType;
 use App\Models\Lookups\Status;
 use App\Models\Lookups\AppSections;
 use App\Http\Mapper\LookMapper;
@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Validator;
 
@@ -115,7 +116,7 @@ class LookController extends Controller
         $mapperObj = new Mapper();
         $look_prices = $mapperObj->getPriceClosure();
         $looks =
-            Look::with(['gender', 'status', 'body_type', 'budget', 'occasion', 'age_group', 'prices' => $look_prices])
+            Look::with(['category', 'gender', 'status', 'body_type', 'budget', 'occasion', 'age_group', 'tags.tag', 'prices' => $look_prices])
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereRaw($remove_deleted_looks)
@@ -136,6 +137,7 @@ class LookController extends Controller
         $view_properties['entity_type_to_send'] = EntityType::LOOK;
         $view_properties['recommendation_type_id'] = RecommendationType::MANUAL;
         $view_properties['is_owner_or_admin'] = Auth::user()->hasRole('admin');
+        $view_properties['entity'] = 'look';
         return view('look.list', $view_properties);
     }
 
@@ -169,12 +171,25 @@ class LookController extends Controller
                 if (isset($new_statuses['id'])) {
                     $new_statuses = array($new_statuses);
                 }
+                $lookMapper = new LookMapper();
                 foreach ($new_statuses as $new_status) {
                     if ($new_status['id'] == $this->action_resource_id) {
                         $look->status_id = $new_status['id'];
+                        DB::beginTransaction();
                         if ($look->save()) {
+                            if ($look->status_id == LookupStatus::Active) {
+                                $response = $lookMapper->createSequence($look->id);
+                            } else {
+                                $response = $lookMapper->deleteSequence($look->id);
+                            }
+                            if (!$response['status']){
+                                DB::rollback();
+                                return Redirect::back()->withError('Error! ' . $response['message']);
+                            }
+                            DB::commit();
                             return Redirect::back()->withSuccess('Look status changed successfully!');
                         } else {
+                            DB::rollback();
                             return Redirect::back()->withError('Error! Look save error.');
                         }
                     }
@@ -229,14 +244,16 @@ class LookController extends Controller
             $query->with('product');
         };
         $images = function ($query) {
-            $query->where(['uploaded_by_entity_type_id' => EntityType::LOOK, 'status_id' => ProfileImageStatus::Active,
-                'image_type_id' => \App\Models\Enums\ImageType::Other_look_image]);
+            $query->where(['uploaded_by_entity_type_id' => EntityType::LOOK, 'status_id' => ProfileImageStatus::Active]);
+            $query->whereIn('image_type_id', [ImageType::PDP_Image, ImageType::PLP_Image]);
         };
 
-        $look = Look::with(['look_products' => $looks_products, 'stylist', 'prices', 'category', 'otherImages' => $images])
+        $look = Look::with(['look_products' => $looks_products, 'stylist', 'prices', 'category', 'otherImages' => $images, 'tags.tag'])
             ->where('id', $this->resource_id)
             ->first();
         if ($look) {
+            $lookMapperObj = new LookMapper();
+            $look = $lookMapperObj->setLookImages($look);
             $view_properties = array(
                 'look' => $look,
                 'status' => Status::find($look->status_id),
@@ -261,6 +278,7 @@ class LookController extends Controller
             if (!empty($request->old('product_ids'))) {
                 $look->look_products = Mapper::productsByIds($request->old('product_ids'));
             }
+            $look = $lookMapperObj->setLookImages($look);
             $look->price = count($look->prices) ? $lookMapperObj->getPrice($look->prices) : 0;
             $view_properties = $lookMapperObj->getDropDowns();
 
@@ -340,5 +358,24 @@ class LookController extends Controller
             return redirect('look/list')->withError('Collage access denied!');
         }
         return view('look/collage');
+    }
+
+    public function getSequence (Request $request)
+    {
+        $lookMapper = new LookMapper();
+        $looks = $lookMapper->sequesceList($request);
+        $view_properties['items'] = $looks;
+        return view('look.sequence', $view_properties);
+    }
+    public function postUpdateSequence (Request $request)
+    {
+        $look_ids = $request->input('look_ids');
+        $lookMapper = new LookMapper();
+        $update_status = $lookMapper->checkUpdate($look_ids);
+        $response = array('status' => false, 'message' => "No update found");
+        if ($update_status) {
+            $response = $lookMapper->updateSequence($look_ids);
+        }
+        return $response;
     }
 }

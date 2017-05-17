@@ -99,14 +99,6 @@
                                 </tr>
                                 @endif
 
-                            @if($is_admin)
-                                    <tr class="row">
-                                        <td class="title" colspan="2">
-                                            @include('common.status.select')
-                                        </td>
-                                    </tr>
-                                @endif
-
                                 <tr class="row">
                                     <td class="title" colspan="1">
                                         <a class="btn active btn-primary btn-xs btn_add_entity" style="color: #fff;"

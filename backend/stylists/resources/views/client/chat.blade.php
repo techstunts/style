@@ -8,6 +8,8 @@
 
             <input type="hidden" id="stylist_id" value="{{$stylist_id_to_chat}}"/>
             <input type="hidden" id="api_origin" value="{{env('API_ORIGIN')}}"/>
+            <input type="hidden" id="is_nicobar" value="{{env('IS_NICOBAR')}}"/>
+            <input type="hidden" id="collage_path" value="{{env('COLLAGE_PATH')}}"/>
 
             <!--
                 Contacts
@@ -18,17 +20,7 @@
                 <div class="profile" ng-class="{'loading': !stylist}">
                     <img ng-src="@{{stylist.icon}}">
                     <h1 ng-bind="stylist.name"></h1>
-                    <h2 ng-bind="stylist.designation"></h2>
-                    @if($is_admin || $is_authorised_for_chat_as_admin)
-                        <form action="">
-                            <select name="stylist_id" onchange="this.form.submit()">
-                                <option value="" disabled>Switch stylist</option>
-                                @foreach($stylists as $stylist)
-                                    <option value="{{$stylist->id}}" {{ $stylist->id == $stylist_id_to_chat ? "selected=selected" : ""}}>{{$stylist->name}}</option>
-                                @endforeach
-                            </select>
-                        </form>
-                    @endif
+                    <h2 ng-bind="{{env('IS_NICOBAR') ? 'stylist.category' : 'stylist.designation'}}"></h2>
                     <form action="">
                         <select name="online_id"
                                 ng-model="status"
@@ -42,6 +34,20 @@
                             @endforeach
                         </select>
                     </form>
+                    @if($is_admin || $is_authorised_for_chat_as_admin)
+                        <form action="">
+                            <select name="stylist_id" onchange="this.form.submit()">
+                                <option value="" selected=selected>Switch stylist</option>
+                                @foreach($stylists as $stylist)
+                                    @if($stylist->id != $stylist_id_to_chat)
+                                        <option value="{{$stylist->id}}"}}>
+                                            {{$stylist->name}} - {{$stylist->category->name}}{{isset($all_stylist_online_status[$stylist->id]) ? ' - ' . $all_stylist_online_status[$stylist->id] : ''}}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </form>
+                    @endif
                 </div>
 
                 <div class="tabs">
@@ -172,6 +178,14 @@
                         </article>
                         <span ng-bind="message.data.time | time"></span>
                     </li>
+                    <li class="client text typing" ng-class="{active: typing}">
+                        <img class="user" icon ng-src="@{{client.image}}">
+                        <article class="dots">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </article>
+                    </li>
                 </ul>
 
                 <div class="send">
@@ -251,6 +265,7 @@
 
                 <div class="foot">
                     <button class="button" ng-disabled="!result.length" ng-click="send()">Send</button>
+                    <button class="button" ng-click="create()">Create</button>
                     <div class="pager">
                         <a class="icon prev-dark" ng-class="{'disabled': !current.prev}" ng-click="pager(-1)"></a>
                         <b ng-bind="current.page"></b>

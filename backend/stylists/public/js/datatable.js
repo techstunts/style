@@ -22,10 +22,10 @@ var all_filters = [];
 var entity_filters = [
     [],
     ['genders', 'colors', 'stylists', 'categories'],
-    ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
+    ['status', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
     [],
-    ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
-    ['statuses', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
+    ['status', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
+    ['status', 'genders', 'occasions', 'body_types', 'budgets', 'age_groups', 'stylists'],
     []
 ];
 var entity_filter_ids = [
@@ -51,14 +51,14 @@ var role_admin = '';
 var is_recommended = false;
 var categoryOccasions = [];
 if (is_nicobar) {
-    entity_filters[EntityType.PRODUCT] = ['colors', 'stylists', 'categories'];
+    entity_filters[EntityType.PRODUCT] = ['category', 'colors'];
     entity_filter_ids[EntityType.PRODUCT] = ['id', 'id'];
-    entity_fields_ids[EntityType.PRODUCT] = ['primary_color_id', 'stylist_id', 'category_id'];
-    entity_filters[EntityType.LOOK] = ['stylists', 'statuses', 'category', 'occasions'];
+    entity_fields_ids[EntityType.PRODUCT] = [ 'parent', 'primary_color_id'];
+    entity_filters[EntityType.LOOK] = ['stylists', 'status', 'category', 'occasions'];
     entity_filter_ids[EntityType.LOOK] = ['id', 'id', 'id', 'id'];
     entity_fields_ids[EntityType.LOOK] = ['stylist_id', 'status_id', 'category_id', 'occasion_id'];
 }
-
+var autosuggest_element = '<input type="text" class="autosuggest" placeholder="Sub category" value="">';
 
 $(document).ready(function () {
     var entity_url = '';
@@ -456,22 +456,15 @@ function initializeFilters() {
             beforeSend: toggleLoader,
             success: function (data) {
                 all_filters[EntityType.PRODUCT] = data;
-                $.ajax({
-                    url: api_origin + '/category/all',
-                    beforeSend: toggleLoader,
-                    success: function (data) {
-                        all_filters[EntityType.PRODUCT]['categories'] = data['categories'];
-                        $.ajax({
-                            url: api_origin + '/look/filters',
-                            beforeSend: toggleLoader,
-                            success: function (data) {
-                                all_filters[EntityType.LOOK] = data;
-                                all_filters[EntityType.TIP] = data;
-                                all_filters[EntityType.COLLECTION] = data;
-                                showFilters();
-                            },
-                            complete: toggleLoader
-                        });
+                    $.ajax({
+                        url: api_origin + '/look/filters',
+                        beforeSend: toggleLoader,
+                        success: function (data) {
+                        all_filters[EntityType.LOOK] = data;
+                        all_filters[EntityType.TIP] = data;
+                        all_filters[EntityType.COLLECTION] = data;
+                        all_filters[EntityType.PRODUCT]['categories'] = data['category'];
+                        showFilters();
                     },
                     complete: toggleLoader
                 });
@@ -486,6 +479,8 @@ function initializeFilters() {
 
 function showFilters() {
     $("#filters select").remove();
+    if ($('input.autosuggest').length > 0)
+        $('input.autosuggest').remove();
 
     for (var filter_count = 0; filter_count < entity_filters[entity_type_id].length; filter_count++) {
         var filter_name = entity_filters[entity_type_id][filter_count];
@@ -512,12 +507,55 @@ function showFilters() {
         sortCategoryOccasion();
     }
     if (entity_type_id == EntityType.PRODUCT) {
+        addSubcategoryField();
         min_discount_field.show();
         max_discount_field.show();
     } else {
         min_discount_field.hide();
         max_discount_field.hide();
     }
+}
+
+function addSubcategoryField()
+{
+    $('.options select[name="parent"]').after(autosuggest_element);
+    if ($('.options select[name="parent"]').siblings('input[name="category_id"]').length == 0)
+        $('.options select[name="parent"]').after('<input type="hidden" name="category_id" value="" >');
+
+    $('.options select[name="parent"]').on('change', function (){
+        $('input.autosuggest').val('');
+        $('input.autosuggest').siblings('input[name="category_id"]').val('');
+    });
+
+    $('input.autosuggest').keyup(function(){
+        var keyword = $(this).val();
+        var parent =  $('.options select[name="parent"]').val();
+        var autosuggest_object =  $(this);
+        if(keyword.trim().length>0){
+            $.ajax({
+                type : "GET",
+                url: api_origin + '/autosuggest/category',
+                data : {
+                    parent : parent,
+                    keyword : keyword,
+                },
+                success : function(response){
+                    var allSuggestions = [];
+                    for(i=0; i<response.categories.length; i++){
+                        allSuggestions.push({label: response.categories[i].name, value: response.categories[i].id});
+                    }
+                    autosuggest_object.autocomplete({
+                        source: allSuggestions,
+                        select: function (e, ui) {
+                            $(this).siblings('input[name="category_id"]').val(ui.item.value);
+                            $(this).val(ui.item.label);
+                            return false;
+                        }
+                    });
+                },
+            });
+        }
+    });
 }
 
 function sortCategoryOccasion(){
