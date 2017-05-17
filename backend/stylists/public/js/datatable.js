@@ -51,7 +51,7 @@ var role_admin = '';
 var is_recommended = false;
 var categoryOccasions = [];
 if (is_nicobar) {
-    entity_filters[EntityType.PRODUCT] = ['category', 'colors', 'in stock'];
+    entity_filters[EntityType.PRODUCT] = ['category', 'colors', 'instock'];
     entity_filter_ids[EntityType.PRODUCT] = ['id', 'id', 'id'];
     entity_fields_ids[EntityType.PRODUCT] = [ 'parent', 'primary_color_id', 'in_stock'];
     entity_filters[EntityType.LOOK] = ['stylists', 'status', 'category', 'occasions'];
