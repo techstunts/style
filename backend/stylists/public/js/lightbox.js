@@ -309,7 +309,7 @@ $(document).ready(function(){
         var autosuggest_type = $(this).attr('autosuggest_type');
         var autosuggest_object =  $(this);
         var par_category_id = $('input.autosuggest').parent().find('select[name="par_category_id"]').val();
-        if(keyword.trim().length>=2){
+        if(keyword.trim().length>0){
             $.ajax({
                 type : "GET",
                 url: api_origin + '/autosuggest/' + autosuggest_type,
