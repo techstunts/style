@@ -36,7 +36,7 @@ class Look extends Model
     }
 
     public function status(){
-        return $this->belongsTo('App\Models\Lookups\Status', 'status_id');
+        return $this->belongsTo('App\Models\Lookups\LookStatus', 'status_id');
     }
 
     public function gender(){

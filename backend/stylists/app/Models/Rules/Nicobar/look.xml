@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<config>
+    <statuses>
+        <status>
+            <id>1</id>
+            <name>Active</name>
+            <edit_status>
+                <new_status>
+                    <id>2</id>
+                    <name>Inactive</name>
+                    <roles>
+                        <role>admin</role>
+                    </roles>
+                </new_status>
+            </edit_status>
+            <edit_data></edit_data>
+        </status>
+        <status>
+            <id>2</id>
+            <name>Inactive</name>
+            <edit_status>
+                <new_status>
+                    <id>1</id>
+                    <name>Active</name>
+                    <roles>
+                        <role>admin</role>
+                    </roles>
+                </new_status>
+                <new_status>
+                    <id>3</id>
+                    <name>Archived</name>
+                    <roles>
+                        <role>admin</role>
+                    </roles>
+                </new_status>
+            </edit_status>
+            <edit_data></edit_data>
+        </status>
+        <status>
+            <id>3</id>
+            <name>Archived</name>
+            <edit_status></edit_status>
+            <edit_data></edit_data>
+        </status>
+    </statuses>
+</config>
+

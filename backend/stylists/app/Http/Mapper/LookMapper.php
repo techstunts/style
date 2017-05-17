@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Lookups\Lookup;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
-use App\Models\Enums\Status;
+use App\Models\Enums\LookStatus as Status;
 use App\Models\Lookups\AppSections;
 use App\Models\Enums\RecommendationType;
 use Validator;
@@ -46,7 +46,7 @@ class LookMapper extends Controller
             'age_groups' => $lookup->type('age_group')->get(),
             'budgets' => $lookup->type('budget')->get(),
             'occasions' => $lookup->type('occasion')->get(),
-            'statuses' => $lookup->type('status')->get(),
+            'statuses' => $lookup->type('look_status')->get(),
             'categories' => Category::whereIn('id', [CategoryEnum::Men, CategoryEnum::Women, CategoryEnum::House])->get(),
             'image_types' => $lookup->type('image_type')->where(['entity_type_id' => EntityType::LOOK])->get(),
     );
