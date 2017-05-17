@@ -50,7 +50,7 @@
             @if(!empty($add_entity) && $add_entity == true)
                 <a class="btn disabled btn-primary btn-xs" id="add" value="send">Add</a>
                 <input type="hidden" value="{{$add_entity}}" id="add_entity_btn">
-                <a class="btn btn-primary btn-xs btn-black" data-popup-close="send-entities" href="#">Done</a>
+                <a class="btn-done btn-primary btn-xs btn-black" data-popup-close="send-entities" href="#">Done</a>
             @else
                 @if(!env('IS_NICOBAR'))
                     @include('common.app_section.select')
@@ -58,7 +58,7 @@
                     <input type="text" name="product_list_heading" id="product_list_heading" value="" placeholder="Product List Heading">
                 @endif
                 <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
-                <a class="btn btn-primary btn-xs btn-black" data-popup-close="send-entities" href="#">Close</a>
+                <a class="btn-done  btn-primary btn-xs btn-black" data-popup-close="send-entities" href="#">Close</a>
             @endif
             <img class="loader" src="/images/popup-loader.gif"/>
         </div>
