@@ -97,7 +97,9 @@ class BookingsController extends Controller
         } else {
             $bookings->updatedBy = null;
         }
+
         $view_properties['booking'] = $booking;
+        $view_properties['is_admin'] = $bookingsMapperObj->isAdmin();
         return view('bookings.view', $view_properties);
     }
 }

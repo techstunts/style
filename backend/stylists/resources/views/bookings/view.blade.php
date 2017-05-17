@@ -11,9 +11,14 @@
                         <div class="row mrgn5px">
                             <div class="col-md-6"><span> Name : {{$booking->client->name}}</span></div>
                         </div>
-                        <div class="row mrgn5px">
-                            <div class="col-md-6 mrgn5px">Email id: {{ $booking->client->email }}</div>
-                        </div>
+                        @if($is_admin)
+                            <div class="row mrgn5px">
+                                <div class="col-md-6"><span> Mobile : {{!empty($booking->mobile) ? $booking->mobile : ''}}</span></div>
+                            </div>
+                            <div class="row mrgn5px">
+                                <div class="col-md-6"><span> Email : {{$booking->client ? $booking->client->email : ''}}</span></div>
+                            </div>
+                        @endif
 
                         <br>
 
@@ -43,7 +48,7 @@
                                         <b>Message : </b>{{$booking->message}}
                                     </div>
                                     <div class="col-md-12">
-                                        <b>Booked at : </b>{{$booking->created_at}}
+                                        <b>Country : </b>{{$booking->country ? $booking->country->name : ''}}
                                     </div>
                                     <div class="col-md-12">
                                         <b>Status : </b>{{$booking->status ? $booking->status->name : ''}}
@@ -53,6 +58,9 @@
                                     </div>
                                     <div class="col-md-12">
                                         <b>Reason : </b>{{$booking->reason}}
+                                    </div>
+                                    <div class="col-md-12">
+                                        <b>Booked at : </b>{{$booking->created_at}}
                                     </div>
                                 </div>
                                 <br>
