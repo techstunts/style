@@ -533,7 +533,7 @@ function addSubcategoryField()
         $('input.autosuggest').siblings('input[name="category_id"]').val('');
     });
 
-    $('input.autosuggest').keyup(function(){
+    $('input.autosuggest').on('input', function(){
         var keyword = $(this).val();
         var parent =  $('.options select[name="parent"]').val();
         var autosuggest_object =  $(this);
