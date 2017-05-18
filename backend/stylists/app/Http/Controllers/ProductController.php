@@ -604,4 +604,28 @@ class ProductController extends Controller
         }
         return $category_ids;
     }
+
+    public function postSyncProducts() {
+        if (file_exists(env('JSONLINE_FILE_BASE_PATH').'lock_file.txt')){
+            return ['status' => false, 'message' => 'Process is already running by other user'];
+        } else {
+            if(!$lockFile = fopen(env('JSONLINE_FILE_BASE_PATH').'lock_file.txt', 'w')){
+                return ['status' => false, 'message' => 'Error creating lock file'];
+            }
+
+            $scraperController = new ScraperController();
+            if ($scraperController->getFetchNicobar()) {
+                if (!$scraperController->getImport()) {
+                    return ['status' => false, 'message' => 'Sync import error'];
+                }
+            } else {
+                return ['status' => false, 'message' => 'Sync fetch error'];
+            }
+            fclose($lockFile);
+            if (!unlink(env('JSONLINE_FILE_BASE_PATH').'lock_file.txt')) {
+                return ['status' => true, 'message' => 'Error deleting lock file'];
+            }
+            return ['status' => true, 'message' => 'Prodcuts Sync successful'];
+        }
+    }
 }

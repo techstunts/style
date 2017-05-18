@@ -52,6 +52,18 @@
                     {{--{!! $products->render() !!}--}}
 
                 </div>
+                <div id="prod-update-div">
+                    <input type="button" id="update-products" value="Update products">
+                    {{csrf_field()}}
+                    <div id="myModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close" id="close">&times;</span>
+                            <p>Product update in progress...</p><br>
+                            <p>Please don't refresh the page.</p>
+                        </div>
+
+                    </div>
+                </div>
 
                 <div class="clear"></div>
             @endif
@@ -99,5 +111,5 @@
 
     </div>
 </div>
-
+<script src="/js/productUpdate.js"></script>
 @endsection
