@@ -17,7 +17,7 @@
                                 <input type="submit" name="filter" value="Filter"/>
                                 <a href="{{url('bookings/list')}}" class="clearall">Clear All</a>
                     </form>
-                    {!! $bookings->render() !!}
+                    {{--{!! $bookings->render() !!}--}}
                 </div>
                 <div class="clear"></div>
 

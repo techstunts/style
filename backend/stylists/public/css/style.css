@@ -39,7 +39,7 @@ li.active {
 div.items {
     float: left;
     margin: 5px;
-    height: 350px;
+    height: 365px;
     width: 260px;
     border: 2px solid beige;
     overflow: hidden;
@@ -125,7 +125,7 @@ div.items div.name a {
 
 ul.pager {
     list-style: none;
-    padding: 0px;
+    padding: 19px 0px;
     margin: 0px;
 }
 
@@ -138,10 +138,12 @@ ul.pager li {
 ul.pager li a {
     color: grey;
     padding: 2px 14px;
+    background-color: darkgray !important;
 }
 
 ul.pager li > span {
     padding: 2px 14px;
+    background-color: darkgray !important;
 }
 
 div.filters {

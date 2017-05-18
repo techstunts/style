@@ -25,7 +25,7 @@
                     <input type="submit" name="filter" value="Filter"/>
                     <a href="{{url('look/list')}}" class="clearall">Clear All</a>
                 </form>
-                {!! $looks->render() !!}
+                {{--{!! $looks->render() !!}--}}
             </div>
 
             <div class="clear"></div>
