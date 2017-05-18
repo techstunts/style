@@ -26,6 +26,7 @@
             <form method="get" action={{env('API_ORIGIN')}}."{entity_type}/list" style="float:none;">
                 <div class="options" style="float:left;"></div>
                 <div class="buttons">
+                    <input type="text" name="search" value="" placeholder="Search Text" class="form-control search">
                     @if(!empty($show_price_filters) && $show_price_filters == 'YES')
                         <input type="text" name="min_price" value="" placeholder="Min Price"
                                class="form-control search">
@@ -35,7 +36,6 @@
                     @if(!empty($show_discount_fields) && $show_discount_fields == true)
                             @include('common.discountedprice')
                     @endif
-                    <input type="text" name="search" value="" placeholder="Search Text" class="form-control search">
                     <input class="btn" type="submit" value="Filter"> </input>
                     <a class="clearall">Clear All</a>
                     <a class="prev-page" data-popup-open="send-entities"> < </a>

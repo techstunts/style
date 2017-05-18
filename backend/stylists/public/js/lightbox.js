@@ -304,16 +304,18 @@ $(document).ready(function(){
         });
     });
 
-    $('input.autosuggest').keyup(function(){
+    $('input.autosuggest').on('input', function(){
         var keyword = $(this).val();
         var autosuggest_type = $(this).attr('autosuggest_type');
         var autosuggest_object =  $(this);
-        if(keyword.trim().length>=2){
+        var par_category_id = $('input.autosuggest').parent().find('select[name="par_category_id"]').val();
+        if(keyword.trim().length>0){
             $.ajax({
                 type : "GET",
                 url: api_origin + '/autosuggest/' + autosuggest_type,
                 data : {
                     keyword : keyword,
+                    parent : par_category_id,
                 },
                 success : function(response){
                     var allSuggestions = [];

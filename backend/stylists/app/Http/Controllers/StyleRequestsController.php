@@ -77,6 +77,7 @@ class StyleRequestsController extends Controller
         $view_properties['min_discount'] = $request->input('min_discount');
         $view_properties['max_discount'] = $request->input('max_discount');
         $view_properties['show_discount_fields'] = false;
+        $view_properties['in_stock'] = $request->input('in_stock');
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);

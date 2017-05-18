@@ -13,8 +13,9 @@
                         @include('stylist.select')
                         @include('brand.select')
                     @endif
+                    @include('category.parent_category')
                     @include('common.autosuggest')
-                    @include('common.gender.select')
+                    @include('common.search')
                     @include('common.color.select')
                     @if(!env('IS_NICOBAR'))
                         @include('common.rating.product')
@@ -26,7 +27,6 @@
                     @endif
                     @include('common.pricerange')
                     <input type="submit" name="filter" value="Filter"/>
-                        @include('common.search')
 
                         <a href="{{url('product/list')}}" class="clearall">Clear All</a>
 
@@ -52,6 +52,18 @@
                     {{--{!! $products->render() !!}--}}
 
                 </div>
+                <div id="prod-update-div">
+                    <input type="button" id="update-products" value="Update products">
+                    {{csrf_field()}}
+                    <div id="myModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close" id="close">&times;</span>
+                            <p>Product update in progress...</p><br>
+                            <p>Please don't refresh the page.</p>
+                        </div>
+
+                    </div>
+                </div>
 
                 <div class="clear"></div>
             @endif
@@ -76,7 +88,7 @@
                                 <span><a href="{{$product->omg_product_link}}">Omg</a></span>
                                 <span>{{$product->category ? $product->category->name : ''}}</span>
                                 @foreach($product->product_prices as $product_price)
-                                    <span>{{$product_price->currency ? $product_price->currency->name : '' . ' ' . $product_price->value}}</span>
+                                    <span>@if($product_price->currency){{$product_price->currency->name}}@endif {{$product_price->value}}</span>
                                 @endforeach
                                 <span>{{$genders_list[$product->gender_id]->name}}</span>
                                 <span style="background-color:{{$product->primary_color ? $product->primary_color->name : 'grey'}}">{{$product->primary_color ? $product->primary_color->name : ''}}
@@ -99,5 +111,5 @@
 
     </div>
 </div>
-
+<script src="/js/productUpdate.js"></script>
 @endsection
