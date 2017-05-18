@@ -304,7 +304,7 @@ $(document).ready(function(){
         });
     });
 
-    $('input.autosuggest').keyup(function(){
+    $('input.autosuggest').on('input', function(){
         var keyword = $(this).val();
         var autosuggest_type = $(this).attr('autosuggest_type');
         var autosuggest_object =  $(this);
