@@ -94,4 +94,27 @@ class BookingMapper extends Controller
             'message' => $message,
         );
     }
+
+    public function getReminderList($request, $where_conditions = [], $where_raw = "1=1")
+    {
+
+        $client = function ($query) {
+            $query->with('genders');
+            $query->select('id', 'name','image', 'email', 'gender_id');
+        };
+
+        $stylist = function ($query) {
+            $query->with('category');
+            $query->select('id', 'name', 'category_id');
+        };
+
+        $bookings = Booking::with(['client' => $client, 'slot', 'stylist' => $stylist, 'status', 'bookingRequest.request', 'country'])
+            ->select(['id', 'stylist_id', 'client_id', 'mobile', DB::raw("to_char(date, 'DD-Mon-YYYY') as date"), 'slot_id', 'status_id', 'service', 'price', 'message',
+                'cancelled_by_entity_type_id', 'cancelled_by_entity_id', 'reason','created_at', 'updated_at', 'country_id'])
+            ->where($where_conditions)
+            ->whereRaw($where_raw)
+            ->orderBy('id')
+            ->get();
+        return $bookings;
+    }
 }
