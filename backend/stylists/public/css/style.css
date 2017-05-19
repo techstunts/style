@@ -102,6 +102,10 @@ div.items div.extra a.Deleted {
     background-position: 384px -123px;
 }
 
+div.items div.extra a.Archived {
+    background-position: 384px -123px;
+}
+
 div.items div.extra a.InProgress {
     background-position: 354px -122px;
 }

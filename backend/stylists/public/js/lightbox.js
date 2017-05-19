@@ -337,9 +337,11 @@ $(document).ready(function(){
     });
 
     var urlTabSection = findTab($(window.location)[0].href);
+    var action = findUrlAction($(window.location)[0].href);
     $('.col-md-12 > ul a').each(function(){
         var linkTabSection = findTab(this.href);
-        if (urlTabSection == linkTabSection) {
+        var linkTabAction = findUrlAction(this.href);
+        if (action == linkTabAction && urlTabSection == linkTabSection) {
             $(this).parent('li').addClass('active');
         }
     });
@@ -352,8 +354,11 @@ $(document).ready(function(){
 });
 
 function findTab(href){
-    var url = href.split('/')[3];
-    return url[0];
+    return href.split('?')[0].split('/')[3];
+}
+
+function findUrlAction(href){
+    return href.split('?')[0].split('/')[4];
 }
 
 function updateLookListImage(entity_id, upload_id, api_origin){
