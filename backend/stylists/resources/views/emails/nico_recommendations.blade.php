@@ -109,7 +109,7 @@
                                     <tr>
                                 @endif
                                     <td colspan="2" style="width:25%;vertical-align:top;text-align:left;">
-                                        <a href="#" style="color:#000000;text-decoration:none;font-weight:bolder;font-size:11px;" target="_blank">
+                                        <a href="{{$products[$index]->product_link}}" style="color:#000000;text-decoration:none;font-weight:bolder;font-size:11px;" target="_blank">
                                             <img src="{{$products[$index]->image}}" style="border:0;width:100%;clear:both;margin-bottom:10px" alt="" class="CToWUd">{{$products[$index]->name}}</a>
                                         <div style="font-size:12px;color:#282b30;padding-top:5px;">
                                             <span>₹</span> {{$products[$index]->price}}</div>
