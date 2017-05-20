@@ -95,7 +95,7 @@ class BookingMapper extends Controller
         );
     }
 
-    public function getReminderList($request, $where_conditions = [], $where_raw = "1=1")
+    public function getReminderList($where_conditions = [], $where_raw = "1=1")
     {
 
         $client = function ($query) {

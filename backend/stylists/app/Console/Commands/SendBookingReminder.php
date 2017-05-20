@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers;
 use Illuminate\Console\Command;
-use App\Http\Controllers\BookingsController;
 
 class SendBookingReminder extends Command
 {
@@ -38,10 +38,10 @@ class SendBookingReminder extends Command
      */
     public function handle()
     {
-        $scraperObj = new BookingController();
+        $scraperObj = new Controllers\BookingsController();
 
         $this->comment(PHP_EOL.'Sending booking reminders started...'.PHP_EOL);
-        if ($scraperObj->sendReminderMail()) {
+        if ($scraperObj->getSendReminders()) {
             $this->comment(PHP_EOL . 'Sending booking reminders complete :)' . PHP_EOL);
         } else {
             $this->comment(PHP_EOL . 'Error identified in sending booking reminders' . PHP_EOL);

@@ -104,18 +104,19 @@ class BookingsController extends Controller
         return view('bookings.view', $view_properties);
     }
 
-    public function getSendReminders(Request $request)
+    public function getSendReminders()
     {
         $this->base_table = 'bookings';
 
         $ts_window = time() + env('BOOKING_REMINDER_TIME_WINDOW');
+        $current_ts = time();
         echo $ts_window;
         $where_conditions['date'] = date('Y-m-d');
         $where_conditions['status_id'] = BookingStatus::Confirm;
         $where_conditions['reminders_sent_count'] = 0;
 
         $bookingsMapperObj = new BookingMapper();
-        $bookings = $bookingsMapperObj->getList($request, $where_conditions);
+        $bookings = $bookingsMapperObj->getReminderList($where_conditions);
 
         if(count($bookings) == 0){
             echo "\n" . date("d-m-Y h:i:s") . " No bookings scheduled for email reminder";
@@ -127,9 +128,9 @@ class BookingsController extends Controller
 
             $booking_readable_datetime = date("h:i a", $booking_ts) . ' on ' . date("M d", $booking_ts);
 
-            if($booking_ts <= $ts_window){
+            if($booking_ts <= $ts_window && $booking_ts > $current_ts){
                 try{
-                    $this->sendReminderMail($request, $booking->client, $booking->stylist, $booking_readable_datetime);
+                    $this->sendReminderMail($booking->client, $booking->stylist, $booking_readable_datetime);
                     //$booking->reminders_sent_count = $booking->reminders_sent_count + 1;
                     $booking->save();
                 }
@@ -142,7 +143,7 @@ class BookingsController extends Controller
 
     }
 
-    public function sendReminderMail(Request $request, $client, $stylist, $booking_readable_datetime){
+    public function sendReminderMail($client, $stylist, $booking_readable_datetime){
 
 
         $words = explode(" ", $stylist->name);
