@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         Commands\Fetcher::class,
         Commands\Importer::class,
         Commands\FetchNicobarProduct::class,
+        Commands\SendBookingReminder::class,
     ];
 
     /**
