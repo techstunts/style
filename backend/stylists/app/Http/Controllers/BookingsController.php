@@ -169,7 +169,8 @@ class BookingsController extends Controller
                 $mail->from(env('FROM_EMAIL'), (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
                 $mail->to($client->email, $client->name)
                 //$mail->to('amit.istyleyou@gmail.com', $client->name)
-                    ->bcc('stylist@istyleyou.in, amit.istyleyou@gmail.com')
+                    ->bcc('stylists@nicobar.com')
+                    ->bcc('amit.istyleyou@gmail.com')
                     ->subject(env('BOOKING_REMINDER_EMAIL_SUBJECT'));
             });
     }
