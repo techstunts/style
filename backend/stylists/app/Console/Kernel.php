@@ -28,9 +28,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('inspire')
-                 ->hourly();
-        $schedule->command('fetch')->daily();
-        $schedule->command('import')->daily();
+        //$schedule->command('inspire')->hourly();
+        $schedule->command('fetch')->dailyAt('23:00');
+        $schedule->command('import')->dailyAt('23:30');
+        $schedule->command('SendBookingReminder')->everyMinute();
     }
 }
