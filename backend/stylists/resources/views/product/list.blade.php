@@ -47,12 +47,13 @@
                         @include('product.bulk_update')
                     </div>
                 @endif
-                <div class="tag">
+            <div class="row">
+                <div class="tag col-md-4">
                     @include('product.create_tag')
                     {{--{!! $products->render() !!}--}}
 
                 </div>
-                <div id="prod-update-div">
+                <div id="prod-update-div" class="col-md-offset-1 col-md-2">
                     <input type="button" id="update-products" value="Update products">
                     {{csrf_field()}}
                     <div id="myModal" class="modal">
@@ -64,6 +65,7 @@
 
                     </div>
                 </div>
+            </div>
 
                 <div class="clear"></div>
             @endif
