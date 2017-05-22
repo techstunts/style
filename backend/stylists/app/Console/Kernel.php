@@ -31,6 +31,6 @@ class Kernel extends ConsoleKernel
         //$schedule->command('inspire')->hourly();
         $schedule->command('fetch')->dailyAt('23:00');
         $schedule->command('import')->dailyAt('23:30');
-        $schedule->command('SendBookingReminder')->everyMinute();
+        $schedule->command('SendBookingReminder')->everyTenMinutes();
     }
 }
