@@ -124,14 +124,14 @@ class BookingsController extends Controller
 
         foreach($bookings as $booking){
             $booking_ts = strtotime($booking->date . ' ' . explode(' ', $booking->slot->name)[0]);
-            echo "\n" . $booking_ts . "\n";
+            echo "\n" . $booking->id . " " . $booking_ts . "\n";
 
             $booking_readable_datetime = date("h:i a", $booking_ts) . ' on ' . date("M d", $booking_ts);
 
             if($booking_ts <= $ts_window && $booking_ts > $current_ts){
                 try{
                     $this->sendReminderMail($booking->client, $booking->stylist, $booking_readable_datetime);
-                    //$booking->reminders_sent_count = $booking->reminders_sent_count + 1;
+                    $booking->reminders_sent_count = $booking->reminders_sent_count + 1;
                     $booking->save();
                 }
                 catch(Exception $e){
@@ -140,6 +140,8 @@ class BookingsController extends Controller
                 echo "\n Sent\n";
             }
         }
+
+        return true;
 
     }
 
@@ -165,9 +167,10 @@ class BookingsController extends Controller
             ],
             function ($mail) use ($client, $stylist) {
                 $mail->from(env('FROM_EMAIL'), (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
-                //$mail->to($client->email, $client->name)
-                $mail->to('amit.istyleyou@gmail.com', $client->name)
-                    ->bcc('stylist@istyleyou.in')
+                $mail->to($client->email, $client->name)
+                //$mail->to('amit.istyleyou@gmail.com', $client->name)
+                    ->bcc('stylists@nicobar.com')
+                    ->bcc('amit.istyleyou@gmail.com')
                     ->subject(env('BOOKING_REMINDER_EMAIL_SUBJECT'));
             });
     }
