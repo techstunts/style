@@ -232,20 +232,71 @@
                 </div>
 
                 <div class="filter">
+                    <div ng-show="nicobar && current.type === 'product'">
+
+                        <div class="select" selector ng-class="{'custom': current.path[1]}">
+                            <span ng-bind="current.path[1] ? current.path[1].name : 'First level'"></span>
+                            <div>
+                                <a ng-repeat="option in product.tree" ng-bind="option.name" ng-click="level(1, option)" ng-class="{'selected': current.path[1] === option}"></a>
+                            </div>
+                        </div>
+
+                        <div class="select" selector ng-class="{disabled: !current.path[1], 'custom': current.path[2]}">
+                            <span ng-bind="current.path[2] ? current.path[2].name : 'Second level'"></span>
+                            <div>
+                                <a ng-repeat="option in current.path[1].subcategories" ng-bind="option.name" ng-click="level(2, option)" ng-class="{'selected': current.path[2] === option}"></a>
+                            </div>
+                        </div>
+
+                        <div class="select" selector ng-class="{disabled: !current.path[2], 'custom': current.path[3]}">
+                            <span ng-bind="current.path[3] ? current.path[3].name : 'Third level'"></span>
+                            <div>
+                                <a ng-repeat="option in current.path[2].subcategories" ng-bind="option.name" ng-click="level(3, option)" ng-class="{'selected': current.path[3] === option}"></a>
+                            </div>
+                        </div>
+
+                        <form class="category">
+                            <input type="text" placeholder="Category" ng-model="suggestion.keyword" ng-change="suggest()">
+                            <div ng-show="suggestion.result.length">
+                                <a ng-repeat="option in suggestion.result" ng-bind="option.name" ng-click="category(option)"></a>
+                            </div>
+                            <input type="submit">
+                        </form>
+
+                    </div>
+
                     <form class="search" ng-submit="search()">
-                        <input type="text" ng-model="current.model.search" placeholder="Search">
-                        <input type="submit">
+                        <input type="text" ng-model="current.model.search" placeholder="Search" ng-disabled="current.options.search">
+                        <input type="submit" ng-hide="current.options.search">
+                        <a class="icon close" ng-show="current.options.search" ng-click="clearSearch()"></a>
                     </form>
+
                     <div class="select" ng-repeat="select in current.filters" ng-class="{'custom': current.model[select.name].id}" selector>
                         <span ng-bind="current.model[select.name].id ? current.model[select.name].name : select.placeholder"></span>
                         <div>
                             <a ng-repeat="option in select.options" ng-bind="option.name" ng-click="change(select.name, option)" ng-class="{'selected': current.model[select.name].id === option.id}"></a>
                         </div>
                     </div>
+
+                    <div ng-show="nicobar && current.type === 'product'">
+                        <form class="search" ng-submit="price('min_price')">
+                            <input type="number" placeholder="Min price" ng-model="current.model.min_price" ng-disabled="current.options.min_price || current.loading">
+                            <a class="icon close" ng-show="current.options.min_price" ng-click="clearPrice('min_price')"></a>
+                            <input type="submit" ng-hide="current.options.min_price">
+                        </form>
+                        <form class="search" ng-submit="price('max_price')">
+                            <input type="number" placeholder="Max price" ng-model="current.model.max_price" ng-disabled="current.options.max_price || current.loading">
+                            <a class="icon close" ng-show="current.options.max_price" ng-click="clearPrice('max_price')"></a>
+                            <input type="submit" ng-hide="current.options.max_price">
+                        </form>
+                        <a class="clear" ng-click="clear()">Clear all</a>
+                    </div>
+
+
                 </div>
 
                 <div class="result">
-                    <div class="tree">
+                    <div class="tree" ng-hide="nicobar">
                         <a ng-repeat="category in current.category" ng-bind="category.name" ng-click="open(category)"></a>
                     </div>
                     <div class="list">
@@ -265,7 +316,7 @@
 
                 <div class="foot">
                     <button class="button" ng-disabled="!result.length" ng-click="send()">Send</button>
-                    <button class="button" ng-click="create()">Create</button>
+                    <button class="button" ng-click="create()" ng-show="current.type === 'look'">Create</button>
                     <div class="pager">
                         <a class="icon prev-dark" ng-class="{'disabled': !current.prev}" ng-click="pager(-1)"></a>
                         <b ng-bind="current.page"></b>
