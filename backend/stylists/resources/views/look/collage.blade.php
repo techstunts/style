@@ -98,12 +98,12 @@
                 <div id="browser" class="window">
                     <div class="toolbar">
                         <form class="parent"></form>
-                        <form class="input category" autocomplete="off">
-                            <input type="text" name="category" placeholder="Sub category">
-                            <a class="icon close"></a>
-                            <a class="icon process"></a>
-                            <div class="menu"></div>
-                        </form>
+                        {{--<form class="input category" autocomplete="off">--}}
+                            {{--<input type="text" name="category" placeholder="Sub category">--}}
+                            {{--<a class="icon close"></a>--}}
+                            {{--<a class="icon process"></a>--}}
+                            {{--<div class="menu"></div>--}}
+                        {{--</form>--}}
                         <form class="input search">
                             <input type="text" name="search" placeholder="Search">
                             <input type="submit" value="">
