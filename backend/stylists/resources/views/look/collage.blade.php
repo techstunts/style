@@ -97,8 +97,26 @@
 
                 <div id="browser" class="window">
                     <div class="toolbar">
-                        <form class="parent"></form>
-                        {{--<form class="input category" autocomplete="off">--}}
+                        <form class="parent">
+                            <div class="select custom " data-name="category_id">
+                                <select name="category_id" placeholder="Sub category" style="display: none;">
+                                    <option value="all">All</option>
+                                </select>
+                                <span>Sub category</span>
+                                <div>
+                                    <a class="">All</a>
+                                </div>
+                            </div>
+                            <div class="select custom " data-name="leaf_category_id">
+                                <select name="leaf_category_id" placeholder="Leaf category" style="display: none;">
+                                    <option value="all">All</option>
+                                </select>
+                                <span>Leaf category</span>
+                                <div>
+                                    <a class="">All</a>
+                                </div>
+                            </div>
+                        </form>
                             {{--<input type="text" name="category" placeholder="Sub category">--}}
                             {{--<a class="icon close"></a>--}}
                             {{--<a class="icon process"></a>--}}
