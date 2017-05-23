@@ -13,9 +13,8 @@
         <td style="padding-right:30px;padding-left:30px;line-height:1.4;text-align:left;">
             <p style="font-family:Arial;color:#020006;font-size:12px;font-style:normal;margin-top:40px;">Hi {{$client_first_name}},</p>
             <div style="font-size:12px;line-height:23px;">
-                <div>Answering our style studio questionnaire was a breeze, wasn't it?. We promised you a
-                    selection of styles, handpicked for you,So here we are. Following recommendations have been created
-                    and sent by {{$stylist_first_name}}, your personal stylist. Please check out the suggestions.
+                <div>Answering our style studio questionnaire was a breeze, wasn't it? We promised you a
+                    selection of styles, handpicked for you, so here we are.
                 </div>
             </div>
             <p>
