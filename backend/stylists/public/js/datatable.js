@@ -649,7 +649,7 @@ function showEntities(entity_url) {
                     var popover_data = "";
                     if (entity_type_id == EntityType.PRODUCT) {
                         var price = getPrice(item.data[i].price);
-                        popover_data = popover_data + "Price: " + price.INR != undefined ? '&#8377 ' + price.INR : '' + "/- <br >";
+                        popover_data = popover_data + (price.INR != undefined ? ('Price: &#8377 ' + price.INR + "/- <br >") : '');
                     }else if (entity_type_id == EntityType.LOOK){
                         popover_data = popover_data + "Price: " + '&#8377 ' + item.data[i].price + "/- <br >";
                     }

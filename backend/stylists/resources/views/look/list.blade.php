@@ -82,7 +82,9 @@
                             <span>{{$look->age_group ? $look->age_group->name : ''}}</span>
                             @endif
                             <span>INR {{$look->price}}</span>
-                            <span>{{$look->budget ? 'INR ' . $look->budget->name : ''}}</span>
+                            @if(!env('IS_NICOBAR'))
+                                <span>{{$look->budget ? 'INR ' . $look->budget->name : ''}}</span>
+                            @endif
                         </div>
                         @include('common.tag')
                     </div>
