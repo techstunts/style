@@ -271,7 +271,7 @@
                         <a class="icon close" ng-show="current.options.search" ng-click="clearSearch()"></a>
                     </form>
 
-                    <div class="select" ng-repeat="select in current.filters" ng-class="{'custom': current.model[select.name].id}" selector>
+                    <div class="select" ng-repeat="select in current.filters" ng-class="{'custom': current.model[select.name].id}" selector ng-hide="current.type === 'product' && select.name === 'category_id'">
                         <span ng-bind="current.model[select.name].id ? current.model[select.name].name : select.placeholder"></span>
                         <div>
                             <a ng-repeat="option in select.options" ng-bind="option.name" ng-click="change(select.name, option)" ng-class="{'selected': current.model[select.name].id === option.id}"></a>
