@@ -188,14 +188,16 @@ class LookController extends Controller
                         $look->status_id = $new_status['id'];
                         DB::beginTransaction();
                         if ($look->save()) {
-                            if ($look->status_id == LookupStatus::Active) {
-                                $response = $lookMapper->createSequence($look->id);
-                            } else {
-                                $response = $lookMapper->deleteSequence($look->id);
-                            }
-                            if (!$response['status']){
-                                DB::rollback();
-                                return Redirect::back()->withError('Error! ' . $response['message']);
+                            if (!$look->is_collage) {
+                                if ($look->status_id == LookupStatus::Active) {
+                                    $response = $lookMapper->createSequence($look->id);
+                                } else {
+                                    $response = $lookMapper->deleteSequence($look->id);
+                                }
+                                if (!$response['status']){
+                                    DB::rollback();
+                                    return Redirect::back()->withError('Error! ' . $response['message']);
+                                }
                             }
                             DB::commit();
                             return Redirect::back()->withSuccess('Look status changed successfully!');

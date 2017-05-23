@@ -238,7 +238,7 @@ class LookMapper extends Controller
             );
         }
         $updateSequence = false;
-        if ($look->status_id != $request->status_id){
+        if (!$look->is_collage && $look->status_id != $request->status_id){
             $updateSequence = true;
         }
         $look = $this->setObjectProperties($look, $request);
