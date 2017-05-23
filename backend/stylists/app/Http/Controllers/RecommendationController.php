@@ -326,11 +326,11 @@ class RecommendationController extends Controller
                 'product_list_heading' => $product_list_heading,
                 'nicobar_website' => env('NICOBAR_WEBSITE'),
             ],
-            function ($mail) use ($client, $stylist) {
+            function ($mail) use ($client, $stylist, $client_first_name) {
                 $mail->from('stylist@istyleyou.in', (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
                 $mail->to($client->email, $client->name)
                     ->bcc('stylist@istyleyou.in')
-                    ->subject($stylist->name . ', your stylist has sent you recommendations!');
+                    ->subject($client_first_name . ', your stylist has sent you recommendations!');
         });
     }
 //below function is not in use right now as structure of sending the recommendatoin has been changed

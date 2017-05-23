@@ -121,10 +121,14 @@ class LookController extends Controller
             $remove_deleted_looks = 'looks.status_id != ' . LookupStatus::Deleted;
         }
         $mapperObj = new Mapper();
-        $look_prices = $mapperObj->getPriceClosure();
+        $look_prices = $mapperObj->getPriceClosure(
+            $request->input('min_price') ? $request->input('min_price') : null,
+            $request->input('max_price') ? $request->input('max_price') : null
+        );
         $looks =
             Look::with(['category', 'gender', 'status', 'body_type', 'budget', 'occasion', 'age_group', 'tags.tag', 'prices' => $look_prices])
                 ->where($this->where_conditions)
+                ->whereHas('prices',  $look_prices)
                 ->whereRaw($this->where_raw)
                 ->whereRaw($remove_deleted_looks)
                 ->orderBy('updated_at', 'desc')

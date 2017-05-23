@@ -40,7 +40,7 @@
     <body>
         <div class="container">
             <div class="content">
-                @if (str_contains(Request::fullUrl(), 'nicobar'))
+                @if (str_contains(Request::fullUrl(), 'nicobar') || env('IS_NICOBAR'))
                     <img style="height:150px;width:500px;" src="{!! asset('images/nicobar/nicobar-horizontal-logo-dark.svg') !!}" alt="">
                     <h3 class="" ><a style="color:#313135;" href="/product/list">Start here</a></h3>
                 @else
