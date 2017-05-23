@@ -20,7 +20,7 @@
             <p>
             </p>
             @if(!empty($custom_message))
-                <div style="color:#282b30;">
+                <div style="font-size:12px;line-height:23px;">
                     <p>{{$custom_message}}</p>
                 </div>
             @endif
