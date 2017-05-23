@@ -98,7 +98,7 @@
                 <div id="browser" class="window">
                     <div class="toolbar">
                         <form class="parent">
-                            <div class="select custom " data-name="category_id">
+                            <div class="select" data-name="category_id">
                                 <select name="category_id" placeholder="Sub category" style="display: none;">
                                     <option value="all">All</option>
                                 </select>
@@ -107,7 +107,7 @@
                                     <a class="">All</a>
                                 </div>
                             </div>
-                            <div class="select custom " data-name="leaf_category_id">
+                            <div class="select" data-name="leaf_category_id">
                                 <select name="leaf_category_id" placeholder="Leaf category" style="display: none;">
                                     <option value="all">All</option>
                                 </select>
