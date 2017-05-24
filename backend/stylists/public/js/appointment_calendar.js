@@ -318,9 +318,9 @@ function getslots(week) {
 function renderSlots(slots) {
     console.log(slots)
     var slotsHtml = slots.map(function (slot, index) {
-        return '<div> <label><input name="slot" type="checkbox" value=' + slot.id + '>' + slot.name + '</label> </div>';
+        return '<div> <label><input  name="slot" type="checkbox" value=' + slot.id + '>' + slot.name + '</label> </div>';
     })
-    var slotHtmlSelect = '<select id="m_slots_select" class="selectpicker" noneSelectedText="jhsdgfdsjhf" multiple>'
+    var slotHtmlSelect = '<select id="m_slots_select" class="selectpicker" title="Select slots"  multiple>'
     slotHtmlSelect += slots.map(function (slot, index) {
         return '<option  value=' + slot.id + '>' + slot.name + '</option>';
     })
