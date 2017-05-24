@@ -45,9 +45,13 @@
                             <th><input name="select_all" value="1" type="checkbox"></th>
                             <th class="font-size-table-header">Booking id</th>
                             <th class="font-size-table-header">Request id</th>
+                            @if(env('IS_NICOBAR'))
+                                <th class="font-size-table-header">Category</th>
+                            @else
+                                <th class="font-size-table-header">Service</th>
+                            @endif
                             <th class="font-size-table-header">Book Date</th>
                             <th class="font-size-table-header">Slot</th>
-                            <th class="font-size-table-header">Service</th>
                             <th class="font-size-table-header">Booked at</th>
                             <th class="font-size-table-header">Country</th>
                             <th class="font-size-table-header">Client name</th>
@@ -74,9 +78,13 @@
                                 @else
                                     <td class="table-font-size"></td>
                                 @endif
+                                @if(env('IS_NICOBAR'))
+                                    <td class="table-font-size"> {{$booking->stylist && $booking->stylist->category ? $booking->stylist->category->name : ''}} </td>
+                                @else
+                                    <td class="table-font-size"> {{$booking->service}} </td>
+                                @endif
                                 <td class="table-font-size">{{$booking->date}}</td>
                                 <td class="table-font-size">{{$booking->slot ? $booking->slot->name : ''}}</td>
-                                <td class="table-font-size"> {{$booking->service}} </td>
                                 <td class="table-font-size"> {{$booking->created_at}} </td>
                                 <td class="table-font-size">{{$booking->country ? $booking->country->name : ''}}</td>
                                 <td class="table-font-size"><a href="{{url("client/view/".$booking->client_id . "?booking_id=" . $booking->id)}}">
