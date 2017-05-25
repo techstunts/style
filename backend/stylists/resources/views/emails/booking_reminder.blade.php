@@ -50,7 +50,7 @@
                 <tbody>
                 <tr>
                     <td style="width:100%;vertical-align:top;text-align:left;">
-                        <a href="#" style="color:#000000;text-decoration:none;font-weight:bolder;font-size:13px;" target="_blank">
+                        <a href="https://www.nicobar.com/journal/" style="color:#000000;text-decoration:none;font-weight:bolder;font-size:13px;" target="_blank">
                             <img src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/from_the_journal.jpg" style="border:0;width:100%;clear:both;margin-bottom:10px" alt="" class="CToWUd"></a>
                     </td>
                 </tr>

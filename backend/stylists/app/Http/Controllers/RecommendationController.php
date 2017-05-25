@@ -318,6 +318,7 @@ class RecommendationController extends Controller
         $product_list_heading = $request->input('product_list_heading') && trim($request->input('product_list_heading')) != "" ? $request->input('product_list_heading') : $product_list_heading;
 
         $recommendation_template = env('IS_NICOBAR') ? ('emails.nico_recommendations') : ('emails.recommendations');
+        $from_email = env('FROM_EMAIL') ? env('FROM_EMAIL') : 'stylists@istyleyou.in';
         Mail::send($recommendation_template,
 
             ['client' => $client, 'stylist' => $stylist, 'entity_data' => $entity_data,
@@ -326,10 +327,10 @@ class RecommendationController extends Controller
                 'product_list_heading' => $product_list_heading,
                 'nicobar_website' => env('NICOBAR_WEBSITE'),
             ],
-            function ($mail) use ($client, $stylist, $client_first_name) {
-                $mail->from('stylist@istyleyou.in', (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
+            function ($mail) use ($client, $stylist, $client_first_name, $from_email) {
+                $mail->from($from_email, (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
                 $mail->to($client->email, $client->name)
-                    ->bcc('stylist@istyleyou.in')
+                    ->bcc($from_email)
                     ->subject($client_first_name . ', your stylist has sent you recommendations!');
         });
     }

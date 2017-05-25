@@ -72,7 +72,7 @@ class ProductController extends Controller
             'merchants' => $this->merchants,
             'brands' => $this->brands,
             'categories' => $categories,
-            'par_categories' => $category_obj->whereIn('id', [1,8,38])->get(),
+            'par_categories' => $category_obj->whereIn('id', [1,8,9,38])->get(),
             'genders' => $this->genders,
             'colors' => $this->colors,
             'ratings' => $this->ratings,

@@ -238,7 +238,7 @@ class LookMapper extends Controller
             );
         }
         $updateSequence = false;
-        if ($look->status_id != $request->status_id){
+        if (!$look->is_collage && $look->status_id != $request->status_id){
             $updateSequence = true;
         }
         $look = $this->setObjectProperties($look, $request);
@@ -380,9 +380,25 @@ class LookMapper extends Controller
 
     public function updateStatus($look_id, $status_id)
     {
+        DB::beginTransaction();
         try{
-            Look::where(['id' => $look_id])->update(['status_id' => $status_id]);
+            $look = Look::where(['id' => $look_id])->first();
+            $look->status_id = $status_id;
+            $look->save();
+            if (!$look->is_collage) {
+                if ($status_id == Status::Active) {
+                    $response = $this->createSequence($look_id);
+                } else {
+                    $response = $this->deleteSequence($look_id);
+                }
+                if (!$response['status']){
+                    DB::rollback();
+                    return false;
+                }
+            }
+            DB::commit();
         } catch (\Exception $e) {
+            DB::rollback();
             return false;
         }
         return true;
