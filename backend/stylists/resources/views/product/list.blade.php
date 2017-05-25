@@ -75,7 +75,7 @@
                 @endif
 
 
-                <ol class="selectable" id="selectable">
+                <ol class="selectable" @if(!env('IS_NICOBAR')) id="selectable" @endif>
                     @if(count($products) == 0)
                         No Products found
                     @endif
@@ -88,18 +88,24 @@
                                     <a href="{{url('product/view/' . $product->id)}}">{{$product->name}}</a>
                                     <input class="entity_ids pull-right" value="{{$product->id}}" type="checkbox">
                                 </div>
-                                <div class="image"><img src="{!! $product->image_name !!}"/></div>
+                                <div class="image">
+                                    <a href="{{url('product/view/' . $product->id)}}">
+                                        <img src="{!! $product->image_name !!}"/>
+                                    </a>
+                                </div>
                                 <div class="extra text">
-                                    <span><a href="{{$product->product_link}}">View</a></span>
-                                    <span><a href="{{$product->omg_product_link}}">Omg</a></span>
+                                    <span><a href="{{$product->product_link}}">Site link</a></span>
+                                    @if(!env('IS_NICOBAR'))
+                                        <span><a href="{{$product->omg_product_link}}">Omg</a></span>
+                                        <span>{{$genders_list[$product->gender_id]->name}}</span>
+                                    @endif
                                     <span>{{$product->category ? $product->category->name : ''}}</span>
                                     @foreach($product->product_prices as $product_price)
                                         <span>@if($product_price->currency){{$product_price->currency->name}}@endif {{$product_price->value}}</span>
                                     @endforeach
-                                    <span>{{$genders_list[$product->gender_id]->name}}</span>
-                                <span style="background-color:{{$product->primary_color ? $product->primary_color->name : 'grey'}}">{{$product->primary_color ? $product->primary_color->name : ''}}
+                                    <span style="background-color:{{$product->primary_color ? $product->primary_color->name : 'grey'}}">{{$product->primary_color ? $product->primary_color->name : ''}}
                                     {{$product->secondary_color && $product->secondary_color->id != 0 ? "({$product->secondary_color->name})" : ""}}</span>
-                                    <span>sku : {{$product->sku_id}}</span>
+                                    <span>sku:{{$product->sku_id}}</span>
                                 </div>
                                 @include('common.tag')
                             </div>
