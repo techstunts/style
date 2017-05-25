@@ -172,8 +172,16 @@ function unselectProduct(e){
     updateSelectedProductSnapshotView();
 }
 var occasions = {};
-
+var categories = [];
+var subCatSelect = '';
+var parCatSelect = '';
+var leafCatSelect = '';
+var parent = '';
 $(document).ready(function(){
+    subCatSelect = $('select[name="category_id"]');
+    parCatSelect = $('select[name="par_category_id"]');
+    leafCatSelect = $('select[name="leaf_category_id"]');
+
     if($('#selectable').length){
         $( "#selectable" ).selectable({
             selected: selectProduct
@@ -351,7 +359,61 @@ $(document).ready(function(){
         var categorySelect = $('select[name="category_id"]');
         categorySelect.on('change', updateCategoryOcasion);
     }
+    $.ajax({
+        url : '/product/allCategoryLevels',
+        type : 'GET',
+        success : function (response) {
+            categories = response;
+            if (parCatSelect.val() !== '')
+                loadSubCategory(parCatSelect.val());
+            if (subCatSelect.val() !== '')
+                loadLeafCategory(parCatSelect.val(), subCatSelect.val());
+        }
+    });
+    parCatSelect.on('change', function(){
+        loadSubCategory($(this).val());
+    });
+    subCatSelect.on('change', function () {
+        loadLeafCategory(parent,$(this).val())
+    });
 });
+
+function loadSubCategory (value) {
+    var placeholder = leafCatSelect.find('option')[0].innerText;
+    var options = '<option value="" >' + placeholder + '</option>';
+    leafCatSelect.html('');
+    leafCatSelect.append(options);
+    placeholder = subCatSelect.find('option')[0].innerText;
+    subCatSelect.html('');
+    options = '<option value="" >' + placeholder + '</option>';
+    parent = value;
+    var subCatValue = $('#category_id').val();
+
+    for (var obj in categories[value].subcategory) {
+        var subcat= categories[value].subcategory[obj];
+        var selected = ''
+        if (subCatValue==subcat.id){
+            selected = 'selected'
+        }
+        options += '<option value="' + subcat.id + '" '+selected+'>' + subcat.name + '</option>';
+    }
+    subCatSelect.append(options);
+}
+function loadLeafCategory(parent_id,value) {
+    var placeholder = leafCatSelect.find('option')[0].innerText;
+    var options = '<option value="" >' + placeholder + '</option>';
+    leafCatSelect.html('');
+    var leafCatValue = $('#leaf_category_id').val();
+    for (var obj in categories[parent_id].subcategory[value].subcategory) {
+        var leafCat= categories[parent_id].subcategory[value].subcategory[obj];
+        var selected = ''
+        if (leafCatValue==leafCat.id){
+            selected = 'selected'
+        }
+        options += '<option value="' + leafCat.id + '" '+selected+' >' + leafCat.name + '</option>';
+    }
+    leafCatSelect.append(options);
+}
 
 function findTab(href){
     return href.split('?')[0].split('/')[3];
