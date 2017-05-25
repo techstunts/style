@@ -178,8 +178,8 @@ var parCatSelect = '';
 var leafCatSelect = '';
 var parent = '';
 $(document).ready(function(){
-    subCatSelect = $('select[name="category_id"]');
-    parCatSelect = $('select[name="par_category_id"]');
+    subCatSelect = $('#select_category_id');
+    parCatSelect = $('select[name="parent"]');
     leafCatSelect = $('select[name="leaf_category_id"]');
 
     if($('#selectable').length){
@@ -356,7 +356,7 @@ $(document).ready(function(){
 
     if ($('#category_occasion_sort').length > 0) {
         occasions = jQuery.parseJSON(list);
-        var categorySelect = $('select[name="category_id"]');
+        var categorySelect = $('.options select[name="category_id"]');
         categorySelect.on('change', updateCategoryOcasion);
     }
     $.ajax({
@@ -364,6 +364,7 @@ $(document).ready(function(){
         type : 'GET',
         success : function (response) {
             categories = response;
+            loadParCategory();
             if (parCatSelect.val() !== '')
                 loadSubCategory(parCatSelect.val());
             if (subCatSelect.val() !== '')
@@ -378,41 +379,50 @@ $(document).ready(function(){
     });
 });
 
-function loadSubCategory (value) {
-    var placeholder = leafCatSelect.find('option')[0].innerText;
+function setPlaceholder(element) {
+    var placeholder = element.find('option')[0].innerText;
     var options = '<option value="" >' + placeholder + '</option>';
-    leafCatSelect.html('');
-    leafCatSelect.append(options);
-    placeholder = subCatSelect.find('option')[0].innerText;
-    subCatSelect.html('');
-    options = '<option value="" >' + placeholder + '</option>';
-    parent = value;
-    var subCatValue = $('#category_id').val();
+    element.html('');
+    element.append(options);
+}
 
-    for (var obj in categories[value].subcategory) {
-        var subcat= categories[value].subcategory[obj];
-        var selected = ''
-        if (subCatValue==subcat.id){
-            selected = 'selected'
+function setOptions(element, categories, selected_id) {
+    var options = '';
+    for (var obj in categories) {
+        var cat= categories[obj];
+        var selected = '';
+        if (selected_id==cat.id){
+            selected = 'selected';
         }
-        options += '<option value="' + subcat.id + '" '+selected+'>' + subcat.name + '</option>';
+        options += '<option value="' + cat.id + '" '+selected+'>' + cat.name + '</option>';
     }
-    subCatSelect.append(options);
+    element.append(options);
+}
+
+function animateElement (element) {
+    element.fadeIn(300).fadeOut(300).fadeIn(300);
+}
+function loadParCategory () {
+    setPlaceholder(parCatSelect);
+    setPlaceholder(subCatSelect);
+    setPlaceholder(leafCatSelect);
+    var catValue = $('#par_category_id').val();
+    setOptions(parCatSelect, categories, catValue);
+}
+
+function loadSubCategory (value) {
+    setPlaceholder(subCatSelect);
+    setPlaceholder(leafCatSelect);
+    parent = value;
+    var subCatValue = $('#sub_category_id').val();
+    setOptions(subCatSelect, categories[value].subcategory, subCatValue);
+    //animateElement(subCatSelect);
 }
 function loadLeafCategory(parent_id,value) {
-    var placeholder = leafCatSelect.find('option')[0].innerText;
-    var options = '<option value="" >' + placeholder + '</option>';
-    leafCatSelect.html('');
+    setPlaceholder(leafCatSelect);
     var leafCatValue = $('#leaf_category_id').val();
-    for (var obj in categories[parent_id].subcategory[value].subcategory) {
-        var leafCat= categories[parent_id].subcategory[value].subcategory[obj];
-        var selected = ''
-        if (leafCatValue==leafCat.id){
-            selected = 'selected'
-        }
-        options += '<option value="' + leafCat.id + '" '+selected+' >' + leafCat.name + '</option>';
-    }
-    leafCatSelect.append(options);
+    setOptions(leafCatSelect, categories[parent_id].subcategory[value].subcategory, leafCatValue);
+    //animateElement(leafCatSelect);
 }
 
 function findTab(href){

@@ -115,7 +115,7 @@ class ProductController extends Controller
         foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
-        $otherInputs = array('tag_id', 'leaf_category_id', 'category_id', 'par_category_id', 'min_price', 'max_discount', 'min_price', 'max_price');
+        $otherInputs = array('tag_id', 'leaf_category_id', 'parent', 'min_price', 'max_discount', 'min_price', 'max_price');
         foreach ($otherInputs as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
@@ -151,8 +151,8 @@ class ProductController extends Controller
             $category_ids = $this->subCategoryIds($request->input('leaf_category_id'));
         } elseif (!empty($request->input('category_id'))) {
             $category_ids = $this->subCategoryIds($request->input('category_id'));
-        } elseif (!empty($request->input('par_category_id'))){
-            $category_ids = $this->subCategoryIds($request->input('par_category_id'));
+        } elseif (!empty($request->input('parent'))){
+            $category_ids = $this->subCategoryIds($request->input('parent'));
         } else {
             $category_ids = [];
         }

@@ -51,9 +51,9 @@ var role_admin = '';
 var is_recommended = false;
 var categoryOccasions = [];
 if (is_nicobar) {
-    entity_filters[EntityType.PRODUCT] = ['category', 'colors', 'instock'];
-    entity_filter_ids[EntityType.PRODUCT] = ['id', 'id', 'id'];
-    entity_fields_ids[EntityType.PRODUCT] = [ 'parent', 'primary_color_id', 'in_stock'];
+    entity_filters[EntityType.PRODUCT] = ['colors', 'instock'];
+    entity_filter_ids[EntityType.PRODUCT] = ['id', 'id'];
+    entity_fields_ids[EntityType.PRODUCT] = ['primary_color_id', 'in_stock'];
     entity_filters[EntityType.LOOK] = ['stylists', 'status', 'category', 'occasions'];
     entity_filter_ids[EntityType.LOOK] = ['id', 'id', 'id', 'id'];
     entity_fields_ids[EntityType.LOOK] = ['stylist_id', 'status_id', 'category_id', 'occasion_id'];
@@ -450,7 +450,7 @@ function deleteItem(e){
 }
 
 function initializeFilters() {
-    if ($("#filters select").length == 0) {
+    if ($("#filters .options select").length == 0) {
         $.ajax({
             url: api_origin + '/filters/list',
             beforeSend: toggleLoader,
@@ -478,7 +478,7 @@ function initializeFilters() {
 }
 
 function showFilters() {
-    $("#filters select").remove();
+    $("#filters .options select").remove();
     if ($('input.autosuggest').length > 0)
         $('input.autosuggest').remove();
 
@@ -508,11 +508,13 @@ function showFilters() {
         adjustSearchBox($('.options select[name="occasion_id"]'));
     }
     if (entity_type_id == EntityType.PRODUCT) {
-        addSubcategoryField();
-        adjustSearchBox($('.options .autosuggest'));
+        $('.categories_tree').show();
+        //addSubcategoryField();
+        //adjustSearchBox($('.options .autosuggest'));
         min_discount_field.show();
         max_discount_field.show();
     } else {
+        $('.categories_tree').hide();
         min_discount_field.hide();
         max_discount_field.hide();
     }
