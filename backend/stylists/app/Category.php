@@ -41,4 +41,11 @@ class Category extends Model
             JOIN categories c3 ON c2.parent_category_id = c3.id
             ORDER BY category_with_parent_name");
     }
+    public function subcategory () {
+        return $this->hasMany('App\Category', 'parent_category_id');
+    }
+    public function leafcategory () {
+        return $this->hasMany('App\Category', 'parent_category_id');
+    }
+
 }
