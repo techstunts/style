@@ -36,8 +36,8 @@ use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id', 'approved_by'];
-    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders', 'colors', 'ratings', 'approvedBy'];
+    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'gender_id', 'primary_color_id', 'rating_id', 'approved_by'];
+    protected $filters = ['stylists', 'merchants', 'brands', 'genders', 'colors', 'ratings', 'approvedBy'];
 
     /**
      * Display a listing of the resource.
@@ -90,14 +90,14 @@ class ProductController extends Controller
         foreach ($this->categories as $category){
             $categories[$category->id] = $category->name;
         }
-        $category = Category::with(['subcategory.subcategory'])->whereIn('id', [1,8,9,38])->orderBy('name', 'ASC')->get();
+//        $category = Category::with(['subcategory.subcategory'])->whereIn('id', [1,8,9,38])->orderBy('name', 'ASC')->get();
 
         $view_properties = array(
             'stylists' => $this->stylists,
             'merchants' => $this->merchants,
             'brands' => $this->brands,
             'categories' => $categories,
-            'par_categories' => $category,
+//            'par_categories' => $category,
             'genders' => $this->genders,
             'colors' => $this->colors,
             'ratings' => $this->ratings,
@@ -115,7 +115,7 @@ class ProductController extends Controller
         foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
-        $otherInputs = array('tag_id', 'leaf_category_id', 'parent', 'min_price', 'max_discount', 'min_price', 'max_price');
+        $otherInputs = array('tag_id', 'leaf_category_id', 'parent', 'category_id', 'min_price', 'max_discount', 'min_price', 'max_price');
         foreach ($otherInputs as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
