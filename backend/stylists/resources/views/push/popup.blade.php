@@ -24,6 +24,11 @@
 
         <div class="filters" id="filters">
             <form method="get" action={{env('API_ORIGIN')}}."{entity_type}/list" style="float:none;">
+                <div class="categories_tree" style="float:left;">
+                    @include('category.parent_category')
+                    @include('category.sub_category')
+                    @include('category.leaf_category')
+                </div>
                 <div class="options" style="float:left;"></div>
                 <div class="buttons">
                     <input type="text" name="search" value="" placeholder="Search Text" class="form-control search">

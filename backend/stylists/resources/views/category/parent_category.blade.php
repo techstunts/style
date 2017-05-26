@@ -1,7 +1,4 @@
-<select name="par_category_id">
+<select name="parent">
     <option value="">Category</option>
-    @foreach($par_categories as $category)
-        <option value="{{$category['id']}}" {{$par_category_id == $category['id'] ? "selected" : ""}}>{{$category['name']}}</option>
-{{--        <option value="{{$category->id}}" {{$par_category_id == $category->id ? "selected" : ""}}>{{$category->name}}{{$category->product_count ? " ({$category->product_count})" : ""}}</option>--}}
-    @endforeach
 </select>
+<input type="hidden" value="{{!empty($parent) ? $parent : ''}}" id="par_category_id">
