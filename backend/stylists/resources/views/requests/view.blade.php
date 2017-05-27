@@ -37,11 +37,13 @@
                                 <br>
                                 <div class="row mrgn5px">
                                     <div class="col-md-12">
-                                        <b>Style : </b>{{$request->style ? $request->style->name : 'Uploaded style image'}}
-                                        <br>
                                         @if($request->style)
+                                            <b>Style : </b>{{$request->style->name}}
+                                            <br>
                                             <img style="width:100px;" src="{{$request->style->image_url}}">
                                         @elseif($request->uploadedStyleImage)
+                                            <b>Style : </b>{{'Uploaded style image'}}
+                                            <br>
                                             <img style="width: 100px"; src="{{$request->uploadedStyleImage->url}}">
                                             @if(count($request->request_styling_element_texts) > 0)
                                                 @foreach($request->request_styling_element_texts as $text)

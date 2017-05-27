@@ -82,16 +82,16 @@
                     <?php $index++; ?>
                 @endforeach
             @endif
-            <table border="0" cellpadding="2" cellspacing="2" style="width:100%;margin:0 auto;text-align:left;font-weight:bolder;font-size:18px;margin-top:40px;margin-bottom:40px;">
-                <tbody>
-                <tr>
-                    <td style="width:100%;vertical-align:top;text-align:center;letter-spacing:3px;">
-                        A FEW MORE RECOMMENDATIONS
-                    </td>
-                </tr>
-                </tbody>
-            </table>
             @if(!empty($entity_data[strtolower(\App\Models\Enums\EntityTypeName::PRODUCT)]))
+                <table border="0" cellpadding="2" cellspacing="2" style="width:100%;margin:0 auto;text-align:left;font-weight:bolder;font-size:18px;margin-top:40px;margin-bottom:40px;">
+                    <tbody>
+                    <tr>
+                        <td style="width:100%;vertical-align:top;text-align:center;letter-spacing:3px;">
+                            A FEW MORE RECOMMENDATIONS
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
                 <?php
                     $product_count = count($entity_data[strtolower(\App\Models\Enums\EntityTypeName::PRODUCT)]);
                     $numOfIteration = intval($product_count/4);
