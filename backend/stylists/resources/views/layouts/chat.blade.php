@@ -32,6 +32,7 @@
     <script src="{{asset("chat/scripts/directives/info.js")}}"></script>
     <script src="{{asset("chat/scripts/directives/unsubscribe.js")}}"></script>
     <script src="{{asset("chat/scripts/directives/fileread.js")}}"></script>
+    <script src="{{asset("chat/scripts/directives/focus-on.js")}}"></script>
     <script src="{{asset("chat/scripts/filters/browser.js")}}"></script>
     <script src="{{asset("chat/scripts/filters/spaces.js")}}"></script>
     <script src="{{asset("chat/scripts/filters/time.js")}}"></script>

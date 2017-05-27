@@ -189,7 +189,7 @@
                 </ul>
 
                 <div class="send">
-                    <textarea placeholder="Enter your message" ng-model="message"  ng-trim="false" ng-keypress="publish($event)" ng-change="change()" message></textarea>
+                    <textarea placeholder="Enter your message" ng-model="message" ng-trim="false" ng-keypress="publish($event)" ng-change="change()" message focus-on="!loading"></textarea>
                     <div class="buttons">
                         <a class="button icon open" ng-click="text()"></a>
                         <a class="button icon look" ng-click="share('look')"></a>
