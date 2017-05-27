@@ -442,11 +442,16 @@ class LookMapper extends Controller
         ->orderBy('order_id', 'asc')
         ->simplePaginate($this->records_per_page * 4)
         ->appends($paginate_qs);
-        foreach ($looks as $item) {
-            if ($item->look && count($item->look->images) > 0) {
-                $item->look->image = env('API_ORIGIN') . '/' .$item->look->images[0]->path . '/' . $item->look->images[0]->name;
-            } else{
-                $item->look->image = env('API_ORIGIN') . '/uploads/images/looks/' . $item->look->image;
+        foreach ($looks as $k => $item) {
+            if ($item->look){
+                if(count($item->look->images) > 0) {
+                    $item->look->image = env('API_ORIGIN') . '/' .$item->look->images[0]->path . '/' . $item->look->images[0]->name;
+                } else{
+                    $item->look->image = env('API_ORIGIN') . '/uploads/images/looks/' . $item->look->image;
+                }
+	        }
+            else{
+                $looks->forget($k);
             }
         }
         return $looks;
