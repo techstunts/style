@@ -53,7 +53,7 @@
                 <div class="tabs">
                     <a ng-click="switch(false)" class="icon contacts"></a>
                     <a ng-click="switch(true)" class="icon recent"></a>
-                    <a class="icon home" target="_blank" href="http://istyleyou.in/"></a>
+                    <a class="icon home" target="_blank" href="{{env('IS_NICOBAR') ? 'http://nicobar.com/' : 'http://istyleyou.in/'}}"></a>
                 </div>
 
                 <div class="form">

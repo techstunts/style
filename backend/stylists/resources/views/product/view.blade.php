@@ -27,17 +27,23 @@
                             @endforeach
                         </tr>
                         <tr class="row">
-                            <td class="head">Merchant</td><td class="content">{{$merchant ? $merchant->name : ""}} <a target="new" href="{{$product->product_link}}" class="product_link">Product Link</a></td>
-                        </tr>
-                        <tr class="row">
-                            <td class="head">Brand</td><td class="content">{{$brand ? $brand->name : ""}} </td>
+                            @if(env('IS_NICOBAR'))
+                                <td class="head">Product Link</td><td class="content"> <a target="new" href="{{$product->product_link}}" class="product_link">View product on nicobar site </a></td>
+                            @else
+                                <td class="head">Merchant</td><td class="content">{{$merchant ? $merchant->name : ""}} <a target="new" href="{{$product->product_link}}" class="product_link">Product Link</a></td>
+                            @endif
                         </tr>
                         <tr class="row">
                             <td class="head">Category</td><td class="content">{{$category ? $category->name : ""}} </td>
                         </tr>
-                        <tr class="row">
-                            <td class="head">Gender</td><td class="content">{{$gender ? $gender->name : ""}} </td>
-                        </tr>
+                        @if(!env('IS_NICOBAR'))
+                            <tr class="row">
+                                <td class="head">Brand</td><td class="content">{{$brand ? $brand->name : ""}} </td>
+                            </tr>
+                            <tr class="row">
+                                <td class="head">Gender</td><td class="content">{{$gender ? $gender->name : ""}} </td>
+                            </tr>
+                        @endif
                         <tr class="row">
                             <td class="head">Colors</td><td class="content">{{$primary_color ? $primary_color->name : ''}} {{$secondary_color && $secondary_color->id
 != 0 ? "(Secondary color: " . $secondary_color->name . ")" : ""}}</td>

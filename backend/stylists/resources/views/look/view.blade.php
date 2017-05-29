@@ -101,7 +101,7 @@
                                     <td class="content">
                                         <a href="{{url('stylist/view/' . $look->stylist->id)}}" title="{{$look->stylist->name}}"
                                            target="stylist_win">
-                                            <img class="icon" src="{{asset('images/' . $look->stylist->image)}}"/>
+                                            <img style="width:30px;" class="icon" src="{{asset('images/' . $look->stylist->image)}}"/>
                                             {{$look->stylist->name}}
                                         </a>
                                     </td>

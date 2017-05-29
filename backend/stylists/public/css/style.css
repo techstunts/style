@@ -540,6 +540,7 @@ div.resource_view tr.row a.product_link {
 }
 
 .pop-image-size {
+        max-width: 200px;
 }
 
 .inactive {
@@ -1035,12 +1036,22 @@ option.dropdown-child {
     background-color: #fefefe;
     margin: 15% auto;
     padding: 20px;
-    border: 1px solid #888;
+    border: none !important;
     width: 25%;
     text-align: center;
-    top: -30px !important;
+    top: -50px !important;
     /* position: absolute !important; */
+    box-shadow: none !important;
 }
+
+.modal-title{
+    color:#282b30 !important;
+}
+
+.modal.in .modal-dialog{
+    background-color: #fff !important;
+}
+
 /* The Close Button */
 .close {
     color: #aaa;

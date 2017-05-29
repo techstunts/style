@@ -9,7 +9,7 @@
             <li class="ui-state-default" id="{{$stylist->id}}">
                 <div class="resource_view">
                     <div class="image">
-                        <img src="{!! strpos($stylist->image, "stylish") === 0 ? asset('images/' . $stylist->image) : $stylist->image !!}"/>
+                        <img style="width:200px" src="{!! strpos($stylist->image, "stylish") === 0 ? asset('images/' . $stylist->image) : $stylist->image !!}"/>
                     </div>
                     <table class="info">
                         <tr class="row">
