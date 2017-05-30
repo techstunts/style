@@ -99,10 +99,14 @@
                                 <td class="head">Stylist : </td>
                                 @if(!empty($look->stylist))
                                     <td class="content">
-                                        <a href="{{url('stylist/view/' . $look->stylist->id)}}" title="{{$look->stylist->name}}"
-                                           target="stylist_win">
-                                            <img class="icon" src="{{asset('images/' . $look->stylist->image)}}"/>
+                                        <img style="width:30px;" class="icon" src="{{asset('images/' . $look->stylist->image)}}"/>
+                                        @if (!env('IS_NICOBAR'))
+                                            <a href="{{url('stylist/view/' . $look->stylist->id)}}" title="{{$look->stylist->name}}" target="stylist_win">
+                                                {{$look->stylist->name}}
+                                            </a>
+                                        @else
                                             {{$look->stylist->name}}
+                                        @endif
                                         </a>
                                     </td>
                                 @endif
