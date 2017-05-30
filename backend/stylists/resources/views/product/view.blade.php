@@ -14,7 +14,9 @@
                     <table class="info">
                         <tr class="row">
                             <td class="title" colspan="2">{{$product->name}}
-                                <a class="product_link" href="{{url('product/edit/' . $product->id)}}" title="{{$product->name}}" >Edit</a>
+                                @if(!env("IS_NICOBAR"))
+                                    <a class="product_link" href="{{url('product/edit/' . $product->id)}}" title="{{$product->name}}" >Edit</a>
+                                @endif
                             </td>
                         </tr>
                         <tr class="row">
