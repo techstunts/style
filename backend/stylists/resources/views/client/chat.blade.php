@@ -85,65 +85,24 @@
 
                 <ul class="info" ng-class="{'hidden': info.hidden}" ng-style="{'top': info.top + 'px'}">
                     <li>
-                        <img icon ng-src="@{{info.client.image}}">
-                        <img icon ng-repeat="item in info.client.other_profile_images" ng-src="@{{item}}">
+                        <b>Category</b>
+                        <p ng-bind="info.client.request.category.name"></p>
                     </li>
                     <li>
-                        <b>ID</b>
-                        <p ng-bind="info.client.id"></p>
+                        <b>Style</b>
+                        <p ng-bind="info.client.request.style.name"></p>
+                        <img ng-class="{'hidden': !info.client.request.style.image_url}" ng-src="@{{info.client.request.style.image_url}}">
                     </li>
-                    <li>
-                        <b>Name</b>
-                        <p ng-bind="info.client.name"></p>
+                    <li ng-repeat="item in info.client.request.question_ans">
+                        <div><p><b ng-bind="item.question.title"></b><br></p></div>
+                        <div>
+                            <span ng-repeat="option in item.option">
+                            <p>@{{option.text}} @{{(option.text !== '' && !$last) ? ', ' : ''}} </p>
+                            <img  ng-class="{'hidden': !option.image}" ng-src="@{{option.image}}">
+                        </span>
+                        </div>
                     </li>
-                    <li>
-                        <b>Gender</b>
-                        <p ng-bind="info.client.gender.name"></p>
-                    </li>
-                    <li>
-                        <b>Body type</b>
-                        <p ng-bind="info.client.body_type.name"></p>
-                    </li>
-                    <li>
-                        <b>Height</b>
-                        <p ng-bind="info.client.height_group.name"></p>
-                    </li>
-                    <li>
-                        <b>Stylist</b>
-                        <p ng-bind="info.client.stylist.name"></p>
-                    </li>
-                    <li>
-                        <b>Daringness</b>
-                        <p ng-bind="info.client.daringness.name"></p>
-                    </li>
-                    <li>
-                        <b>Color pref.</b>
-                        <p>
-                            <span ng-repeat="item in info.client.client_color_prefs" ng-bind="item.color.name"></span>
-                        </p>
-                    </li>
-                    <li>
-                        <b>Heel pref.</b>
-                        <p>
-                            <span ng-repeat="item in info.client.client_heel_prefs" ng-bind="item.heel_types.name"></span>
-                        </p>
-                    </li>
-                    <li>
-                        <b>Brand pref.</b>
-                        <p ng-bind="info.client.brand.name"></p>
-                    </li>
-                    <li>
-                        <b>Top pref.</b>
-                        <p>
-                            <span ng-repeat="item in info.client.top_fit_prefs" ng-bind="item.fits.name"></span>
-                        </p>
-                    </li>
-                    <li>
-                        <b>Bottom pref.</b>
-                        <p>
-                            <span ng-repeat="item in info.client.bottom_fit_prefs" ng-bind="item.fits.name"></span>
-                        </p>
-                    </li>
+                    <a class="icon dir" ng-repeat="item in current.path" ng-bind="item.name" ng-click="back($index, $last)"></a>
                 </ul>
 
             </div>

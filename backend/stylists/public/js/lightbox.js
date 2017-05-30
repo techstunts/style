@@ -272,13 +272,17 @@ $(document).ready(function(){
         var form = $(this);
         var url = form.find('input[name="url"]').val();
         var image = form.find('input[name="image"]');
-        var image_type = form.find('select[name="image_type"]');
+        var image_type = form.find('select[name="image_type"]').val();
+        if ('' == image_type){
+            alert('Please select image type');
+            return false;
+        }
 
         var form_data = new FormData(form[0]);
         form_data.append("image", image.prop('files')[0]);
         form_data.append("entity_type_id", form.find('input[name="entity_type_id"]').val());
         form_data.append("entity_id", form.find('input[name="entity_id"]').val());
-        form_data.append("image_type", image_type.val());
+        form_data.append("image_type", image_type);
         form_data.append("_token", form.find('select[name="_token"]').val());
         $.ajax({
             type : "POST",
