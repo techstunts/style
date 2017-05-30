@@ -155,6 +155,9 @@ class BookingsController extends Controller
         $client_first_name = strtoupper(substr($words[0], 0, 1)) . strtolower(substr($words[0], 1)) ;
 
         $recommendation_template = env('IS_NICOBAR') ? ('emails.booking_reminder') : ('emails.booking_reminder');
+
+        $chat_link = env('CHAT_LINK') . "&category_id=" . $stylist->category->id;
+
         Mail::send($recommendation_template,
 
             [
@@ -163,7 +166,7 @@ class BookingsController extends Controller
                 'client_first_name' => $client_first_name,
                 'booking_readable_datetime' => $booking_readable_datetime,
                 'nicobar_website' => env('NICOBAR_WEBSITE'),
-                'chat_link' => env('CHAT_LINK')
+                'chat_link' => $chat_link
             ],
             function ($mail) use ($client, $stylist) {
                 $mail->from(env('FROM_EMAIL'), (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
