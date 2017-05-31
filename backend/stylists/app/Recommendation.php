@@ -33,4 +33,12 @@ class Recommendation extends Model
         }
         return false;
     }
+    public function look ()
+    {
+        return $this->belongsTo('App\Look', 'entity_id');
+    }
+    public function product ()
+    {
+        return $this->belongsTo('App\Product', 'entity_id');
+    }
 }
