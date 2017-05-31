@@ -67,4 +67,12 @@ class StyleRequests extends Model
     {
         return $this->hasMany('App\Models\Questionnaire\StyleElementText', 'request_id');
     }
+    public function reco_looks()
+    {
+        return $this->hasMany('App\Recommendation', 'style_request_id');
+    }
+    public function reco_products()
+    {
+        return $this->hasMany('App\Recommendation', 'style_request_id');
+    }
 }

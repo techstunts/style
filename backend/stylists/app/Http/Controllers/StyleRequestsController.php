@@ -140,13 +140,32 @@ class StyleRequestsController extends Controller
             $query->select('id', DB::raw("concat('$api_origin', '/',  path, '/', name) as url"));
         };
 
-        $styleRequest = StyleRequests::with(['client' => $client, 'requested_entity', 'question_ans' => $question_ans,
-            'category', 'uploadedStyleImage' => $uploadedStyleImage, 'request_styling_element_texts'])
+        $looks = function ($subquery) use ($api_origin) {
+            $subquery->select('id', DB::raw("concat('$api_origin', '/uploads/images/looks/', image) as image"));
+        };
+        $products = function ($subquery) use ($api_origin) {
+            $subquery->select('id', 'image_name as image');
+        };
+
+        $reco_looks = function ($query) use($looks) {
+            $query->select('id', 'entity_type_id', 'entity_id', 'style_request_id', 'created_at');
+            $query->with(['look' => $looks,]);
+            $query->where(['entity_type_id' => EntityType::LOOK]);
+        };
+        $reco_products = function ($query) use($products) {
+            $query->select('id', 'entity_type_id', 'entity_id', 'style_request_id', 'created_at');
+            $query->with(['product' => $products,]);
+            $query->where(['entity_type_id' => EntityType::PRODUCT]);
+        };
+
+        $styleRequest = StyleRequests::with(['client' => $client, 'requested_entity', 'question_ans' => $question_ans, 'reco_looks' => $reco_looks,
+            'reco_products' => $reco_products, 'category', 'uploadedStyleImage' => $uploadedStyleImage, 'request_styling_element_texts'])
             ->where(['id' => $this->resource_id])
             ->first();
         if (!$styleRequest) {
             return Redirect::to('requests/list')->withError('Request Not Found');
         }
+        $styleRequest = $this->formatRecommendations($styleRequest);
         $ans_arr = array();
         foreach ($styleRequest->question_ans as $question_ans) {
             if (!isset($ans_arr[$question_ans->question_id])) {
@@ -226,5 +245,33 @@ class StyleRequestsController extends Controller
             $response = $styleRequestObj->updateStatus($styleRequest, $request->input('status_id'));
             return response()->json($response, 200);
         }
+    }
+
+    public function formatRecommendations ($stylerequest) {
+        $reco_arr = array();
+        foreach ($stylerequest->reco_looks as $reco_look) {
+            $date = date('Y-m-d H:i:s', strtotime($reco_look->created_at));
+            if (!isset($reco_arr[$date])) {
+                $reco_arr[$date] = array();
+            }
+            if (!isset($reco_arr[$date][$reco_look->entity_type_id])) {
+                $reco_arr[$date][$reco_look->entity_type_id] = array();
+            }
+            $reco_arr[$date][$reco_look->entity_type_id][] = $reco_look->look;
+        }
+        foreach ($stylerequest->reco_products as $reco_look) {
+            $date = date('Y-m-d H:i:s', strtotime($reco_look->created_at));
+            if (!isset($reco_arr[$date])) {
+                $reco_arr[$date] = array();
+            }
+            if (!isset($reco_arr[$date][$reco_look->entity_type_id])) {
+                $reco_arr[$date][$reco_look->entity_type_id] = array();
+            }
+            $reco_arr[$date][$reco_look->entity_type_id][] = $reco_look->product;
+        }
+        krsort($reco_arr);
+        $stylerequest->recommendations = $reco_arr;
+        unset($stylerequest->reco_looks, $stylerequest->reco_products);
+        return $stylerequest;
     }
 }

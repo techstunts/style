@@ -1074,3 +1074,30 @@ div#prod-update-div {
     top: 102px;
     left: 410px;
 }
+
+.recommendations{
+    border: 1px solid #000000;
+    padding: 10px 10px;
+}
+
+.pad10{
+    padding: 10px 10px;
+}
+
+.pad5{
+    padding: 5px 5px;
+}
+
+
+.lh80{
+    line-height: 80px;
+}
+
+.text-align-left{
+    text-align: left;
+}
+
+.no-margin-row{
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}
