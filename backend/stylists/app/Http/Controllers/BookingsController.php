@@ -10,6 +10,7 @@ use App\Stylist;
 use Illuminate\Http\Request;
 use App\Http\Mapper\BookingMapper;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Mail;
 
@@ -110,7 +111,8 @@ class BookingsController extends Controller
 
         $ts_window = time() + env('BOOKING_REMINDER_TIME_WINDOW');
         $current_ts = time();
-        echo $ts_window;
+        echo "\nts_window: " . $ts_window;
+        echo "\ncurrent_ts: " . $current_ts;
         $where_conditions['date'] = date('Y-m-d');
         $where_conditions['status_id'] = BookingStatus::Confirm;
         $where_conditions['reminders_sent_count'] = 0;
@@ -124,7 +126,7 @@ class BookingsController extends Controller
 
         foreach($bookings as $booking){
             $booking_ts = strtotime($booking->date . ' ' . explode(' ', $booking->slot->name)[0]);
-            echo "\n" . $booking->id . " " . $booking_ts . "\n";
+            echo "\n" . $booking->id . "\nbooking_ts: " . $booking_ts . "\n";
 
             $booking_readable_datetime = date("h:i a", $booking_ts) . ' on ' . date("M d", $booking_ts);
 
@@ -135,9 +137,13 @@ class BookingsController extends Controller
                     $booking->save();
                 }
                 catch(Exception $e){
+                    Log::info($e);
                     echo "\n Exception : " . $e->getMessage();
                 }
-                echo "\n Sent\n";
+                echo "\nSent\n";
+            }
+            else{
+                echo "\nSkipping as the booking time is either passed or not yet arrived\n";
             }
         }
 
