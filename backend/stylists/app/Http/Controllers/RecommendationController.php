@@ -187,7 +187,7 @@ class RecommendationController extends Controller
             $style_request_id = $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->id : 0;
             $recommends_arr = $this->dataToBeSaved($recommends_arr, $entity_data, $client_id, $recommendation_type_id, $style_request_id);
 
-            if (count($reg_ids) > 0 && $message_pushed == 0) {
+            if (!env('IS_NICOBAR') && count($reg_ids) > 0 && $message_pushed == 0) {
                 $params = array(
                     "message" => $stylist_data->name . " has sent you recommendation",
                     "message_summery" => $stylist_data->name . " has sent you recommendation against your style request",
