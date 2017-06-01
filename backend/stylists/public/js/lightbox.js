@@ -172,8 +172,16 @@ function unselectProduct(e){
     updateSelectedProductSnapshotView();
 }
 var occasions = {};
-
+var categories = [];
+var subCatSelect = '';
+var parCatSelect = '';
+var leafCatSelect = '';
+var parent = '';
 $(document).ready(function(){
+    subCatSelect = $('#select_category_id');
+    parCatSelect = $('select[name="parent"]');
+    leafCatSelect = $('select[name="leaf_category_id"]');
+
     if($('#selectable').length){
         $( "#selectable" ).selectable({
             selected: selectProduct
@@ -264,13 +272,17 @@ $(document).ready(function(){
         var form = $(this);
         var url = form.find('input[name="url"]').val();
         var image = form.find('input[name="image"]');
-        var image_type = form.find('select[name="image_type"]');
+        var image_type = form.find('select[name="image_type"]').val();
+        if ('' == image_type){
+            alert('Please select image type');
+            return false;
+        }
 
         var form_data = new FormData(form[0]);
         form_data.append("image", image.prop('files')[0]);
         form_data.append("entity_type_id", form.find('input[name="entity_type_id"]').val());
         form_data.append("entity_id", form.find('input[name="entity_id"]').val());
-        form_data.append("image_type", image_type.val());
+        form_data.append("image_type", image_type);
         form_data.append("_token", form.find('select[name="_token"]').val());
         $.ajax({
             type : "POST",
@@ -304,16 +316,18 @@ $(document).ready(function(){
         });
     });
 
-    $('input.autosuggest').keyup(function(){
+    $('input.autosuggest').on('input', function(){
         var keyword = $(this).val();
         var autosuggest_type = $(this).attr('autosuggest_type');
         var autosuggest_object =  $(this);
-        if(keyword.trim().length>=2){
+        var par_category_id = $('input.autosuggest').parent().find('select[name="par_category_id"]').val();
+        if(keyword.trim().length>0){
             $.ajax({
                 type : "GET",
                 url: api_origin + '/autosuggest/' + autosuggest_type,
                 data : {
                     keyword : keyword,
+                    parent : par_category_id,
                 },
                 success : function(response){
                     var allSuggestions = [];
@@ -335,23 +349,92 @@ $(document).ready(function(){
     });
 
     var urlTabSection = findTab($(window.location)[0].href);
+    var action = findUrlAction($(window.location)[0].href);
     $('.col-md-12 > ul a').each(function(){
         var linkTabSection = findTab(this.href);
-        if (urlTabSection == linkTabSection) {
+        var linkTabAction = findUrlAction(this.href);
+        if (action == linkTabAction && urlTabSection == linkTabSection) {
             $(this).parent('li').addClass('active');
         }
     });
 
     if ($('#category_occasion_sort').length > 0) {
         occasions = jQuery.parseJSON(list);
-        var categorySelect = $('select[name="category_id"]');
+        var categorySelect = $('.options select[name="category_id"]');
         categorySelect.on('change', updateCategoryOcasion);
     }
+    $.ajax({
+        url : '/product/allCategoryLevels',
+        type : 'GET',
+        success : function (response) {
+            categories = response;
+            loadParCategory();
+            if (parCatSelect.val() !== '')
+                loadSubCategory(parCatSelect.val());
+            if (subCatSelect.val() !== '')
+                loadLeafCategory(parCatSelect.val(), subCatSelect.val());
+        }
+    });
+    parCatSelect.on('change', function(){
+        loadSubCategory($(this).val());
+    });
+    subCatSelect.on('change', function () {
+        loadLeafCategory(parent,$(this).val())
+    });
 });
 
+function setPlaceholder(element) {
+    var placeholder = element.find('option')[0].innerText;
+    var options = '<option value="" >' + placeholder + '</option>';
+    element.html('');
+    element.append(options);
+}
+
+function setOptions(element, categories, selected_id) {
+    var options = '';
+    for (var obj in categories) {
+        var cat= categories[obj];
+        var selected = '';
+        if (selected_id==cat.id){
+            selected = 'selected';
+        }
+        options += '<option value="' + cat.id + '" '+selected+'>' + cat.name + '</option>';
+    }
+    element.append(options);
+}
+
+function animateElement (element) {
+    element.fadeIn(300).fadeOut(300).fadeIn(300);
+}
+function loadParCategory () {
+    setPlaceholder(parCatSelect);
+    setPlaceholder(subCatSelect);
+    setPlaceholder(leafCatSelect);
+    var catValue = $('#par_category_id').val();
+    setOptions(parCatSelect, categories, catValue);
+}
+
+function loadSubCategory (value) {
+    setPlaceholder(subCatSelect);
+    setPlaceholder(leafCatSelect);
+    parent = value;
+    var subCatValue = $('#sub_category_id').val();
+    setOptions(subCatSelect, categories[value].subcategory, subCatValue);
+    //animateElement(subCatSelect);
+}
+function loadLeafCategory(parent_id,value) {
+    setPlaceholder(leafCatSelect);
+    var leafCatValue = $('#leaf_category_id').val();
+    setOptions(leafCatSelect, categories[parent_id].subcategory[value].subcategory, leafCatValue);
+    //animateElement(leafCatSelect);
+}
+
 function findTab(href){
-    var url = href.split('/')[3];
-    return url[0];
+    return href.split('?')[0].split('/')[3];
+}
+
+function findUrlAction(href){
+    return href.split('?')[0].split('/')[4];
 }
 
 function updateLookListImage(entity_id, upload_id, api_origin){

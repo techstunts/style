@@ -25,7 +25,7 @@
                     <input type="submit" name="filter" value="Filter"/>
                     <a href="{{url('look/list')}}" class="clearall">Clear All</a>
                 </form>
-                {!! $looks->render() !!}
+                {{--{!! $looks->render() !!}--}}
             </div>
 
             <div class="clear"></div>
@@ -46,7 +46,10 @@
                             <a href="{{url('look/view/' . $look->id)}}">{{$look->name == "" ? "Error! Look name empty" : $look->name }}</a>
                             <input class="entity_ids pull-right"  value="{{$look->id}}" type="checkbox">
                         </div>
-                        <div class="image"><img src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/></div>
+                        <div class="image" data-toggle="popover" data-trigger="hover" data-placement="auto right" data-html="true"
+                             data-content="{{'<strong>Description: </strong>'.$look->description.' <br ><img style="width:250px;" src='.env('API_ORIGIN').'/uploads/images/looks/'. $look->image.' />'}}"
+                        >
+                            <img src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/></div>
                         <div class="extra text">
                             <?php
                                 if (isset($status_rules) && isset($status_rules[$look->status->id]['edit_status']['new_status'])){
@@ -82,7 +85,9 @@
                             <span>{{$look->age_group ? $look->age_group->name : ''}}</span>
                             @endif
                             <span>INR {{$look->price}}</span>
-                            <span>{{$look->budget ? 'INR ' . $look->budget->name : ''}}</span>
+                            @if(!env('IS_NICOBAR'))
+                                <span>{{$look->budget ? 'INR ' . $look->budget->name : ''}}</span>
+                            @endif
                         </div>
                         @include('common.tag')
                     </div>
@@ -97,4 +102,7 @@
         @include('push.popup')
     </div>
 </div>
+<script>
+    $('div [data-toggle="popover"]').popover();
+</script>
 @endsection

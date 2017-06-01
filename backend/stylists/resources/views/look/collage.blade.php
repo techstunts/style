@@ -97,17 +97,35 @@
 
                 <div id="browser" class="window">
                     <div class="toolbar">
+                        <form class="parent">
+                            <div class="select" data-name="category_id">
+                                <select name="category_id" placeholder="Sub category" style="display: none;">
+                                    <option value="all">All</option>
+                                </select>
+                                <span>Sub category</span>
+                                <div>
+                                    <a class="">All</a>
+                                </div>
+                            </div>
+                            <div class="select" data-name="leaf_category_id">
+                                <select name="leaf_category_id" placeholder="Leaf category" style="display: none;">
+                                    <option value="all">All</option>
+                                </select>
+                                <span>Leaf category</span>
+                                <div>
+                                    <a class="">All</a>
+                                </div>
+                            </div>
+                        </form>
+                            {{--<input type="text" name="category" placeholder="Sub category">--}}
+                            {{--<a class="icon close"></a>--}}
+                            {{--<a class="icon process"></a>--}}
+                            {{--<div class="menu"></div>--}}
+                        {{--</form>--}}
                         <form class="input search">
                             <input type="text" name="search" placeholder="Search">
                             <input type="submit" value="">
                             <a class="icon close"></a>
-                        </form>
-                        <form class="parent"></form>
-                        <form class="input category" autocomplete="off">
-                            <input type="text" name="category" placeholder="Sub category">
-                            <a class="icon close"></a>
-                            <a class="icon process"></a>
-                            <div class="menu"></div>
                         </form>
                         <form class="filter"></form>
                         <form class="input search-icon minPrice">

@@ -28,7 +28,10 @@
 
                 <div class="clear"></div>
 
-                @include('common.sendrecommendations')
+                @if(!env('IS_NICOBAR'))
+                    @include('common.sendrecommendations')
+                @endif
+
                 @if(count($requests) == 0)
                     No Requests found
                 @endif
@@ -48,7 +51,6 @@
                                 <th class="font-size-table-header">Time</th>
                                 <th class="font-size-table-header">Assigned</th>
                                 <th class="font-size-table-header">Status</th>
-                                <th class="font-size-table-header">Client Details</th>
                             @else
                                 <th><input name="select_all" value="1" type="checkbox"></th>
                                 <th class="font-size-table-header">Request id</th>
@@ -62,6 +64,7 @@
                                 <th class="font-size-table-header">Stylist</th>
                                 <th class="font-size-table-header">Message</th>
                                 <th class="font-size-table-header">Request Type</th>
+                                <th class="font-size-table-header">Client Details</th>
                             @endif
                         </tr>
                         </thead>
@@ -84,7 +87,6 @@
                                 <td class="table-font-size"> {{$request->created_at->format('h:i A')}} </td>
                                 <td class="table-font-size"> {{$request->client && $request->client->stylist ? $request->client->stylist->name : ''}} </td>
                                 <td class="table-font-size"> {{$request->status ? $request->status->name : ''}} </td>
-                                <td class="table-font-size"> <a href="/client/{{$request->client ? 'view/' . $request->client->id : 'list'}}">view</a> </td>
                             </tr>
                             @endforeach
                         @else
@@ -102,6 +104,7 @@
                                     <td class="table-font-size"> {{$request->client && $request->client->stylist ? $request->client->stylist->name : ''}} </td>
                                     <td class="table-font-size"> {{$request->description}} </td>
                                     <td class="table-font-size"> {{$request->entity_type ? $request->entity_type->name : ''}} </td>
+                                    <td class="table-font-size"> <a href="/client/{{$request->client ? 'view/' . $request->client->id : 'list'}}">view</a> </td>
                                 </tr>
                             @endforeach
                         @endif

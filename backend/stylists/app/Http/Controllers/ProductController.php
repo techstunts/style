@@ -6,6 +6,7 @@ use App\Brand;
 use App\Category;
 use App\Http\Mapper\Mapper;
 use App\Models\Enums\Currency;
+use App\Models\Enums\InStock;
 use App\Models\Enums\PriceType;
 use App\Models\Looks\LookTag;
 use App\Models\Lookups\Gender;
@@ -35,8 +36,8 @@ use Validator;
 
 class ProductController extends Controller
 {
-    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'rating_id', 'approved_by'];
-    protected $filters = ['stylists', 'merchants', 'brands', 'categories', 'genders', 'colors', 'ratings', 'approvedBy'];
+    protected $filter_ids = ['stylist_id', 'merchant_id', 'brand_id', 'gender_id', 'primary_color_id', 'rating_id', 'approved_by'];
+    protected $filters = ['stylists', 'merchants', 'brands', 'genders', 'colors', 'ratings', 'approvedBy'];
 
     /**
      * Display a listing of the resource.
@@ -52,6 +53,30 @@ class ProductController extends Controller
         return $this->$method($request);
     }
 
+    public function getAllCategoryLevels()
+    {
+        $cat_arr = array();
+
+        $categories = Category::with(['subcategory.subcategory'])->whereIn('id', [1,8,9,38])->orderBy('name', 'ASC')->get();
+        foreach ($categories as $category) {
+            if (!isset($cat_arr[$category->id])){
+                $cat_arr[$category->id] = array('id' => $category->id, 'name' => $category->name, 'subcategory' => array());
+            }
+            foreach ($category->subcategory as $subcategory){
+                if (!isset($cat_arr[$category->id]['subcategory'][$subcategory->id])){
+                    $cat_arr[$category->id]['subcategory'][$subcategory->id] = array('id' => $subcategory->id, 'name' => $subcategory->name, 'subcategory' => array());
+                }
+                foreach ($subcategory->subcategory as $subsubcategory){
+                    if (!isset($cat_arr[$category->id]['subcategory'][$subcategory->id]['subcategory'][$subsubcategory->id])){
+                        $cat_arr[$category->id]['subcategory'][$subcategory->id]['subcategory'][$subsubcategory->id] =
+                            array('id' => $subsubcategory->id, 'name' => $subsubcategory->name);
+                    }
+                }
+            }
+        }
+        return $cat_arr;
+    }
+
     public function getList(Request $request)
     {
         $this->base_table = 'products';
@@ -65,12 +90,14 @@ class ProductController extends Controller
         foreach ($this->categories as $category){
             $categories[$category->id] = $category->name;
         }
+//        $category = Category::with(['subcategory.subcategory'])->whereIn('id', [1,8,9,38])->orderBy('name', 'ASC')->get();
 
         $view_properties = array(
             'stylists' => $this->stylists,
             'merchants' => $this->merchants,
             'brands' => $this->brands,
             'categories' => $categories,
+//            'par_categories' => $category,
             'genders' => $this->genders,
             'colors' => $this->colors,
             'ratings' => $this->ratings,
@@ -88,7 +115,10 @@ class ProductController extends Controller
         foreach ($this->filter_ids as $filter) {
             $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
         }
-        $view_properties['tag_id'] = $request->has('tag_id') && $request->input('tag_id') !== "" ? intval($request->input('tag_id')) : "";
+        $otherInputs = array('tag_id', 'leaf_category_id', 'parent', 'category_id', 'min_price', 'max_discount', 'min_price', 'max_price');
+        foreach ($otherInputs as $filter) {
+            $view_properties[$filter] = $request->has($filter) && $request->input($filter) !== "" ? intval($request->input($filter)) : "";
+        }
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
         $in_stock = $request->input('in_stock');
@@ -101,10 +131,6 @@ class ProductController extends Controller
         $max_price = $request->input('max_price');
         $min_discount = $request->input('min_discount');
         $max_discount = $request->input('max_discount');
-        $view_properties['min_price'] = $min_price;
-        $view_properties['max_price'] = $max_price;
-        $view_properties['min_discount'] = $min_discount;
-        $view_properties['max_discount'] = $max_discount;
 
         $paginate_qs = $request->query();
         unset($paginate_qs['page']);
@@ -121,7 +147,15 @@ class ProductController extends Controller
 
         $genders_list = Gender::all()->keyBy('id');
         $genders_list[0] = new Gender();
-
+        if (!empty($request->input('leaf_category_id'))) {
+            $category_ids = $this->subCategoryIds($request->input('leaf_category_id'));
+        } elseif (!empty($request->input('category_id'))) {
+            $category_ids = $this->subCategoryIds($request->input('category_id'));
+        } elseif (!empty($request->input('parent'))){
+            $category_ids = $this->subCategoryIds($request->input('parent'));
+        } else {
+            $category_ids = [];
+        }
         $mapperObj = new Mapper();
         $product_prices = $mapperObj->getPriceClosure($min_price, $max_price, $min_discount, $max_discount);
         $in_stock_closure = $this->getInStockClosure($in_stock);
@@ -130,8 +164,11 @@ class ProductController extends Controller
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereHas('product_prices', $product_prices);
-        if (!empty($in_stock)) {
+        if ($in_stock != null && $in_stock !== '') {
             $products = $products->whereHas('in_stock', $in_stock_closure);
+        }
+        if (!empty($category_ids)) {
+            $products = $products->whereIn('category_id', $category_ids);
         }
         $products = $products->orderBy('created_at', 'desc')
                 ->simplePaginate($this->records_per_page)
@@ -163,8 +200,12 @@ class ProductController extends Controller
     public function getInStockClosure($in_stock)
     {
         return function ($query) use($in_stock) {
-            if (!empty($in_stock)) {
-                $query->where('stock_quantity', '>=', $in_stock);
+            if ($in_stock == InStock::Yes) {
+                $query->where('stock_quantity', '>=', 1);
+            } elseif ($in_stock == InStock::No) {
+                $query->select('product_id')
+                    ->groupBy('product_id')
+                    ->havingRaw('SUM(stock_quantity) = 0');
             }
         };
     }
@@ -580,5 +621,38 @@ class ProductController extends Controller
         return Redirect::back()
             ->withErrors([$message])
             ->withInput();
+    }
+
+    public function subCategoryIds ($category_id) {
+        $categories = Category::where(['parent_category_id' => $category_id])->get();
+        $category_ids = array(intval($category_id));
+        foreach ($categories as $category) {
+            $category_ids[] = $category->id;
+        }
+        return $category_ids;
+    }
+
+    public function postSyncProducts() {
+        if (file_exists(env('JSONLINE_FILE_BASE_PATH').'lock_file.txt')){
+            return ['status' => false, 'message' => 'Process is already running by other user'];
+        } else {
+            if(!$lockFile = fopen(env('JSONLINE_FILE_BASE_PATH').'lock_file.txt', 'w')){
+                return ['status' => false, 'message' => 'Error creating lock file'];
+            }
+
+            $scraperController = new ScraperController();
+            if ($scraperController->getFetchNicobar()) {
+                if (!$scraperController->getImport()) {
+                    return ['status' => false, 'message' => 'Sync import error'];
+                }
+            } else {
+                return ['status' => false, 'message' => 'Sync fetch error'];
+            }
+            fclose($lockFile);
+            if (!unlink(env('JSONLINE_FILE_BASE_PATH').'lock_file.txt')) {
+                return ['status' => true, 'message' => 'Error deleting lock file'];
+            }
+            return ['status' => true, 'message' => 'Prodcuts Sync successful'];
+        }
     }
 }

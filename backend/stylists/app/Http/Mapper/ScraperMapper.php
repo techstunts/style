@@ -237,7 +237,6 @@ class ScraperMapper
             if ($count >= $this->process_data_count) {
                 try {
                     $result = \GuzzleHttp\json_decode($this->importMerchantProducts($product_array, $url));
-                    var_dump($result->message);
                     if (!$result->status) {
                         echo 'Some error occured ' . $result->message;
                     }

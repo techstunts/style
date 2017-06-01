@@ -15,7 +15,7 @@
     <script src="{{asset("chat/vendor/pubnub-angular-3.1.2.min.js")}}"></script>
     <script src="{{asset("chat/scripts/app.js")}}"></script>
     <script src="{{asset("chat/scripts/services/chat.js")}}"></script>
-    <script src="{{asset("chat/scripts/services/helper.js")}}"></script>
+    <script src="{{asset("chat/scripts/services/helper.js?v=1.12")}}"></script>
     <script src="{{asset("chat/scripts/services/popup.js")}}"></script>
     <script src="{{asset("chat/scripts/services/stylist.js")}}"></script>
     <script src="{{asset("chat/scripts/controllers/chat.js")}}"></script>
@@ -32,6 +32,7 @@
     <script src="{{asset("chat/scripts/directives/info.js")}}"></script>
     <script src="{{asset("chat/scripts/directives/unsubscribe.js")}}"></script>
     <script src="{{asset("chat/scripts/directives/fileread.js")}}"></script>
+    <script src="{{asset("chat/scripts/directives/focus-on.js")}}"></script>
     <script src="{{asset("chat/scripts/filters/browser.js")}}"></script>
     <script src="{{asset("chat/scripts/filters/spaces.js")}}"></script>
     <script src="{{asset("chat/scripts/filters/time.js")}}"></script>

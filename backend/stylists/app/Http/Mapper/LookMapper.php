@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Lookups\Lookup;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
-use App\Models\Enums\Status;
+use App\Models\Enums\LookStatus as Status;
 use App\Models\Lookups\AppSections;
 use App\Models\Enums\RecommendationType;
 use Validator;
@@ -46,7 +46,7 @@ class LookMapper extends Controller
             'age_groups' => $lookup->type('age_group')->get(),
             'budgets' => $lookup->type('budget')->get(),
             'occasions' => $lookup->type('occasion')->get(),
-            'statuses' => $lookup->type('status')->get(),
+            'statuses' => $lookup->type('look_status')->get(),
             'categories' => Category::whereIn('id', [CategoryEnum::Men, CategoryEnum::Women, CategoryEnum::House])->get(),
             'image_types' => $lookup->type('image_type')->where(['entity_type_id' => EntityType::LOOK])->get(),
     );
@@ -238,7 +238,7 @@ class LookMapper extends Controller
             );
         }
         $updateSequence = false;
-        if ($look->status_id != $request->status_id){
+        if (!$look->is_collage && $look->status_id != $request->status_id){
             $updateSequence = true;
         }
         $look = $this->setObjectProperties($look, $request);
@@ -380,9 +380,25 @@ class LookMapper extends Controller
 
     public function updateStatus($look_id, $status_id)
     {
+        DB::beginTransaction();
         try{
-            Look::where(['id' => $look_id])->update(['status_id' => $status_id]);
+            $look = Look::where(['id' => $look_id])->first();
+            $look->status_id = $status_id;
+            $look->save();
+            if (!$look->is_collage) {
+                if ($status_id == Status::Active) {
+                    $response = $this->createSequence($look_id);
+                } else {
+                    $response = $this->deleteSequence($look_id);
+                }
+                if (!$response['status']){
+                    DB::rollback();
+                    return false;
+                }
+            }
+            DB::commit();
         } catch (\Exception $e) {
+            DB::rollback();
             return false;
         }
         return true;
@@ -426,11 +442,16 @@ class LookMapper extends Controller
         ->orderBy('order_id', 'asc')
         ->simplePaginate($this->records_per_page * 4)
         ->appends($paginate_qs);
-        foreach ($looks as $item) {
-            if ($item->look && count($item->look->images) > 0) {
-                $item->look->image = env('API_ORIGIN') . '/' .$item->look->images[0]->path . '/' . $item->look->images[0]->name;
-            } else{
-                $item->look->image = env('API_ORIGIN') . '/uploads/images/looks/' . $item->look->image;
+        foreach ($looks as $k => $item) {
+            if ($item->look){
+                if(count($item->look->images) > 0) {
+                    $item->look->image = env('API_ORIGIN') . '/' .$item->look->images[0]->path . '/' . $item->look->images[0]->name;
+                } else{
+                    $item->look->image = env('API_ORIGIN') . '/uploads/images/looks/' . $item->look->image;
+                }
+	        }
+            else{
+                $looks->forget($k);
             }
         }
         return $looks;

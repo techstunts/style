@@ -187,7 +187,7 @@ class RecommendationController extends Controller
             $style_request_id = $recommendation_type_id == RecommendationType::STYLE_REQUEST ? $client_data[$i]->id : 0;
             $recommends_arr = $this->dataToBeSaved($recommends_arr, $entity_data, $client_id, $recommendation_type_id, $style_request_id);
 
-            if (count($reg_ids) > 0 && $message_pushed == 0) {
+            if (!env('IS_NICOBAR') && count($reg_ids) > 0 && $message_pushed == 0) {
                 $params = array(
                     "message" => $stylist_data->name . " has sent you recommendation",
                     "message_summery" => $stylist_data->name . " has sent you recommendation against your style request",
@@ -318,6 +318,9 @@ class RecommendationController extends Controller
         $product_list_heading = $request->input('product_list_heading') && trim($request->input('product_list_heading')) != "" ? $request->input('product_list_heading') : $product_list_heading;
 
         $recommendation_template = env('IS_NICOBAR') ? ('emails.nico_recommendations') : ('emails.recommendations');
+        $from_email = env('FROM_EMAIL') ? env('FROM_EMAIL') : 'stylists@istyleyou.in';
+        $static_url = env('IS_NICOBAR') ? env('NICOBAR_STATIC_URL') : env('ALL_ASSETS');
+
         Mail::send($recommendation_template,
 
             ['client' => $client, 'stylist' => $stylist, 'entity_data' => $entity_data,
@@ -325,12 +328,13 @@ class RecommendationController extends Controller
                 'client_first_name' => $client_first_name, 'custom_message' => $custom_message,
                 'product_list_heading' => $product_list_heading,
                 'nicobar_website' => env('NICOBAR_WEBSITE'),
+                'static_url' => $static_url
             ],
-            function ($mail) use ($client, $stylist) {
-                $mail->from('stylist@istyleyou.in', (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
+            function ($mail) use ($client, $stylist, $client_first_name, $from_email) {
+                $mail->from($from_email, (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
                 $mail->to($client->email, $client->name)
-                    ->bcc('stylist@istyleyou.in')
-                    ->subject($stylist->name . ', your stylist has sent you recommendations!');
+                    ->bcc($from_email)
+                    ->subject($client_first_name . ', your stylist has sent you recommendations!');
         });
     }
 //below function is not in use right now as structure of sending the recommendatoin has been changed

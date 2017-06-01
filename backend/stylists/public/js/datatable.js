@@ -51,9 +51,9 @@ var role_admin = '';
 var is_recommended = false;
 var categoryOccasions = [];
 if (is_nicobar) {
-    entity_filters[EntityType.PRODUCT] = ['category', 'colors'];
+    entity_filters[EntityType.PRODUCT] = ['colors', 'instock'];
     entity_filter_ids[EntityType.PRODUCT] = ['id', 'id'];
-    entity_fields_ids[EntityType.PRODUCT] = [ 'parent', 'primary_color_id'];
+    entity_fields_ids[EntityType.PRODUCT] = ['primary_color_id', 'in_stock'];
     entity_filters[EntityType.LOOK] = ['stylists', 'status', 'category', 'occasions'];
     entity_filter_ids[EntityType.LOOK] = ['id', 'id', 'id', 'id'];
     entity_fields_ids[EntityType.LOOK] = ['stylist_id', 'status_id', 'category_id', 'occasion_id'];
@@ -450,7 +450,7 @@ function deleteItem(e){
 }
 
 function initializeFilters() {
-    if ($("#filters select").length == 0) {
+    if ($("#filters .options select").length == 0) {
         $.ajax({
             url: api_origin + '/filters/list',
             beforeSend: toggleLoader,
@@ -478,7 +478,7 @@ function initializeFilters() {
 }
 
 function showFilters() {
-    $("#filters select").remove();
+    $("#filters .options select").remove();
     if ($('input.autosuggest').length > 0)
         $('input.autosuggest').remove();
 
@@ -505,17 +505,25 @@ function showFilters() {
     if (entity_type_id == EntityType.LOOK) {
         categoryOccasions = all_filters[entity_type_id]['category_occasions'];
         sortCategoryOccasion();
+        adjustSearchBox($('.options select[name="occasion_id"]'));
     }
     if (entity_type_id == EntityType.PRODUCT) {
-        addSubcategoryField();
+        $('.categories_tree').show();
+        //addSubcategoryField();
+        //adjustSearchBox($('.options .autosuggest'));
         min_discount_field.show();
         max_discount_field.show();
     } else {
+        $('.categories_tree').hide();
         min_discount_field.hide();
         max_discount_field.hide();
     }
 }
 
+function adjustSearchBox(adjacent) {
+    var search_box = $('#filters input[name="search"]');
+    adjacent.after(search_box);
+}
 function addSubcategoryField()
 {
     $('.options select[name="parent"]').after(autosuggest_element);
@@ -527,7 +535,7 @@ function addSubcategoryField()
         $('input.autosuggest').siblings('input[name="category_id"]').val('');
     });
 
-    $('input.autosuggest').keyup(function(){
+    $('input.autosuggest').on('input', function(){
         var keyword = $(this).val();
         var parent =  $('.options select[name="parent"]').val();
         var autosuggest_object =  $(this);
@@ -643,7 +651,7 @@ function showEntities(entity_url) {
                     var popover_data = "";
                     if (entity_type_id == EntityType.PRODUCT) {
                         var price = getPrice(item.data[i].price);
-                        popover_data = popover_data + "Price: " + price.INR != undefined ? '&#8377 ' + price.INR : '' + "/- <br >";
+                        popover_data = popover_data + (price.INR != undefined ? ('Price: &#8377 ' + price.INR + "/- <br >") : '');
                     }else if (entity_type_id == EntityType.LOOK){
                         popover_data = popover_data + "Price: " + '&#8377 ' + item.data[i].price + "/- <br >";
                     }

@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     @if (str_contains(Request::fullUrl(), 'nicobar'))
-        <link rel="stylesheet" href="{!! asset('css/nicobar.style.css') !!}" />
+        <link rel="stylesheet" href="{!! asset('css/style.css') !!}" />
+        <!--<link rel="stylesheet" href="{!! asset('css/nicobar.style.css') !!}" />-->
     @else
         <link rel="stylesheet" href="{!! asset('css/style.css') !!}" />
     @endif

@@ -20,9 +20,10 @@
                             <a href="{{url('client/list')}}" class="clearall">Clear All</a>
                         </form>
                     @endif
-                    {!! $clients->render() !!}
+                    {{--{!! $clients->render() !!}--}}
                 </div>
 
+                <div class="clear"></div>
                 @include('common.sendrecommendations')
                 <div class="clear"></div>
 

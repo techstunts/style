@@ -39,7 +39,7 @@ li.active {
 div.items {
     float: left;
     margin: 5px;
-    height: 350px;
+    height: 365px;
     width: 260px;
     border: 2px solid beige;
     overflow: hidden;
@@ -102,6 +102,10 @@ div.items div.extra a.Deleted {
     background-position: 384px -123px;
 }
 
+div.items div.extra a.Archived {
+    background-position: 384px -123px;
+}
+
 div.items div.extra a.InProgress {
     background-position: 354px -122px;
 }
@@ -125,7 +129,7 @@ div.items div.name a {
 
 ul.pager {
     list-style: none;
-    padding: 0px;
+    padding: 19px 0px;
     margin: 0px;
 }
 
@@ -138,10 +142,12 @@ ul.pager li {
 ul.pager li a {
     color: grey;
     padding: 2px 14px;
+    background-color: darkgray !important;
 }
 
 ul.pager li > span {
     padding: 2px 14px;
+    background-color: darkgray !important;
 }
 
 div.filters {
@@ -534,6 +540,7 @@ div.resource_view tr.row a.product_link {
 }
 
 .pop-image-size {
+        max-width: 200px;
 }
 
 .inactive {
@@ -1009,4 +1016,88 @@ option.dropdown-child {
 .pLF5{
     padding-left: 5px !important;
     padding-right: 5px !important;
+}
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: none !important;
+    width: 25%;
+    text-align: center;
+    top: -50px !important;
+    /* position: absolute !important; */
+    box-shadow: none !important;
+}
+
+.modal-title{
+    color:#282b30 !important;
+}
+
+.modal.in .modal-dialog{
+    background-color: #fff !important;
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+div#prod-update-div {
+    display: inline-block;
+    float: right;
+    position: absolute;
+    top: 102px;
+    left: 410px;
+}
+
+.recommendations{
+    border: 1px solid #000000;
+    padding: 10px 10px;
+}
+
+.pad10{
+    padding: 10px 10px;
+}
+
+.pad5{
+    padding: 5px 5px;
+}
+
+
+.lh80{
+    line-height: 80px;
+}
+
+.text-align-left{
+    text-align: left;
+}
+
+.no-margin-row{
+    margin-left: 0px !important;
+    margin-right: 0px !important;
 }

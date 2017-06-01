@@ -53,7 +53,7 @@
                 <div class="tabs">
                     <a ng-click="switch(false)" class="icon contacts"></a>
                     <a ng-click="switch(true)" class="icon recent"></a>
-                    <a class="icon home" target="_blank" href="http://istyleyou.in/"></a>
+                    <a class="icon home" target="_blank" href="{{env('IS_NICOBAR') ? 'http://nicobar.com/' : 'http://istyleyou.in/'}}"></a>
                 </div>
 
                 <div class="form">
@@ -85,65 +85,24 @@
 
                 <ul class="info" ng-class="{'hidden': info.hidden}" ng-style="{'top': info.top + 'px'}">
                     <li>
-                        <img icon ng-src="@{{info.client.image}}">
-                        <img icon ng-repeat="item in info.client.other_profile_images" ng-src="@{{item}}">
+                        <b>Category</b>
+                        <p ng-bind="info.client.request.category.name"></p>
                     </li>
                     <li>
-                        <b>ID</b>
-                        <p ng-bind="info.client.id"></p>
+                        <b>Style</b>
+                        <p ng-bind="info.client.request.style.name"></p>
+                        <img ng-class="{'hidden': !info.client.request.style.image_url}" ng-src="@{{info.client.request.style.image_url}}">
                     </li>
-                    <li>
-                        <b>Name</b>
-                        <p ng-bind="info.client.name"></p>
+                    <li ng-repeat="item in info.client.request.question_ans">
+                        <div><p><b ng-bind="item.question.title"></b><br></p></div>
+                        <div>
+                            <span ng-repeat="option in item.option">
+                            <p>@{{option.text}} @{{(option.text !== '' && !$last) ? ', ' : ''}} </p>
+                            <img  ng-class="{'hidden': !option.image}" ng-src="@{{option.image}}">
+                        </span>
+                        </div>
                     </li>
-                    <li>
-                        <b>Gender</b>
-                        <p ng-bind="info.client.gender.name"></p>
-                    </li>
-                    <li>
-                        <b>Body type</b>
-                        <p ng-bind="info.client.body_type.name"></p>
-                    </li>
-                    <li>
-                        <b>Height</b>
-                        <p ng-bind="info.client.height_group.name"></p>
-                    </li>
-                    <li>
-                        <b>Stylist</b>
-                        <p ng-bind="info.client.stylist.name"></p>
-                    </li>
-                    <li>
-                        <b>Daringness</b>
-                        <p ng-bind="info.client.daringness.name"></p>
-                    </li>
-                    <li>
-                        <b>Color pref.</b>
-                        <p>
-                            <span ng-repeat="item in info.client.client_color_prefs" ng-bind="item.color.name"></span>
-                        </p>
-                    </li>
-                    <li>
-                        <b>Heel pref.</b>
-                        <p>
-                            <span ng-repeat="item in info.client.client_heel_prefs" ng-bind="item.heel_types.name"></span>
-                        </p>
-                    </li>
-                    <li>
-                        <b>Brand pref.</b>
-                        <p ng-bind="info.client.brand.name"></p>
-                    </li>
-                    <li>
-                        <b>Top pref.</b>
-                        <p>
-                            <span ng-repeat="item in info.client.top_fit_prefs" ng-bind="item.fits.name"></span>
-                        </p>
-                    </li>
-                    <li>
-                        <b>Bottom pref.</b>
-                        <p>
-                            <span ng-repeat="item in info.client.bottom_fit_prefs" ng-bind="item.fits.name"></span>
-                        </p>
-                    </li>
+                    <a class="icon dir" ng-repeat="item in current.path" ng-bind="item.name" ng-click="back($index, $last)"></a>
                 </ul>
 
             </div>
@@ -189,7 +148,7 @@
                 </ul>
 
                 <div class="send">
-                    <textarea placeholder="Enter your message" ng-model="message"  ng-trim="false" ng-keypress="publish($event)" ng-change="change()" message></textarea>
+                    <textarea placeholder="Enter your message" ng-model="message" ng-trim="false" ng-keypress="publish($event)" ng-change="change()" message focus-on="!loading"></textarea>
                     <div class="buttons">
                         <a class="button icon open" ng-click="text()"></a>
                         <a class="button icon look" ng-click="share('look')"></a>
@@ -232,20 +191,71 @@
                 </div>
 
                 <div class="filter">
+                    <div ng-show="nicobar && current.type === 'product'">
+
+                        <div class="select" selector ng-class="{'custom': current.path[1]}">
+                            <span ng-bind="current.path[1] ? current.path[1].name : 'First level'"></span>
+                            <div>
+                                <a ng-repeat="option in product.tree" ng-bind="option.name" ng-click="level(1, option)" ng-class="{'selected': current.path[1] === option}"></a>
+                            </div>
+                        </div>
+
+                        <div class="select" selector ng-class="{disabled: !current.path[1], 'custom': current.path[2]}">
+                            <span ng-bind="current.path[2] ? current.path[2].name : 'Second level'"></span>
+                            <div>
+                                <a ng-repeat="option in current.path[1].subcategories" ng-bind="option.name" ng-click="level(2, option)" ng-class="{'selected': current.path[2] === option}"></a>
+                            </div>
+                        </div>
+
+                        <div class="select" selector ng-class="{disabled: !current.path[2], 'custom': current.path[3]}">
+                            <span ng-bind="current.path[3] ? current.path[3].name : 'Third level'"></span>
+                            <div>
+                                <a ng-repeat="option in current.path[2].subcategories" ng-bind="option.name" ng-click="level(3, option)" ng-class="{'selected': current.path[3] === option}"></a>
+                            </div>
+                        </div>
+
+                        <form class="category">
+                            <input type="text" placeholder="Category" ng-model="suggestion.keyword" ng-change="suggest()">
+                            <div ng-show="suggestion.result.length">
+                                <a ng-repeat="option in suggestion.result" ng-bind="option.name" ng-click="category(option)"></a>
+                            </div>
+                            <input type="submit">
+                        </form>
+
+                    </div>
+
                     <form class="search" ng-submit="search()">
-                        <input type="text" ng-model="current.model.search" placeholder="Search">
-                        <input type="submit">
+                        <input type="text" ng-model="current.model.search" placeholder="Search" ng-disabled="current.options.search">
+                        <input type="submit" ng-hide="current.options.search">
+                        <a class="icon close" ng-show="current.options.search" ng-click="clearSearch()"></a>
                     </form>
-                    <div class="select" ng-repeat="select in current.filters" ng-class="{'custom': current.model[select.name].id}" selector>
+
+                    <div class="select" ng-repeat="select in current.filters" ng-class="{'custom': current.model[select.name].id}" selector ng-hide="current.type === 'product' && select.name === 'category_id'">
                         <span ng-bind="current.model[select.name].id ? current.model[select.name].name : select.placeholder"></span>
                         <div>
                             <a ng-repeat="option in select.options" ng-bind="option.name" ng-click="change(select.name, option)" ng-class="{'selected': current.model[select.name].id === option.id}"></a>
                         </div>
                     </div>
+
+                    <div ng-show="nicobar && current.type === 'product'">
+                        <form class="search" ng-submit="price('min_price')">
+                            <input type="number" placeholder="Min price" ng-model="current.model.min_price" ng-disabled="current.options.min_price || current.loading">
+                            <a class="icon close" ng-show="current.options.min_price" ng-click="clearPrice('min_price')"></a>
+                            <input type="submit" ng-hide="current.options.min_price">
+                        </form>
+                        <form class="search" ng-submit="price('max_price')">
+                            <input type="number" placeholder="Max price" ng-model="current.model.max_price" ng-disabled="current.options.max_price || current.loading">
+                            <a class="icon close" ng-show="current.options.max_price" ng-click="clearPrice('max_price')"></a>
+                            <input type="submit" ng-hide="current.options.max_price">
+                        </form>
+                        <a class="clear" ng-click="clear()">Clear all</a>
+                    </div>
+
+
                 </div>
 
                 <div class="result">
-                    <div class="tree">
+                    <div class="tree" ng-hide="nicobar">
                         <a ng-repeat="category in current.category" ng-bind="category.name" ng-click="open(category)"></a>
                     </div>
                     <div class="list">
@@ -265,7 +275,7 @@
 
                 <div class="foot">
                     <button class="button" ng-disabled="!result.length" ng-click="send()">Send</button>
-                    <button class="button" ng-click="create()">Create</button>
+                    <button class="button" ng-click="create()" ng-show="current.type === 'look'">Create</button>
                     <div class="pager">
                         <a class="icon prev-dark" ng-class="{'disabled': !current.prev}" ng-click="pager(-1)"></a>
                         <b ng-bind="current.page"></b>

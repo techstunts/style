@@ -23,7 +23,7 @@ class ScraperController extends Controller
     public function getFetchLatest()
     {
 
-        if(!$fileObj = fopen(env('LOG_FILE_BASE_PATH').'scraper_log.txt', 'a')){
+        if(!$fileObj = fopen(storage_path(env('LOG_FILE_BASE_PATH').'scraper_log.txt'), 'a')){
             return false;
         }
         $scraperMapperObj = new ScraperMapper();
@@ -82,7 +82,7 @@ class ScraperController extends Controller
 
     public function getImport()
     {
-        if(!$fileObj = fopen(env('LOG_FILE_BASE_PATH').'import_log.txt', 'a')){
+        if(!$fileObj = fopen(storage_path(env('LOG_FILE_BASE_PATH').'import_log.txt'), 'a')){
             return false;
         }
         $scraperMapperObj = new ScraperMapper();
@@ -121,7 +121,7 @@ class ScraperController extends Controller
 
     public function getFetchNicobar()
     {
-        if(!$fileObj = fopen(env('LOG_FILE_BASE_PATH').'scraper_log.txt', 'a')){
+        if(!$fileObj = fopen(storage_path(env('LOG_FILE_BASE_PATH').'scraper_log.txt'), 'a')){
             return false;
         }
         $scraperMapperObj = new ScraperMapper();

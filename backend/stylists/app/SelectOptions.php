@@ -101,6 +101,10 @@ class SelectOptions{
         return $this->get_lookup_data_with_count('booking_status', 'status_id');
     }
 
+    public function lookStatuses(){
+        return $this->get_lookup_data_with_count('look_status','status_id');
+    }
+
     public function styles(){
         return $this->get_lookup_data_with_count('style');
     }
