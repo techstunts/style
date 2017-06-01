@@ -199,6 +199,7 @@ class StyleRequestsController extends Controller
         $view_properties['request'] = $styleRequest;
         $styleRequestMapperObj = new StyleRequestMapper();
         $view_properties = array_merge($view_properties, $styleRequestMapperObj->popupProperties($request));
+        $view_properties['static_url'] = env('IS_NICOBAR') ? env('NICOBAR_STATIC_URL') : env('ALL_ASSETS');
         return view('requests.view', $view_properties);
     }
 

@@ -40,7 +40,7 @@
                                         @if($request->style)
                                             <b>Style : </b>{{$request->style->name}}
                                             <br>
-                                            <img style="width:100px;" src="{{$request->style->image_url}}">
+                                            <img style="width:100px;" src="{{$static_url}}styling/{{$request->style->image_url}}">
                                         @elseif($request->uploadedStyleImage)
                                             <b>Style : </b>{{'Uploaded style image'}}
                                             <br>
@@ -74,10 +74,10 @@
                                                             <div class="col-md-12 text-center">
                                                                 <span>{{$ans->text}}</span></div>
                                                             <div class="col-md-12 text-center"><img
-                                                                        {{!empty($ans->image) ? "style=width:100px;" : ""}} src="{{!empty($ans->image) ? $ans->image : ""}}">
+                                                                        {{!empty($ans->image) ? "style=width:100px;" : ""}} src="{{!empty($ans->image) ? $static_url . "styling/" . $ans->image : ""}}">
                                                             </div>
                                                         @elseif($question_ans['ansType'] == 'image')
-                                                            <img {{!empty($ans->image) ? "style=width:100px;" : ""}} src="{{!empty($ans->image) ? $ans->image : ""}}">
+                                                            <img {{!empty($ans->image) ? "style=width:100px;" : ""}} src="{{!empty($ans->image) ? $static_url . "styling/" . $ans->image : ""}}">
                                                         @endif
                                                     @endforeach
                                                 </div>

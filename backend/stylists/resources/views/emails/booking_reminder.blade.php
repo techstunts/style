@@ -5,7 +5,7 @@
     <tbody>
     <tr>
         <td>
-            <img src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/booking-reminder-header.jpg" style="border:0;width: 100%" alt="" class="CToWUd">
+            <img src="{{$static_url}}styling/emailer/booking-reminder-header.jpg" style="border:0;width: 100%" alt="" class="CToWUd">
         </td>
     </tr>
     <tr>
@@ -28,7 +28,7 @@
     </tr>
     <tr>
         <td colspan="10" style="vertical-align:top;text-align:center;margin-top:20px;margin-bottom:20px;">
-            <img style="width: 100%;margin-bottom: 20px;margin-top: 20px;" src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/line_break.jpg" alt="">
+            <img style="width: 100%;margin-bottom: 20px;margin-top: 20px;" src="{{$static_url}}styling/emailer/line_break.jpg" alt="">
         </td>
     </tr>
     <tr>
@@ -51,7 +51,7 @@
                 <tr>
                     <td style="width:100%;vertical-align:top;text-align:left;">
                         <a href="https://www.nicobar.com/journal/" style="color:#000000;text-decoration:none;font-weight:bolder;font-size:13px;" target="_blank">
-                            <img src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/from_the_journal.jpg" style="border:0;width:100%;clear:both;margin-bottom:10px" alt="" class="CToWUd"></a>
+                            <img src="{{$static_url}}styling/emailer/from_the_journal.jpg" style="border:0;width:100%;clear:both;margin-bottom:10px" alt="" class="CToWUd"></a>
                     </td>
                 </tr>
                 </tbody>
@@ -60,7 +60,7 @@
     </tr>
     <tr>
         <td style="background:#e5eff1;margin-top:10px;">
-            <img style="width: 100%" src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/Appointment/kalash-for-booking.jpg" alt="" class="CToWUd">
+            <img style="width: 100%" src="{{$static_url}}styling/emailer/Appointment/kalash-for-booking.jpg" alt="" class="CToWUd">
         </td>
     </tr>
     <tr>
@@ -81,8 +81,8 @@
                 </tr>
                 <tr>
                     <td style="padding-top:4px;" valign="top">
-                        <img src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/common/phone-icon.png" alt="" style="border:0" class="CToWUd">    
-                        <img src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/common/mail-icon.png" alt="" style="border:0" class="CToWUd">
+                        <img src="{{$static_url}}styling/emailer/common/phone-icon.png" alt="" style="border:0" class="CToWUd">    
+                        <img src="{{$static_url}}styling/emailer/common/mail-icon.png" alt="" style="border:0" class="CToWUd">
                     </td>
                 </tr>
                 <tr>
@@ -131,9 +131,9 @@
                 <tr>
                     <td style="padding-top:4px;font-size:11px;">
                         <a href="https://www.facebook.com/nicobarstudio" style="text-decoration:none;color:#2c2e2e;" target="_blank">
-                            <img src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/common/fb-icon.png" alt="" class="CToWUd"> /nicobarstudio</a>   
+                            <img src="{{$static_url}}styling/emailer/common/fb-icon.png" alt="" class="CToWUd"> /nicobarstudio</a>   
                         <a href="https://www.instagram.com/nicojournal" style="text-decoration:none;color:#2c2e2e;" target="_blank">
-                            <img src="http://ec2-35-154-59-70.ap-south-1.compute.amazonaws.com:5001/media/styling/emailer/common/instagram-icon.png" alt="" class="CToWUd"> /nicojournal</a>
+                            <img src="{{$static_url}}styling/emailer/common/instagram-icon.png" alt="" class="CToWUd"> /nicojournal</a>
                     </td>
                 </tr>
                 <tr>

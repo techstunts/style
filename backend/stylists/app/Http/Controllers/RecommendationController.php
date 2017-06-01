@@ -319,6 +319,8 @@ class RecommendationController extends Controller
 
         $recommendation_template = env('IS_NICOBAR') ? ('emails.nico_recommendations') : ('emails.recommendations');
         $from_email = env('FROM_EMAIL') ? env('FROM_EMAIL') : 'stylists@istyleyou.in';
+        $static_url = env('IS_NICOBAR') ? env('NICOBAR_STATIC_URL') : env('ALL_ASSETS');
+
         Mail::send($recommendation_template,
 
             ['client' => $client, 'stylist' => $stylist, 'entity_data' => $entity_data,
@@ -326,6 +328,7 @@ class RecommendationController extends Controller
                 'client_first_name' => $client_first_name, 'custom_message' => $custom_message,
                 'product_list_heading' => $product_list_heading,
                 'nicobar_website' => env('NICOBAR_WEBSITE'),
+                'static_url' => $static_url
             ],
             function ($mail) use ($client, $stylist, $client_first_name, $from_email) {
                 $mail->from($from_email, (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
