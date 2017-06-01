@@ -113,14 +113,22 @@
                                 </td>
                                 <td style="width:10px;border-right:1px solid #6d6d6d;">
                                 </td>
-                                <td style="width:10px;">
-                                </td>
-                                <td style="text-align:left;" width="245">
+                                <td style="text-align:center;" width="245">
                                     <address style="font-style:normal;font-size:1em;">
                                         Shop #79 &amp; 80, <br>
                                         Above Diva Spiced,Meherchand Market,<br>
                                         Fifth Avenue Road<br>
                                         Lodhi Colony, 110003<br>
+                                    </address>
+                                </td>
+                                <td style="width:10px;border-right:1px solid #6d6d6d;">
+                                </td>
+                                <td style="text-align:left;padding-left:10px;" width="245">
+                                    <address style="font-style:normal;font-size:1em;">
+                                        Above Good Earth No. 4,<br>
+                                        Walton Road<br>
+                                        Off Lavelle Road<br>
+                                        Banglore - 560001<br>
                                     </address>
                                 </td>
                             </tr>
