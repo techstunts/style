@@ -8,6 +8,7 @@ use App\Models\Enums\EntityTypeName;
 use Validator;
 use App\Collection;
 use App\Tip;
+use Illuminate\Support\Facades\Storage;
 
 class UploadMapper extends Controller
 {
@@ -57,6 +58,9 @@ class UploadMapper extends Controller
         $destinationPath = public_path() . '/' . $image_path;
         $filename = preg_replace('/[^a-zA-Z0-9_.]/', '_', time() . '_' . $request->file('image')->getClientOriginalName());
 
+        if (env("IS_NICOBAR")) {
+            $this->updateFileInS3($request, $filename, $image_path);
+        }
         $request->file('image')->move($destinationPath, $filename);
         return $filename;
     }
@@ -94,5 +98,13 @@ class UploadMapper extends Controller
             'status' => $status,
             'message' => $message,
         );
+    }
+
+    public function updateFileInS3 ($request, $filename, $image_path) {
+        $real_path = explode('public', realpath($image_path))[1];
+        $s3_path = '/media'. $real_path;
+        $s3_full_path = $s3_path . '/' . $filename;
+        $status = Storage::disk('s3')->put($s3_full_path, file_get_contents($request->file('image')), 'public');
+        return $status;
     }
 }
