@@ -100,11 +100,9 @@ class UploadMapper extends Controller
         );
     }
 
-    public function updateFileInS3 ($request, $filename, $image_path, $id = null) {
-        $s3_path = '/media/'. $image_path;
-        if ($id) {
-            $s3_path .= '/' . $id;
-        }
+    public function updateFileInS3 ($request, $filename, $image_path) {
+        $real_path = explode('public', realpath($image_path))[1];
+        $s3_path = '/media'. $real_path;
         $s3_full_path = $s3_path . '/' . $filename;
         $status = Storage::disk('s3')->put($s3_full_path, file_get_contents($request->file('image')), 'public');
         return $status;
