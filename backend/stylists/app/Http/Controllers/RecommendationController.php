@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Validator;
 use App\Recommendation;
@@ -321,21 +322,26 @@ class RecommendationController extends Controller
         $from_email = env('FROM_EMAIL') ? env('FROM_EMAIL') : 'stylists@istyleyou.in';
         $static_url = env('IS_NICOBAR') ? env('NICOBAR_STATIC_URL') : env('ALL_ASSETS');
 
-        Mail::send($recommendation_template,
+        try {
+            Mail::send($recommendation_template,
 
-            ['client' => $client, 'stylist' => $stylist, 'entity_data' => $entity_data,
-                'banner_image_path' => $banner_image_path, 'stylist_first_name' => $stylist_first_name,
-                'client_first_name' => $client_first_name, 'custom_message' => $custom_message,
-                'product_list_heading' => $product_list_heading,
-                'nicobar_website' => env('NICOBAR_WEBSITE'),
-                'static_url' => $static_url
-            ],
-            function ($mail) use ($client, $stylist, $client_first_name, $from_email) {
-                $mail->from($from_email, (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
-                $mail->to($client->email, $client->name)
-                    ->bcc($from_email)
-                    ->subject($client_first_name . ', your stylist has sent you recommendations!');
-        });
+                ['client' => $client, 'stylist' => $stylist, 'entity_data' => $entity_data,
+                    'banner_image_path' => $banner_image_path, 'stylist_first_name' => $stylist_first_name,
+                    'client_first_name' => $client_first_name, 'custom_message' => $custom_message,
+                    'product_list_heading' => $product_list_heading,
+                    'nicobar_website' => env('NICOBAR_WEBSITE'),
+                    'static_url' => $static_url
+                ],
+                function ($mail) use ($client, $stylist, $client_first_name, $from_email) {
+                    $mail->from($from_email, (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
+                    $mail->to($client->email, $client->name)
+                        ->bcc($from_email)
+                        ->subject($client_first_name . ', your stylist has sent you recommendations!');
+                });
+        } catch (\Exception $e) {
+            Log::info('Exception sending mail : '. $e->getMessage());
+            return false;
+        }
     }
 //below function is not in use right now as structure of sending the recommendatoin has been changed
     public function getEntityProducts($entity_type_id, $entity_data) {
