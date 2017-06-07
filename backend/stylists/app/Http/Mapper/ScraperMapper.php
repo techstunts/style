@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Mapper;
 
+use App\Models\Enums\Status;
 use App\Models\Lookups\Color;
 use App\Models\Enums\Color as ColorEnum;
 use App\Models\Scraper\Jobs;
@@ -11,6 +12,7 @@ use App\Models\Scraper\ErroneousProducts;
 use App\Models\Enums\Gender;
 use App\Models\Enums\ProductStatus;
 use App\Models\Enums\ProductError;
+use App\Product;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -527,5 +529,51 @@ class ScraperMapper
             'sku' => $sku,
             'error_id' => $error_id,
         );
+    }
+
+    public function unpublishedIds($log_file, $file_name)
+    {
+        $file_name_with_path = env('JSONLINE_FILE_BASE_PATH') . $file_name;
+        $file = fopen($file_name_with_path, "r");
+        if ($file == false) {
+            fwrite($log_file, PHP_EOL.'Error opening file to read product ids'.PHP_EOL);
+            return array('status' => false);
+        }
+        if (!$json_line = fgets($file)) {
+            fwrite($log_file, PHP_EOL.'Error reading file'.PHP_EOL);
+            return array('status' => false);
+        }
+        $product_ids = array();
+        $lineObj = json_decode($json_line);
+        fclose($file);
+        foreach ($lineObj as $line) {
+            array_push($product_ids, $line->id);
+        }
+        return array('status' => true, 'ids' => $product_ids);
+    }
+
+    public function updateInactive ($product_ids) {
+        try {
+            Product::where('status_id', Status::Active)->whereNotIn('sku_id', $product_ids)->update(['status_id' => Status::Inactive]);
+            return true;
+        } catch (\Exception $e) {
+            Log::info('Exception updating products to inactive : '. $e->getMessage());
+            return false;
+        }
+    }
+
+    public function updateUnpublishedProducts($log_file, $file_name)
+    {
+        $status = false;
+        $response = $this->unpublishedIds($log_file, $file_name);
+        if (!$response['status']) {
+            return array('status' => $status);
+        }
+        $product_ids = $response['ids'];
+        if (count($product_ids) > 0) {
+            $status = $this->updateInactive($product_ids);
+        }
+
+        return array('status' => $status);
     }
 }
