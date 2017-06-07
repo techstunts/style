@@ -159,6 +159,9 @@ class ScraperController extends Controller
                     continue;
                 }
             fwrite($fileObj, date("Y-m-d H:i:s"). ' ' .'Fetch completed for '. $spider->name.PHP_EOL);
+
+            fwrite($fileObj, PHP_EOL.'Updating Unpublished products... '.PHP_EOL);
+            $res = $scraperMapperObj->updateUnpublishedProducts($fileObj, $file_name);
         }
         fwrite($fileObj, PHP_EOL.'Complete '.PHP_EOL);
 
