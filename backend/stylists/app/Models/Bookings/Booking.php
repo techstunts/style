@@ -30,4 +30,7 @@ class Booking extends Model
     public function country(){
         return $this->belongsTo('App\Models\Lookups\Country', 'country_id');
     }
+    public function category(){
+        return $this->belongsTo('App\Category', 'category_id');
+    }
 }
