@@ -22,13 +22,12 @@ class BookingMapper extends Controller
         };
 
         $stylist = function ($query) {
-            $query->with('category');
             $query->select('id', 'name', 'category_id');
         };
 
-        $bookings = Booking::with(['client' => $client, 'slot', 'stylist' => $stylist, 'status', 'bookingRequest.request', 'country'])
+        $bookings = Booking::with(['client' => $client, 'slot', 'stylist' => $stylist, 'status', 'bookingRequest.request', 'country', 'category'])
             ->select(['id', 'stylist_id', 'client_id', 'mobile', DB::raw("to_char(date, 'DD-Mon-YYYY') as date"), 'slot_id', 'status_id', 'service', 'price', 'message',
-                'cancelled_by_entity_type_id', 'cancelled_by_entity_id', 'reason','created_at', 'updated_at', 'country_id'])
+                'cancelled_by_entity_type_id', 'cancelled_by_entity_id', 'reason','created_at', 'updated_at', 'country_id', 'category_id'])
             ->where($where_conditions)
             ->whereRaw($where_raw)
             ->orderBy('id', 'desc')

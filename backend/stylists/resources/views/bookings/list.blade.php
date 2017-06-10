@@ -79,7 +79,7 @@
                                     <td class="table-font-size"></td>
                                 @endif
                                 @if(env('IS_NICOBAR'))
-                                    <td class="table-font-size"> {{$booking->stylist && $booking->stylist->category ? $booking->stylist->category->name : ''}} </td>
+                                    <td class="table-font-size"> {{$booking->category ? $booking->category->name : ''}} </td>
                                 @else
                                     <td class="table-font-size"> {{$booking->service}} </td>
                                 @endif

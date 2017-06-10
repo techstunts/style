@@ -33,7 +33,7 @@
                                 <br>
                                 <div class="row mrgn5px">
                                     <div class="col-md-12">
-                                        <b>Category : </b>{{$booking->stylist && $booking->stylist->category ? $booking->stylist->category->name : ''}}
+                                        <b>Category : </b>{{$booking->category ? $booking->category->name : ''}}
                                     </div>
                                     <div class="col-md-12">
                                         <b>Stylist : </b>{{$booking->stylist ? $booking->stylist->name : ''}}
