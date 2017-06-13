@@ -45,11 +45,11 @@
                                             <b>Style : </b>{{'Uploaded style image'}}
                                             <br>
                                             <img style="width: 100px" ; src="{{$request->uploadedStyleImage->url}}">
-                                            @if(count($request->request_styling_element_texts) > 0)
-                                                @foreach($request->request_styling_element_texts as $text)
-                                                    <span>{{$text->text}}</span>&nbsp;
-                                                @endforeach
-                                            @endif
+                                        @endif
+                                        @if(count($request->request_styling_element_texts) > 0)
+                                            @foreach($request->request_styling_element_texts as $text)
+                                                <span>{{$text->text}}</span>&nbsp;
+                                            @endforeach
                                         @endif
                                     </div>
                                 </div>
