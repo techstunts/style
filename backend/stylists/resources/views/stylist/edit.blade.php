@@ -92,6 +92,15 @@
 
                                 <tr class="row">
                                     <td class="title" colspan="2">
+                                        @include('category.select')
+                                        @if($category_error = $errors->first('category_id'))
+                                            <span class="errorMsg">{{$category_error}}</span>
+                                        @endif
+                                    </td>
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="title" colspan="2">
                                         @include('common.designation.select')
                                         @if($designation_error = $errors->first('designation_id'))
                                             <span class="errorMsg">{{$designation_error}}</span>

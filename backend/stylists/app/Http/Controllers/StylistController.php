@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
+use App\Models\Enums\Category as CategoryEnum;
 use App\Models\Enums\ImageType;
 use App\Models\Lookups\Lookup;
 use App\Models\Lookups\StylistStatus;
@@ -149,6 +151,8 @@ class StylistController extends Controller
             $view_properties['expertises'] = $lookup->type('expertise')->get();
             $view_properties['designation_id'] = intval($stylist->designation_id);
             $view_properties['designations'] = $lookup->type('designation')->get();
+            $view_properties['category_id'] = intval($stylist->category_id);
+            $view_properties['categories'] = Category::whereIn('id', [CategoryEnum::Men, CategoryEnum::House, CategoryEnum::Women])->get();
             $view_properties['is_admin'] = $is_admin;
             $view_properties['image_types'] = $image_types;
             $view_properties['image_type_names'] = $image_type_names;
@@ -219,6 +223,7 @@ class StylistController extends Controller
         if(Auth::user()->hasRole('admin')){
             $stylist->code = isset($request->code) && $request->code != '' ? $request->code : '';
             $stylist->status_id = isset($request->status_id) && $request->status_id != '' ? $request->status_id : '';
+            $stylist->category_id = isset($request->category_id) && $request->category_id != '' ? $request->category_id : '';
             $stylist->email = isset($request->email) && $request->email != '' ? $request->email : '';
             $stylist->designation_id = isset($request->designation_id) && $request->designation_id != '' ? $request->designation_id : '';
         }
