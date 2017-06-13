@@ -99,8 +99,10 @@
                                 @if($is_admin)
                                     <td class="table-font-size"> {{!empty($booking->mobile) ? $booking->mobile : ''}} </td>
                                     <td class="table-font-size"> {{$booking->client ? $booking->client->email : ''}} </td>
-                                    <td class="table-font-size"><a class="stylist-link" href="{{url("stylist/view/".$booking->stylist_id)}}">
-                                        {{$booking->stylist ? $booking->stylist->name : ''}}</a> </td>
+                                    <td class="table-font-size stylist-hover-list"><a class="stylist-link" href="{{url("stylist/view/".$booking->stylist_id)}}">
+                                        {{$booking->stylist ? $booking->stylist->name : ''}}</a>
+                                        <span class="caret"></span>
+                                    </td>
                                 @endif
                                 <td class="table-font-size"> {{!empty($booking->reason) ? $booking->reason : ''}} </td>
                             </tr>

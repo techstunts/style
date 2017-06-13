@@ -419,9 +419,10 @@ $(document).ready(function(){
  });
 
 function getList () {
-    stylist_list = '<div class="stylist-list">';
+    stylist_list = '<div class="stylist-list">' +
+        '<span class="stylist-list-header"> Change stylist</span>';
     for (var i =0; i < stylist.length; i++) {
-        stylist_list += '<li class="list" value="'+stylist[i].id+'">'+stylist[i].name+'</li>';
+        stylist_list += '<li class="list hover-hand" value="'+stylist[i].id+'">'+stylist[i].name+'</li>';
     }
     stylist_list += '</div>';
 }
@@ -430,7 +431,6 @@ function bindClick () {
         booking_id = $(this).parents('tr').find('a')[0].innerText;
         var element = $(this);
         $(this).on('click', function(){
-            console.log(this.value);
             updateBooking(element, this.value);
         });
     });

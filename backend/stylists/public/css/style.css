@@ -1105,6 +1105,12 @@ div#prod-update-div {
 .stylist-list > .list {
     padding: 10px;
     list-style: none;
+    margin-top: 10px;
+}
+
+.stylist-hover-list{
+    padding-right: 0px !important;
+    padding-left: 0px !important;
 }
 
 .stylist-list {
@@ -1114,4 +1120,15 @@ div#prod-update-div {
     border: 1px solid #000;
     background: #f7f7f6;
     margin-top: 10px;
+    padding-top: 10px;
+}
+
+.stylist-list-header{
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.28);
+    color: #fff;
+}
+
+.hover-hand{
+    cursor: pointer;
 }
