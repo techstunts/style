@@ -26,6 +26,7 @@
                         @include('common.status.bookingStatus', array('bookingStatuses' => $booking_statuses_list))
                         <input type="text" placeholder="Describe the reason" name="reason" value="{{old('reason') != "" ? old('reason') : ''}}"/>
                         <input type="submit" title="Change" value="Change Status"/>
+                        <input type="hidden" value="{{env('API_ORIGIN')}}" id="api_origin">
                         <input type="hidden" id="change_status_only_one" value="{{$change_status_only_one}}"/>
                         <input type="hidden" name="booking_id" id="selected_booking_id" value=""/>
                         @if(!empty(Session::get('successMsg')) || !empty(Session::get('errorMsg')))
@@ -98,7 +99,7 @@
                                 @if($is_admin)
                                     <td class="table-font-size"> {{!empty($booking->mobile) ? $booking->mobile : ''}} </td>
                                     <td class="table-font-size"> {{$booking->client ? $booking->client->email : ''}} </td>
-                                    <td class="table-font-size"><a href="{{url("stylist/view/".$booking->stylist_id)}}">
+                                    <td class="table-font-size"><a class="stylist-link" href="{{url("stylist/view/".$booking->stylist_id)}}">
                                         {{$booking->stylist ? $booking->stylist->name : ''}}</a> </td>
                                 @endif
                                 <td class="table-font-size"> {{!empty($booking->reason) ? $booking->reason : ''}} </td>

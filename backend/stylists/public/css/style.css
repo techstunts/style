@@ -1101,3 +1101,17 @@ div#prod-update-div {
     margin-left: 0px !important;
     margin-right: 0px !important;
 }
+
+.stylist-list > .list {
+    padding: 10px;
+    list-style: none;
+}
+
+.stylist-list {
+    position: absolute;
+    z-index: 9999;
+    width: 100px;
+    border: 1px solid #000;
+    background: #f7f7f6;
+    margin-top: 10px;
+}

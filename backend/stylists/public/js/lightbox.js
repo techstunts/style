@@ -173,6 +173,9 @@ function unselectProduct(e){
 }
 var occasions = {};
 var categories = [];
+var stylist = [];
+var stylist_list = '';
+var booking_id = '';
 var subCatSelect = '';
 var parCatSelect = '';
 var leafCatSelect = '';
@@ -381,7 +384,76 @@ $(document).ready(function(){
     subCatSelect.on('change', function () {
         loadLeafCategory(parent,$(this).val())
     });
-});
+    if ($('.stylist-link').length > 0) {
+        $('.stylist-link').each(function() {
+            var this_loc = $(this);
+            this_loc.mouseover(function(){
+                if (stylist.length == 0) {
+                    $.ajax({
+                        url : api_origin+'stylist/activelist',
+                        type : 'GET',
+                        success : function(res){
+                            if (res.status == false) {
+                                alert(res.message);
+                            }
+                            stylist = res.data;
+                            if (stylist_list == '') {
+                                getList();
+                                this_loc.parent().append(stylist_list);
+                                bindClick();
+                            }
+                        }
+                    });
+                } else {
+                    this_loc.parent().append(stylist_list);
+                    bindClick();
+                }
+            });
+        });
+    }
+    if ($('.stylist-link').length > 0) {
+        $('.stylist-link').parent().mouseleave(function() {
+            $(this).find('.stylist-list').remove();
+        });
+    }
+ });
+
+function getList () {
+    stylist_list = '<div class="stylist-list">';
+    for (var i =0; i < stylist.length; i++) {
+        stylist_list += '<li class="list" value="'+stylist[i].id+'">'+stylist[i].name+'</li>';
+    }
+    stylist_list += '</div>';
+}
+function bindClick () {
+    $('.list').each(function(){
+        booking_id = $(this).parents('tr').find('a')[0].innerText;
+        var element = $(this);
+        $(this).on('click', function(){
+            console.log(this.value);
+            updateBooking(element, this.value);
+        });
+    });
+}
+function updateBooking (element, stylist_id) {
+    var booking = booking_id;
+    $.ajax({
+        url : api_origin+'appointment/updatebookingstylist',
+        type : 'POST',
+        data : {booking_id : booking, stylist_id : stylist_id},
+        success : function(res){
+            if (res.status == false) {
+                alert(res.message);
+                return false;
+            }
+            var a_element = element.parent().siblings('a');
+            var base_url = document.location.origin;
+            a_element.attr('href', base_url+'/stylist/view/'+stylist_id);
+            a_element[0].innerText = element[0].innerText;
+            a_element.fadeIn(300).fadeOut(300).fadeIn(300);
+        }
+    });
+}
 
 function setPlaceholder(element) {
     var placeholder = element.find('option')[0].innerText;
