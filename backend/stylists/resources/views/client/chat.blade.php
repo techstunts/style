@@ -10,6 +10,7 @@
             <input type="hidden" id="api_origin" value="{{env('API_ORIGIN')}}"/>
             <input type="hidden" id="is_nicobar" value="{{env('IS_NICOBAR')}}"/>
             <input type="hidden" id="collage_path" value="{{env('COLLAGE_PATH')}}"/>
+            <input type="hidden" id="account_id" value="{{$account_id}}"/>
 
             <!--
                 Contacts

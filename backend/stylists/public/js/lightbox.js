@@ -180,6 +180,15 @@ var subCatSelect = '';
 var parCatSelect = '';
 var leafCatSelect = '';
 var parent = '';
+var EntityType = {
+    PRODUCT: 1,
+    LOOK: 2,
+    STYLIST: 3,
+    TIP: 4,
+    COLLECTION: 5,
+    CLIENT: 6,
+}
+
 $(document).ready(function(){
     subCatSelect = $('#select_category_id');
     parCatSelect = $('select[name="parent"]');
@@ -276,6 +285,7 @@ $(document).ready(function(){
         var url = form.find('input[name="url"]').val();
         var image = form.find('input[name="image"]');
         var image_type = form.find('select[name="image_type"]').val();
+        var entity_type_id = form.find('input[name="entity_type_id"]').val();
         if ('' == image_type){
             alert('Please select image type');
             return false;
@@ -283,7 +293,7 @@ $(document).ready(function(){
 
         var form_data = new FormData(form[0]);
         form_data.append("image", image.prop('files')[0]);
-        form_data.append("entity_type_id", form.find('input[name="entity_type_id"]').val());
+        form_data.append("entity_type_id", entity_type_id);
         form_data.append("entity_id", form.find('input[name="entity_id"]').val());
         form_data.append("image_type", image_type);
         form_data.append("_token", form.find('select[name="_token"]').val());
@@ -298,8 +308,14 @@ $(document).ready(function(){
                 if (data.status != undefined && data.status == 'success') {
                     image_type[0].selectedIndex = 0;
                     image.val('');
-                    alert('Image uploaded successfully');
-                    location.reload();
+                    if (entity_type_id == EntityType.PRODUCT) {
+                        alert('Please save to update details');
+                        $('input[name="image0"]').val(data.data.url);
+                        $('input[name="imageId"]').val(data.data.image_id);
+                    } else {
+                        location.reload();
+                        alert('Image uploaded successfully');
+                    }
                 } else {
                     alert(data.error.message);
                 }

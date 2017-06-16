@@ -6,6 +6,7 @@ use App\Brand;
 use App\Category;
 use App\Http\Mapper\Mapper;
 use App\Models\Enums\Currency;
+use App\Models\Enums\ImageType;
 use App\Models\Enums\InStock;
 use App\Models\Enums\PriceType;
 use App\Models\Looks\LookTag;
@@ -25,8 +26,10 @@ use App\Models\Products\ProductPrice;
 use App\Models\Products\ProductSize;
 use App\Product;
 use App\ProductTag;
+use App\UploadImages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Mapper\ProductMapper;
 
@@ -162,6 +165,7 @@ class ProductController extends Controller
         $products =
             Product::with(['category', 'product_prices' => $product_prices, 'in_stock', 'primary_color', 'tags.tag'])
                 ->where($this->where_conditions)
+                ->where('account_id', $request->user()->account_id)
                 ->whereRaw($this->where_raw)
                 ->whereHas('product_prices', $product_prices);
         if ($in_stock != null && $in_stock !== '') {
@@ -210,6 +214,27 @@ class ProductController extends Controller
         };
     }
 
+    public function getCreateProduct(Request $request){
+        $category_obj = new Category();
+        $lookup = new Lookup();
+        $view_properties = array(
+            'category_tree' => $category_obj->getCategoryTree(),
+            'genders' => $lookup->type('gender')->get(),
+            'colors' => $lookup->type('color')->get(),
+            'merchants' => Merchant::get(),
+            'image_types' => $lookup->type('image_type')->where('entity_type_id', EntityType::PRODUCT)->get(),
+            'category_id' => $request->old('category_id'),
+            'gender_id' => $request->old('gender_id'),
+            'primary_color_id' => $request->old('primary_color_id'),
+            'brand_id' => $request->old('brand_id'),
+            'merchant_id' => $request->old('merchant_id'),
+            'entity_type_id' => EntityType::PRODUCT,
+            'image0' => $request->old('image0'),
+            'imageId' => $request->old('imageId'),
+
+        );
+        return view('product.create', $view_properties);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -221,84 +246,171 @@ class ProductController extends Controller
             'name' => 'required|min:5',
             'price' => 'required|numeric',
             'desc' => 'required|min:5',
-            'merchant' => 'required|min:4',
-            'brand' => 'required|min:2',
-            'category' => 'required|min:2',
-            'gender' => 'required|min:4',
-            'color1' => 'required|min:3',
+            'merchant' => 'required_without:merchant_id|min:4',
+            'brand' => 'required_without:brand_id|min:2',
+            'category' => 'required_without:category_id|min:2',
+            'gender' => 'required_without:gender_id|min:4',
+            'color1' => 'required_without:primary_color_id|min:3',
             'color2' => 'min:3',
         ]);
+        $not_from_ext = $request->has('not_from_ext') && $request->input('not_from_ext') == true ? true : false;
 
         $error_messages = "";
         if ($validator->fails()) {
             foreach ($validator->errors()->getMessages() as $v) {
                 $error_messages .= $v[0] . "<br/>";
             }
-            echo json_encode([false, $error_messages]);
-            return;
+            if ($not_from_ext) {
+                return Redirect::back()
+                    ->withErrors($validator)
+                    ->withInput($request->all());
+            } else {
+                echo json_encode([false, $error_messages]);
+                return;
+            }
         }
 
-        $brand_name = preg_replace('/[^a-zA-Z0-9_&-@\' \']/', null, $request->input('brand'));
-        $brand_name = trim($brand_name);
+        if ($request->has('merchant_id')){
+            if ($request->input('merchant_id') != '') {
+                $merchant_id = $request->input('merchant_id');
+            } else {
+                $error_messages .= 'Empty merchant id ';
+            }
+        } else {
+            $merchant = Merchant::where('name', $request->input('merchant'))->first();
+            $merchant_id = $merchant ? $merchant->id : '';
+        }
 
-        $merchant = Merchant::where('name', $request->input('merchant'))->first();
-        $brand = Brand::firstOrCreate(['name' => $brand_name]);
-        $category = Category::where(['name' => $request->input('category')])->first();
-        $gender = Gender::where(['name' => $request->input('gender')])->first();
-        $primary_color = Color::where(['name' => $request->input('color1')])->first();
+        if ($request->has('brand_id')){
+            if ($request->input('brand_id') != '') {
+                $brand_id = $request->input('brand_id');
+            } else {
+                $error_messages .= 'Empty brand id ';
+            }
+        } else {
+            $brand_name = preg_replace('/[^a-zA-Z0-9_&-@\' \']/', null, $request->input('brand'));
+            $brand = Brand::firstOrCreate(['name' => trim($brand_name)]);
+            $brand_id = $brand ? $brand->id : '';
+        }
+
+        if ($request->has('category_id')){
+            if ($request->input('category_id') != '') {
+                $category_id = $request->input('category_id');
+            } else {
+                $error_messages .= 'Empty category id ';
+            }
+        } else {
+            $category = Category::where(['name' => $request->input('category')])->first();
+            $category_id = $category ? $category->id : '';
+        }
+
+        if ($request->has('primary_color_id')){
+            if ($request->input('primary_color_id') != '') {
+                $primary_color_id = $request->input('primary_color_id');
+            } else {
+                $error_messages .= 'Empty Color id ';
+            }
+        } else {
+            $primary_color = Color::where(['name' => $request->input('color1')])->first();
+            $primary_color_id = $primary_color ? $primary_color->id : '';
+        }
+
+        if ($request->has('gender_id')){
+            if ($request->input('gender_id') != '') {
+                $gender_id = $request->input('gender_id');
+            } else {
+                $error_messages .= 'Empty gender id ';
+            }
+        } else {
+            $gender = Gender::where(['name' => $request->input('gender')])->first();
+            $gender_id = $gender ? $gender->id : '';
+        }
         $secondary_color = Color::where(['name' => $request->input('color2')])->first();
 
-        $required_values = array('merchant', 'category', 'gender', 'primary_color');
-        $error_messages = "";
+        $required_values = array('merchant_id', 'category_id', 'gender_id', 'primary_color_id');
         foreach ($required_values as $v) {
-            if (!isset($$v) || !$$v->id) {
+            if (!isset($$v)) {
                 $error_messages .= strtoupper(substr($v, 0, 1)) . substr($v, 1) . " not found. Please contact admin.<br/>";
             }
         }
         if ($error_messages != "") {
-            echo json_encode([false, $error_messages]);
-            return;
+            if ($not_from_ext) {
+                return Redirect::back()
+                    ->withErrors($error_messages)
+                    ->withInput($request->all());
+            } else {
+                echo json_encode([false, $error_messages]);
+                return;
+            }
         }
 
-        if ($merchant && $request->input('name') && $category && $gender && $primary_color) {
+        if ($merchant_id && $request->input('name') && $category_id && $gender_id && $primary_color_id) {
             $sku_id = !empty($request->input('sku_id')) ? $request->input('sku_id') : 'isy_' . (intval(time()) + rand(0, 10000));
-            $product = Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant->id]);
-
+            $product = Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant_id]);
             DB::beginTransaction();
             $product_group_id = $this->getProductGroupId();
 
-            $product->merchant_id = $merchant->id;
+            $product->merchant_id = $merchant_id;
             $product->sku_id = $sku_id;
             $product->group_id = $product_group_id;
             $product->name = htmlentities($request->input('name'));
             $product->description = htmlentities($request->input('desc'));
-            $product->product_link = $request->input('url');
+            $product->product_link = $not_from_ext ? 'http://'.$request->getHost().'/product/view/'.$product->id : $request->input('url');
             $product->image_name = $request->input('image0');
-            $product->brand_id = $brand->id;
-            $product->category_id = $category->id;
-            $product->gender_id = $gender->id;
-            $product->primary_color_id = $primary_color->id;
+            $product->brand_id = $brand_id;
+            $product->category_id = $category_id;
+            $product->gender_id = $gender_id;
+            $product->primary_color_id = $primary_color_id;
             $product->secondary_color_id = $secondary_color ? $secondary_color->id : "";
             $product->stylist_id = $request->user()->id;
             $product->approved_by = $product->stylist_id;
+            $product->account_id = $request->user()->account_id;
 
             try {
                 ProductColorGroup::insert(['group_id' => $product_group_id, 'sku_id' => $sku_id]);
                 if ($product->save()) {
                     ProductPrice::insert(['product_id' => $product->id, 'price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR, 'value' => $request->input('price')]);
                     $product_url = url('product/view/' . $product->id);
+                    if ($not_from_ext) {
+                        $image_id = $request->input('imageId');
+                        UploadImages::where('id', $image_id)->update(['uploaded_by_entity_id' => $product->id]);
+                    }
                     DB::commit();
-                    echo json_encode([true, $product_url]);
+                    if ($not_from_ext) {
+                        return Redirect::to($product_url);
+                    } else {
+                        echo json_encode([true, $product_url]);
+                    }
                 } else {
-                    echo json_encode([false, "Product save failed. Please contact admin."]);
+                    if ($not_from_ext) {
+                        return Redirect::back()
+                            ->withErrors($error_messages)
+                            ->withInput($request->all());
+                    } else {
+                        echo json_encode([false, "Product save failed. Please contact admin."]);
+                    }
                 }
                 ProductSize::insert(['size_id' => ProductSizeEnum::NO_ANY, 'sku_id' => $sku_id, 'product_id' => $product->id, 'stock_quantity' => 1]);
             } catch (\Exception $e) {
                 DB::rollback();
-                echo json_encode([false, "Exception : " . $e->getMessage()]);
+
+                if ($not_from_ext) {
+                    return Redirect::back()
+                        ->withErrors($error_messages)
+                        ->withInput($request->all());
+                } else {
+                    echo json_encode([false, "Exception : " . $e->getMessage()]);
+                }
             }
         } else {
-            echo json_encode([false, "Product required info missing. Please contact admin."]);
+
+            if ($not_from_ext) {
+                return Redirect::back()
+                    ->withErrors($error_messages)
+                    ->withInput($request->all());
+            } else {
+                echo json_encode([false, "Product required info missing. Please contact admin."]);
+            }
         }
     }
 
@@ -342,9 +454,17 @@ class ProductController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function getEdit($id)
+    public function getEdit(Request $request)
     {
-        $product = Product::find($this->resource_id);
+        $mapperObj = new Mapper();
+        $product_prices = $mapperObj->getPriceClosure();
+        $product = Product::with(['product_prices' => $product_prices])->where(['id', $this->resource_id, 'account_id' => $request->user()->account_id])->first();
+        if (!$product) {
+            return redirect('product/list')
+                ->withErrors(['error' => 'No permission to edit'])
+                ->withInput();
+        }
+
         $view_properties = null;
         if ($product) {
             $lookup = new Lookup();
@@ -357,7 +477,8 @@ class ProductController extends Controller
             $view_properties['category_tree'] = $category_obj->getCategoryTree();
             $view_properties['primary_color_id'] = intval($product->primary_color_id);
             $view_properties['colors'] = $lookup->type('color')->get();
-            $view_properties['price'] = $product->price;
+            $view_properties['image_types'] = $lookup->type('image_type')->where('entity_type_id', EntityType::PRODUCT)->get();
+            $view_properties['entity_type_id'] = EntityType::PRODUCT;
         } else {
             return view('404', array('title' => 'Product not found'));
         }
@@ -390,17 +511,33 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return redirect('product/edit/' . $this->resource_id)
                 ->withErrors($validator)
+                ->withInput($request->all());
+        }
+        $product = Product::where(['id', $this->resource_id, 'account_id' => $request->user()->account_id])->first();
+        if (!$product) {
+            return redirect('product/list')
+                ->withErrors(['error' => 'No permission to edit'])
                 ->withInput();
         }
-
-        $product = Product::find($this->resource_id);
-        $product->name = isset($request->name) && $request->name != '' ? $request->name : '';
-        $product->description = isset($request->description) && $request->description != '' ? $request->description : '';
-        $product->price = isset($request->price) && $request->price != '' ? $request->price : '';
-        $product->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
-        $product->category_id = isset($request->category_id) && $request->category_id != '' ? $request->category_id : '';
-        $product->primary_color_id = isset($request->primary_color_id) && $request->primary_color_id != '' ? $request->primary_color_id : '';
-        $product->save();
+        try {
+            DB::begintransaction();
+            $product->name = isset($request->name) && $request->name != '' ? $request->name : '';
+            $product->description = isset($request->description) && $request->description != '' ? $request->description : '';
+            $product->gender_id = isset($request->gender_id) && $request->gender_id != '' ? $request->gender_id : '';
+            $product->category_id = isset($request->category_id) && $request->category_id != '' ? $request->category_id : '';
+            $product->primary_color_id = isset($request->primary_color_id) && $request->primary_color_id != '' ? $request->primary_color_id : '';
+            $product->image_name = isset($request->image0) && $request->image0 != '' ? $request->image0 : $product->image_name;
+            $product->save();
+            ProductPrice::where(['product_id' => $product->id, 'price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR])->delete();
+            ProductPrice::insert(['product_id' => $product->id, 'price_type_id' => PriceType::RETAIL, 'currency_id' => Currency::INR, 'value' => $request->input('price')]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::info($e->getMessage());
+            return redirect('product/edit/' . $this->resource_id)
+                ->withErrors(['error' => 'Exception : '.$e->getMessage()])
+                ->withInput($request->all());
+        }
 
         return redirect('product/view/' . $this->resource_id);
     }

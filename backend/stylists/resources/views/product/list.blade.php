@@ -57,6 +57,7 @@
                             {{--{!! $products->render() !!}--}}
 
                         </div>
+                        @if(env('IS_NICOBAR'))
                         <div id="prod-update-div" class="col-md-offset-1 col-md-2">
                             <input type="button" id="update-products" value="Update products">
                             {{csrf_field()}}
@@ -69,6 +70,7 @@
 
                             </div>
                         </div>
+                        @endif
                     </div>
 
                     <div class="clear"></div>

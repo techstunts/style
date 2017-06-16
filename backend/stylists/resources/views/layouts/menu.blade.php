@@ -18,6 +18,11 @@
                         <li><a href="/client/list">Clients</a></li>
                         <li class="pull-right" a><a href="{!! url('auth/logout') !!}">Logout</a></li>
                         <li class="pull-right"><a href="{!! url('stylist/view/' . Auth::user()->id) !!}">{{Auth::user()->name}}</a></li>
+                    @elseif (0 === strrpos(\Illuminate\Support\Facades\Request::getHost(), 'designer'))
+                        <li><a href="/client/chat">Chat</a></li>
+                        <li><a href="/product/list">Products</a></li>
+                        <li class="pull-right" a><a href="{!! url('auth/logout') !!}">Logout</a></li>
+                        <li class="pull-right"><a href="{!! url('stylist/view/' . Auth::user()->id) !!}">{{Auth::user()->name}}</a></li>
                     @else
                         <li><a href="/client/chat">Chat</a></li>
                         @if(Auth::user()->hasRole('admin'))
