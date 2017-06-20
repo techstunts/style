@@ -7,4 +7,5 @@ class ImageType{
     const Banner = "7";
     const PDP_Image = "12";
     const PLP_Image = "13";
+    const Primary = "14";
 }

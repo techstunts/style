@@ -204,6 +204,7 @@ class ClientController extends Controller
         //dd($stylist_online_status);
         $view_properties['stylist_online_status'] = $stylist_online_status ? $stylist_online_status->chat_online_status_id : "";
         $view_properties['all_stylist_online_status'] = $all_stylist_online_status;
+        $view_properties['account_id'] = $request->user()->account_id;
 
         return view('client/chat', $view_properties);
     }
