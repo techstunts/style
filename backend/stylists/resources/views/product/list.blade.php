@@ -38,6 +38,7 @@
                 </div>
                 @if(!env('IS_NICOBAR'))
                     @include('common.sendrecommendations')
+                    <a class="btn btn-primary btn-xs" href="{{url('product/createproduct')}}">Add Product</a>
                 @endif
                 <div class="clear"></div>
 
