@@ -25,10 +25,17 @@ class BookingMapper extends Controller
             $query->select('id', 'name', 'category_id');
         };
 
+        $select_fields = ['id', 'stylist_id', 'client_id', 'mobile', 'slot_id', 'status_id', 'service', 'price', 'message',
+            'cancelled_by_entity_type_id', 'cancelled_by_entity_id', 'reason','created_at', 'updated_at', 'country_id', 'category_id'];
+        if (env('IS_NICOBAR')){
+            $select_fields[] =  DB::raw("to_char(date, 'DD-Mon-YYYY') as date");
+        } else {
+            $select_fields[] =  DB::raw("DATE_FORMAT(date, '%d-%b-%Y') as date");
+        }
         $bookings = Booking::with(['client' => $client, 'slot', 'stylist' => $stylist, 'status', 'bookingRequest.request', 'country', 'category'])
-            ->select(['id', 'stylist_id', 'client_id', 'mobile', DB::raw("to_char(date, 'DD-Mon-YYYY') as date"), 'slot_id', 'status_id', 'service', 'price', 'message',
-                'cancelled_by_entity_type_id', 'cancelled_by_entity_id', 'reason','created_at', 'updated_at', 'country_id', 'category_id'])
+            ->select($select_fields)
             ->where($where_conditions)
+            ->where('account_id', $request->user()->account_id)
             ->whereRaw($where_raw)
             ->orderBy('id', 'desc')
             ->simplePaginate($this->records_per_page)

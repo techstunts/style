@@ -22,8 +22,8 @@ use Validator;
 
 class StyleRequestsController extends Controller
 {
-    protected $filter_ids = [ 'occasion_id', 'budget_id', 'status_id', 'style_id', 'category_id'];
-    protected $filters = [ 'occasions', 'budgets', 'bookingStatuses', 'styles', 'categories'];
+    protected $filter_ids = ['status_id', 'style_id', 'category_id'];
+    protected $filters = ['bookingStatuses', 'styles', 'categories'];
 
     /**
      * Display a listing of the resource.

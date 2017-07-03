@@ -91,6 +91,7 @@ class ClientController extends Controller
         $authWhereClauses = $this->authWhereClauses();
         $clients =
             Client::with($this->relations)
+                ->where(['account_id' => $request->user()->account_id])
                 ->where($this->where_conditions)
                 ->whereRaw($this->where_raw)
                 ->whereRaw($authWhereClauses)
@@ -171,7 +172,7 @@ class ClientController extends Controller
         }
 
         if($is_admin || $is_authorised_for_chat_as_admin){
-            $stylists = Stylist::whereIn('status_id',[StylistStatus::Active])
+            $stylists = Stylist::whereIn('status_id',[StylistStatus::Active])->where('account_id', $request->user()->account_id)
                 ->orderBy('name')->get();
 
             //select `s1`.*, `lc`.`name` as `chat_online_status` from `stylist_chat_online` as `s1` left join `stylist_chat_online` as `s2` on `s1`.`stylist_id` = `s2`.`stylist_id` and `s1`.`id` < `s2`.`id` inner join `lu_chat_online_status` as `lc` on `s1`.`chat_online_status_id` = `lc`.`id` where `s2`.`id` is null
