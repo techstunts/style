@@ -14,8 +14,7 @@
                             @include('common.status.bookingStatus')
                             @include('common.style.select')
                         @else
-                            @include('common.occasion.select')
-                            @include('common.budget.select')
+                            @include('common.status.bookingStatus')
                             @include('common.daterange')
                         @endif
                         <input type="submit" name="filter" value="Filter"/>
@@ -55,15 +54,10 @@
                                 <th><input name="select_all" value="1" type="checkbox"></th>
                                 <th class="font-size-table-header">Request id</th>
                                 <th class="font-size-table-header">Client name</th>
-                                <th class="font-size-table-header">Age</th>
-                                <th class="font-size-table-header">Body type</th>
-                                <th class="font-size-table-header">Occasion</th>
-                                <th class="font-size-table-header">Budget</th>
                                 <th class="font-size-table-header">Date</th>
                                 <th class="font-size-table-header">Request Status</th>
                                 <th class="font-size-table-header">Stylist</th>
                                 <th class="font-size-table-header">Message</th>
-                                <th class="font-size-table-header">Request Type</th>
                                 <th class="font-size-table-header">Client Details</th>
                             @endif
                         </tr>
@@ -95,15 +89,10 @@
                                     <td>{{$request->user_id}}</td>
                                     <td class="table-font-size"><a target="_blank" href="/requests/view/{{$request->id}}"> {{$request->id}} </a> </td>
                                     <td class="table-font-size">{{$request->client ? $request->client->name : ''}}</td>
-                                    <td class="table-font-size">{{$request->client && $request->client->age_group ? $request->client->age_group->name : ''}}</td>
-                                    <td class="table-font-size"> {{$request->client && $request->client->body_type ?$request->client->body_type->name : ''}} </td>
-                                    <td class="table-font-size"> {{$request->occasion ? $request->occasion->name : ''}} </td>
-                                    <td class="table-font-size"> {{$request->budget ? $request->budget->name : ''}} </td>
                                     <td class="table-font-size"> {{$request->created_at}} </td>
                                     <td class="table-font-size"> {{$request->status ? $request->status->name : ''}} </td>
                                     <td class="table-font-size"> {{$request->client && $request->client->stylist ? $request->client->stylist->name : ''}} </td>
                                     <td class="table-font-size"> {{$request->description}} </td>
-                                    <td class="table-font-size"> {{$request->entity_type ? $request->entity_type->name : ''}} </td>
                                     <td class="table-font-size"> <a href="/client/{{$request->client ? 'view/' . $request->client->id : 'list'}}">view</a> </td>
                                 </tr>
                             @endforeach
