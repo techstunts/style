@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\ProductTag;
 use App\AgencyMerchantProgramme;
 use App\Models\Enums\AgencyMerchantProgrammeStatus;
+use Illuminate\Support\Facades\Log;
 
 class ProductMapper extends Controller
 {
@@ -85,6 +86,7 @@ class ProductMapper extends Controller
             ProductTag::insert($all_tags);
             $status = true;
         } catch (\Exception $e) {
+            Log::info($e->getMessage());
             $status = false;
         }
 
