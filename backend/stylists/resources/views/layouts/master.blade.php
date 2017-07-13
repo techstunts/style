@@ -13,7 +13,9 @@
         <link rel="stylesheet" href="{!! asset('css/style.css') !!}" />
     @endif
 
-    <link rel="stylesheet" href="{!! asset('css/bootstrap.css') !!}" />
+        <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    {{--<link rel="stylesheet" href="{!! asset('css/bootstrap.css') !!}" />--}}
     <link rel="stylesheet" href="{!! asset('css/report.css') !!}" />
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
