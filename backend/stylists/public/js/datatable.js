@@ -76,6 +76,7 @@ $(document).ready(function () {
     var rows_selected = [];
     var request_ids = [];
     var table = $('#datatable').DataTable({
+        'searching':false,
 
         'columnDefs': [{
             'targets': 0,

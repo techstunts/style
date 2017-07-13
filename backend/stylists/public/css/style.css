@@ -50,6 +50,7 @@ li.active {
 .btn_quick{
     position: fixed;
     right: 10px;
+    z-index: 10;
 }
 
 .stack_1{

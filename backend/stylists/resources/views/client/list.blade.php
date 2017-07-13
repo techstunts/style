@@ -6,22 +6,35 @@
     <div id="contentCntr">
         <div class="section">
             <div class="container">
-                <div class="filters">
-                    @if(Auth::user()->hasRole('admin'))
-                        <form method="get" action="">
-                            @include('stylist.select')
-                            @include('common.status.deviceStatusSelect')
-                            @include('common.gender.select')
-                            @include('common.body_type.select')
-                            @include('common.age_group.select')
-                            @include('common.search')
-                            @include('common.daterange')
-                            <input type="submit" name="filter" value="Filter"/>
-                            <a href="{{url('client/list')}}" class="clearall">Clear All</a>
-                        </form>
-                    @endif
-                    {{--{!! $clients->render() !!}--}}
+                <div class="hidden-xs hidden-sm ">
+                    <div class="filters">
+                        @if(Auth::user()->hasRole('admin'))
+                            <form method="get" action="">
+                                @include('stylist.select')
+                                @include('common.status.deviceStatusSelect')
+                                @include('common.gender.select')
+                                @include('common.body_type.select')
+                                @include('common.age_group.select')
+                                @include('common.search')
+                                @include('common.daterange')
+                                <input type="submit" name="filter" value="Filter"/>
+                                <a href="{{url('client/list')}}" class="clearall">Clear All</a>
+                            </form>
+                        @endif
+                        {{--{!! $clients->render() !!}--}}
+                    </div>
                 </div>
+                <div class="hidden-lg hidden-md ">
+                    <div class="filters">
+                        @if(Auth::user()->hasRole('admin'))
+                            <form method="get" action="">
+                                <input type="search" name="search" value="{{$search}}" placeholder="What are your looking for..." style="width: 200px;" class="form-control">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </form>
+                        @endif
+                    </div>
+                </div>
+
 
                 <div class="clear"></div>
                 @include('common.sendrecommendations')
