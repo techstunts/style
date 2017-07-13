@@ -47,6 +47,19 @@ li.active {
     background-color: #E91E63 !important;
 }
 
+.btn_quick{
+    position: fixed;
+    right: 10px;
+}
+
+.stack_1{
+    bottom: 10px;
+}
+
+.stack_2{
+    bottom: 35px;
+}
+
 div.items {
     float: left;
     margin: 5px;

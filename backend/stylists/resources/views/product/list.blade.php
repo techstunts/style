@@ -37,10 +37,6 @@
 
                         </form>
                     </div>
-                    @if(!env('IS_NICOBAR'))
-                        @include('common.sendrecommendations')
-                        <a class="btn btn-primary btn-xs" href="{{url('product/createproduct')}}">Add Product</a>
-                    @endif
                     <div class="clear"></div>
 
                     @foreach($errors->all() as $e)
@@ -87,6 +83,10 @@
                 </div>
                 <div class="clear"></div>
 
+                @if(!env('IS_NICOBAR'))
+                    @include('common.sendrecommendations')
+                    <a class="btn btn-primary btn-xs btn_quick stack_1" href="{{url('product/createproduct')}}">Add Product</a>
+                @endif
 
                 <ol class="selectable" @if(!env('IS_NICOBAR')) id="selectable" @endif>
                     @if(count($products) == 0)
