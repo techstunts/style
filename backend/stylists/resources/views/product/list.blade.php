@@ -6,77 +6,87 @@
     <div id="contentCntr">
         <div class="section">
             <div class="container">
-                <div class="filters">
-                    <form method="get" action="">
+                <div class="hidden-xs hidden-sm ">
+                    <div class="filters">
+                        <form method="get" action="">
+                            @if(!env('IS_NICOBAR'))
+                                @include('merchant.select')
+                                @include('stylist.select')
+                                @include('brand.select')
+                            @endif
+                            @include('category.parent_category')
+                            @include('category.sub_category')
+                            @include('category.leaf_category')
+                            @if(!env('IS_NICOBAR'))
+                                @include('common.autosuggest')
+                            @endif
+                            @include('common.search')
+                            @include('common.color.select')
+                            @if(!env('IS_NICOBAR'))
+                                @include('common.rating.product')
+                                @include('common.approved_by.select')
+                            @endif
+                            @include('common.status.instockselect')
+                            @if(!env('IS_NICOBAR'))
+                                @include('common.daterange')
+                            @endif
+                            @include('common.pricerange')
+                            <input type="submit" name="filter" value="Filter"/>
+
+                            <a href="{{url('product/list')}}" class="clearall">Clear All</a>
+
+                        </form>
+                    </div>
+                    <div class="clear"></div>
+
+                    @foreach($errors->all() as $e)
+                        <span class="errorMsg">{{$e}}</span><br/>
+                    @endforeach
+
+                    @if(Auth::user()->hasRole('admin') )
                         @if(!env('IS_NICOBAR'))
-                            @include('merchant.select')
-                            @include('stylist.select')
-                            @include('brand.select')
+                            <div class="filters">
+                                @include('product.bulk_update')
+                            </div>
                         @endif
-                        @include('category.parent_category')
-                        @include('category.sub_category')
-                        @include('category.leaf_category')
-                        @if(!env('IS_NICOBAR'))
-                            @include('common.autosuggest')
-                        @endif
-                        @include('common.search')
-                        @include('common.color.select')
-                        @if(!env('IS_NICOBAR'))
-                            @include('common.rating.product')
-                            @include('common.approved_by.select')
-                        @endif
-                        @include('common.status.instockselect')
-                        @if(!env('IS_NICOBAR'))
-                            @include('common.daterange')
-                        @endif
-                        @include('common.pricerange')
-                        <input type="submit" name="filter" value="Filter"/>
-
-                        <a href="{{url('product/list')}}" class="clearall">Clear All</a>
-
-                    </form>
-                </div>
-                @if(!env('IS_NICOBAR'))
-                    @include('common.sendrecommendations')
-                    <a class="btn btn-primary btn-xs" href="{{url('product/createproduct')}}">Add Product</a>
-                @endif
-                <div class="clear"></div>
-
-                @foreach($errors->all() as $e)
-                    <span class="errorMsg">{{$e}}</span><br/>
-                @endforeach
-
-                @if(Auth::user()->hasRole('admin') )
-                    @if(!env('IS_NICOBAR'))
-                        <div class="filters">
-                            @include('product.bulk_update')
-                        </div>
-                    @endif
-                    <div class="row">
-                        <div class="tag col-md-4">
-                            @include('product.create_tag')
-                            {{--{!! $products->render() !!}--}}
-
-                        </div>
-                        @if(env('IS_NICOBAR'))
-                        <div id="prod-update-div" class="col-md-offset-1 col-md-2">
-                            <input type="button" id="update-products" value="Update products">
-                            {{csrf_field()}}
-                            <div id="myModal" class="modal">
-                                <div class="modal-content">
-                                    <span class="close" id="close">&times;</span>
-                                    <p>Product update in progress...</p><br>
-                                    <p>Please don't refresh the page.</p>
-                                </div>
+                        <div class="row">
+                            <div class="tag col-md-4">
+                                @include('product.create_tag')
+                                {{--{!! $products->render() !!}--}}
 
                             </div>
+                            @if(env('IS_NICOBAR'))
+                            <div id="prod-update-div" class="col-md-offset-1 col-md-2">
+                                <input type="button" id="update-products" value="Update products">
+                                {{csrf_field()}}
+                                <div id="myModal" class="modal">
+                                    <div class="modal-content">
+                                        <span class="close" id="close">&times;</span>
+                                        <p>Product update in progress...</p><br>
+                                        <p>Please don't refresh the page.</p>
+                                    </div>
+
+                                </div>
+                            </div>
+                            @endif
                         </div>
-                        @endif
+
+                    @endif
+                </div>
+                <div class="hidden-lg hidden-md ">
+                    <div class="filters">
+                        <form method="get" action="">
+                            <input type="search" name="search" value="{{$search}}" placeholder="What are your looking for..." style="width: 200px;" class="form-control">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </form>
                     </div>
+                </div>
+                <div class="clear"></div>
 
-                    <div class="clear"></div>
+                @if(!env('IS_NICOBAR'))
+                    @include('common.sendrecommendations')
+                    <a class="btn btn-primary btn-xs btn_quick stack_1" href="{{url('product/createproduct')}}">Add Product</a>
                 @endif
-
 
                 <ol class="selectable" @if(!env('IS_NICOBAR')) id="selectable" @endif>
                     @if(count($products) == 0)

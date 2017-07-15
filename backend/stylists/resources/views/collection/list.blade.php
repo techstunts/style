@@ -6,26 +6,34 @@
 <div id="contentCntr">
     <div class="section">
         <div class="container">
-            <div class="filters">
+            <div class="hidden-xs hidden-sm ">
+                <div class="filters">
+                    <form method="get" action="">
+                        @include('stylist.select')
+                        @include('common.occasion.select')
+                        @include('common.status.select')
+                        @include('common.gender.select')
+                        @include('common.age_group.select')
+                        @include('common.body_type.select')
+                        @include('common.budget.select')
+                        @include('common.search')
+                        <input type="submit" name="filter" value="Filter"/>
+                        <a href="{{url('tip/list')}}" class="clearall">Clear All</a>
+                    </form>
 
-                <form method="get" action="">
-                    @include('stylist.select')
-                    @include('common.occasion.select')
-                    @include('common.status.select')
-                    @include('common.gender.select')
-                    @include('common.age_group.select')
-                    @include('common.body_type.select')
-                    @include('common.budget.select')
-                    @include('common.search')
-                    <input type="submit" name="filter" value="Filter"/>
-                    <a href="{{url('tip/list')}}" class="clearall">Clear All</a>
-                </form>
-                
+                </div>
             </div>
-            {!! $collections->render() !!}
+            <div class="hidden-lg hidden-md ">
+                <div class="filters">
+                    <form method="get" action="">
+                        <input type="search" name="search" value="{{$search}}" placeholder="What are your looking for..." style="width: 200px;" class="form-control">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </form>
+                </div>
+            </div>
 
             <div class="clear"></div>
-            <a class="btn btn-primary btn-xs" href="{{url('collection/create')}}">Create Collection</a>
+            <a class="btn btn-primary btn-xs btn_quick stack_1" href="{{url('collection/create')}}">Create Collection</a>
             @include('common.sendrecommendations')
             <div class="clear"></div>
 
