@@ -18,7 +18,7 @@
                         @include('common.budget.select')
                         @include('common.search')
                         <input type="submit" name="filter" value="Filter"/>
-                        <a href="{{url('tip/list')}}" class="clearall">Clear All</a>
+                        <a href="{{url('collection/list')}}" class="clearall">Clear All</a>
                     </form>
 
                 </div>
@@ -48,14 +48,14 @@
                         </div>
                         <div class="image"><img src="{{env('API_ORIGIN') . '/uploads/images/collections/' . $collection->image}}"/></div>
                         <div class="extra text">
-                            <span>{{$collection->status->name}}</span>
-                            <span>{{$collection->gender->name}}</span>
-                            <span>{{$collection->occasion->name}}</span>
-                            <span>{{$collection->body_type->name}}</span>
+                            <span>{{$collection->status ? $collection->status->name : ''}}</span>
+                            <span>{{$collection->gender ? $collection->gender->name : ''}}</span>
+                            <span>{{$collection->occasion ? $collection->occasion->name : ''}}</span>
+                            <span>{{$collection->body_type ? $collection->body_type->name : ''}}</span>
                         </div>
                         <div class="extra text">
-                            <span>{{$collection->age_group->name}}</span>
-                            <span>Rs.{{$collection->budget->name}}</span>
+                            <span>{{$collection->age_group ? $collection->age_group->name : ''}}</span>
+                            <span>Rs.{{$collection->budget ? $collection->budget->name : ''}}</span>
                         </div>
                     </div>
                 </li>
