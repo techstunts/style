@@ -18,14 +18,25 @@ nav ul {
 }
 
 nav li {
-    float: left;
     margin: 0px 2px 4px 0px;
-    padding: 3px 5px;
-    list-style: none;
     border: 1px solid wheat;
     background-color: gray;
+    text-align: center;
 }
 
+.navbar-inverse .navbar-nav > li > a {
+    padding: 5px;
+}
+.navbar-nav li a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 16px !important;
+    color: #ffffff !important;
+}
+.navbar-inverse {
+    background-color: transparent !important;
+     border-color: transparent !important;
+}
 nav li a {
     color: white;
     text-decoration: none;
@@ -34,6 +45,20 @@ nav li a {
 
 li.active {
     background-color: #E91E63 !important;
+}
+
+.btn_quick{
+    position: fixed;
+    right: 10px;
+    z-index: 10;
+}
+
+.stack_1{
+    bottom: 30px;
+}
+
+.stack_2{
+    bottom: 60px;
 }
 
 div.items {

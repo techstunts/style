@@ -70,7 +70,10 @@ class SelectOptions{
     }
 
     public function occasions(){
-        return $this->get_lookup_data_with_count('occasion', '', 'label');
+        if (env('IS_NICOBAR'))
+            return $this->get_lookup_data_with_count('occasion', '', 'label');
+        else
+            return $this->get_lookup_data_with_count('occasion');
     }
 
     public function body_types(){
