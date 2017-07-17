@@ -61,6 +61,42 @@ li.active {
     bottom: 60px;
 }
 
+/* Smartphones (landscape) ----------- */
+@media only screen
+and (max-device-width : 414px) {
+    .rwd_div{
+        width: 173px !important;
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen
+and (max-device-width : 375px) {
+    .rwd_div{
+        width: 154px !important;
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen
+and (max-device-width : 360px) {
+    .rwd_div{
+        width: 147px !important;
+    }
+}
+
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen
+and (max-device-width : 320px) {
+    .rwd_div{
+        width: 126px !important;
+    }
+}
+
+
+
+
 div.items {
     float: left;
     margin: 5px;
