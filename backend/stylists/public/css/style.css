@@ -535,6 +535,7 @@ div.resource_view tr.row a.product_link {
     top: 0px;
     left: 0px;
     background: rgba(0, 0, 0, 0.75);
+    z-index: 12;
 }
 
 /* Inner */
@@ -1004,6 +1005,12 @@ option.dropdown-child {
 .btn_recommendation {
     background-color: #000 !important;
     color: #FFFFFF !important;
+}
+
+.btn-close {
+    position: fixed;
+    top: 10px;
+    right: 10px;
 }
 
 .btn-done{

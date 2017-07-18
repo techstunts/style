@@ -1,5 +1,6 @@
 <div class="popup" data-value="{{$popup_entity_type_ids[$nav_tab_index]}}" data-popup="send-entities">
     <div class="popup-inner">
+        <a class="btn-close  btn-primary btn-xs btn-black" data-popup-close="send-entities" href="#">Close</a>
         <input type="hidden" value="{{!empty($is_recommended) ? $is_recommended : false}}" id="is_recommended">
         <input type="hidden" value="{{env('API_ORIGIN')}}" id="api_origin">
         <input type="hidden" value="{{env('IS_NICOBAR')}}" id="is_nicobar">
@@ -24,13 +25,15 @@
 
         <div class="filters" id="filters">
             <form method="get" action={{env('API_ORIGIN')}}."{entity_type}/list" style="float:none;">
-                <div class="categories_tree" style="float:left;">
+                <div class="categories_tree hidden-xs hidden-sm" style="float:left;">
                     @include('category.parent_category')
                     @include('category.sub_category')
                     @include('category.leaf_category')
                 </div>
                 <div class="options" style="float:left;"></div>
                 <div class="buttons">
+                    <input type="checkbox" id="selectAll" style="vertical-align: middle;">
+                    <label for="selectAll" >All</label>
                     <input type="text" name="search" value="" placeholder="Search Text" class="form-control search">
                     @if(!empty($show_price_filters) && $show_price_filters == 'YES')
                         <input type="text" name="min_price" value="" placeholder="Min Price"
@@ -41,9 +44,8 @@
                     @if(!empty($show_discount_fields) && $show_discount_fields == true)
                             @include('common.discountedprice')
                     @endif
-                    <input class="btn" type="submit" value="Filter"> </input>
-                    <a class="clearall">Clear All</a>
-                    <input type="checkbox" id="selectAll">Select All
+                    <input class="btn hidden-xs hidden-sm" type="submit" value="Filter"> </input>
+                    <a class="clearall hidden-xs hidden-sm">Clear All</a>
                     <a class="prev-page" data-popup-open="send-entities"> < </a>
                     <a class="next-page" data-popup-open="send-entities"> > </a>
                 </div>
@@ -64,7 +66,6 @@
                     <input type="text" name="product_list_heading" id="product_list_heading" value="" placeholder="Product List Heading">
                 @endif
                 <a class="btn disabled btn-primary btn-xs" id="send" value="send">Send</a>
-                <a class="btn-done  btn-primary btn-xs btn-black" data-popup-close="send-entities" href="#">Close</a>
             @endif
             <img class="loader" src="/images/popup-loader.gif"/>
         </div>
