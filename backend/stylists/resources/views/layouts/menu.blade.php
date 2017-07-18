@@ -29,6 +29,7 @@
                 @elseif (0 === strrpos(\Illuminate\Support\Facades\Request::getHost(), 'designer'))
                     <li><a href="/client/chat">Chat</a></li>
                     <li><a href="/product/list">Products</a></li>
+                    <li><a href="/collection/list">Collections</a></li>
                     <li><a href="/requests/list">Requests</a></li>
                     <li><a href="/bookings/list">Bookings</a></li>
                     <li><a href="/client/list">Clients</a></li>

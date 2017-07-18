@@ -43,6 +43,7 @@
                     @endif
                     <input class="btn" type="submit" value="Filter"> </input>
                     <a class="clearall">Clear All</a>
+                    <input type="checkbox" id="selectAll">Select All
                     <a class="prev-page" data-popup-open="send-entities"> < </a>
                     <a class="next-page" data-popup-open="send-entities"> > </a>
                 </div>
