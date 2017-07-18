@@ -83,6 +83,7 @@ class ProductController extends Controller
     public function getList(Request $request)
     {
         $this->base_table = 'products';
+        $records_per_page = !empty(env('NUM_OF_RECORDS')) ? env('NUM_OF_RECORDS') : $this->records_per_page;
         $this->initWhereConditions($request);
         $this->initFilters();
 
@@ -175,7 +176,7 @@ class ProductController extends Controller
             $products = $products->whereIn('category_id', $category_ids);
         }
         $products = $products->orderBy('created_at', 'desc')
-                ->simplePaginate($this->records_per_page)
+                ->simplePaginate($records_per_page)
                 ->appends($paginate_qs);
 
         $product_mapper = new ProductMapper();
