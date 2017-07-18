@@ -324,7 +324,9 @@ $(document).ready(function () {
             $(".container .btn-primary").addClass('disabled');
         }
     });
-
+    $("#selectAll").on('click', function(){
+        updateSelections($(this).prop('checked'));
+    });
     $("#add").on('click', function (e) {
         var entity_ids = [];
         var checked_items = $(".popup-inner > .pop-up-item :checked");
@@ -810,4 +812,10 @@ function sendRequestRecommendation (e) {
 function createLook(){
     var baseUrl = window.location.href.split('/requests')[0];
     window.open(baseUrl + '/look/collage');
+}
+
+function updateSelections(value){
+    $(".popup-inner > .pop-up-item").find('input[name="entity_ids"]').each(function(){
+        $(this).prop("checked", value);
+    })
 }

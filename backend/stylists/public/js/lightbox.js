@@ -210,8 +210,10 @@ $(document).ready(function(){
 
     $( "#update_selected" ).click(function(){
         var product_ids = [];
-        jQuery('ol.selectable li.ui-selected').each(function(){
-                product_ids.push($(this).attr('product_id'));
+        jQuery('#selectableItem').find('.entity_ids').each(function(){
+            if ($(this).prop('checked')) {
+                product_ids.push($(this).val());
+            }
         });
         $( "#bulk_update" ).parent().children('#product_id').attr("value", product_ids);
     });
@@ -219,7 +221,7 @@ $(document).ready(function(){
     $( "#bulk_update" ).click(function(){
         //var product_ids = $(this).parent().child('product_id').val();
         var product_ids = [];
-        jQuery('ol.selectable li').each(function(){
+        jQuery('#selectableItem .entity').each(function(){
             product_ids.push($(this).attr('product_id'));
         });
         $(this).parent().children('#product_id').attr("value", product_ids);
