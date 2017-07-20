@@ -60,6 +60,9 @@ li.active {
 .stack_2{
     bottom: 60px;
 }
+.stack_3{
+    bottom: 90px;
+}
 
 /* Smartphones (landscape) ----------- */
 @media only screen
