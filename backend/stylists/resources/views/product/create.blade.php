@@ -34,15 +34,6 @@
 
                             <tr class="row">
                                 <td class="title" colspan="2">
-                                    @include('merchant.select')
-                                    @if($merchant_error = $errors->first('merchant_id'))
-                                        <span class="errorMsg">{{$merchant_error}}</span>
-                                    @endif
-                                </td>
-                            </tr>
-
-                            <tr class="row">
-                                <td class="title" colspan="2">
                                     @include('category.tree.select')
                                     @if($category_error = $errors->first('category_id'))
                                         <span class="errorMsg">{{$category_error}}</span>
