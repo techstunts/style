@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Models\Enums\DeviceStatus;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
+use App\Models\Enums\Gender;
 use App\Models\Enums\RecommendationType;
 use App\Models\Enums\StylistStatus;
 use App\Models\Lookups\AppSections;
@@ -18,6 +20,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Validator;
+use Illuminate\Support\Facades\Redirect;
 
 class ClientController extends Controller
 {
@@ -210,4 +215,88 @@ class ClientController extends Controller
         return view('client/chat', $view_properties);
     }
 
+    public function getGetcsv ()
+    {
+        return view('client/updatecsv');
+    }
+    public function postUpdatecsv (Request $request)
+    {
+        $file = $request->file('clients');
+        $data = array(
+            'clients' => $file,
+            'extension' => $file->getClientOriginalExtension(),
+        );
+        $validator = Validator::make($data, [
+            'clients' => 'required',
+            'extension' => 'required|in:csv',
+        ]);
+        if ($validator->fails()) {
+            return Redirect::back()
+                  ->withErrors($validator);
+        }
+        $clients = $this->formatData($request);
+        $existing_clients = Client::whereIn('email', array_keys($clients))->where(['account_id' => $request->user()->account_id])->select(['email'])->get();
+        $existing_clients_arr = array();
+        foreach ($existing_clients as $existing_client) {
+            $existing_clients_arr[] = $existing_client->email;
+        }
+        unset($existing_clients);
+        $new_clients = array_diff(array_keys($clients), $existing_clients_arr);
+        $non_existing_clients = array();
+        foreach ($new_clients as $new_client_email) {
+            $non_existing_clients[] = $clients[$new_client_email];
+        }
+        if (count($non_existing_clients) > 0) {
+            DB::begintransaction();
+            try {
+                Client::insert($non_existing_clients);
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+                Log::info('Exception : '. $e->getMessage());
+                return view('client/updatecsv', ['exception' => 'Exception : '. $e->getMessage()]);
+            }
+
+        }
+        return view('client/updatecsv', ['success' => 'Clients data import successful']);
+    }
+
+
+    public function formatData($request)
+    {
+        $index = null;
+        $data = array();
+        $gender = array('male' => Gender::Male, 'female' => Gender::Female);
+        $additional_data = array(
+            'account_id' => $request->user()->account_id,
+            'stylist_id' => $request->user()->id,
+            'regId' => 'excelclientdata',
+            'device_status' => DeviceStatus::Inactive,
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+        if (($file = fopen($request->file('clients')->getRealPath(), 'r')) !== false)
+        {
+            while (($row = fgetcsv($file, 1000)) !== false)
+            {
+                if (!$index) {
+                    $index = array();
+                    foreach ($row as $item)
+                        $index[] = strtolower(trim($item));
+                }
+                else {
+                    $file_data = array_combine($index, $row);
+                    $file_data['gender_id'] = isset($gender[$file_data['gender']]) ? $gender[$file_data['gender']] : Gender::NA;
+
+                    if ($file_data['gender_id'] == Gender::Female)
+                        $file_data['image'] = 'http://d36o0t9p57q98i.cloudfront.net/resources/images/android/female-v2.png';
+                    elseif ($file_data['gender_id'] == Gender::Male)
+                        $file_data['image'] = 'http://d36o0t9p57q98i.cloudfront.net/resources/images/android/male-v2.png';
+
+                    $data[$file_data['email']] = array_merge($file_data, $additional_data);
+                }
+            }
+            fclose($file);
+        }
+        return $data;
+    }
 }

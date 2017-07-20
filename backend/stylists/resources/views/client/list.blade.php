@@ -38,8 +38,10 @@
 
                 <div class="clear"></div>
                 @include('common.sendrecommendations')
+                @if (0 === strrpos(\Illuminate\Support\Facades\Request::getHost(), 'designer'))
+                    <a href="/client/getcsv"><input class="btn_quick stack_3" type="button" value="Update clients from excel"></a>
+                @endif
                 <div class="clear"></div>
-
                 <form name="frm-datatable" id="frm-datatable" method="POST" action="">
                     <table id="datatable" class="display select datatable" cellspacing="0" width="100%">
                         <thead>
