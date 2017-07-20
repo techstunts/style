@@ -77,6 +77,7 @@ class CollectionController extends Controller
         $collections =
             Collection::with('gender','status','body_type','budget','occasion','age_group')
                 ->where($this->where_conditions)
+                ->whereRaw($this->where_raw)
                 ->orderBy('id', 'desc')
                 ->simplePaginate($this->records_per_page)
                 ->appends($paginate_qs);

@@ -83,6 +83,7 @@ class ProductController extends Controller
     public function getList(Request $request)
     {
         $this->base_table = 'products';
+        $records_per_page = !empty(env('NUM_OF_RECORDS')) ? env('NUM_OF_RECORDS') : $this->records_per_page;
         $this->initWhereConditions($request);
         $this->initFilters();
 
@@ -175,7 +176,7 @@ class ProductController extends Controller
             $products = $products->whereIn('category_id', $category_ids);
         }
         $products = $products->orderBy('created_at', 'desc')
-                ->simplePaginate($this->records_per_page)
+                ->simplePaginate($records_per_page)
                 ->appends($paginate_qs);
 
         $product_mapper = new ProductMapper();
@@ -246,7 +247,6 @@ class ProductController extends Controller
             'name' => 'required|min:5',
             'price' => 'required|numeric',
             'desc' => 'required|min:5',
-            'merchant' => 'required_without:merchant_id|min:4',
             'brand' => 'required_without:brand_id|min:2',
             'category' => 'required_without:category_id|min:2',
             'gender' => 'required_without:gender_id|min:4',
@@ -344,7 +344,7 @@ class ProductController extends Controller
             }
         }
 
-        if ($merchant_id && $request->input('name') && $category_id && $gender_id && $primary_color_id) {
+        if ($request->input('name') && $category_id && $gender_id && $primary_color_id) {
             $sku_id = !empty($request->input('sku_id')) ? $request->input('sku_id') : 'isy_' . (intval(time()) + rand(0, 10000));
             $product = Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant_id]);
             DB::beginTransaction();
@@ -458,7 +458,7 @@ class ProductController extends Controller
     {
         $mapperObj = new Mapper();
         $product_prices = $mapperObj->getPriceClosure();
-        $product = Product::with(['product_prices' => $product_prices])->where(['id', $this->resource_id, 'account_id' => $request->user()->account_id])->first();
+        $product = Product::with(['product_prices' => $product_prices])->where(['id' => $this->resource_id, 'account_id' => $request->user()->account_id])->first();
         if (!$product) {
             return redirect('product/list')
                 ->withErrors(['error' => 'No permission to edit'])
@@ -513,7 +513,7 @@ class ProductController extends Controller
                 ->withErrors($validator)
                 ->withInput($request->all());
         }
-        $product = Product::where(['id', $this->resource_id, 'account_id' => $request->user()->account_id])->first();
+        $product = Product::where(['id' => $this->resource_id, 'account_id' => $request->user()->account_id])->first();
         if (!$product) {
             return redirect('product/list')
                 ->withErrors(['error' => 'No permission to edit'])
