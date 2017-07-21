@@ -258,7 +258,7 @@ class ClientController extends Controller
             }
 
         }
-        return view('client/updatecsv', ['success' => 'Clients data import successful']);
+        return redirect()->back()->with(['success' => 'Clients data import successful']);
     }
 
 

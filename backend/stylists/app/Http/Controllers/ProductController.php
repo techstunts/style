@@ -247,7 +247,7 @@ class ProductController extends Controller
             'name' => 'required|min:5',
             'price' => 'required|numeric',
             'desc' => 'required|min:5',
-            'brand' => 'required_without:brand_id|min:2',
+            'brand' => 'required_without:brand_id|min:1',
             'category' => 'required_without:category_id|min:2',
             'gender' => 'required_without:gender_id|min:4',
             'color1' => 'required_without:primary_color_id|min:3',
