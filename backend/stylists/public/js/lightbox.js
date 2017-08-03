@@ -215,7 +215,7 @@ $(document).ready(function(){
                 product_ids.push($(this).val());
             }
         });
-        $( "#bulk_update" ).parent().children('#product_id').attr("value", product_ids);
+        $(this).parent().children('#product_id').attr("value", product_ids);
     });
 
     $( "#bulk_update" ).click(function(){
