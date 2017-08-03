@@ -7,7 +7,9 @@
     @if (!empty($tags_list))
         @include('product.tags_list', array('tags' => $tags_list))
     @endif
+    @if(Auth::user()->id != 127) { // to hide from a intern to avoid bulk update
     <input type="submit" id="bulk_update" name="update" value="Bulk update" />
+    @endif
     <input type="submit" id="update_selected" name="update_selected" value="Update Selected" action_url="{!! url($url.'bulkUpdate') !!}" />
     <input type="hidden" name="merchant_id" value="{{$merchant_id}}"/>
     <input type="hidden" name="stylist_id" value="{{$stylist_id}}"/>
