@@ -7,7 +7,7 @@
     @if (!empty($tags_list))
         @include('product.tags_list', array('tags' => $tags_list))
     @endif
-    @if(Auth::user()->id != 127) {
+    @if(Auth::user()->id != 127) 
     <input type="submit" id="bulk_update" name="update" value="Bulk update" />
     @endif
     <input type="submit" id="update_selected" name="update_selected" value="Update Selected" action_url="{!! url($url.'bulkUpdate') !!}" />
