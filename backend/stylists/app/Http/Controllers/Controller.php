@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Lookups\Tag;
+use App\ProductTag;
 use Illuminate\Support\Facades\DB;
 use App\SelectOptions;
 use Illuminate\Support\Facades\Auth;
@@ -65,7 +67,7 @@ abstract class Controller extends BaseController
             $search_query = $desc_condition = $tag_condition = "";
 
             if ($this->base_table == 'products') {
-                $tag_condition = $this->setTagCondition($search_term, 'product');
+                $tag_condition = $this->setTagCondition($search_term, 'product', $request->input('tags_only'));
             } elseif ($this->base_table == 'looks') {
                 $tag_condition = $this->setTagCondition($search_term, 'look');
             }
@@ -82,7 +84,12 @@ abstract class Controller extends BaseController
                     $desc_condition = " OR LOWER({$description}) like '%{$search_term}%' ";
                 }
             }
-            $search_query .= $tag_condition;
+            if ($this->base_table == 'products' and $request->input('tags_only')) {
+                $search_query = '';
+                $search_query .= substr($tag_condition, 4);
+            } else {
+                 $search_query .= $tag_condition;
+            }
             $where_raw[] = str_replace("{{desc}}", $desc_condition, $search_query);
         }
 
@@ -122,17 +129,31 @@ abstract class Controller extends BaseController
         $this->stylist_condition = Auth::user()->hasRole('admin') ? false : true;
     }
 
-    public function setTagCondition($tags, $table)
+    public function setTagCondition($tags, $table, $tags_only = false)
     {
         $tags_array = array();
         foreach (explode(',', $tags) as $value) {
             $tags_array[] = trim($value);
         }
+        if (!$tags_only) {
         $tagged_products = DB::table($table.'_tags')
             ->select(DB::raw("DISTINCT {$table}_id"))
             ->join('lu_tags', 'lu_tags.id', '=', $table.'_tags.tag_id')
             ->whereIn(DB::raw("LOWER(lu_tags.name)"), $tags_array)
             ->get();
+        } else {
+            $tags = Tag::whereIn('name', $tags_array)->get();
+            $tag_ids = array();
+            foreach ($tags as $tag) {
+                array_push($tag_ids, $tag->id);
+            }
+            $tags_count = count($tag_ids);
+            $tagged_products = ProductTag::whereIn('tag_id', $tag_ids)
+                ->select('product_id', DB::raw('COUNT(tag_id) as tag_ids_count'))
+                ->groupBy('product_id')
+                ->havingRaw("tag_ids_count >= $tags_count")
+                ->get();
+        }
         if (count($tagged_products) <= 0) {
            return '';
         }
