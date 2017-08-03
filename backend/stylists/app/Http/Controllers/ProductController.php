@@ -125,6 +125,7 @@ class ProductController extends Controller
         }
         $view_properties['search'] = $request->input('search');
         $view_properties['exact_word'] = $request->input('exact_word');
+        $view_properties['tags_only'] = $request->input('tags_only');
         $in_stock = $request->input('in_stock');
         $view_properties['in_stock'] = $in_stock;
 
