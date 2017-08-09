@@ -73,8 +73,12 @@
                                                             <br>
                                                             <div class="col-md-12 text-center">
                                                                 <span>{{$ans->text}}</span></div>
-                                                            <div class="col-md-12 text-center"><img
-                                                                        {{!empty($ans->image) ? "style=width:100px;" : ""}} src="{{!empty($ans->image) ? $static_url . "styling/" . $ans->image : ""}}">
+                                                            <div class="col-md-12 text-center">
+                                                                @if(env('IS_NICOBAR'))
+                                                                    <img {{!empty($ans->image) ? "style=width:100px;" : ""}} src="{{!empty($ans->image) ? $static_url . "styling/" . $ans->image : ""}}">
+                                                                @else
+                                                                    <img {{!empty($ans->image) ? "style=width:100px;" : ""}} src="{{!empty($ans->image) ? $ans->image : ""}}">
+                                                                @endif
                                                             </div>
                                                         @elseif($question_ans['ansType'] == 'image')
                                                             @if(env('IS_NICOBAR'))
