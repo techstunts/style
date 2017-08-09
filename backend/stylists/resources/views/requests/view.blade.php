@@ -77,7 +77,11 @@
                                                                         {{!empty($ans->image) ? "style=width:100px;" : ""}} src="{{!empty($ans->image) ? $static_url . "styling/" . $ans->image : ""}}">
                                                             </div>
                                                         @elseif($question_ans['ansType'] == 'image')
+                                                            @if(env('IS_NICOBAR'))
                                                             <img {{!empty($ans->image) ? "style=width:100px;" : ""}} src="{{!empty($ans->image) ? $static_url . "styling/" . $ans->image : ""}}">
+                                                            @else
+                                                                <img {{!empty($ans->image) ? "style=width:100px;" : ""}} src="{{!empty($ans->image) ? $ans->image : ""}}">
+                                                            @endif
                                                         @endif
                                                     @endforeach
                                                 </div>
