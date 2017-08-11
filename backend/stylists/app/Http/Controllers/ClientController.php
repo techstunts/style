@@ -212,6 +212,10 @@ class ClientController extends Controller
         $view_properties['all_stylist_online_status'] = $all_stylist_online_status;
         $view_properties['account_id'] = $request->user()->account_id;
 
+        if(stripos($_SERVER['HTTP_USER_AGENT'], "mobile")){
+            return view('client/mobile_chat', $view_properties);
+        }
+
         return view('client/chat', $view_properties);
     }
 
