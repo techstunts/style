@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class ProductMapper extends Controller
 {
-    protected $bulk_update_fields = ['category_id', 'gender_id', 'primary_color_id', 'rating_id'];
+    protected $bulk_update_fields = ['category_id', 'gender_id', 'primary_color_id', 'rating_id', 'status_id'];
 
     public function validationRules()
     {
@@ -22,6 +22,7 @@ class ProductMapper extends Controller
             'gender_id' => 'integer',
             'primary_color_id' => 'integer',
             'category_id' => 'integer',
+            'status_id' => 'integer',
             'search' => 'regex:/[\w]+/',
         );
     }
@@ -35,6 +36,7 @@ class ProductMapper extends Controller
                 ->update($update_clauses);
 
         } catch (\Exception $e){
+            Log::info($e->getMessage());
             return false;
         }
         return true;
