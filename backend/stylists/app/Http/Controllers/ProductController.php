@@ -9,6 +9,7 @@ use App\Models\Enums\Currency;
 use App\Models\Enums\ImageType;
 use App\Models\Enums\InStock;
 use App\Models\Enums\PriceType;
+use App\Models\Enums\Status;
 use App\Models\Looks\LookTag;
 use App\Models\Lookups\Gender;
 use App\Models\Lookups\Color;
@@ -111,6 +112,7 @@ class ProductController extends Controller
             'color_list' => $lookup->type('color')->get(),
             'ratings_list' => $lookup->type('rating')->where('status_id', true)->get(),
             'tags_list' => $lookup->type('tags')->get(),
+            'statuses' => $lookup->type('status')->get(),
         );
         if (!env('IS_NICOBAR')) {
             $view_properties['category_tree'] = $category_obj->getCategoryTree();
@@ -131,6 +133,8 @@ class ProductController extends Controller
 
         $view_properties['from_date'] = $request->input('from_date');
         $view_properties['to_date'] = $request->input('to_date');
+        $view_properties['status_id'] = $request->input('status_id');
+        $status_id = !empty($request->input('status_id')) ? $request->input('status_id') : Status::Active;
 
         $min_price = $request->input('min_price');
         $max_price = $request->input('max_price');
@@ -167,7 +171,7 @@ class ProductController extends Controller
         $products =
             Product::with(['category', 'product_prices' => $product_prices, 'in_stock', 'primary_color', 'tags.tag'])
                 ->where($this->where_conditions)
-                ->where('account_id', $request->user()->account_id)
+                ->where(['account_id' => $request->user()->account_id, 'status_id' => $status_id])
                 ->whereRaw($this->where_raw)
                 ->whereHas('product_prices', $product_prices);
         if ($in_stock != null && $in_stock !== '') {
