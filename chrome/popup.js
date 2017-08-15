@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				{
 					code: '\
 					var merchant = window.location.hostname.split(\'.\')[1];\
-					var prod_name = \'\', prod_price = \'\', prod_desc = \'\', a_tags = \'\', category = \'\', brand = \'\', gender = \'\', img_links = [], colors = [], sku_id = \'\';\
+					var prod_name = \'\', prod_price = \'\', prod_desc = \'\', a_tags = \'\', category = \'\', brand = \'\', gender = \'\', img_links = [], colors = [], sku_id = \'\', fit = \'\', sleeves = \'\', material = \'\', style = \'\', model_stat = \'\', rise = \'\';\
 					\
 					if(merchant == \'koovs\'){\
 						prod_name = document.getElementById(\'prod_name_hide\').value;\
@@ -116,8 +116,31 @@ document.addEventListener('DOMContentLoaded', function() {
 						labels = document.querySelectorAll(\'.prod-main-wrapper li\');\
 						var i;\
 						for (i = 0; i < labels.length; i++) {\
-						    if(labels[i].querySelectorAll(\'span\')[0].innerText == \'Color\'){\
-								colors.push(labels[i].querySelectorAll(\'span\')[1].innerText);\
+							var text = labels[i].querySelectorAll(\'span\')[0].innerText;\
+							var value = labels[i].querySelectorAll(\'span\')[1].innerText;\
+						    if(text == \'Color\'){\
+								colors.push(value);\
+							}\
+						    else if(text == \'Fit\'){\
+								fit = value;\
+							}\
+						    else if(text == \'Sleeves\'){\
+								sleeves = value;\
+							}\
+						    else if(text == \'Rise\'){\
+								rise = value;\
+							}\
+						    else if(text == \'Fabric\'){\
+								material = value;\
+							}\
+						    else if(text == \'Style\'){\
+								style = value;\
+							}\
+						    else if(text == \'Model Stats\'){\
+								model_stat = value;\
+							}\
+						    else if(text == \'SKU\'){\
+								sku_id = value;\
 							}\
 						}\
 					}\
@@ -187,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					else if(gender == "men" || gender == "boys"){\
 						gender = "Male";\
 					}\
-					var r = [prod_name, prod_price, prod_desc, img_links, merchant, category, brand, gender, colors, sku_id];\
+					var r = [prod_name, prod_price, prod_desc, img_links, merchant, category, brand, gender, colors, sku_id, fit, sleeves, material, style, model_stat, rise];\
 					r;\
 					'
 				},
@@ -203,6 +226,12 @@ document.addEventListener('DOMContentLoaded', function() {
 					document.getElementById('brand').value = results[0][6].capitalizeFirstLetter();
 					document.getElementById('gender').value = results[0][7];
 					document.getElementById('sku_id').value = results[0][9];
+					document.getElementById('fit').value = results[0][10];
+					document.getElementById('sleeves').value = results[0][11];
+					document.getElementById('material').value = results[0][12];
+					document.getElementById('style').value = results[0][13];
+					document.getElementById('model_stat').value = results[0][14];
+					document.getElementById('rise').value = results[0][15];
 
 					for(cnt in results[0][8]){
 						var input = document.getElementById('color' + (parseInt(cnt) + 1));

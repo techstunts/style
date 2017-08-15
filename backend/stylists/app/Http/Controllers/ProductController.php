@@ -11,8 +11,13 @@ use App\Models\Enums\InStock;
 use App\Models\Enums\PriceType;
 use App\Models\Enums\Status;
 use App\Models\Looks\LookTag;
+use App\Models\Lookups\ClothingFit;
+use App\Models\Lookups\ClothingStyle;
 use App\Models\Lookups\Gender;
 use App\Models\Lookups\Color;
+use App\Models\Lookups\Material;
+use App\Models\Lookups\Rise;
+use App\Models\Lookups\Sleeve;
 use App\Models\Lookups\Tag;
 use App\Models\Enums\EntityType;
 use App\Models\Enums\EntityTypeName;
@@ -23,6 +28,7 @@ use App\Merchant;
 use App\Models\Lookups\Lookup;
 use App\Models\Products\ProductColorGroup;
 use App\Models\Products\ProductGroup;
+use App\Models\Products\ProductInfo;
 use App\Models\Products\ProductPrice;
 use App\Models\Products\ProductSize;
 use App\Product;
@@ -370,6 +376,7 @@ class ProductController extends Controller
             $product->stylist_id = $request->user()->id;
             $product->approved_by = $product->stylist_id;
             $product->account_id = $request->user()->account_id;
+            $product->material_id = $this->material($request);
 
             try {
                 ProductColorGroup::insert(['group_id' => $product_group_id, 'sku_id' => $sku_id]);
@@ -380,6 +387,7 @@ class ProductController extends Controller
                         $image_id = $request->input('imageId');
                         UploadImages::where('id', $image_id)->update(['uploaded_by_entity_id' => $product->id]);
                     }
+                    $this->additionalInfo($request, $product->id);
                     DB::commit();
                     if ($not_from_ext) {
                         return Redirect::to($product_url);
@@ -424,6 +432,68 @@ class ProductController extends Controller
         $productGroupObj = new ProductGroup();
         $productGroupObj->save();
         return $productGroupObj->id;
+    }
+
+    public function material($request)
+    {
+        $material_name = $request->has('material') ? trim($request->input('material')) : '';
+        $material = null;
+        if (!empty($material_name)) {
+            $material = Material::firstOrCreate(['name' => strtolower($material_name)]);
+        }
+        return $material ? $material->id : 0;
+    }
+
+    public function additionalInfo($request, $product_id)
+    {
+        $data = array();
+        if ($request->has('fit') && !empty($request->input('fit'))) {
+            $fit_name = trim($request->input('fit'));
+            $fit = null;
+            if (!empty($fit_name)) {
+                $fit = ClothingFit::firstOrCreate(['name' => strtolower($fit_name)]);
+                $data['fit_id'] = $fit ? $fit->id : 0;
+            }
+        }
+        if ($request->has('sleeves') && !empty($request->input('sleeves'))) {
+            $sleeves_name = trim($request->input('sleeves'));
+            $sleeves = null;
+            if (!empty($sleeves_name)) {
+                $sleeves = Sleeve::firstOrCreate(['name' => strtolower($sleeves_name)]);
+                $data['sleeve_id'] = $sleeves ? $sleeves->id : 0;
+            }
+        }
+        if ($request->has('rise') && !empty($request->input('rise'))) {
+            $rise_name = trim($request->input('rise'));
+            $rise = null;
+            if (!empty($rise_name)) {
+                $rise = Rise::firstOrCreate(['name' => strtolower($rise_name)]);
+                $data['rise_id'] = $rise ? $rise->id : 0;
+            }
+        }
+        if ($request->has('style') && !empty($request->input('style'))) {
+            $style_name = trim($request->input('style'));
+            $style = null;
+            if (!empty($style_name)) {
+                $style = ClothingStyle::firstOrCreate(['name' => strtolower($style_name)]);
+                $data['clothing_style_id'] = $style? $style->id : 0;
+            }
+        }
+        if ($request->has('model_stat') && !empty($request->input('model_stat'))) {
+            $data['model_stat'] = $request->input('model_stat');
+        }
+        if (count($data) > 0) {
+            $prodInfo = ProductInfo::where(['product_id' => $product_id])->first();
+            if (!$prodInfo) {
+                $data['product_id'] = $product_id;
+                ProductInfo::insert($data);
+            } else {
+                ProductInfo::where(['product_id' => $product_id])->update($data);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function getView()
