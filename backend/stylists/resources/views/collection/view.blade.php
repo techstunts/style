@@ -20,22 +20,22 @@
                             <tr class="row">
                                 <td class="description" colspan="2">{{$collection->description}}</td>
                             </tr>
-                            <tr class="row">
-                                <td class="head">Body Type</td>
-                                <td class="content">{{$collection->body_type->name}} </td>
-                            </tr>
-                            <tr class="row">
-                                <td class="head">Budget</td>
-                                <td class="content">{{$collection->budget->name}} </td>
-                            </tr>
-                            <tr class="row">
-                                <td class="head">Age Group</td>
-                                <td class="content">{{$collection->age_group->name}} </td>
-                            </tr>
-                            <tr class="row">
-                                <td class="head">Occasion</td>
-                                <td class="content">{{$collection->occasion->name}} </td>
-                            </tr>
+                            {{--<tr class="row">--}}
+                                {{--<td class="head">Body Type</td>--}}
+                                {{--<td class="content">{{$collection->body_type->name}} </td>--}}
+                            {{--</tr>--}}
+                            {{--<tr class="row">--}}
+                                {{--<td class="head">Budget</td>--}}
+                                {{--<td class="content">{{$collection->budget->name}} </td>--}}
+                            {{--</tr>--}}
+                            {{--<tr class="row">--}}
+                                {{--<td class="head">Age Group</td>--}}
+                                {{--<td class="content">{{$collection->age_group->name}} </td>--}}
+                            {{--</tr>--}}
+                            {{--<tr class="row">--}}
+                                {{--<td class="head">Occasion</td>--}}
+                                {{--<td class="content">{{$collection->occasion->name}} </td>--}}
+                            {{--</tr>--}}
                             <tr class="row">
                                 <td class="head">Gender</td>
                                 <td class="content">{{$collection->gender->name}} </td>
@@ -67,25 +67,25 @@
                                 </td>
                             </tr>
                             <div class="clear"></div>
-                            <tr class="row">
-                                <td class="head">Looks</td>
-                                <td class="content looks">
-                                    @foreach($collection->look_entities as $entity)
-                                        @if(!empty($entity->look))
-                                            <div class="items pop-up-item">
-                                                <div class="name text">
-                                                    <a href="{{url('look/view/' . $entity->look->id)}}"
-                                                       title="{{$entity->look->name}}"
-                                                       target="product_win">
-                                                        <img class="entity"
-                                                             src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $entity->look->image}}"/>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </td>
-                            </tr>
+                            {{--<tr class="row">--}}
+                                {{--<td class="head">Looks</td>--}}
+                                {{--<td class="content looks">--}}
+                                    {{--@foreach($collection->look_entities as $entity)--}}
+                                        {{--@if(!empty($entity->look))--}}
+                                            {{--<div class="items pop-up-item">--}}
+                                                {{--<div class="name text">--}}
+                                                    {{--<a href="{{url('look/view/' . $entity->look->id)}}"--}}
+                                                       {{--title="{{$entity->look->name}}"--}}
+                                                       {{--target="product_win">--}}
+                                                        {{--<img class="entity"--}}
+                                                             {{--src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $entity->look->image}}"/>--}}
+                                                    {{--</a>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        {{--@endif--}}
+                                    {{--@endforeach--}}
+                                {{--</td>--}}
+                            {{--</tr>--}}
                         </table>
                         <div class="image">
                             <img src="{{env('API_ORIGIN') . '/uploads/images/collections/' . $collection->image}}"/>

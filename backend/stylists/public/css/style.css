@@ -105,10 +105,13 @@ and (max-device-width : 320px) {
         width: 126px !important;
     }
 }
-
-
-
-
+/* Smartphones (common) ----------- */
+@media only screen
+and (max-device-width : 760px) {
+    .hfmo{
+        display: none !important;
+    }
+}
 div.items {
     float: left;
     margin: 5px;
