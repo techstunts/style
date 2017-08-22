@@ -94,7 +94,7 @@ class RecommendationController extends Controller
         $api_origin = env('API_ORIGIN');
         $entity_data = array();
         if (count($product_ids) > 0) {
-            $products = Product::whereIn('id', $product_ids)
+            $products = Product::with(['category', 'merchant'])->whereIn('id', $product_ids)
                 ->select('id', 'name', 'image_name as image', 'product_link', 'merchant_id')->get();
 
             if (count($products)) {

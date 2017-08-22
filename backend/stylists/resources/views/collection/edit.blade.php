@@ -52,41 +52,41 @@
                                     </td>
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="title" colspan="2">
-                                        @include('common.body_type.select')
-                                        @if($body_type_error = $errors->first('body_type_id'))
-                                            <span class="errorMsg">{{$body_type_error}}</span>
-                                        @endif
-                                    </td>
-                                </tr>
+                                {{--<tr class="row">--}}
+                                    {{--<td class="title" colspan="2">--}}
+                                        {{--@include('common.body_type.select')--}}
+                                        {{--@if($body_type_error = $errors->first('body_type_id'))--}}
+                                            {{--<span class="errorMsg">{{$body_type_error}}</span>--}}
+                                        {{--@endif--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
 
-                                <tr class="row">
-                                    <td class="title" colspan="2">
-                                        @include('common.budget.select')
-                                        @if($budget_error = $errors->first('budget_id'))
-                                            <span class="errorMsg">{{$budget_error}}</span>
-                                        @endif
-                                    </td>
-                                </tr>
+                                {{--<tr class="row">--}}
+                                    {{--<td class="title" colspan="2">--}}
+                                        {{--@include('common.budget.select')--}}
+                                        {{--@if($budget_error = $errors->first('budget_id'))--}}
+                                            {{--<span class="errorMsg">{{$budget_error}}</span>--}}
+                                        {{--@endif--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
 
-                                <tr class="row">
-                                    <td class="title" colspan="2">
-                                        @include('common.age_group.select')
-                                        @if($age_group_error = $errors->first('age_group_id'))
-                                            <span class="errorMsg">{{$age_group_error}}</span>
-                                        @endif
-                                    </td>
-                                </tr>
+                                {{--<tr class="row">--}}
+                                    {{--<td class="title" colspan="2">--}}
+                                        {{--@include('common.age_group.select')--}}
+                                        {{--@if($age_group_error = $errors->first('age_group_id'))--}}
+                                            {{--<span class="errorMsg">{{$age_group_error}}</span>--}}
+                                        {{--@endif--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
 
-                                <tr class="row">
-                                    <td class="title" colspan="2">
-                                        @include('common.occasion.select')
-                                        @if($occasion_error = $errors->first('occasion_id'))
-                                            <span class="errorMsg">{{$occasion_error}}</span>
-                                        @endif
-                                    </td>
-                                </tr>
+                                {{--<tr class="row">--}}
+                                    {{--<td class="title" colspan="2">--}}
+                                        {{--@include('common.occasion.select')--}}
+                                        {{--@if($occasion_error = $errors->first('occasion_id'))--}}
+                                            {{--<span class="errorMsg">{{$occasion_error}}</span>--}}
+                                        {{--@endif--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
 
                                 <tr class="row">
                                     <td class="title" colspan="2">
@@ -108,7 +108,7 @@
                                 <tr class="row">
                                     <td class="title" colspan="1">
                                         <a {{$is_recommended ? "disabled" : ""}} class="btn active btn-primary btn-xs btn_add_entity" style="color: #fff;"
-                                           data-popup-open="send-entities" href="#">Add Looks and Products</a>
+                                           data-popup-open="send-entities" href="#">Add Products</a>
                                     </td>
                                 </tr>
 
@@ -139,31 +139,31 @@
                                     </td>
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="head">Looks</td>
-                                    <input type="hidden" name="look_ids"
-                                           value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
-                                    <td class="content">
-                                        @foreach($collection->look_entities as $entity)
-                                            @if(!empty($entity->look))
-                                                <div class="items pop-up-item" value="{{$entity->look->id}}">
-                                                    <span class="pull-right cross_mark"><a href="#"><i
-                                                                    class="material-icons" style="font-size: 13px;">close</i></a></span>
-                                                    <div class="name text">
-                                                        <a href="{{url('look/view/' . $entity->look->id)}}"
-                                                           target="_blank">{{$entity->look->name}}</a>
-                                                    </div>
-                                                    <div class="image" data-toggle="popover" data-trigger="hover"
-                                                         data-placement="right" data-html="true"
-                                                         data-content="{{$entity->look->name}}">
-                                                        <img src="{{strpos($entity->look->image, "http") !== false ? $entity->look->image : asset('images/' . $entity->look->image)}}"
-                                                             class="pop-image-size"/>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        @endforeach
-                                    </td>
-                                </tr>
+                                {{--<tr class="row">--}}
+                                    {{--<td class="head">Looks</td>--}}
+                                    {{--<input type="hidden" name="look_ids"--}}
+                                           {{--value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">--}}
+                                    {{--<td class="content">--}}
+                                        {{--@foreach($collection->look_entities as $entity)--}}
+                                            {{--@if(!empty($entity->look))--}}
+                                                {{--<div class="items pop-up-item" value="{{$entity->look->id}}">--}}
+                                                    {{--<span class="pull-right cross_mark"><a href="#"><i--}}
+                                                                    {{--class="material-icons" style="font-size: 13px;">close</i></a></span>--}}
+                                                    {{--<div class="name text">--}}
+                                                        {{--<a href="{{url('look/view/' . $entity->look->id)}}"--}}
+                                                           {{--target="_blank">{{$entity->look->name}}</a>--}}
+                                                    {{--</div>--}}
+                                                    {{--<div class="image" data-toggle="popover" data-trigger="hover"--}}
+                                                         {{--data-placement="right" data-html="true"--}}
+                                                         {{--data-content="{{$entity->look->name}}">--}}
+                                                        {{--<img src="{{strpos($entity->look->image, "http") !== false ? $entity->look->image : asset('images/' . $entity->look->image)}}"--}}
+                                                             {{--class="pop-image-size"/>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                            {{--@endif--}}
+                                        {{--@endforeach--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
 
                                 <tr class="row">
                                     <td class="title" colspan="2">

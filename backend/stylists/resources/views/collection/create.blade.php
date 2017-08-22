@@ -32,41 +32,41 @@
                                     </td>
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="title" colspan="2">
-                                        @include('common.body_type.select')
-                                        @if($body_type_error = $errors->first('body_type_id'))
-                                            <span class="errorMsg">{{$body_type_error}}</span>
-                                        @endif
-                                    </td>
-                                </tr>
+                                {{--<tr class="row">--}}
+                                    {{--<td class="title" colspan="2">--}}
+                                        {{--@include('common.body_type.select')--}}
+                                        {{--@if($body_type_error = $errors->first('body_type_id'))--}}
+                                            {{--<span class="errorMsg">{{$body_type_error}}</span>--}}
+                                        {{--@endif--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
 
-                                <tr class="row">
-                                    <td class="title" colspan="2">
-                                        @include('common.budget.select')
-                                        @if($budget_error = $errors->first('budget_id'))
-                                            <span class="errorMsg">{{$budget_error}}</span>
-                                        @endif
-                                    </td>
-                                </tr>
+                                {{--<tr class="row">--}}
+                                    {{--<td class="title" colspan="2">--}}
+                                        {{--@include('common.budget.select')--}}
+                                        {{--@if($budget_error = $errors->first('budget_id'))--}}
+                                            {{--<span class="errorMsg">{{$budget_error}}</span>--}}
+                                        {{--@endif--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
 
-                                <tr class="row">
-                                    <td class="title" colspan="2">
-                                        @include('common.age_group.select')
-                                        @if($age_group_error = $errors->first('age_group_id'))
-                                            <span class="errorMsg">{{$age_group_error}}</span>
-                                        @endif
-                                    </td>
-                                </tr>
+                                {{--<tr class="row">--}}
+                                    {{--<td class="title" colspan="2">--}}
+                                        {{--@include('common.age_group.select')--}}
+                                        {{--@if($age_group_error = $errors->first('age_group_id'))--}}
+                                            {{--<span class="errorMsg">{{$age_group_error}}</span>--}}
+                                        {{--@endif--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
 
-                                <tr class="row">
-                                    <td class="title" colspan="2">
-                                        @include('common.occasion.select')
-                                        @if($occasion_error = $errors->first('occasion_id'))
-                                            <span class="errorMsg">{{$occasion_error}}</span>
-                                        @endif
-                                    </td>
-                                </tr>
+                                {{--<tr class="row">--}}
+                                    {{--<td class="title" colspan="2">--}}
+                                        {{--@include('common.occasion.select')--}}
+                                        {{--@if($occasion_error = $errors->first('occasion_id'))--}}
+                                            {{--<span class="errorMsg">{{$occasion_error}}</span>--}}
+                                        {{--@endif--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
 
                                 <tr class="row">
                                     <td class="title" colspan="2">
@@ -88,7 +88,7 @@
                                 <tr class="row">
                                     <td class="title" colspan="1">
                                         <a class="btn active btn-primary btn-xs btn_add_entity" style="color: #fff;"
-                                           data-popup-open="send-entities" href="#">Add Looks and Products</a>
+                                           data-popup-open="send-entities" href="#">Add Products</a>
                                     </td>
                                 </tr>
 
@@ -100,12 +100,12 @@
                                     <td class="content"></td>
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="head">Looks</td>
-                                    <input type="hidden" name="look_ids"
-                                           value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">
-                                    <td class="content"></td>
-                                </tr>
+                                {{--<tr class="row">--}}
+                                    {{--<td class="head">Looks</td>--}}
+                                    {{--<input type="hidden" name="look_ids"--}}
+                                           {{--value="{{old('look_ids') != "" ? old('look_ids') : ''}}" id="look_ids">--}}
+                                    {{--<td class="content"></td>--}}
+                                {{--</tr>--}}
 
                                 <tr class="row">
                                     <td class="title" colspan="2">

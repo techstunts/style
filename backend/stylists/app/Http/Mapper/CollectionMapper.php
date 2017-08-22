@@ -201,12 +201,12 @@ class CollectionMapper extends Controller
     {
         $view_properties = array();
         $view_properties['popup_entity_type_ids'] = array(
-            EntityType::LOOK,
+//            EntityType::LOOK,
             EntityType::PRODUCT,
         );
 
         $view_properties['entity_type_names'] = array(
-            EntityTypeName::LOOK,
+//            EntityTypeName::LOOK,
             EntityTypeName::PRODUCT,
         );
         $view_properties['nav_tab_index'] = '0';

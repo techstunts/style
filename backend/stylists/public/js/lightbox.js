@@ -199,6 +199,11 @@ $(document).ready(function(){
             selected: selectProduct
         });
     }
+    if ($('.glyphicon-search').length > 0) {
+        $('.glyphicon-search').on('click', function(){
+            $(this).parent('form').trigger('submit');
+        });
+    }
     $('div.remove').bind('click', unselectProduct);
     $.cookie.json = true;
     updateSelectedProductSnapshotView();

@@ -234,7 +234,7 @@
                                                                         <div style="text-align:center"><span
                                                                                     style="font-size:13px"><span
                                                                                         style="font-family:arial,helvetica neue,helvetica,sans-serif">
-                                                                                    <strong>{{$product->category}}</strong><br>Rs.{{$product->price}}@ {{$product->merchant}}</span></span></div>
+                                                                                    <strong>{{$product->category ? $product->category->name : ''}}</strong><br>Rs.{{$product->price}}@ {{$product->merchant ? $product->merchant->name : ''}}</span></span></div>
 
                                                                     </td>
                                                                 </tr>
