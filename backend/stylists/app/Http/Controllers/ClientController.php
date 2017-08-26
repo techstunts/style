@@ -11,6 +11,7 @@ use App\Models\Enums\RecommendationType;
 use App\Models\Enums\StylistStatus;
 use App\Models\Lookups\AppSections;
 use App\Models\Lookups\ChatOnlineStatus;
+use Artdarek\OAuth\Facade\OAuth;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Stylist\ChatOnline;
@@ -20,6 +21,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 use Validator;
 use Illuminate\Support\Facades\Redirect;
@@ -302,5 +304,111 @@ class ClientController extends Controller
             fclose($file);
         }
         return $data;
+    }
+
+    public function importGoogleContact(Request $request)
+    {
+        // get data from request
+        $code = Input::get('code');
+
+        // get google service
+        $googleService = \OAuth::consumer('Google');
+
+        // check if code is valid
+        // if code is provided get user data and sign in
+        if ( ! is_null($code)) {
+            // This was a callback request from google, get the token
+            $token = $googleService->requestAccessToken($code);
+
+            // Send a request with it
+            $result = json_decode($googleService->request('https://www.google.com/m8/feeds/contacts/default/full?alt=json&max-results=400'), true);
+
+            // Going through the array to clear it and create a new clean array with only the email addresses
+            $emails = []; // initialize the new array
+            foreach ($result['feed']['entry'] as $contact) {
+                if (isset($contact['gd$email'])) { // Sometimes, a contact doesn't have email address
+                    $emails[] = $contact['gd$email'][0]['address'];
+                }
+            }
+            $response = $this->createClients($request, $emails, 'google');
+            return redirect('client/list')->with($response);
+        }
+        // if not ask for permission first
+        else {
+            // get googleService authorization
+            $url = $googleService->getAuthorizationUri();
+
+            // return to google login url
+            return redirect((string)$url);
+        }
+    }
+
+    public function createClients ($request, $emails, $social_media) {
+        $contactClients = $this->clientsFromContact($request, $emails, $social_media);
+        $existingClients = $this->existingClients($request, $emails);
+        $existingClientsArr = $this->formatEmailIndexArray($existingClients);
+        $new_clients_arr = array_diff(array_keys($contactClients), $existingClientsArr);
+        $new_clients = $this->newClientsData($new_clients_arr, $contactClients);
+        $status = 'success';
+        $message = 'No data to be updated';
+        if (count($new_clients) > 0) {
+            DB::begintransaction();
+            try {
+                Client::insert($new_clients);
+                DB::commit();
+                $message = 'Data updated successfully';
+            } catch (\Exception $e) {
+                DB::rollback();
+                Log::info('Exception : '. $e->getMessage());
+                $status = 'failure';
+                $message = 'Exception : '. $e->getMessage();
+            }
+        }
+        return array(
+            'status' => $status,
+            'message' => $message,
+        );
+    }
+
+    public function newClientsData ($new_clients, $contact_data) {
+        $non_existing_arr = array();
+        foreach ($new_clients as $new_client_email) {
+            $non_existing_arr[] = $contact_data[$new_client_email];
+        }
+        return $non_existing_arr;
+    }
+
+    public function existingClients ($request, $emails) {
+        $existingClients = Client::whereIn('email', $emails)->where(['account_id' => $request->user()->account_id])->select(['email'])->get();
+        return $existingClients;
+    }
+
+    public function clientsFromContact ($request, $emails, $social_media) {
+        $clients_data = array();
+        $additional_data = array(
+            'account_id' => $request->user()->account_id,
+            'stylist_id' => $request->user()->id,
+            'gender_id' => Gender::NA,
+            'regId' => $social_media. '_clientdata',
+            'device_status' => DeviceStatus::Inactive,
+            'created_at' => date("Y-m-d H:i:s"),
+            'password' => 'demopassword',
+        );
+        foreach ($emails as $email) {
+            $data = array(
+                'name' => substr($email, 0, strpos($email, '@')),
+                'email' => $email,
+            );
+            $clients_data[$email] = array_merge($data, $additional_data);
+        }
+        return $clients_data;
+    }
+
+    public function formatEmailIndexArray ($data) {
+        $existing_clients_arr = array();
+        foreach ($data as $item) {
+            $existing_clients_arr[] = $item->email;
+        }
+        return $existing_clients_arr;
     }
 }
