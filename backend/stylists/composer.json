@@ -16,7 +16,8 @@
         "phpspec/phpspec": "~2.1",
         "zizaco/entrust": "dev-laravel-5",
         "guzzlehttp/guzzle": "~5.3|~6.0",
-        "league/flysystem-aws-s3-v3":" ~1.0"
+        "league/flysystem-aws-s3-v3":" ~1.0",
+        "oriceon/oauth-5-laravel": "dev-master"
     },
     "autoload": {
         "classmap": [

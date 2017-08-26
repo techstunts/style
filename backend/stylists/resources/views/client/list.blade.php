@@ -34,7 +34,21 @@
                         @endif
                     </div>
                 </div>
-
+                <div class="clear"></div>
+                @if (session('status') == 'failure')
+                    <div class="alert alert-error">
+                        {{ session('message') }}
+                    </div>
+                @elseif(session('status') == 'success')
+                    <div class="alert alert-success">
+                        {{ session('message') }}
+                    </div>
+                @endif
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 col-xs-6">
+                        <a href="/contact/import/google" class="btn btn-lg waves-effect waves-light btn-block google">Import google contacts</a>
+                    </div>
+                </div>
 
                 <div class="clear"></div>
                 @include('common.sendrecommendations')

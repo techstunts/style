@@ -57,6 +57,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::any('campaign-tracker/{action}/{id?}/', 'Campaign\CampaignTrackerController@index');
 
     Route::any('scripts/regenerate-images', 'Scripts\RegenerateImagesController@index');
+    Route::get('contact/import/google', ['as'=>'google.import', 'uses'=>'ClientController@importGoogleContact']);
 });
 
 Route::any('cr', 'Campaign\CampaignRedirectController@index');
