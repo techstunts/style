@@ -14,4 +14,7 @@ class ProductTag extends Model
      public function tag(){
         return $this->belongsTo('App\Models\Lookups\Tag', 'tag_id');
     }
+    public function product(){
+        return $this->belongsTo('App\Product', 'product_id');
+    }
 }

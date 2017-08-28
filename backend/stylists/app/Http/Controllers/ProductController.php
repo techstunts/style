@@ -357,7 +357,7 @@ class ProductController extends Controller
 
         if ($request->input('name') && $category_id && $gender_id && $primary_color_id) {
             $sku_id = !empty($request->input('sku_id')) ? $request->input('sku_id') : 'isy_' . (intval(time()) + rand(0, 10000));
-            $product = Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant_id]);
+            $product = Product::firstOrCreate(['sku_id' => $sku_id, 'merchant_id' => $merchant_id, 'status_id' => Status::Active]);
             DB::beginTransaction();
             $product_group_id = $this->getProductGroupId();
 
@@ -373,10 +373,11 @@ class ProductController extends Controller
             $product->gender_id = $gender_id;
             $product->primary_color_id = $primary_color_id;
             $product->secondary_color_id = $secondary_color ? $secondary_color->id : "";
-            $product->stylist_id = $request->user()->id;
+            $product->stylist_id = !empty($product->stylist_id) ? $product->stylist_id : $request->user()->id;
             $product->approved_by = $product->stylist_id;
             $product->account_id = $request->user()->account_id;
             $product->material_id = $this->material($request);
+            $product->status_id = Status::InProgress;
 
             try {
                 ProductColorGroup::insert(['group_id' => $product_group_id, 'sku_id' => $sku_id]);
@@ -388,6 +389,9 @@ class ProductController extends Controller
                         UploadImages::where('id', $image_id)->update(['uploaded_by_entity_id' => $product->id]);
                     }
                     $this->additionalInfo($request, $product->id);
+                    if (env('PRODUCT_AUTO_TAG')) {
+                        $this->tagNewProduct($product);
+                    }
                     DB::commit();
                     if ($not_from_ext) {
                         return Redirect::to($product_url);
@@ -432,6 +436,73 @@ class ProductController extends Controller
         $productGroupObj = new ProductGroup();
         $productGroupObj->save();
         return $productGroupObj->id;
+    }
+
+    public function hasTag ($product_id) {
+        return ProductTag::where('product_id', $product_id)->get();
+    }
+
+    public function tagNewProduct ($product)
+    {
+        $response = array(
+            'status' => false,
+            'message' => 'Already tagged'
+        );
+        if (count($this->hasTag($product->id)) > 0) {
+            return $response;
+        }
+        $category_id = $product->category_id;
+        $products = Product::select(['id'])->where('category_id', $category_id)->get();
+        $product_ids = array();
+        foreach ($products as $product_obj) {
+            $product_ids[] = $product_obj->id;
+        }
+        $response['message'] = 'No product found in this category';
+        $productClosure = function ($query) {
+            $query->where('status_id', Status::Active);
+        };
+        if (count($product_ids) > 0) {
+            $productTags = ProductTag::select(['product_id', DB::raw('COUNT(tag_id) as tag_ids_count')])
+                ->with(['product' => $productClosure])
+                ->whereHas('product', $productClosure)
+                ->whereIn('product_id', $product_ids)
+                ->groupBy('product_id')
+                ->orderBy('tag_ids_count', 'DESC')
+                ->get();
+            $tag_ids = array();
+            if (count($productTags) > 0) {
+                $productMaxTags = $productTags[0];
+                unset($productTags);
+                $productTags = ProductTag::where('product_id', $productMaxTags->product_id)->get();
+                foreach ($productTags as $productTag) {
+                    $tag_ids[] = $productTag->tag_id;
+                }
+            }
+            $response['message'] = 'No tags to be tagged';
+            if (count($tag_ids) > 0) {
+                if ($this->tagAProduct($product->id, $tag_ids)) {
+                    $response['status'] = true;
+                    $response['message'] = 'Product tagged';
+                } else {
+                    $response['message'] = 'Error in tagging';
+                }
+            }
+        }
+        return $response;
+    }
+
+    public function tagAProduct($product_id, $tag_ids) {
+        $data = array();
+        foreach ($tag_ids as $tag_id) {
+            $data[] = ['product_id' => $product_id, 'tag_id' => $tag_id];
+        }
+        try{
+            ProductTag::insert($data);
+            return true;
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            return false;
+        }
     }
 
     public function material($request)
