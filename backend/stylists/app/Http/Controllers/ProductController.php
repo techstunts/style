@@ -389,7 +389,7 @@ class ProductController extends Controller
                         UploadImages::where('id', $image_id)->update(['uploaded_by_entity_id' => $product->id]);
                     }
                     $this->additionalInfo($request, $product->id);
-                    if (env('PRODUCT_AUTO_TAG')) {
+                    if (!empty(env('PRODUCT_AUTO_TAG'))) {
                         $this->tagNewProduct($product);
                     }
                     DB::commit();
