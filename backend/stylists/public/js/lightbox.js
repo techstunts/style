@@ -432,6 +432,32 @@ $(document).ready(function(){
             $(this).find('.stylist-list').remove();
         });
     }
+    var category_fields = $('#category-fields');
+    $('#category-update').on('click', function () {
+        category_fields.toggleClass('hidden');
+    });
+    category_fields.find('input[type="button"]').on('click', function () {
+        $.ajax({
+            type: "POST",
+            url : api_origin + 'category/update',
+            data : {
+                level1:category_fields.find('input[name="level1"]').val(),
+                level2:category_fields.find('input[name="level2"]').val(),
+                level3:category_fields.find('input[name="level3"]').val()
+            },
+            success : function (response) {
+                if (response.status == false) {
+                    alert(response.message);
+                    return false;
+                } else {
+                    category_fields.find('input[name="level1"]').val('');
+                    category_fields.find('input[name="level2"]').val('');
+                    category_fields.find('input[name="level3"]').val('');
+                    alert(response.message);
+                }
+            }
+        });
+    });
  });
 
 function getList () {

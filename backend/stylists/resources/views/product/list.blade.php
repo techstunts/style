@@ -71,6 +71,15 @@
 
                             </div>
                         </div>
+                        <div>
+                            <input id="category-update" type="checkbox" value="update 1"> Category update
+                            <div id="category-fields" class="hidden">
+                                <input name="level1" type="text" value="" placeholder="Level 1">
+                                <input name="level2" type="text" value="" placeholder="Level 2">
+                                <input name="level3" type="text" value="" placeholder="Level 3">
+                                <span> <input type="button" value="Update"></span>
+                            </div>
+                        </div>
                         @endif
                     </div>
 
