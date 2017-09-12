@@ -319,7 +319,9 @@ class RecommendationController extends Controller
         $product_list_heading = $request->input('product_list_heading') && trim($request->input('product_list_heading')) != "" ? $request->input('product_list_heading') : $product_list_heading;
 
         $recommendation_template = env('IS_NICOBAR') ? ('emails.nico_recommendations') : ('emails.recommendations');
+        $recommendation_template = env('AUTO_RECO_MAIL') ? ('emails.auto_recommendation') : $recommendation_template;
         $from_email = env('FROM_EMAIL') ? env('FROM_EMAIL') : 'stylists@istyleyou.in';
+        $bcc_email = env('BCC_EMAIL') ? explode(';',env('BCC_EMAIL')) : [];
         $static_url = env('IS_NICOBAR') ? env('NICOBAR_STATIC_URL') : env('ALL_ASSETS');
 
         try {
@@ -332,10 +334,10 @@ class RecommendationController extends Controller
                     'nicobar_website' => env('NICOBAR_WEBSITE'),
                     'static_url' => $static_url
                 ],
-                function ($mail) use ($client, $stylist, $client_first_name, $from_email) {
+                function ($mail) use ($client, $stylist, $client_first_name, $from_email, $bcc_email) {
                     $mail->from($from_email, (env('IS_NICOBAR') ? 'Nicobar' : 'IStyleYou'));
                     $mail->to($client->email, $client->name)
-                        ->bcc($from_email)
+                        ->bcc($bcc_email)
                         ->subject($client_first_name . ', your stylist has sent you recommendations!');
                 });
         } catch (\Exception $e) {
