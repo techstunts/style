@@ -69,32 +69,24 @@
 
                                     </div>
                                 </span>
-                                {{--<input id="category-update" type="checkbox" value="update 1"> Category update--}}
-                                {{--<div id="category-fields" class="hidden">--}}
-                                {{--<input name="level1" type="text" value="" placeholder="Level 1">--}}
-                                {{--<input name="level2" type="text" value="" placeholder="Level 2">--}}
-                                {{--<input name="level3" type="text" value="" placeholder="Level 3">--}}
-                                {{--<span> <input type="button" value="Update"></span>--}}
-                                {{--</div>--}}
-
                                 <!-- Trigger the category update with button -->
                                 <input type="button" value="Update Category" data-toggle="modal" data-target="#catUpdate">
-                                    <div id="catUpdate" class="modal fade" role="dialog">
-                                        <div class="modal-dialog"> <!-- Modal content-->
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;
-                                                    </button>
-                                                    <h4 class="modal-title">Category Update</h4></div>
-                                                <div class="modal-body">
-                                                    <input name="level1" type="text" class="form-control" value="" placeholder="Level 1">
-                                                    <input name="level2" type="text" class="form-control" value="" placeholder="Level 2">
-                                                    <input name="level3" type="text" class="form-control" value="" placeholder="Level 3">
-                                                    <input type="button" value="Update" class="btn btn-md btn-primary">
-                                                </div>
+                                <div id="catUpdate" class="modal fade" role="dialog">
+                                    <div class="modal-dialog"> <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;
+                                                </button>
+                                                <h4 class="modal-title">Category Update</h4></div>
+                                            <div class="modal-body">
+                                                <input name="level1" type="text" class="form-control" value="" placeholder="Level 1*">
+                                                <input name="level2" type="text" class="form-control" value="" placeholder="Level 2">
+                                                <input name="level3" type="text" class="form-control" value="" placeholder="Level 3">
+                                                <input type="button" id="category-update" value="Update" class="btn btn-md btn-primary">
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                             @endif
 
                         </div>

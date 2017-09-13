@@ -432,11 +432,8 @@ $(document).ready(function(){
             $(this).find('.stylist-list').remove();
         });
     }
-    var category_fields = $('#category-fields');
     $('#category-update').on('click', function () {
-        category_fields.toggleClass('hidden');
-    });
-    category_fields.find('input[type="button"]').on('click', function () {
+        var category_fields = $(this).parent();
         $.ajax({
             type: "POST",
             url : api_origin + 'category/update',
