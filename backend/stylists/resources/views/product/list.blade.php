@@ -53,34 +53,51 @@
                         </div>
                     @endif
                     <div class="row">
-                        <div class="tag col-md-4">
+                        <div class="tag col-md-12">
                             @include('product.create_tag')
                             {{--{!! $products->render() !!}--}}
+                            @if(env('IS_NICOBAR'))
+                                <span id="prod-update-div">
+                                    <input type="button" id="update-products" value="Update products">
+                                    {{csrf_field()}}
+                                    <div id="myModal" class="modal">
+                                        <div class="modal-content">
+                                            <span class="close" id="close">&times;</span>
+                                            <p>Product update in progress...</p><br>
+                                            <p>Please don't refresh the page.</p>
+                                        </div>
+
+                                    </div>
+                                </span>
+                                {{--<input id="category-update" type="checkbox" value="update 1"> Category update--}}
+                                {{--<div id="category-fields" class="hidden">--}}
+                                {{--<input name="level1" type="text" value="" placeholder="Level 1">--}}
+                                {{--<input name="level2" type="text" value="" placeholder="Level 2">--}}
+                                {{--<input name="level3" type="text" value="" placeholder="Level 3">--}}
+                                {{--<span> <input type="button" value="Update"></span>--}}
+                                {{--</div>--}}
+
+                                <!-- Trigger the category update with button -->
+                                <input type="button" value="Update Category" data-toggle="modal" data-target="#catUpdate">
+                                    <div id="catUpdate" class="modal fade" role="dialog">
+                                        <div class="modal-dialog"> <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;
+                                                    </button>
+                                                    <h4 class="modal-title">Category Update</h4></div>
+                                                <div class="modal-body">
+                                                    <input name="level1" type="text" class="form-control" value="" placeholder="Level 1">
+                                                    <input name="level2" type="text" class="form-control" value="" placeholder="Level 2">
+                                                    <input name="level3" type="text" class="form-control" value="" placeholder="Level 3">
+                                                    <input type="button" value="Update" class="btn btn-md btn-primary">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            @endif
 
                         </div>
-                        @if(env('IS_NICOBAR'))
-                        <div id="prod-update-div" class="col-md-offset-1 col-md-2">
-                            <input type="button" id="update-products" value="Update products">
-                            {{csrf_field()}}
-                            <div id="myModal" class="modal">
-                                <div class="modal-content">
-                                    <span class="close" id="close">&times;</span>
-                                    <p>Product update in progress...</p><br>
-                                    <p>Please don't refresh the page.</p>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div>
-                            <input id="category-update" type="checkbox" value="update 1"> Category update
-                            <div id="category-fields" class="hidden">
-                                <input name="level1" type="text" value="" placeholder="Level 1">
-                                <input name="level2" type="text" value="" placeholder="Level 2">
-                                <input name="level3" type="text" value="" placeholder="Level 3">
-                                <span> <input type="button" value="Update"></span>
-                            </div>
-                        </div>
-                        @endif
                     </div>
 
                     <div class="clear"></div>
@@ -116,7 +133,7 @@
                                         <span>@if($product_price->currency){{$product_price->currency->name}}@endif {{$product_price->value}}</span>
                                     @endforeach
                                     <span style="background-color:{{$product->primary_color ? $product->primary_color->name : 'grey'}}">{{$product->primary_color ? $product->primary_color->name : ''}}
-                                    {{$product->secondary_color && $product->secondary_color->id != 0 ? "({$product->secondary_color->name})" : ""}}</span>
+                                        {{$product->secondary_color && $product->secondary_color->id != 0 ? "({$product->secondary_color->name})" : ""}}</span>
                                     <span>sku:{{$product->sku_id}}</span>
                                 </div>
                                 @include('common.tag')

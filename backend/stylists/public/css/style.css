@@ -8,6 +8,12 @@
     margin-top: 10px;
 }
 
+.tag > form {
+    float: left;
+    margin-right: 10px;
+}
+
+
 nav {
     overflow: auto;
     margin: 14px;
@@ -1031,6 +1037,16 @@ option.dropdown-child {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+#catUpdate > .modal-dialog > .modal-content {
+    width: 100%;
+}
+
+#catUpdate > .modal-dialog > .modal-content > .modal-body > .form-control{
+    width: 75%;
+    margin: auto;
+    margin-bottom: 2%;
+}
+
 /* Modal Content/Box */
 .modal-content {
     background-color: #fefefe;
@@ -1069,10 +1085,6 @@ option.dropdown-child {
 
 div#prod-update-div {
     display: inline-block;
-    float: right;
-    position: absolute;
-    top: 102px;
-    left: 410px;
 }
 
 .recommendations{
