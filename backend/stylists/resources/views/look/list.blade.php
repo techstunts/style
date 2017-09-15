@@ -46,7 +46,7 @@
                             <a href="{{url('look/view/' . $look->id)}}">{{$look->name == "" ? "Error! Look name empty" : $look->name }}</a>
                             <input class="entity_ids pull-right"  value="{{$look->id}}" type="checkbox">
                         </div>
-                        <div class="image" data-toggle="popover" data-trigger="hover" data-placement="auto right" data-html="true"
+                        <div class="image" data-toggle="popover" data-trigger="hover" data-html="true"
                              data-content="{{'<strong>Description: </strong>'.$look->description.' <br ><img style="width:250px;" src='.env('API_ORIGIN').'/uploads/images/looks/'. $look->image.' />'}}"
                         >
                             <img src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/></div>
@@ -103,6 +103,28 @@
     </div>
 </div>
 <script>
-    $('div [data-toggle="popover"]').popover();
+    var options = {
+        placement: function (context, source) {
+            var position = $(source).position();
+
+            if (position.left > 515) {
+                return "left";
+            }
+
+            if (position.left < 515) {
+                return "right";
+            }
+
+            if (position.top < 110){
+                return "bottom";
+            }
+
+            return "top";
+        }
+        , trigger: "hover"
+    };
+
+    $('div [data-toggle="popover"]').popover(options);
+
 </script>
 @endsection

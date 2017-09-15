@@ -642,7 +642,7 @@ function showEntities(entity_url) {
                 }else if (entity_type_id == EntityType.PRODUCT) {
                     str = str + '<div class="extra text" >' + '<span> {{price}}</span>' + '<span> {{dollerPrice}}</span>'  + '</div>';
                 }
-                str = str + '<div class="image" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-content="{{item_popover}}">' +
+                str = str + '<div class="image" data-toggle="popover" data-trigger="hover" data-html="true" data-content="{{item_popover}}">' +
                     '<img src="{{item_image}}" class="pop-image-size"/>' +
                     '</div>' +
                     '</div>';
@@ -685,7 +685,35 @@ function showEntities(entity_url) {
                     $(".mobile-app-send .btn").addClass('disabled');
                 }
             });
-            $('.pop-up-item [data-toggle="popover"]').popover();
+
+
+            var options = {
+                placement: function (context, source) {
+                    var position = $(source).position();
+
+                    if (position.left > 515) {
+                        return "left";
+
+                    }
+
+                    if (position.left < 515) {
+                        return "right";
+                    }
+
+                    if (position.top < 110){
+                        return "bottom";
+                    }
+
+                    return "top";
+                }
+                , trigger: "hover"
+            };
+
+            $('.pop-up-item [data-toggle="popover"]').popover(options);
+
+            $('.pop-up-item [data-toggle="popover"]').on("show.bs.popover",function(){
+                $(this).data("bs.popover").tip().css("max-width","600px")
+            });
 
             if (item.prev_page_url == null) {
                 $(".buttons .prev-page").addClass('inactive');
