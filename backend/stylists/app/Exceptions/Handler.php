@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -30,6 +31,13 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
+        Mail::send("emails.errors", ['e' => $e],
+            function ($mail) {
+                $mail->from(env('FROM_EMAIL'), 'Nicobar')
+                    ->to(env('DEVELOPER_EMAIL'))
+                    ->subject('Styling Error Exception');
+            });
+
         return parent::report($e);
     }
 
