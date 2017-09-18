@@ -12,7 +12,7 @@ class Client extends Model
      *
      * @var string
      */
-    protected $table = 'clients';
+    protected $table = 'isy_clients';
 
     protected $primaryKey = 'id';
 

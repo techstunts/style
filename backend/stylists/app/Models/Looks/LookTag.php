@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class LookTag extends Model
 {
    
-    protected $table = 'look_tags';
+    protected $table = 'isy_look_tags';
 
     public $timestamps = false;
     public function tag(){

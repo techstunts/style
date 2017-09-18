@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class CampaignMailerRepository extends Model
 {
-    const TABLE_NAME = 'campaign_mailer_list';
+    const TABLE_NAME = 'isy_campaign_mailer_list';
 
     protected $table = self::TABLE_NAME;
     protected $fillable = ['email', 'name', 'campaign_id'];

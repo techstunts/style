@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ErroneousProducts extends Model
 {
-    protected $table = 'erroneous_products';
+    protected $table = 'isy_erroneous_products';
     protected $connection = 'mysqlScraper';
     public $timestamps = false;
 }

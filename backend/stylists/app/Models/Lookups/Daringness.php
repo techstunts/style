@@ -11,6 +11,6 @@ class Daringness extends Model
      *
      * @var string
      */
-    protected $table = 'lu_daringness';
+    protected $table = 'isy_lu_daringness';
 
 }

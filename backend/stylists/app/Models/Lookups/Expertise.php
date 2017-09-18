@@ -11,6 +11,6 @@ class Expertise extends Model
      *
      * @var string
      */
-    protected $table = 'lu_expertise';
+    protected $table = 'isy_lu_expertise';
 
 }

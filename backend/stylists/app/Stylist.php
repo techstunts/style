@@ -25,7 +25,7 @@ class Stylist extends Model implements AuthenticatableContract,
      *
      * @var string
      */
-    protected $table = 'stylists';
+    protected $table = 'isy_stylists';
 
     protected $primaryKey = 'id';
 

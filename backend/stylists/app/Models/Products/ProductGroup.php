@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductGroup extends Model
 {
-    protected $table = 'product_group';
+    protected $table = 'isy_product_group';
     public $timestamps = false;
 }

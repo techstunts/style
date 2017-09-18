@@ -11,6 +11,6 @@ class Complexion extends Model
      *
      * @var string
      */
-    protected $table = 'lu_complexion';
+    protected $table = 'isy_lu_complexion';
 
 }

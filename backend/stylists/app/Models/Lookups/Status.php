@@ -11,6 +11,6 @@ class Status extends Model
      *
      * @var string
      */
-    protected $table = 'lu_status';
+    protected $table = 'isy_lu_status';
 
 }

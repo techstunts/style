@@ -11,6 +11,6 @@ class ChatOnlineStatus extends Model
      *
      * @var string
      */
-    protected $table = 'lu_chat_online_status';
+    protected $table = 'isy_lu_chat_online_status';
 
 }

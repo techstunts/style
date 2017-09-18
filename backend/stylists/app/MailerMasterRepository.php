@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class MailerMasterRepository extends Model
 {
 
-    const TABLE_NAME = 'mailer_master_list';
+    const TABLE_NAME = 'isy_mailer_master_list';
     const FETCH_LIMIT = 100;
 
     protected $table = self::TABLE_NAME;

@@ -11,7 +11,7 @@ class MerchantProduct extends Model
      *
      * @var string
      */
-    protected $table = 'merchant_products';
+    protected $table = 'isy_merchant_products';
 
     public function brand()
     {

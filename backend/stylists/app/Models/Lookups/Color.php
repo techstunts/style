@@ -11,6 +11,6 @@ class Color extends Model
      *
      * @var string
      */
-    protected $table = 'lu_color';
+    protected $table = 'isy_lu_color';
 
 }

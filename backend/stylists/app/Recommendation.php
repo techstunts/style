@@ -12,7 +12,7 @@ class Recommendation extends Model
      *
      * @var string
      */
-    protected $table = 'recommendations';
+    protected $table = 'isy_recommendations';
 
     protected $primaryKey = 'id';
 

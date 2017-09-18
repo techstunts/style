@@ -11,6 +11,6 @@ class AppSections extends Model
      *
      * @var string
      */
-    protected $table = 'lu_app_sections';
+    protected $table = 'isy_lu_app_sections';
 
 }

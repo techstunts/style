@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Merchants extends Model
 {
-    protected $table = 'merchants';
+    protected $table = 'isy_merchants';
     protected $primaryKey = 'id';
 //    protected $connection = 'mysqlScraper';
 

@@ -11,6 +11,6 @@ class StylistStatus extends Model
      *
      * @var string
      */
-    protected $table = 'lu_stylist_status';
+    protected $table = 'isy_lu_stylist_status';
 
 }

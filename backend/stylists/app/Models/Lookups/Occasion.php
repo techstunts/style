@@ -11,6 +11,6 @@ class Occasion extends Model
      *
      * @var string
      */
-    protected $table = 'lu_occasion';
+    protected $table = 'isy_lu_occasion';
 
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TipEntity extends Model
 {
-    protected $table = 'tip_entities';
+    protected $table = 'isy_tip_entities';
     public $timestamps = false;
 
     public function product(){

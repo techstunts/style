@@ -11,6 +11,6 @@ class AgeGroup extends Model
      *
      * @var string
      */
-    protected $table = 'lu_age_group';
+    protected $table = 'isy_lu_age_group';
 
 }

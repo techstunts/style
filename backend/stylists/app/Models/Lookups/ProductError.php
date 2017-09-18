@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class ProductError extends Model
 {
     protected $connection = 'mysqlScraper';
-    protected $table = 'lu_product_error';
+    protected $table = 'isy_lu_product_error';
 
 }

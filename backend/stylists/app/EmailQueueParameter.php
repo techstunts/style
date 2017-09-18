@@ -12,6 +12,6 @@ class EmailQueueParameter extends Model
      *
      * @var string
      */
-    protected $table = 'email_queue_parameter';
+    protected $table = 'isy_email_queue_parameter';
 
 }

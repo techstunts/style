@@ -18,13 +18,13 @@ class SelectOptions{
         $whereClauses = $this->whereClauses;
         unset($whereClauses['merchant_id']);
         $merchants = DB::table($this->table)
-            ->join('merchants', $this->table . '.merchant_id', '=', 'merchants.id')
+            ->join('isy_merchants', $this->table . '.merchant_id', '=', 'isy_merchants.id')
             ->where($whereClauses)
             ->whereRaw($this->whereRawClauses)
             ->distinct()
-            ->select('merchants.id', 'merchants.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
-            ->groupBy('merchants.id', 'merchants.name')
-            ->orderBy('merchants.name')
+            ->select('isy_merchants.id', 'isy_merchants.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
+            ->groupBy('isy_merchants.id', 'isy_merchants.name')
+            ->orderBy('isy_merchants.name')
             ->get();
         return $merchants;
     }
@@ -34,13 +34,13 @@ class SelectOptions{
         $whereClauses = $this->whereClauses;
         unset($whereClauses['brand_id']);
         $brands = DB::table($this->table)
-            ->join('brands', $this->table . '.brand_id', '=', 'brands.id')
+            ->join('isy_brands', $this->table . '.brand_id', '=', 'isy_brands.id')
             ->where($whereClauses)
             ->whereRaw($this->whereRawClauses)
             ->distinct()
-            ->select('brands.id', 'brands.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
-            ->groupBy('brands.id', 'brands.name')
-            ->orderBy('brands.name')
+            ->select('isy_brands.id', 'isy_brands.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
+            ->groupBy('isy_brands.id', 'isy_brands.name')
+            ->orderBy('isy_brands.name')
             ->get();
         return $brands;
     }
@@ -50,13 +50,13 @@ class SelectOptions{
         $whereClauses = $this->whereClauses;
         unset($whereClauses['category_id']);
         $categories = DB::table($this->table)
-            ->join('categories', $this->table . '.category_id', '=', 'categories.id')
+            ->join('isy_categories', $this->table . '.category_id', '=', 'isy_categories.id')
             ->where($whereClauses)
             ->whereRaw($this->whereRawClauses)
             //->distinct()
-            ->select('categories.id', 'categories.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
-            ->groupBy('categories.id', 'categories.name')
-            ->orderBy('categories.name')
+            ->select('isy_categories.id', 'isy_categories.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
+            ->groupBy('isy_categories.id', 'isy_categories.name')
+            ->orderBy('isy_categories.name')
             ->get();
         return $categories;
     }
@@ -112,7 +112,7 @@ class SelectOptions{
     protected function get_lookup_data_with_count($lookup_type, $count_table_fk="", $label = 'name'){
         $whereClauses = $this->whereClauses;
 
-        $lookup_table = 'lu_' . $lookup_type;
+        $lookup_table = 'isy_lu_' . $lookup_type;
         $lookup_table_pk_col = $lookup_table. '.id';
         $lookup_table_name_col = $lookup_table. '.'. $label;
         $count_table_id_col = $this->table . '.id';
@@ -156,12 +156,12 @@ class SelectOptions{
          $whereClauses = $this->whereClauses;
         unset($whereClauses[$columnName]);
         $stylists = DB::table($this->table)
-            ->join('stylists', $this->table . '.'.$columnName, '=', 'stylists.id')
+            ->join('isy_stylists', $this->table . '.'.$columnName, '=', 'isy_stylists.id')
             ->where($whereClauses)
             ->whereRaw($this->whereRawClauses)
-            ->select('stylists.id', 'stylists.name', DB::raw('COUNT(' . $this->table . '.'.$columnName.') as product_count'))
-            ->groupBy('stylists.id', 'stylists.name')
-            ->orderBy('stylists.name')
+            ->select('isy_stylists.id', 'isy_stylists.name', DB::raw('COUNT(' . $this->table . '.'.$columnName.') as product_count'))
+            ->groupBy('isy_stylists.id', 'isy_stylists.name')
+            ->orderBy('isy_stylists.name')
             ->get();
         return $stylists;        
     }

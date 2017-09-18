@@ -11,7 +11,7 @@ class Question extends Model
      *
      * @var string
      */
-    protected $table = 'questions';
+    protected $table = 'isy_questions';
 
     protected $primaryKey = 'id';
     public $timestamps=false;

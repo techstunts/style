@@ -11,7 +11,7 @@ class MerchantProductRejected extends Model
      *
      * @var string
      */
-    protected $table = 'merchant_products_rejected';
+    protected $table = 'isy_merchant_products_rejected';
     protected $fillable = ['agency_id', 'merchant_id', 'm_product_id', 'm_product_sku'];
     public $timestamps = false;
 }

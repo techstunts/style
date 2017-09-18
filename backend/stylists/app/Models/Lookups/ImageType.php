@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ImageType extends Model
 {
-    protected $table = 'lu_image_type';
+    protected $table = 'isy_lu_image_type';
 }

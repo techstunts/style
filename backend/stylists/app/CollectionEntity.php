@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CollectionEntity extends Model
 {
-    protected $table = 'collection_entities';
+    protected $table = 'isy_collection_entities';
     public $timestamps = false;
 
     public function product(){

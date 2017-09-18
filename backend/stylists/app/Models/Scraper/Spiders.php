@@ -4,7 +4,7 @@ namespace App\Models\Scraper;
 use Illuminate\Database\Eloquent\Model;
 class Spiders extends Model
 {
-    protected $table = 'spiders';
+    protected $table = 'isy_spiders';
     protected $primaryKey = 'id';
 //    protected $connection = 'mysqlScraper';
 

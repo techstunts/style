@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductPrice extends Model
 {
-    protected $table = 'products_prices';
+    protected $table = 'isy_products_prices';
 
     public function type(){
         return $this->belongsTo('App\Models\Lookups\PriceType', 'price_type_id');

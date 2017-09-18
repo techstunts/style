@@ -11,6 +11,6 @@ class LookStatus extends Model
      *
      * @var string
      */
-    protected $table = 'lu_look_status';
+    protected $table = 'isy_lu_look_status';
 
 }

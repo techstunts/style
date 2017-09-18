@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChatOnline extends Model
 {
-    protected $table = 'stylist_chat_online';
+    protected $table = 'isy_stylist_chat_online';
 }

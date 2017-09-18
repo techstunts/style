@@ -11,6 +11,6 @@ class Designation extends Model
      *
      * @var string
      */
-    protected $table = 'lu_designation';
+    protected $table = 'isy_lu_designation';
 
 }

@@ -11,7 +11,7 @@ class Brand extends Model
      *
      * @var string
      */
-    protected $table = 'brands';
+    protected $table = 'isy_brands';
 
     protected $fillable = ['name'];
 

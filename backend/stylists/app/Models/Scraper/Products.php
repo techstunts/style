@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Products extends Model
 {
-    protected $table = 'products';
+    protected $table = 'isy_products';
     protected $primaryKey = 'id';
     protected $connection = 'mysqlScraper';
     public $timestamps = false;

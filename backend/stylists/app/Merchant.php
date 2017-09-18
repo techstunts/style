@@ -11,7 +11,7 @@ class Merchant extends Model
      *
      * @var string
      */
-    protected $table = 'merchants';
+    protected $table = 'isy_merchants';
 
 
 }

@@ -11,7 +11,7 @@ class QuestionOption extends Model
      *
      * @var string
      */
-    protected $table = 'question_options';
+    protected $table = 'isy_question_options';
 
     protected $primaryKey = 'id';
     public $timestamps=false;

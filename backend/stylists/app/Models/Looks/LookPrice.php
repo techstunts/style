@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LookPrice extends Model
 {
-    protected $table = 'look_prices';
+    protected $table = 'isy_look_prices';
 
     public function currency(){
         return $this->belongsTo('App\Models\Lookups\Currency', 'currency_id');

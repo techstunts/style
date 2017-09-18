@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductSize extends Model
 {
-    protected $table = 'product_sizes';
+    protected $table = 'isy_product_sizes';
 }

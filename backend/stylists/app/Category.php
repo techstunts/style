@@ -12,7 +12,7 @@ class Category extends Model
      *
      * @var string
      */
-    protected $table = 'categories';
+    protected $table = 'isy_categories';
 
     protected $fillable = ['name'];
 
@@ -36,9 +36,9 @@ class Category extends Model
             ) name,
 
             '' as product_count
-            FROM categories c1
-            JOIN categories c2 ON c1.parent_category_id = c2.id
-            JOIN categories c3 ON c2.parent_category_id = c3.id
+            FROM isy_categories c1
+            JOIN isy_categories c2 ON c1.parent_category_id = c2.id
+            JOIN isy_categories c3 ON c2.parent_category_id = c3.id
             ORDER BY category_with_parent_name");
     }
     public function subcategory () {

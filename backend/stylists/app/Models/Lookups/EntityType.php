@@ -11,6 +11,6 @@ class EntityType extends Model
      *
      * @var string
      */
-    protected $table = 'lu_entity_type';
+    protected $table = 'isy_lu_entity_type';
 
 }

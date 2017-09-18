@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tag extends Model
 {
-    protected $table = 'lu_tags';
+    protected $table = 'isy_lu_tags';
 }

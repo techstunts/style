@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RequestsBooking extends Model
 {
-    protected $table = 'requests_books_map';
+    protected $table = 'isy_requests_books_map';
     public $timestamps = false;
 
     public function booking()

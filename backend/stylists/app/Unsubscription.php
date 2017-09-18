@@ -13,7 +13,7 @@ class Unsubscription extends Model
     const REASON_SPAM = 'The emails are spam and should be reported';
     const REASON_OTHER = 'Others';
 
-    const TABLE_NAME = 'unsubscriptions';
+    const TABLE_NAME = 'isy_unsubscriptions';
 
     protected $table = self::TABLE_NAME;
     protected $fillable = ['email', 'reason', 'mailer_type_id'];

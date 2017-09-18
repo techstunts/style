@@ -12,7 +12,7 @@ class Collection extends Model
      *
      * @var string
      */
-    protected $table = 'collections';
+    protected $table = 'isy_collections';
 
     protected $primaryKey = 'id';
 

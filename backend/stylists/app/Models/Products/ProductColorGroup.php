@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductColorGroup extends Model
 {
-    protected $table = 'product_color_group';
+    protected $table = 'isy_product_color_group';
 }

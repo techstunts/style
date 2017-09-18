@@ -11,6 +11,6 @@ class Budget extends Model
      *
      * @var string
      */
-    protected $table = 'lu_budget';
+    protected $table = 'isy_lu_budget';
 
 }

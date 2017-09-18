@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Tip extends Model
 {
    
-    protected $table      = 'tips';
+    protected $table      = 'isy_tips';
     protected $primaryKey = 'id';
     
     

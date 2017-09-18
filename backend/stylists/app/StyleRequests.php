@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class StyleRequests extends Model
 {
 
-    protected $table = 'style_requests';
+    protected $table = 'isy_style_requests';
 
     protected $primaryKey = 'id';
 

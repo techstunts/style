@@ -11,7 +11,7 @@ class Product extends Model
      *
      * @var string
      */
-    protected $table = 'products';
+    protected $table = 'isy_products';
 
     protected $fillable = ['agency_id', 'merchant_id', 'name', 'price', 'product_link', 'upload_image',
         'image_name','merchant_product_id', 'brand_id', 'category_id', 'gender_id', 'primary_color_id', 'secondary_color_id'];

@@ -11,6 +11,6 @@ class PriceType extends Model
      *
      * @var string
      */
-    protected $table = 'lu_price';
+    protected $table = 'isy_lu_price';
 
 }

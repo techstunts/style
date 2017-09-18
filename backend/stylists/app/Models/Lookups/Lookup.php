@@ -26,6 +26,6 @@ class Lookup extends Model
     public $timestamps = false;
 
     public function type($name){
-        return $this->setTable('lu_' . $name);
+        return $this->setTable('isy_lu_' . $name);
     }
 }

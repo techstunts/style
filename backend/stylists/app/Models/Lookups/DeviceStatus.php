@@ -11,6 +11,6 @@ class RegIdStatus extends Model
      *
      * @var string
      */
-    protected $table = 'lu_device_status';
+    protected $table = 'isy_lu_device_status';
 
 }

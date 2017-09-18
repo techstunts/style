@@ -130,8 +130,8 @@ abstract class Controller extends BaseController
         }
         $tagged_products = DB::table($table.'_tags')
             ->select(DB::raw("DISTINCT {$table}_id"))
-            ->join('lu_tags', 'lu_tags.id', '=', $table.'_tags.tag_id')
-            ->whereIn(DB::raw("LOWER(lu_tags.name)"), $tags_array)
+            ->join('isy_lu_tags', 'isy_lu_tags.id', '=', $table.'_tags.tag_id')
+            ->whereIn(DB::raw("LOWER(isy_lu_tags.name)"), $tags_array)
             ->get();
         if (count($tagged_products) <= 0) {
            return '';

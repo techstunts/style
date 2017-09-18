@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Country extends Model
 {
-    protected $table = 'lu_country';
+    protected $table = 'isy_lu_country';
 }

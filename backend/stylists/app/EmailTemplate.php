@@ -12,7 +12,7 @@ class EmailTemplate extends Model
      *
      * @var string
      */
-    protected $table = 'email_templates';
+    protected $table = 'isy_email_templates';
 
     protected $primaryKey = 'id';
 

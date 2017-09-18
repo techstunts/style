@@ -11,6 +11,6 @@ class BodyType extends Model
      *
      * @var string
      */
-    protected $table = 'lu_body_type';
+    protected $table = 'isy_lu_body_type';
 
 }

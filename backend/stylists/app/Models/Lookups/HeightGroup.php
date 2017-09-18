@@ -11,6 +11,6 @@ class HeightGroup extends Model
      *
      * @var string
      */
-    protected $table = 'lu_height_group';
+    protected $table = 'isy_lu_height_group';
 
 }

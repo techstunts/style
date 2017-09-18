@@ -12,7 +12,7 @@ class LookProduct extends Model
      *
      * @var string
      */
-    protected $table = 'looks_products';
+    protected $table = 'isy_looks_products';
 
     protected $primaryKey = 'id';
 

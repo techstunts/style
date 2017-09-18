@@ -12,7 +12,7 @@ class EmailQueue extends Model
      *
      * @var string
      */
-    protected $table = 'email_queue';
+    protected $table = 'isy_email_queue';
 
     protected $primaryKey = 'id';
 
