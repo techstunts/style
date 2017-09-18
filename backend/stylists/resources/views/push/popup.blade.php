@@ -35,6 +35,8 @@
                     <input type="checkbox" id="selectAll" style="vertical-align: middle;">
                     <label for="selectAll" >All</label>
                     <input type="text" name="search" value="" placeholder="Search Text" class="form-control search">
+                    <input type="checkbox" name="tags_only" class="form-control" value="1">
+                    <label for="tags_only" class="form-control">Tags Only</label>
                     @if(!empty($show_price_filters) && $show_price_filters == 'YES')
                         <input type="text" name="min_price" value="" placeholder="Min Price"
                                class="form-control search">
