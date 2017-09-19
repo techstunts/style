@@ -22,7 +22,7 @@ class SelectOptions{
             ->where($whereClauses)
             ->whereRaw($this->whereRawClauses)
             ->distinct()
-            ->select('merchants.id', 'merchants.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
+            ->select('merchants.id', 'merchants.name', DB::raw('COUNT(' .env('DB_PREFIX') . $this->table . '.id) as product_count'))
             ->groupBy('merchants.id', 'merchants.name')
             ->orderBy('merchants.name')
             ->get();
@@ -38,7 +38,7 @@ class SelectOptions{
             ->where($whereClauses)
             ->whereRaw($this->whereRawClauses)
             ->distinct()
-            ->select('brands.id', 'brands.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
+            ->select('brands.id', 'brands.name', DB::raw('COUNT(' .env('DB_PREFIX') . $this->table . '.id) as product_count'))
             ->groupBy('brands.id', 'brands.name')
             ->orderBy('brands.name')
             ->get();
@@ -54,7 +54,7 @@ class SelectOptions{
             ->where($whereClauses)
             ->whereRaw($this->whereRawClauses)
             //->distinct()
-            ->select('categories.id', 'categories.name', DB::raw('COUNT(' . $this->table . '.id) as product_count'))
+            ->select('categories.id', 'categories.name', DB::raw('COUNT('.env('DB_PREFIX') . $this->table . '.id) as product_count'))
             ->groupBy('categories.id', 'categories.name')
             ->orderBy('categories.name')
             ->get();
@@ -115,7 +115,7 @@ class SelectOptions{
         $lookup_table = 'lu_' . $lookup_type;
         $lookup_table_pk_col = $lookup_table. '.id';
         $lookup_table_name_col = $lookup_table. '.'. $label;
-        $count_table_id_col = $this->table . '.id';
+        $count_table_id_col = env('DB_PREFIX').$this->table . '.id';
         $count_table_fk_col = $this->table . '.' . ($count_table_fk!="" ? $count_table_fk : $lookup_type . '_id');
         $count_table_fk = $lookup_type . '_id';
 
@@ -159,7 +159,7 @@ class SelectOptions{
             ->join('stylists', $this->table . '.'.$columnName, '=', 'stylists.id')
             ->where($whereClauses)
             ->whereRaw($this->whereRawClauses)
-            ->select('stylists.id', 'stylists.name', DB::raw('COUNT(' . $this->table . '.'.$columnName.') as product_count'))
+            ->select('stylists.id', 'stylists.name', DB::raw('COUNT('. env('DB_PREFIX'). $this->table . '.'.$columnName.') as product_count'))
             ->groupBy('stylists.id', 'stylists.name')
             ->orderBy('stylists.name')
             ->get();
