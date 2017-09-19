@@ -112,7 +112,7 @@ class SelectOptions{
     protected function get_lookup_data_with_count($lookup_type, $count_table_fk="", $label = 'name'){
         $whereClauses = $this->whereClauses;
 
-        $lookup_table = 'isy_lu_' . $lookup_type;
+        $lookup_table = 'lu_' . $lookup_type;
         $lookup_table_pk_col = $lookup_table. '.id';
         $lookup_table_name_col = $lookup_table. '.'. $label;
         $count_table_id_col = env('DB_PREFIX').$this->table . '.id';

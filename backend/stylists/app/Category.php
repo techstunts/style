@@ -12,7 +12,7 @@ class Category extends Model
      *
      * @var string
      */
-    protected $table = 'isy_categories';
+    protected $table = 'categories';
 
     protected $fillable = ['name'];
 
