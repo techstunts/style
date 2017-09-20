@@ -147,7 +147,8 @@ return [
 		'Zizaco\Entrust\EntrustServiceProvider',
         Barryvdh\Debugbar\ServiceProvider::class,
         App\Report\ReportServiceProvider::class,
-        App\Providers\ValidatorServiceProvider::class
+        App\Providers\ValidatorServiceProvider::class,
+        'Chumper\Zipper\ZipperServiceProvider',
 
 
     ],
@@ -199,7 +200,7 @@ return [
         'URL'       => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
-
+        'Zipper' => \Chumper\Zipper\ZipperServiceProvider::class,
     ],
 
 ];

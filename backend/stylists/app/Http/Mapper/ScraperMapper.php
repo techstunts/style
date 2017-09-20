@@ -13,6 +13,7 @@ use App\Models\Enums\Gender;
 use App\Models\Enums\ProductStatus;
 use App\Models\Enums\ProductError;
 use App\Product;
+use Chumper\Zipper\Zipper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -252,7 +253,19 @@ class ScraperMapper
         if(!fclose($file)){
             return false;
         }
+        $this->addToZip($job->items_file_path.'products_json.zip', $file_name);
         return true;
+    }
+
+    public function addToZip ($zip_file, $file) {
+        try {
+            $zipper = new Zipper();
+            $zipper->make($zip_file)->add($file);
+            $zipper->close();
+            unlink($file);
+        } catch (\Exception $e){
+            Log::info($e->getMessage());
+        }
     }
 
     public function saveProductInLocal($product_array, $merchant_id)
