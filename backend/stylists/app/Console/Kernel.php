@@ -33,6 +33,6 @@ class Kernel extends ConsoleKernel
 //        $schedule->command('fetch')->dailyAt('23:00');
 //        $schedule->command('import')->dailyAt('23:30');
 //        $schedule->command('SendBookingReminder')->everyFiveMinutes();
-        $schedule->command('product_sync')->everyTenMinutes();
+        $schedule->command('product_sync')->everyThirtyMinutes();
     }
 }
