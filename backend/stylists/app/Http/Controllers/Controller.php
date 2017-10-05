@@ -41,6 +41,7 @@ abstract class Controller extends BaseController
     protected $action_resource_id;
 
     public function initWhereConditions(Request $request){
+        $prefix = env('DB_PREFIX');
         foreach($this->filter_ids as $filter_id){
             if($request->input($filter_id) != ""){
                 $this->where_conditions[$this->base_table . '.' . $filter_id] = $request->input($filter_id);
@@ -53,11 +54,11 @@ abstract class Controller extends BaseController
         }
 
         if ($this->base_table == 'merchant_products') {
-            $name = $this->base_table . '.m_product_name';
-            $description = $this->base_table . '.m_product_description';
+            $name = $prefix.$this->base_table . '.m_product_name';
+            $description = $prefix.$this->base_table . '.m_product_description';
         }else{
-            $name = $this->base_table . '.name';
-            $description = $this->base_table . '.description';
+            $name = $prefix.$this->base_table . '.name';
+            $description = $prefix.$this->base_table . '.description';
         }
 
         if($request->input('search') != "" and strlen(trim($request->input('search')))>0){
@@ -124,6 +125,7 @@ abstract class Controller extends BaseController
 
     public function setTagCondition($tags, $table)
     {
+        $prefix = env('DB_PREFIX');
         $tags_array = array();
         foreach (explode(',', $tags) as $value) {
             $tags_array[] = trim($value);
@@ -131,7 +133,7 @@ abstract class Controller extends BaseController
         $tagged_products = DB::table($table.'_tags')
             ->select(DB::raw("DISTINCT {$table}_id"))
             ->join('lu_tags', 'lu_tags.id', '=', $table.'_tags.tag_id')
-            ->whereIn(DB::raw("LOWER(lu_tags.name)"), $tags_array)
+            ->whereIn(DB::raw("LOWER({$prefix}lu_tags.name)"), $tags_array)
             ->get();
         if (count($tagged_products) <= 0) {
            return '';
@@ -141,6 +143,6 @@ abstract class Controller extends BaseController
         foreach ($tagged_products as $tagged_product) {
             array_push($product_ids, $tagged_product->$paramName);
         }
-        return " OR {$this->base_table}.id IN(". implode(", ", $product_ids) . ")";
+        return " OR {$prefix}{$this->base_table}.id IN(". implode(", ", $product_ids) . ")";
     }
 }

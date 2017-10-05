@@ -118,7 +118,7 @@ class LookController extends Controller
 
         $remove_deleted_looks = '1=1';
         if (!$request->has('status_id') || $request->input('status_id') != LookupStatus::Deleted) {
-            $remove_deleted_looks = 'looks.status_id != ' . LookupStatus::Deleted;
+            $remove_deleted_looks = env('DB_PREFIX').'looks.status_id != ' . LookupStatus::Deleted;
         }
         $mapperObj = new Mapper();
         $look_prices = $mapperObj->getPriceClosure(

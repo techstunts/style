@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         Commands\Importer::class,
         Commands\FetchNicobarProduct::class,
         Commands\SendBookingReminder::class,
+        Commands\ProductSync::class,
     ];
 
     /**
@@ -29,8 +30,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //$schedule->command('inspire')->hourly();
-        $schedule->command('fetch')->dailyAt('23:00');
-        $schedule->command('import')->dailyAt('23:30');
-        $schedule->command('SendBookingReminder')->everyTenMinutes();
+//        $schedule->command('fetch')->dailyAt('23:00');
+//        $schedule->command('import')->dailyAt('23:30');
+//        $schedule->command('SendBookingReminder')->everyFiveMinutes();
+        $schedule->command('product_sync')->everyThirtyMinutes();
     }
 }

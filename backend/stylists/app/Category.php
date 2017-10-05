@@ -19,7 +19,7 @@ class Category extends Model
     public $timestamps = false;
 
     public function getCategoryTree(){
-
+        $prefix = env('DB_PREFIX');
         return DB::select("SELECT c3.id as category_id_1, c2.id as category_id_2, c1.id as id,
 
             CONCAT(
@@ -33,12 +33,12 @@ class Category extends Model
                 (case when c3.id != 0 then '&nbsp;&nbsp;' else '' end),
                 (case when c2.id != 0 then '&nbsp;&nbsp;' else '' end),
                 c1.name
-            ) name,
+            ) as name,
 
             '' as product_count
-            FROM categories c1
-            JOIN categories c2 ON c1.parent_category_id = c2.id
-            JOIN categories c3 ON c2.parent_category_id = c3.id
+            FROM {$prefix}categories c1
+            JOIN {$prefix}categories c2 ON c1.parent_category_id = c2.id
+            JOIN {$prefix}categories c3 ON c2.parent_category_id = c3.id
             ORDER BY category_with_parent_name");
     }
     public function subcategory () {
