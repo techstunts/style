@@ -31,12 +31,14 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        Mail::send("emails.errors", ['e' => $e],
-            function ($mail) {
-                $mail->from(env('FROM_EMAIL'), 'Nicobar')
-                    ->to(env('DEVELOPER_EMAIL'))
-                    ->subject('Styling Error Exception');
-            });
+        if (false == strpos($e->getTraceAsString(), 'App\Http\Controllers\ScraperController->')) {
+            Mail::send("emails.errors", ['e' => $e],
+                function ($mail) {
+                    $mail->from(env('FROM_EMAIL'), 'Nicobar')
+                        ->to(env('DEVELOPER_EMAIL'))
+                        ->subject('Styling Error Exception');
+                });
+        }
 
         return parent::report($e);
     }
