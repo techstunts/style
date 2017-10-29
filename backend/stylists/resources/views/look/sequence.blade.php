@@ -15,7 +15,7 @@
                         No Looks found
                     @endif
                     @foreach($items as $item)
-                        <li class="col-md-3 ui-state-default border-around" look_id="{{$item->look_id}}" order_id="{{$item->_id}}">
+                        <li class="col-md-4 ui-state-default border-around" look_id="{{$item->look_id}}" order_id="{{$item->_id}}">
                             <div>
                                 <img class="img-responsive" src="{{$item->look->image}}"/>
                             </div>
