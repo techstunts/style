@@ -179,17 +179,17 @@ class LookMapper extends Controller
         if (count($look->otherImages) > 0) {
             foreach ($look->otherImages as $otherImage) {
                 if ($otherImage->image_type_id == ImageType::PDP_Image){
-                    $look->PDP_Image = env('API_ORIGIN') .'/' . $otherImage->path.'/'  . $otherImage->name;
+                    $look->PDP_Image = env('IMAGES_ORIGIN') .'/' . $otherImage->path.'/'  . $otherImage->name;
                 } elseif ($otherImage->image_type_id == ImageType::PLP_Image) {
-                    $look->PLP_Image = env('API_ORIGIN') .'/' . $otherImage->path.'/'  . $otherImage->name;
+                    $look->PLP_Image = env('IMAGES_ORIGIN') .'/' . $otherImage->path.'/'  . $otherImage->name;
                 }
             }
         }
         if (empty($look->PDP_Image)) {
-            $look->PDP_Image = env('API_ORIGIN') . '/uploads/images/looks/' . $look->image;
+            $look->PDP_Image = env('IMAGES_ORIGIN') . '/uploads/images/looks/' . $look->image;
         }
         if (empty($look->PLP_Image)) {
-            $look->PLP_Image = env('API_ORIGIN') . '/uploads/images/looks/' . $look->image;
+            $look->PLP_Image = env('IMAGES_ORIGIN') . '/uploads/images/looks/' . $look->image;
         }
         return $look;
     }
@@ -445,9 +445,9 @@ class LookMapper extends Controller
         foreach ($looks as $k => $item) {
             if ($item->look){
                 if(count($item->look->images) > 0) {
-                    $item->look->image = env('API_ORIGIN') . '/' .$item->look->images[0]->path . '/' . $item->look->images[0]->name;
+                    $item->look->image = env('IMAGES_ORIGIN') . '/' .$item->look->images[0]->path . '/' . $item->look->images[0]->name;
                 } else{
-                    $item->look->image = env('API_ORIGIN') . '/uploads/images/looks/' . $item->look->image;
+                    $item->look->image = env('IMAGES_ORIGIN') . '/uploads/images/looks/' . $item->look->image;
                 }
 	        }
             else{

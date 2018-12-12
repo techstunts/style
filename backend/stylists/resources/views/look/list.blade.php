@@ -47,9 +47,9 @@
                             <input class="entity_ids pull-right"  value="{{$look->id}}" type="checkbox">
                         </div>
                         <div class="image" data-toggle="popover" data-trigger="hover" data-placement="auto right" data-html="true"
-                             data-content="{{'<strong>Description: </strong>'.$look->description.' <br ><img style="width:250px;" src='.env('API_ORIGIN').'/uploads/images/looks/'. $look->image.' />'}}"
+                             data-content="{{'<strong>Description: </strong>'.$look->description.' <br ><img style="width:250px;" src='.env('IMAGES_ORIGIN').'/uploads/images/looks/'. $look->image.' />'}}"
                         >
-                            <img src="{{env('API_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/></div>
+                            <img src="{{env('IMAGES_ORIGIN') . '/uploads/images/looks/' . $look->image}}"/></div>
                         <div class="extra text">
                             <?php
                                 if (isset($status_rules) && isset($status_rules[$look->status->id]['edit_status']['new_status'])){

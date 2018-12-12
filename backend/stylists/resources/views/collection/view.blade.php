@@ -86,9 +86,28 @@
                                     {{--@endforeach--}}
                                 {{--</td>--}}
                             {{--</tr>--}}
+                            <tr class="row">
+                                <td class="head">Looks</td>
+                                <td class="content looks">
+                                    @foreach($collection->look_entities as $entity)
+                                        @if(!empty($entity->look))
+                                            <div class="items pop-up-item">
+                                                <div class="name text">
+                                                    <a href="{{url('look/view/' . $entity->look->id)}}"
+                                                       title="{{$entity->look->name}}"
+                                                       target="product_win">
+                                                        <img class="entity"
+                                                             src="{{env('IMAGES_ORIGIN') . '/uploads/images/looks/' . $entity->look->image}}"/>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </td>
+                            </tr>
                         </table>
                         <div class="image">
-                            <img src="{{env('API_ORIGIN') . '/uploads/images/collections/' . $collection->image}}"/>
+                            <img src="{{env('IMAGES_ORIGIN') . '/uploads/images/collections/' . $collection->image}}"/>
                         </div>
                     </div>
                 </li>

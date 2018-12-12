@@ -91,7 +91,7 @@ class RecommendationController extends Controller
             ]);
         };
 
-        $api_origin = env('API_ORIGIN');
+        $api_origin = env('IMAGES_ORIGIN');
         $entity_data = array();
         if (count($product_ids) > 0) {
             $products = Product::with(['category', 'merchant'])->whereIn('id', $product_ids)
@@ -115,7 +115,7 @@ class RecommendationController extends Controller
                 ->select('id', 'name', DB::raw("concat('$api_origin', '/uploads/images/looks/', image) as image"))->get();
             foreach ($looks as $look) {
                 if (count($look->images) > 0) {
-                    $look->image = env('API_ORIGIN') . '/' . $look->images[0]['path'] . '/' . $look->images[0]['name'];
+                    $look->image = env('IMAGES_ORIGIN') . '/' . $look->images[0]['path'] . '/' . $look->images[0]['name'];
                     unset($look->images);
                 }
                 if (count($look->look_products)) {
@@ -298,7 +298,7 @@ class RecommendationController extends Controller
             ->where('image_type_id', ImageType::Banner)
             ->where('status_id', Status::Active)->first();
 
-        $banner_image_path = $banner_image ? env('API_ORIGIN') .'/'. $banner_image->path . '/' . $banner_image->name : "";
+        $banner_image_path = $banner_image ? env('IMAGES_ORIGIN') .'/'. $banner_image->path . '/' . $banner_image->name : "";
 
         $product_mapper = new ProductMapper();
         if (!empty($entity_data[strtolower(EntityTypeName::PRODUCT)]))

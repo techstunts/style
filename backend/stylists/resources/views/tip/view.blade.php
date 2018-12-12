@@ -129,7 +129,7 @@
                             </tr>
                         </table>
                         <div class="image">
-                            <img src="{{env('API_ORIGIN') . '/uploads/images/tips/' . $tip->image}}"/>
+                            <img src="{{env('IMAGES_ORIGIN') . '/uploads/images/tips/' . $tip->image}}"/>
                         </div>
 
                     </div>

@@ -135,7 +135,7 @@ class StyleRequestsController extends Controller
             $query->with(['question', 'option']);
         };
 
-        $api_origin = env('API_ORIGIN');
+        $api_origin = env('IMAGES_ORIGIN');
         $uploadedStyleImage = function ($query) use ($api_origin) {
             $query->select('id', DB::raw("concat('$api_origin', '/',  path, '/', name) as url"));
         };

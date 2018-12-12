@@ -42,7 +42,7 @@ class StylistController extends Controller
         $status_list[0] = new StylistStatus();
 
         $image = function ($query) {
-            $api_origin = env('API_ORIGIN');
+            $api_origin = env('IMAGES_ORIGIN');
             $query->select('*', DB::raw("concat('$api_origin', '/', path, '/', name) as image"));
             $query->where(['uploaded_by_entity_type_id' => EntityType::STYLIST, 'image_type_id' => ImageType::Profile, 'status_id' => ProfileImageStatus::Active]);
         };

@@ -45,7 +45,7 @@
                                         <tr class="row">
                                             <td class="head">{{$upload_image->type->name}}</td>
                                             <td class="content">
-                                                <img class="entity" src="{{env('API_ORIGIN') .'/'. $upload_image->path .'/'.$upload_image->name}}"/>
+                                                <img class="entity" src="{{env('IMAGES_ORIGIN') .'/'. $upload_image->path .'/'.$upload_image->name}}"/>
                                             </td>
                                         </tr>
                                     @endif

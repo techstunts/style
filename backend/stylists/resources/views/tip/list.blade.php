@@ -41,7 +41,7 @@
                             <input class="entity_ids pull-right"  value="{{$tip->id}}" type="checkbox">
                         </div>
                         @if($tip->image)
-                            <div class="image"><img src="{{env('API_ORIGIN') . '/uploads/images/tips/' . $tip->image}}"/></div>
+                            <div class="image"><img src="{{env('IMAGES_ORIGIN') . '/uploads/images/tips/' . $tip->image}}"/></div>
                         @elseif($tip->image_url)
                             <div class="image"><img src="{!! $tip->image_url !!}" /></div>
                         @else

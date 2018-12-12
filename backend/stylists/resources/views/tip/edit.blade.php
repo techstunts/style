@@ -211,7 +211,7 @@
 
                             </table>
                             <div class="image">
-                                <img src="{!! strpos($tip->image, "http") === 0 ? env('API_ORIGIN') . '/uploads/images/tips/' . $tip->image : $tip->image !!}"/>
+                                <img src="{!! strpos($tip->image, "http") === 0 ? env('IMAGES_ORIGIN') . '/uploads/images/tips/' . $tip->image : $tip->image !!}"/>
                                 <input {{$is_recommended ? "disabled" : ""}} id="image" name="image" type="file" class="file-loading">
                                 <input name="entity_type_id" type="hidden" value="{{$entity_type_id}}">
                                 <img id="loadedImage" src="" class="pop-image-size"/>
